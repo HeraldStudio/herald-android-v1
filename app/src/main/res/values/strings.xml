@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">我的东大</string>
+
+    <string name="title_section1">首页</string>
+    <string name="title_section2">课内游</string>
+    <string name="title_section3">课外玩</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">我的</string>
+</resources>
