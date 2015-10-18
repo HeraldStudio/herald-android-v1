@@ -8,5 +8,4 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="action_settings">我的</string>
-    <string name="title_activity_login">登录</string>
 </resources>

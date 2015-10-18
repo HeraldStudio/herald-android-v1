@@ -13,8 +13,8 @@
         <item name="android:actionModeStyle">@style/MyActionMode</item>
         <item name="android:actionBarTabTextStyle">@style/MyTabText</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>
