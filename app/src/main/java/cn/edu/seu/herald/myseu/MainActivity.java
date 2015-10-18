@@ -1,8 +1,12 @@
 package cn.edu.seu.herald.myseu;
 
 import java.util.Locale;
+import java.util.prefs.PreferenceChangeEvent;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.internal.widget.ActionBarContainer;
+import android.support.v7.internal.widget.ActionBarOverlayLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +28,7 @@ import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
+public class MainActivity extends BaseActivity implements ActionBar.TabListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -34,6 +41,10 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+/********************
+ *  布局的放置和定义  *
+ ********************/
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -69,13 +80,9 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
 
-        /*
-        * 沉浸顶栏实现
-        * 参考：http://blog.csdn.net/jdsjlzx/article/details/41643587
-        * */
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.drawable.bg_actionbar);
+/********************
+ *  布局的调整和美化  *
+ ********************/
 
         /*
         * ActionBar自定义布局
@@ -84,7 +91,28 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         * */
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(R.layout.custom_actionbar);
+        View v = LayoutInflater.from(this).inflate(R.layout.custom_actionbar, null);
+        v.setLayoutParams(new ActionBar.LayoutParams(-1, -1));
+        actionBar.setCustomView(v);
+
+        /*
+        * 解决Android 4.4版本ActionBar左上角显示问题
+        * 参考：http://my.oschina.net/547217475/blog/359427
+        * */
+        actionBar.setTitle("");
+
+/********************
+ *    启动时的准备    *
+ ********************/
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sp.getBoolean("firstRun",true)){
+            //TODO Show user intro here
+        }
+
+        if(sp.getString("accountId","").equals("")||sp.getString("accountPass","").equals("")){
+            startActivity(new Intent(this, LoginActivity.class));
+        }
     }
 
     @Override
@@ -116,7 +144,13 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            System.out.println(position);
+            switch (position){
+                case 0:
+                    return new HomeFragment();
+                default:
+                    return PlaceholderFragment.newInstance(position + 1);
+            }
         }
 
         @Override
