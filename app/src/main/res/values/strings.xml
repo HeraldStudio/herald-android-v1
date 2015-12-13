@@ -11,10 +11,18 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_login">LoginActivity</string>
 
+    <!--首页-->
     <string name="index_title_name">首页</string>
+
+
+    <!--侧边栏导航-->
 
 
     <!--个人信息相关-->
     <string name="user_name"></string>
     <string name="user_class"></string>
+    <string name="title_activity_sys_settings">系统设置</string>
+
+
+    <!--系统设置-->
 </resources>

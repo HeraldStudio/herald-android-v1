@@ -1,22 +1,21 @@
 package cn.seu.herald_android;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.text.Layout;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +23,7 @@ import android.widget.Toast;
 import cn.seu.herald_android.exception.AuthException;
 import cn.seu.herald_android.helper.AuthHelper;
 import cn.seu.herald_android.mode_auth.LoginActivity;
+import cn.seu.herald_android.mode_settings.SysSettingsActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private AuthHelper authHelper;
     private Handler initHandler;
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         init();
@@ -98,8 +99,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_assistant) {
 
         } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_share) {
+            Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_join) {
 
         } else if (id == R.id.nav_send) {
 
@@ -114,8 +116,8 @@ public class MainActivity extends AppCompatActivity
 
     public void init(){
         authHelper = new AuthHelper(MainActivity.this);
-        refreshUI();
         checkAuth();
+        refreshUI();
     }
 
     public void checkAuth(){
@@ -162,11 +164,21 @@ public class MainActivity extends AppCompatActivity
     public void refreshUI(){
         TextView tv_hello = (TextView)findViewById(R.id.tv_main_hello);
         tv_hello.setText("你好！"+authHelper.getAuthCache("name")+"同学");
+
+        //
+        LayoutInflater inflater = getLayoutInflater();
+        View navLayout = inflater.inflate(R.layout.nav_header_main, null);
+        TextView tv_nav_user = (TextView)navLayout.findViewById(R.id.tv_nav_username);
+        tv_nav_user.setText("sssssssss");
+
+//        TextView tv_nav_user = (TextView)navigationView.inflateHeaderView(R.layout.nav_header_main).findViewById(R.id.tv_nav_username);
+//        tv_nav_user.setText(authHelper.getAuthCache("name"));
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        checkAuth();
         refreshUI();
     }
 }

@@ -107,7 +107,7 @@ public class AuthHelper {
         return authCache;
     }
 
-    public  boolean setAuthCache(String cacheName,String cacheValue){
+    public boolean setAuthCache(String cacheName,String cacheValue){
         //用于更新存储的某项信息
         SharedPreferences.Editor editor= context.getSharedPreferences("Auth",context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
