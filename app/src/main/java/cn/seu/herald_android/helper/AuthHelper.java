@@ -93,6 +93,14 @@ public class AuthHelper {
     }
 
     public String getAuthCache(String cacheName){
+        //可用
+        /**
+         * uuid         认证用uuid
+         * cardnuim     一卡通号
+         * schoolnum    学号
+         * name         名字
+         * sex          性别
+         */
         //获得存储的某项信息
         SharedPreferences pref = context.getSharedPreferences("Auth", Context.MODE_PRIVATE);
         String authCache = pref.getString(cacheName,"");

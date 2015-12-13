@@ -6,15 +6,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@mipmap/login_background_2"
     tools:context="cn.seu.herald_android.mode_auth.LoginActivityFragment"
     tools:showIn="@layout/activity_login">
 
 
     <LinearLayout
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
@@ -23,29 +25,45 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="登录"
+            android:fontFamily="consola"
+            android:textSize="40dp"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="30dp"
             android:gravity="center"
             android:id="@+id/textView3" />
 
         <EditText
             android:layout_width="240dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
+            android:paddingLeft="15dp"
             android:inputType="number"
-            android:hint="一卡通"
+            android:background="@drawable/corners_bg"
+            android:hint="校园一卡通号"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:textColorHint="#60ffffff"
+            android:layout_marginBottom="10dp"
             android:ems="10"
             android:id="@+id/tv_login_cardnum"
             android:layout_gravity="center_horizontal" />
 
         <EditText
             android:layout_width="240dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
+            android:paddingLeft="15dp"
             android:inputType="textPassword"
+            android:background="@drawable/corners_bg"
+            android:textSize="14sp"
             android:hint="统一认证密码"
+            android:textColor="#ffffff"
+            android:textColorHint="#60ffffff"
+            android:layout_marginBottom="40dp"
             android:ems="10"
             android:id="@+id/tv_login_pwd"
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:text="登录"
             android:textColor="#ffffff"
@@ -54,4 +72,12 @@
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#6fffffff"
+        android:text="\@Copyright 东南大学先声网"/>
 </RelativeLayout>

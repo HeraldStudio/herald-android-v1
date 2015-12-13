@@ -23,14 +23,75 @@ import cn.seu.herald_android.helper.AuthHelper;
  * Created by heyon on 2015/12/8.
  */
 public class ApiClient {
-    public static final int API_USER=0;
-    public static final int API_PE=1;
-    public static final int API_SRTP=2;
+    //可用doRequest调用的API
+    //SRTP学分查询
+    public static final int API_SRTP=0;
+    //本学期课表学分查询
+    public static final int API_SIDEBAR=1;
+    //课表查询
+    public static final int API_CURRICULUM=2;
+    //绩点查询(较慢)
+    public static final int API_GPA=3;
+    //跑操次数查询
+    public static final int API_PE=4;
+    //校园网账户情况
+    public static final int API_NIC=5;
+    //一卡通余额
+    public static final int API_CARD=6;
+    //人文讲座查询
+    public static final int API_LECTURE=7;
+    //物理实验查询
+    public static final int API_PHYLAB=8;
+    //跑操预报
+    public static final int API_PC=9;
+    //教务处通知
+    public static final int API_JWC=10;
+    //校车
+    public static final int API_SCHOOLBUS=11;
+    //课程预报（今天剩下的课的消息）
+    public static final int API_LEC_NOTICE=12;
+    //个人信息查询
+    public static final int API_USER=13;
+    //宿舍查询
+    public static final int API_ROOM=14;
+
+
+    //需用其他方式访问的
+    /**
+     * 调戏
+     * 参数
+     * uuid：要搜索的书名
+     * msg：对话内容
+     */
+    public static final int API_SIMSIMI=0;
+
+    //暂时无法使用的两个
+    public static final int API_RENEW=1;
+    public static final int API_LIBRARY=2;
+
+    //图书馆藏书搜索
+    /**
+     * 参数
+     * book:要搜索的书名
+     */
+    public static final int API_BOOK_SEARCH=3;
 
     private static String[] apiNames = new String[]{
-            "user",
+            "srtp",
+            "sidebar",
+            "curriculum",
+            "gpa",
             "pe",
-            "srtp"
+            "nic",
+            "card",
+            "lecture",
+            "phylab",
+            "pc",
+            "jwc",
+            "schoolbus",
+            "lecturenotice",
+            "user",
+            "room"
     };
 
     public ApiClient(){
@@ -60,7 +121,6 @@ public class ApiClient {
             }
         }
         return result;
-
     }
 
     public String doAuth(String cardnum,String pwd )throws NetworkOnMainThreadException,AuthException{
