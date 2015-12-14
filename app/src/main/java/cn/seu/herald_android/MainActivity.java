@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
+
                 }else{
                     refreshUI();
                     Log.d("MainActivity","refresh");
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity
         View navLayout = inflater.inflate(R.layout.nav_header_main, null);
         TextView tv_nav_user = (TextView)navLayout.findViewById(R.id.tv_nav_username);
         tv_nav_user.setText("sssssssss");
+
 
 //        TextView tv_nav_user = (TextView)navigationView.inflateHeaderView(R.layout.nav_header_main).findViewById(R.id.tv_nav_username);
 //        tv_nav_user.setText(authHelper.getAuthCache("name"));
