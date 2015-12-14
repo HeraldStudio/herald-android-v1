@@ -10,7 +10,6 @@
     tools:context="cn.seu.herald_android.mode_settings.SysSettingsActivity">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
