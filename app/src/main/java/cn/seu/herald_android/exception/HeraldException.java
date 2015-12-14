@@ -4,6 +4,7 @@ package cn.seu.herald_android.exception;
  * Created by heyon on 2015/12/8.
  */
 public class HeraldException extends Exception{
+
     private String msg;
     private int code;
 

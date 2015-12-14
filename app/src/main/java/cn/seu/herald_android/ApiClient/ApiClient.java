@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import cn.seu.herald_android.exception.AuthException;
 import cn.seu.herald_android.helper.AuthHelper;
@@ -106,6 +108,7 @@ public class ApiClient {
         }else{
             String url = AuthHelper.url + apiNames[apiname];
             OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.setReadTimeout(3000, TimeUnit.MILLISECONDS);//设置超时时间
             RequestBody body = new FormEncodingBuilder()
                     .add("uuid", uuid)
                     .build();
@@ -115,8 +118,11 @@ public class ApiClient {
                     .build();
             try {
                 Response response  = okHttpClient.newCall(request).execute();
-                result = response.body().string();
-            } catch (IOException e) {
+                if(response.code()==200)
+                    result = response.body().string();
+            }catch (SocketTimeoutException e){
+                throw new AuthException("网络错误，请检查网络连接",AuthException.NETWORK_ERROR);
+            }catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -131,6 +137,7 @@ public class ApiClient {
             //抛出在主线程中操作网络的异常
         }else{
             OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.setReadTimeout(3000, TimeUnit.MILLISECONDS);//设置超时时间
             RequestBody body = new FormEncodingBuilder()
                     .add("user", cardnum)
                     .add("password", pwd)
@@ -140,6 +147,7 @@ public class ApiClient {
                     .url("http://115.28.27.150/uc/auth")
                     .post(body)
                     .build();
+
             try {
                 Log.d("api", "doAuth: "+request.toString());
                 Response response  = okHttpClient.newCall(request).execute();
@@ -147,7 +155,9 @@ public class ApiClient {
                     throw new AuthException("账户信息出错，请核实一卡通号或者统一认证密码",AuthException.ERROR_PWD);
                 //返回uuid
                 uuid = response.body().string().toString();
-            } catch (IOException e) {
+            } catch (SocketTimeoutException e){
+                throw new AuthException("网络错误，请检查网络连接",AuthException.NETWORK_ERROR);
+            }catch (IOException e) {
                 e.printStackTrace();
             }
         }

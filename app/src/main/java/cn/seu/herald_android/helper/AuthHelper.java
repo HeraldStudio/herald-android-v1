@@ -27,10 +27,8 @@ public class AuthHelper {
     public void checkAuth()throws AuthException,NetworkOnMainThreadException{
         //检查uuid的正确情况，如果正确则更新个人信息
         String uuid = getUUID();
-        if (uuid.equals("")) {
+        if (uuid.equals(""))
             throw new AuthException("未登录",AuthException.HAVE_NOT_LOGIN);
-            //抛出未登录错误
-        }
         try{
             ApiClient apiClient = new ApiClient();
             String result = apiClient.doRequest(ApiClient.API_USER,uuid);
@@ -61,9 +59,9 @@ public class AuthHelper {
         //联网登录，获取并保存uuid,然后返回
         ApiClient apiClient = new ApiClient();
         String uuid = apiClient.doAuth(cardnum,pwd);
-        setAuthCache("uuid",uuid);
+        if(setAuthCache("uuid",uuid))
         //更新个人信息
-        checkAuth();
+            checkAuth();
         return uuid;
     }
 

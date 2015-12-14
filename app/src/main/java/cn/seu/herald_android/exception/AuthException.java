@@ -4,6 +4,8 @@ package cn.seu.herald_android.exception;
  * Created by heyon on 2015/12/8.
  */
 public class AuthException extends HeraldException{
+    public static final int NETWORK_ERROR = -2;
+    //网络错误
     public static final int UNKONW_ERROR =-1;
     //未知错误
     public static final int ERROR_PWD =0;
