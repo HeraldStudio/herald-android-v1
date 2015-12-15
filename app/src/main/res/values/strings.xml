@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Herald_Android</string>
+    <string name="app_name">我的东大</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">设置</string>
+    <string name="action_settings">settings</string>
     <string name="action_logout">注销登录</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
@@ -22,6 +22,7 @@
     <string name="user_name"></string>
     <string name="user_class"></string>
     <string name="title_activity_sys_settings">系统设置</string>
+    <string name="title_activity_query">QueryActivity</string>
 
 
     <!--系统设置-->

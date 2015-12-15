@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/index_title_name"
+            android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,6 +35,10 @@
             android:name=".mode_settings.SysSettingsActivity"
             android:label="@string/title_activity_sys_settings"
             android:launchMode="singleInstance" />
+        <activity
+            android:name=".mode_query.QueryActivity"
+            android:label="@string/title_activity_query"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

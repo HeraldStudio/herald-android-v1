@@ -23,6 +23,7 @@ import android.widget.Toast;
 import cn.seu.herald_android.exception.AuthException;
 import cn.seu.herald_android.helper.AuthHelper;
 import cn.seu.herald_android.mode_auth.LoginActivity;
+import cn.seu.herald_android.mode_query.QueryActivity;
 import cn.seu.herald_android.mode_settings.SysSettingsActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity
     private AuthHelper authHelper;
     private Handler initHandler;
     private NavigationView navigationView;
+    private TextView tv_hello;
+    private TextView tv_nav_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,12 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        tv_hello = (TextView)findViewById(R.id.tv_main_hello);
+
+        //获取侧边栏布局
+        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
 
         init();
 
@@ -79,12 +88,14 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         }else if(id == R.id.action_logout){
             authHelper.doLogout();
             checkAuth();
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -97,10 +108,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_info) {
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
-
+            Intent intent = new Intent(MainActivity.this, QueryActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         } else if (id == R.id.nav_join) {
 
         } else if (id == R.id.nav_send) {
@@ -162,17 +176,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void refreshUI(){
-        TextView tv_hello = (TextView)findViewById(R.id.tv_main_hello);
-        tv_hello.setText("你好！"+authHelper.getAuthCache("name")+"同学");
-
-        //
-        LayoutInflater inflater = getLayoutInflater();
-        View navLayout = inflater.inflate(R.layout.nav_header_main, null);
-        TextView tv_nav_user = (TextView)navLayout.findViewById(R.id.tv_nav_username);
-        tv_nav_user.setText("sssssssss");
-
-//        TextView tv_nav_user = (TextView)navigationView.inflateHeaderView(R.layout.nav_header_main).findViewById(R.id.tv_nav_username);
-//        tv_nav_user.setText(authHelper.getAuthCache("name"));
+        //设置首页欢迎信息
+        tv_hello.setText("你好！" + authHelper.getAuthCache("name") + "同学");
+        //设置侧边栏上个人信息
+        tv_nav_user.setText(authHelper.getAuthCache("name"));
     }
 
     @Override
