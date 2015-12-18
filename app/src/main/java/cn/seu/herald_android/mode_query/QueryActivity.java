@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.helper.ModuleHelper;
 
 public class QueryActivity extends AppCompatActivity {
 
@@ -22,10 +23,9 @@ public class QueryActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                // 启动跑操模块的一个Demo
+                ModuleHelper.launchModuleActivity(QueryActivity.this, ModuleHelper.MODULE_PAOCAO, null);
             }
         });
     }
-
 }
