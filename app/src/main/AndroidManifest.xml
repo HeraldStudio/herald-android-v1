@@ -27,16 +27,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".mode_auth.LoginActivity"
+            android:name=".mod_auth.LoginActivity"
             android:label="@string/title_activity_login"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".mode_settings.SysSettingsActivity"
+            android:name=".mod_settings.SysSettingsActivity"
             android:label="@string/title_activity_sys_settings"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".mode_query.QueryActivity"
+            android:name=".mod_query.QueryActivity"
             android:label="@string/title_activity_query"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

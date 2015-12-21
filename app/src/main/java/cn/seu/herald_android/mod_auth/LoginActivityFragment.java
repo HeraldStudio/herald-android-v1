@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mode_auth;
+package cn.seu.herald_android.mod_auth;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

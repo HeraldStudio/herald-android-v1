@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mode_settings;
+package cn.seu.herald_android.mod_settings;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

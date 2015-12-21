@@ -1,9 +1,6 @@
-package cn.seu.herald_android.mode_query;
+package cn.seu.herald_android.mod_query;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +14,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.exception.ModuleLoadException;
 import cn.seu.herald_android.helper.ModuleHelper;
 
 public class QueryActivity extends AppCompatActivity {
@@ -43,8 +41,12 @@ public class QueryActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 启动跑操模块的一个Demo
-                ModuleHelper.launchModuleActivity(QueryActivity.this, ModuleHelper.MODULE_PAOCAO, null);
+                // 启动跑操模块的一个Deme
+                try {
+                    ModuleHelper.launchModuleActivity(QueryActivity.this, ModuleHelper.MODULE_PAOCAO, null);
+                } catch (ModuleLoadException e) {
+                    Snackbar.make(view,"此模块未安装",Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -64,7 +66,7 @@ public class QueryActivity extends AppCompatActivity {
         int icon_min_w = icon_max_w * 3 /4;
 
         //加载已安装的查询模块
-        for(int i = 0; i < 3; i++ ){
+        for(int i = 0; i < res_queryicons.length ; i++ ){
             ImageView imgv = new ImageView(getBaseContext());
             imgv.setBackground(ContextCompat.getDrawable(getBaseContext(), res_queryicons[i]));
             imgv.setPadding(padding, padding, padding, padding);

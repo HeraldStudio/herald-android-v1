@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
@@ -155,10 +156,12 @@ public class ApiClient {
                     throw new AuthException("账户信息出错，请核实一卡通号或者统一认证密码",AuthException.ERROR_PWD);
                 //返回uuid
                 uuid = response.body().string().toString();
-            } catch (SocketTimeoutException e){
+            }catch (SocketTimeoutException e){
                 throw new AuthException("网络错误，请检查网络连接",AuthException.NETWORK_ERROR);
+            }catch (ConnectException e) {
+                throw new AuthException("网络连接错误，请检查网络连接",AuthException.NETWORK_ERROR);
             }catch (IOException e) {
-                e.printStackTrace();
+                throw new AuthException("从服务器拉取认证信息失败,请联系管理员",AuthException.NETWORK_ERROR);
             }
         }
         return uuid;
