@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
 
+        //启动服务
+        startService(new Intent(this, MainService.class));
+
         init();
 
     }
