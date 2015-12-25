@@ -20,48 +20,60 @@ public class AuthHelper {
     private Context context;
     public static String APPID = "34cc6df78cfa7cd457284e4fc377559e";
     public static String url = "http://115.28.27.150/api/";
+
     public AuthHelper(Context context) {
         this.context = context;
     }
 
-    public void checkAuth()throws AuthException,NetworkOnMainThreadException{
+    public void checkAuth() throws AuthException, NetworkOnMainThreadException {
         //检查uuid的正确情况，如果正确则更新个人信息
         String uuid = getUUID();
         if (uuid.equals(""))
-            throw new AuthException("未登录",AuthException.HAVE_NOT_LOGIN);
-        try{
+            throw new AuthException("未登录", AuthException.HAVE_NOT_LOGIN);
+        try {
             ApiClient apiClient = new ApiClient();
-            String result = apiClient.doRequest(ApiClient.API_USER,uuid);
-            Log.d("checkAuth",result);
-            if(new JSONObject(result).getInt("code")==200)
-            {
+            String result = apiClient.doRequest(ApiClient.API_USER, uuid);
+            Log.d("checkAuth", result);
+            if (new JSONObject(result).getInt("code") == 200) {
                 JSONObject content = new JSONObject(result).getJSONObject("content");
                 String cardnum = content.getString("cardnum");
                 String schoolnum = content.getString("schoolnum");
                 String name = content.getString("name");
                 String sex = content.getString("sex");
-                SharedPreferences.Editor editor  = context.getSharedPreferences("Auth",context.MODE_PRIVATE).edit();
-                editor.putString("cardnum",cardnum);
-                editor.putString("schoolnum",schoolnum);
-                editor.putString("name",name);
-                editor.putString("sex",sex);
+                SharedPreferences.Editor editor = context.getSharedPreferences("Auth", context.MODE_PRIVATE).edit();
+                editor.putString("cardnum", cardnum);
+                editor.putString("schoolnum", schoolnum);
+                editor.putString("name", name);
+                editor.putString("sex", sex);
                 editor.commit();
             }
-        }catch (AuthException e){
+        } catch (AuthException e) {
             throw e;
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
-            throw new AuthException("刷新个人信息时遇到了未知错误",AuthException.UNKONW_ERROR);
+            throw new AuthException("刷新个人信息时遇到了未知错误", AuthException.UNKONW_ERROR);
         }
     }
 
-    public String doLogin(String cardnum,String pwd)throws NetworkOnMainThreadException,AuthException{
+    public String doLogin(String cardnum, String pwd) throws NetworkOnMainThreadException, AuthException {
         //联网登录，获取并保存uuid,然后返回
         ApiClient apiClient = new ApiClient();
-        String uuid = apiClient.doAuth(cardnum,pwd);
-        if(setAuthCache("uuid",uuid))
-        //更新个人信息
+        String uuid = apiClient.doAuth(cardnum, pwd);
+
+
+        if (setAuthCache("uuid", uuid)) {
+            //更新个人信息
             checkAuth();
+            //保存用户名和加密的密码，用于wifi自动登录使用
+            try {
+                SharedPreferences.Editor editor = context.getSharedPreferences("Auth", context.MODE_PRIVATE).edit();
+                EncryptHelper helper = new EncryptHelper("Auth" + cardnum + uuid);
+                editor.putString("password", helper.encrypt(pwd));
+                editor.apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return uuid;
     }
 
@@ -73,24 +85,24 @@ public class AuthHelper {
         setAuthCache("sex", "");
     }
 
-    public boolean isLogin(){
+    public boolean isLogin() {
         //判断是否已登录
         SharedPreferences pref = context.getSharedPreferences("Auth", Context.MODE_PRIVATE);
-        String uuid = pref.getString("uuid","");
-        if (uuid.equals("")){
+        String uuid = pref.getString("uuid", "");
+        if (uuid.equals("")) {
             return false;
         }
         return true;
     }
 
-    public String getUUID(){
+    public String getUUID() {
         //获得存储的uuid
         SharedPreferences pref = context.getSharedPreferences("Auth", Context.MODE_PRIVATE);
-        String uuid = pref.getString("uuid","");
+        String uuid = pref.getString("uuid", "");
         return uuid;
     }
 
-    public String getAuthCache(String cacheName){
+    public String getAuthCache(String cacheName) {
         //可用
         /**
          * uuid         认证用uuid
@@ -101,19 +113,16 @@ public class AuthHelper {
          */
         //获得存储的某项信息
         SharedPreferences pref = context.getSharedPreferences("Auth", Context.MODE_PRIVATE);
-        String authCache = pref.getString(cacheName,"");
+        String authCache = pref.getString(cacheName, "");
         return authCache;
     }
 
-    public boolean setAuthCache(String cacheName,String cacheValue){
+    public boolean setAuthCache(String cacheName, String cacheValue) {
         //用于更新存储的某项信息
-        SharedPreferences.Editor editor= context.getSharedPreferences("Auth",context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences("Auth", context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         return editor.commit();
     }
-
-
-
 
 
 }

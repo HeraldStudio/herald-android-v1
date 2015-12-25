@@ -41,7 +41,7 @@
             android:label="@string/title_activity_query"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <service android:name=".MainService">
+        <service android:name=".mod_wifi.NetworkService">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>

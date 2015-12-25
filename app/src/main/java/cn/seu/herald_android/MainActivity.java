@@ -23,6 +23,7 @@ import cn.seu.herald_android.helper.AuthHelper;
 import cn.seu.herald_android.mod_auth.LoginActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
+import cn.seu.herald_android.mod_wifi.NetworkService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private AuthHelper authHelper;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
 
         //启动服务
-        startService(new Intent(this, MainService.class));
+        startService(new Intent(this, NetworkService.class));
 
         init();
 
