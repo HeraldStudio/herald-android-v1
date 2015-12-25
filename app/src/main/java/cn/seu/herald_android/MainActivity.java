@@ -1,5 +1,7 @@
 package cn.seu.herald_android;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private TextView tv_hello;
     private TextView tv_nav_user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,18 +53,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        tv_hello = (TextView)findViewById(R.id.tv_main_hello);
+        tv_hello = (TextView) findViewById(R.id.tv_main_hello);
 
         //获取侧边栏布局
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
+        tv_nav_user = (TextView) headerLayout.findViewById(R.id.tv_nav_username);
 
         //启动自动登录服务
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if(sp.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN))
-            startService(new Intent(this, NetworkService.class));
-
+        if (sp.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN)) {
+            //检查Service状态
+            boolean isServiceRunning = false;
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if ("cn.seu.herald_android.mod_wifi.NetworkService".equals(service.service.getClassName())) {
+                    isServiceRunning = true;
+                }
+            }
+            if (!isServiceRunning) {
+                Intent i = new Intent(this, NetworkService.class);
+                startService(i);
+            }
+        }
         init();
 
     }
@@ -95,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
-        } else if(id == R.id.action_logout){
+        } else if (id == R.id.action_logout) {
             authHelper.doLogout();
             checkAuth();
             return true;
@@ -123,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_send) {
 
-        }else{
+        } else {
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -132,32 +146,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void init(){
+    public void init() {
         authHelper = new AuthHelper(MainActivity.this);
         checkAuth();
         refreshUI();
     }
 
-    public void checkAuth(){
+    public void checkAuth() {
         initHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                if(msg.obj instanceof AuthException)
-                {
-                    switch (((AuthException) msg.obj).getCode())
-                    {
+                if (msg.obj instanceof AuthException) {
+                    switch (((AuthException) msg.obj).getCode()) {
                         case AuthException.ERROR_UUID:
-                            Toast.makeText(MainActivity.this,"认证信息已无效请重新登陆",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "认证信息已无效请重新登陆", Toast.LENGTH_SHORT).show();
                             break;
                         case AuthException.HAVE_NOT_LOGIN:
-                            Toast.makeText(MainActivity.this,"请登录",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "请登录", Toast.LENGTH_SHORT).show();
                             break;
                     }
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
-                }else{
+                } else {
                     refreshUI();
-                    Log.d("MainActivity","refresh");
+                    Log.d("MainActivity", "refresh");
                 }
                 return false;
             }
@@ -171,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (AuthException e) {
                     e.printStackTrace();
                     msg.obj = e;
-                }finally {
+                } finally {
                     initHandler.sendMessage(msg);
                 }
             }
@@ -179,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         thread.start();
     }
 
-    public void refreshUI(){
+    public void refreshUI() {
         //设置首页欢迎信息
         tv_hello.setText("你好！" + authHelper.getAuthCache("name") + "同学");
         //设置侧边栏上个人信息

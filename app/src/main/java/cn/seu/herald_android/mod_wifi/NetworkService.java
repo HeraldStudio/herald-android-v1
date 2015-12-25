@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import cn.seu.herald_android.helper.AuthHelper;
 import cn.seu.herald_android.helper.EncryptHelper;
 import cn.seu.herald_android.mod_auth.LoginActivity;
+import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
 /**
  * Created by vhyme on 2015/12/25 025.
@@ -56,6 +57,12 @@ public class NetworkService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        SharedPreferences sp1 = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sp1.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN)){
+            stopSelf();
+        }
+
         sp = getSharedPreferences("Auth", MODE_PRIVATE);
         editor = sp.edit();
         IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
