@@ -1,9 +1,11 @@
 package cn.seu.herald_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -54,8 +56,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
 
-        //启动服务
-        startService(new Intent(this, NetworkService.class));
+        //启动自动登录服务
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sp.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN))
+            startService(new Intent(this, NetworkService.class));
 
         init();
 
@@ -90,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
-        }else if(id == R.id.action_logout){
+        } else if(id == R.id.action_logout){
             authHelper.doLogout();
             checkAuth();
             return true;

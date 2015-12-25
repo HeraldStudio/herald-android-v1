@@ -1,5 +1,6 @@
 package cn.seu.herald_android.mod_settings;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.widget.Switch;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_wifi.NetworkService;
 
 public class SysSettingsActivity extends AppCompatActivity {
 
@@ -32,6 +34,14 @@ public class SysSettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("autoLogin", autoLogin.isChecked());
         editor.apply();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN)) {
+            startService(new Intent(this, NetworkService.class));
+        } else {
+            stopService(new Intent(this, NetworkService.class));
+        }
+
         super.onPause();
     }
 }
