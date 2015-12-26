@@ -58,6 +58,7 @@ public class NetworkService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        // (TODO 貌似是多余的检查，可以考虑去掉)
         SharedPreferences sp1 = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sp1.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN)){
             stopSelf();
@@ -74,7 +75,6 @@ public class NetworkService extends Service {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("onReceive", intent.getAction());
             WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             String ssid = wifiInfo.getSSID().replaceAll("\"", "");

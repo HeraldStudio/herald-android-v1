@@ -4,7 +4,9 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
+import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 import cn.seu.herald_android.mod_wifi.NetworkService;
 
 /**
@@ -14,6 +16,11 @@ import cn.seu.herald_android.mod_wifi.NetworkService;
 public class PersistentReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        if (!PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN))
+            return;
+
         if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
             //检查Service状态
             boolean isServiceRunning = false;
