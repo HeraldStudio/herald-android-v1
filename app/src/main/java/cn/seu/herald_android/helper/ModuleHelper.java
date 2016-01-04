@@ -15,10 +15,12 @@ import cn.seu.herald_android.exception.ModuleLoadException;
 public class ModuleHelper {
     // 各模块的序号
     public static final int MODULE_PAOCAO = 0;
+    public static final int MODULE_SEUNET = 1;
 
     // 各模块的action名，与上面的序号顺序一致，需要在各模块Manifest中进行定义
     private static final String[] moduleActions = {
-            "cn.edu.seu.herald.MODULE_PAOCAO"
+            "cn.edu.seu.herald.MODULE_PAOCAO",
+            "cn.edu.seu.herald.MODULE_SEUNET"
     };
 
     // 启动一个模块的Activity

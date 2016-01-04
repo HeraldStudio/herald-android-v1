@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.exception.ModuleLoadException;
+import cn.seu.herald_android.helper.AuthHelper;
 import cn.seu.herald_android.helper.ModuleHelper;
 
 public class QueryActivity extends AppCompatActivity {
@@ -43,7 +44,11 @@ public class QueryActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // 启动跑操模块的一个Deme
                 try {
-                    ModuleHelper.launchModuleActivity(QueryActivity.this, ModuleHelper.MODULE_PAOCAO, null);
+                    AuthHelper authHelper = new AuthHelper(getBaseContext());
+                    Bundle seubundle = new Bundle();
+                    seubundle.putString("uuid",authHelper.getUUID());
+                    seubundle.putString("url","http://115.28.27.150/api/nic");
+                    ModuleHelper.launchModuleActivity(QueryActivity.this, ModuleHelper.MODULE_SEUNET, seubundle);
                 } catch (ModuleLoadException e) {
                     Snackbar.make(view,"此模块未安装",Snackbar.LENGTH_SHORT).show();
                 }
