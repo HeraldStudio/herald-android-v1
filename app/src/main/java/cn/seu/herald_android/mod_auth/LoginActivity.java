@@ -1,75 +1,60 @@
 package cn.seu.herald_android.mod_auth;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
+import cn.seu.herald_android.BaseAppCompatActivity;
+import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.exception.AuthException;
-import cn.seu.herald_android.helper.AuthHelper;
+import okhttp3.Call;
 
-public class LoginActivity extends AppCompatActivity {
-    AuthHelper authHelper;
-    Handler loginHandler;
-
-
+public class LoginActivity extends BaseAppCompatActivity {
+    TextView tv_card;
+    TextView tv_pwd;
+    Button btn_login;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.notoolbar);
         setSupportActionBar(toolbar);
-        authHelper = new AuthHelper(this);
         init();
     }
 
     public void init(){
-        final TextView tv_card = (TextView)findViewById(R.id.tv_login_cardnum);
-        final TextView tv_pwd = (TextView)findViewById(R.id.tv_login_pwd);
-        Button btn_login = (Button)findViewById(R.id.btn_login_login);
+        //空间初始化
+        tv_card = (TextView)findViewById(R.id.tv_login_cardnum);
+        tv_pwd = (TextView)findViewById(R.id.tv_login_pwd);
+
+        //进度进度条
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("登录中");
+
+        //绑定登录按钮点击函数
+        btn_login = (Button)findViewById(R.id.btn_login_login);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //运行请求前先清除旧的uuid
-                authHelper.setAuthCache("uuid","");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String card  = tv_card.getText().toString();
-                        String pwd = tv_pwd.getText().toString();
-                        Log.d("login", "run: card"+card);
-                        Log.d("login", "run: pwd"+pwd);
-                        Message msg = new Message();
-                        try {
-                            authHelper.doLogin(card,pwd);
-                        } catch (AuthException e) {
-                            e.printStackTrace();
-                            msg.obj = e;
-                        } finally {
-                            loginHandler.sendMessage(msg);
-                        }
-                    }
-                }).start();
-
-            }
-        });
-        loginHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if(msg.obj instanceof AuthException) {
-                    Toast.makeText(getApplication(),((AuthException) msg.obj).getMsg(),Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                toHomePage();
-                return true;
+                doLogin();
             }
         });
     }
@@ -85,10 +70,40 @@ public class LoginActivity extends AppCompatActivity {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-    public void toHomePage(){
-        if(authHelper.isLogin())
-        super.onBackPressed();
+    private void doLogin(){
+        //登录函数
+        progressDialog.show();
+        btn_login.setEnabled(false);
+        OkHttpUtils
+                .post()
+                .url(getApiHepler().auth_url)
+                .addParams("user", tv_card.getText().toString())
+                .addParams("password",tv_pwd.getText().toString())
+                .addParams("appid", getApiHepler().APPID)
+                .build()
+                .execute(new StringCallback() {
+                             @Override
+                             public void onError(Call call, Exception e) {
+                                 progressDialog.dismiss();
+                                 btn_login.setEnabled(true);
+                                 //处理Api错误
+                                 getApiHepler().dealApiException(e);
+                             }
+
+                             @Override
+                             public void onResponse(String response) {
+                                 progressDialog.dismiss();
+                                 btn_login.setEnabled(true);
+                                 String uuid = response;
+                                 getApiHepler().setAuthCache("uuid", uuid);
+                                 startActivity(new Intent(getBaseContext(),MainActivity.class));
+                                 finish();
+                             }
+                         }
+                );
     }
+
+
 
 
 }

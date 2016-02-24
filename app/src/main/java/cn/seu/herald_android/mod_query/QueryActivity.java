@@ -1,9 +1,9 @@
 package cn.seu.herald_android.mod_query;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +14,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.exception.ModuleLoadException;
-import cn.seu.herald_android.helper.AuthHelper;
-import cn.seu.herald_android.helper.ModuleHelper;
+import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 
 public class QueryActivity extends AppCompatActivity {
     public static int[] res_queryicons = {
@@ -42,16 +40,7 @@ public class QueryActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 启动跑操模块的一个Deme
-                try {
-                    AuthHelper authHelper = new AuthHelper(getBaseContext());
-                    Bundle seubundle = new Bundle();
-                    seubundle.putString("uuid",authHelper.getUUID());
-                    seubundle.putString("url","http://115.28.27.150/api/nic");
-                    ModuleHelper.launchModuleActivity(QueryActivity.this, ModuleHelper.MODULE_SEUNET, seubundle);
-                } catch (ModuleLoadException e) {
-                    Snackbar.make(view,"此模块未安装",Snackbar.LENGTH_SHORT).show();
-                }
+                startActivity(new Intent(QueryActivity.this, SchoolBusActivity.class));
             }
         });
 

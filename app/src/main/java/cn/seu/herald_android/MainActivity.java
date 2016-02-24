@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,15 +17,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.seu.herald_android.exception.AuthException;
-import cn.seu.herald_android.helper.AuthHelper;
+import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_auth.LoginActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
+import okhttp3.Call;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private AuthHelper authHelper;
-    private Handler initHandler;
+public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationView navigationView;
     private TextView tv_hello;
     private TextView tv_nav_user;
@@ -52,9 +56,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //获取侧边栏布局
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
-
         init();
-
+        refreshUI();
     }
 
     @Override
@@ -87,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         }else if(id == R.id.action_logout){
-            authHelper.doLogout();
-            checkAuth();
+            getApiHepler().doLogout();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -103,16 +105,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_info) {
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
+            //打开查询助手
             Intent intent = new Intent(MainActivity.this, QueryActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         } else if (id == R.id.nav_settings) {
+            //打开设置
             Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         } else if (id == R.id.nav_join) {
+            //显示加入我们对话框
 
         } else if (id == R.id.nav_send) {
+            //打开给我们发送建议的窗口
 
         }else{
 
@@ -124,63 +130,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void init(){
-        authHelper = new AuthHelper(MainActivity.this);
-        checkAuth();
         refreshUI();
     }
 
-    public void checkAuth(){
-        initHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if(msg.obj instanceof AuthException)
-                {
-                    switch (((AuthException) msg.obj).getCode())
-                    {
-                        case AuthException.ERROR_UUID:
-                            Toast.makeText(MainActivity.this,"认证信息已无效请重新登陆",Toast.LENGTH_SHORT).show();
-                            break;
-                        case AuthException.HAVE_NOT_LOGIN:
-                            Toast.makeText(MainActivity.this,"请登录",Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                }else{
-                    refreshUI();
-                    Log.d("MainActivity","refresh");
-                }
-                return false;
-            }
-        });
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message msg = new Message();
-                try {
-                    authHelper.checkAuth();
-                } catch (AuthException e) {
-                    e.printStackTrace();
-                    msg.obj = e;
-                }finally {
-                    initHandler.sendMessage(msg);
-                }
-            }
-        });
-        thread.start();
-    }
 
     public void refreshUI(){
-        //设置首页欢迎信息
-        tv_hello.setText("你好！" + authHelper.getAuthCache("name") + "同学");
-        //设置侧边栏上个人信息
-        tv_nav_user.setText(authHelper.getAuthCache("name"));
+        //如果缓存存在的话先设置欢迎信息和侧边栏信息
+        tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
+        tv_nav_user.setText(getApiHepler().getAuthCache("name"));
+        OkHttpUtils
+                .get()
+                .url(ApiHelper.url+ApiHelper.API_USER)
+                .addParams("uuid",getApiHepler().getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        //错误检测
+                        getApiHepler().dealApiException(e);
+                    }
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json_res = new JSONObject(response);
+                            if (json_res.getInt("code") == 200) {
+                                //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
+                                //更新首页欢迎信息和侧边栏信息
+                                JSONObject json_content = json_res.getJSONObject("content");
+                                getApiHepler().setAuthCache("name",json_content.getString("name"));
+                                getApiHepler().setAuthCache("sex",json_content.getString("sex"));
+                                getApiHepler().setAuthCache("cardnum",json_content.getString("cardnum"));
+                                getApiHepler().setAuthCache("schoolnum",json_content.getString("schoolnum"));
+                                tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
+                                tv_nav_user.setText(getApiHepler().getAuthCache("name"));
+                            } else {
+                                //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
+                                showMsg("登录信息已失效，请重新登录");
+                                getApiHepler().doLogout();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        checkAuth();
         refreshUI();
     }
+
 }
