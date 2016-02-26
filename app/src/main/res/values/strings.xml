@@ -22,7 +22,8 @@
     <string name="user_name"></string>
     <string name="user_class"></string>
     <string name="title_activity_sys_settings">系统设置</string>
-    <string name="title_activity_query">QueryActivity</string>
+    <string name="title_activity_query">查询助手</string>
+    <string name="title_activity_schoolbus">校车时刻表</string>
 
 
     <!--系统设置-->

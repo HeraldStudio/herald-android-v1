@@ -28,14 +28,14 @@ public class CacheHelper {
          * sex          性别
          */
         //获得存储的某项信息
-        SharedPreferences pref = context.getSharedPreferences("Auth", Context.MODE_PRIVATE);
+        SharedPreferences pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
         String authCache = pref.getString(cacheName,"");
         return authCache;
     }
 
     public boolean setCache(String cacheName,String cacheValue){
         //用于更新存储的某项信息
-        SharedPreferences.Editor editor= context.getSharedPreferences("Auth",context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor= context.getSharedPreferences("herald",context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         return editor.commit();
     }

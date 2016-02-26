@@ -36,6 +36,10 @@ public class LoginActivity extends BaseAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.notoolbar);
         setSupportActionBar(toolbar);
         init();
+        if(getApiHepler().isLogin()){
+            startActivity(new Intent(getBaseContext(),MainActivity.class));
+            finish();
+        }
     }
 
     public void init(){

@@ -39,6 +39,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
 
@@ -67,6 +68,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+
         }
     }
 
@@ -139,8 +141,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
         tv_nav_user.setText(getApiHepler().getAuthCache("name"));
         OkHttpUtils
-                .get()
-                .url(ApiHelper.url+ApiHelper.API_USER)
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_USER))
                 .addParams("uuid",getApiHepler().getUUID())
                 .build()
                 .execute(new StringCallback() {

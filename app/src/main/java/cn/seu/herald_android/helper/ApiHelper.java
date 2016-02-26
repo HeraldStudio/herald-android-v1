@@ -110,6 +110,10 @@ public class ApiHelper {
         this.editor = activity.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }
 
+    public static String getApiUrl(int api){
+        return ApiHelper.url+ApiHelper.apiNames[api];
+    }
+
     public void checkAuth(){
         //检查uuid的正确情况，如果正确则更新个人信息
         String uuid = getUUID();
