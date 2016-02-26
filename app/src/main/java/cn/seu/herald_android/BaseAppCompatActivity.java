@@ -22,9 +22,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.apiHelper = new ApiHelper(this);
         this.cacheHelper = new CacheHelper(getBaseContext(),this);
-        //兼容4.4的沉浸式布局
-
-
     }
 
     public void showMsg(String msg){

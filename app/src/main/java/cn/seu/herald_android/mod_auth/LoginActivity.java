@@ -3,7 +3,6 @@ package cn.seu.herald_android.mod_auth;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +11,6 @@ import android.widget.Toast;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;

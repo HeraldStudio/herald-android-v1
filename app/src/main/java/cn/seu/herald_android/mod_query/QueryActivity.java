@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
-import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 
 public class QueryActivity extends BaseAppCompatActivity {
     public static int[] res_queryicons = {
@@ -30,7 +29,7 @@ public class QueryActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query);
-        setStatusBarColor(this, R.color.colorPrimary);
+        setStatusBarColor(this, getResources().getColor(R.color.colorPrimary));
         initView();
     }
 

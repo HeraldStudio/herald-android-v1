@@ -2,9 +2,7 @@ package cn.seu.herald_android;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,22 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import cn.seu.herald_android.exception.AuthException;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.mod_auth.LoginActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 import okhttp3.Call;
-
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationView navigationView;
     private TextView tv_hello;
@@ -39,7 +29,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
 
 

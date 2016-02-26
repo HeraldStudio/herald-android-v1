@@ -14,12 +14,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">1
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".mod_auth.LoginActivity"
             android:label="@string/title_activity_login"
@@ -43,9 +43,8 @@
             android:name=".mod_query.schoolbus.SchoolBusActivity"
             android:label="@string/title_activity_schoolbus"
             android:theme="@style/QuerySchoolBusTheme"/>
-        <activity
-            android:name=".mod_query.grade.GradeActivity"
-            android:theme="@style/QueryGradeTheme" />
+        <activity android:name=".mod_query.grade.GradeActivity"
+            android:theme="@style/QueryGradeTheme"/>
     </application>
 
 </manifest>
