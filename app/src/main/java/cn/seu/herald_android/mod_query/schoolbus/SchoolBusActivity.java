@@ -1,17 +1,13 @@
 package cn.seu.herald_android.mod_query.schoolbus;
 
-import android.content.Context;
+
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -20,12 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
+import java.util.ArrayList;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -62,7 +54,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
         listView_tosubway_weekday = (ListView) findViewById(R.id.list_schoolbus_tosubway_weekday);
         listview_toschool_weekend = (ListView) findViewById(R.id.list_schoolbus_toschool_weekend);
         listView_tosubway_weekend = (ListView) findViewById(R.id.list_schoolbus_tosubway_weekend);
-        //展示区域
+        //设置点开时展示具体数据区域，再点击关闭
         explore_toschool = (LinearLayout)findViewById(R.id.explorespace_toschool);
         explore_tosubway = (LinearLayout)findViewById(R.id.explorespace_tosubway);
         btn_explore_toschoollist = (ImageButton) findViewById(R.id.btn_explore_toschool);
@@ -158,86 +150,6 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 }
 
 
-class SchoolBusItem{
-    private String period;
-    private String time;
-    SchoolBusItem(String period,String time){
-        this.period = period;
-        this.time = time;
-    }
 
-    public String getPeriod() {
-        return period;
-    }
 
-    public String getTime() {
-        return time;
-    }
 
-    public static ArrayList<SchoolBusItem> transfromtransfromJSONtoArrayList(JSONArray jsonArray)throws JSONException{
-        ArrayList<SchoolBusItem> list = new ArrayList<>();
-        for(int i = 0;i<jsonArray.length();i++){
-            list.add(new SchoolBusItem(
-                    jsonArray.getJSONObject(i).getString("time"),
-                    jsonArray.getJSONObject(i).getString("bus")
-            ));
-        }
-        return list;
-    }
-}
-
-class SchoolBusListAdapter extends ArrayAdapter<SchoolBusItem> {
-    private int resourceID;
-    public SchoolBusListAdapter(Context context, int resource, List<SchoolBusItem> objects) {
-        super(context, resource, objects);
-        this.resourceID = resource;
-    }
-    @Override
-    public View getView(int position, final View convertView, ViewGroup parent) {
-        final SchoolBusItem schoolBusItem = getItem(position);
-        final View view = LayoutInflater.from(getContext()).inflate(resourceID, null);//为子项加载布局
-        TextView tv_period = (TextView)view.findViewById(R.id.tv_schoolbusitem_period);
-        TextView tv_time = (TextView)view.findViewById(R.id.tv_schoolbusitem_time);
-        //判断是否是当前时间的区间
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        try{
-            String time = schoolBusItem.getPeriod();
-            Date dateStart = new Date();
-            Date dateEnd = new Date();
-            dateStart.setHours(Integer.parseInt(time.split(":")[0]));
-            dateStart.setMinutes(Integer.parseInt(time.split(":")[1].split("-")[0]));
-            dateEnd.setHours(Integer.parseInt(time.split(":")[1].split("-")[1]));
-            dateEnd.setMinutes(Integer.parseInt(time.split(":")[2]));
-            Date now = new Date();
-            if(now.after(dateStart)&&now.before(dateEnd)) {
-                //如果是当前时间所处于的时间区间，则设置颜色
-                tv_period.setTextColor(tv_period.getResources().getColor(R.color.relaxBlue));
-                tv_time.setTextColor(tv_time.getResources().getColor(R.color.relaxBlue));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        tv_period.setText(schoolBusItem.getPeriod());
-        tv_time.setText(schoolBusItem.getTime());
-        return view;
-    }
-
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        //根据listview的item数目设置宽度
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
-}

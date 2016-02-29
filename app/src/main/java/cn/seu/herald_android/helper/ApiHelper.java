@@ -30,7 +30,7 @@ public class ApiHelper {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     public static String APPID = "34cc6df78cfa7cd457284e4fc377559e";
-    public static String url = "http://115.28.27.150/api/";
+    private static String url = "http://115.28.27.150/api/";
     public static String auth_url = "http://115.28.27.150/uc/auth";
 
     //可用doRequest调用的API
