@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -101,8 +103,8 @@ public class GradeActivity extends BaseAppCompatActivity {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //获取计算后的绩点
                 if(jsonArray.getJSONObject(0).has("gpa")){
-                    tv_gpa.setText("首修绩点:"+jsonArray.getJSONObject(0).getString("gpa without revamp"));
-                    tv_gpa2.setText("绩点:"+jsonArray.getJSONObject(0).getString("gpa without revamp"));
+                    tv_gpa.setText(jsonArray.getJSONObject(0).getString("gpa without revamp"));
+                    tv_gpa2.setText(jsonArray.getJSONObject(0).getString("gpa without revamp"));
                     tv_time.setText("最后计算时间:"+jsonArray.getJSONObject(0).get("calculate time"));
                 }
                 //数据类型转换
@@ -119,6 +121,21 @@ public class GradeActivity extends BaseAppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_grade,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_grade_sync){
+            refreshCache();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void refreshCache(){
         progressDialog.show();
         OkHttpUtils
@@ -133,7 +150,7 @@ public class GradeActivity extends BaseAppCompatActivity {
                     public void onError(Call call, Exception e) {
                         getApiHepler().dealApiException(e);
                         progressDialog.dismiss();
-                        showMsg("请求超时.");
+                        showMsg("请求超时。");
                     }
 
                     @Override
@@ -145,10 +162,11 @@ public class GradeActivity extends BaseAppCompatActivity {
                                 getCacheHelper().setCache("herald_grade_gpa", response);
                                 loadCache();
                                 progressDialog.dismiss();
+                                showMsg("刷新成功！");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            showMsg("数据解析失败，请重试.");
+                            showMsg("数据解析失败，请重试。");
                         }
                     }
                 });

@@ -42,9 +42,10 @@
         <activity
             android:name=".mod_query.schoolbus.SchoolBusActivity"
             android:label="@string/title_activity_schoolbus"
-            android:theme="@style/QuerySchoolBusTheme"/>
-        <activity android:name=".mod_query.grade.GradeActivity"
-            android:theme="@style/QueryGradeTheme"/>
+            android:theme="@style/QuerySchoolBusTheme" />
+        <activity
+            android:name=".mod_query.grade.GradeActivity"
+            android:theme="@style/QueryGradeTheme" />
     </application>
 
 </manifest>
