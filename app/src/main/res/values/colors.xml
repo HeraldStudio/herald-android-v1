@@ -35,5 +35,11 @@
     <color name="white">#ffffffff</color>
     <color name="colorGray">#3e3e3e</color>
     <color name="relaxGreen">#419655</color>
+    <color name="relexRed">#FF5252</color>
     <color name="relaxBlue">#7189d7</color>
+    <color name="relaxGray">#727272</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
+    <color name="coloricons">#FFFFFF</color>
+    <color name="colorDivider">#B6B6B6</color>
 </resources>

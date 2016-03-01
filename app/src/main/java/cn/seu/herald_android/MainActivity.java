@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_query.QueryActivity;
+import cn.seu.herald_android.mod_query.cardextra.CardActivity;
+import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -97,9 +99,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
             //打开查询助手
-            Intent intent = new Intent(MainActivity.this, QueryActivity.class);
+            Intent intent = new Intent(MainActivity.this, CardActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         } else if (id == R.id.nav_settings) {
             //打开设置
             Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);

@@ -39,7 +39,8 @@ public class LectureActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecture);
         init();
-        refresh();
+        //由于此模块实时性要求较高，每次打开实时刷新
+        refreshCache();
     }
 
     private void init(){
@@ -64,11 +65,6 @@ public class LectureActivity extends BaseAppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setTitle("最新讲座消息获取中");
         progressDialog.setMessage("请稍后...");
-
-    }
-
-    public void loadCache(){
-
     }
 
     @Override
@@ -87,12 +83,16 @@ public class LectureActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh(){
+    private void loadCache(){
+
+    }
+
+    public void refreshCache(){
         progressDialog.show();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LECTURE))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHepler().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override

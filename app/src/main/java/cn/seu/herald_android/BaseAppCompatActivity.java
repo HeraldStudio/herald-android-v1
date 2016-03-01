@@ -1,6 +1,7 @@
 package cn.seu.herald_android;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,11 +18,18 @@ import cn.seu.herald_android.helper.CacheHelper;
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ApiHelper apiHelper;
     private CacheHelper cacheHelper;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.apiHelper = new ApiHelper(this);
         this.cacheHelper = new CacheHelper(getBaseContext(),this);
+
+        //加载刷新对话框
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setTitle("最新数据获取中");
+        progressDialog.setMessage("请稍后...");
     }
 
     public void showMsg(String msg){
@@ -79,5 +87,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         statusView.setLayoutParams(params);
         statusView.setBackgroundColor(color);
         return statusView;
+    }
+
+    public ProgressDialog getProgressDialog(){
+        return progressDialog;
     }
 }

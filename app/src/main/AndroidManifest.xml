@@ -49,7 +49,11 @@
         <activity
             android:name=".mod_query.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
-            android:theme="@style/LectureTheme"/>
+            android:theme="@style/LectureTheme" />
+        <activity
+            android:name=".mod_query.cardextra.CardActivity"
+            android:label="@string/title_activity_card"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

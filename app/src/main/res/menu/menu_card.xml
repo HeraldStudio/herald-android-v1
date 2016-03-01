@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@drawable/ic_sync_24dp"
+        android:id="@+id/action_card_sync"
+        android:title="刷新"
+        app:showAsAction="always"/>
+    <item
+        android:icon="@drawable/ic_settings_24dp"
+        android:id="@+id/action_card_settings"
+        android:title="设置"
+        app:showAsAction="always"/>
+</menu>
