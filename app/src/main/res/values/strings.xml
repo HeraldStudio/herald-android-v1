@@ -6,9 +6,6 @@
     <string name="action_settings">settings</string>
     <string name="action_logout">注销登录</string>
 
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <!--首页-->
@@ -24,9 +21,6 @@
     <string name="title_activity_sys_settings">系统设置</string>
     <string name="title_activity_query">查询助手</string>
     <string name="title_activity_schoolbus">校车时刻表</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_activity_ttttt">TTTTTActivity</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -116,6 +110,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="title_activity_lecture">东南大学人文讲堂</string>
 
 
     <!--系统设置-->

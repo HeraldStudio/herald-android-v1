@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
+import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 
 public class QueryActivity extends BaseAppCompatActivity {
     public static int[] res_queryicons = {
@@ -47,7 +48,7 @@ public class QueryActivity extends BaseAppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(QueryActivity.this, GradeActivity.class));
+                startActivity(new Intent(QueryActivity.this, LectureActivity.class));
             }
         });
 

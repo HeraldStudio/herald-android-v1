@@ -46,6 +46,10 @@
         <activity
             android:name=".mod_query.grade.GradeActivity"
             android:theme="@style/QueryGradeTheme" />
+        <activity
+            android:name=".mod_query.lecture.LectureActivity"
+            android:label="@string/title_activity_lecture"
+            android:theme="@style/LectureTheme"/>
     </application>
 
 </manifest>

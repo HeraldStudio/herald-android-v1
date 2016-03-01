@@ -18,6 +18,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="LectureTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 人文讲座风格 -->
+        <item name="colorPrimary">@color/colorLectureprimary</item>
+        <item name="colorPrimaryDark">@color/colorLectureprimary_dark</item>
+        <item name="colorAccent">@color/colorLectureaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="QuerySchoolBusTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 校车时刻表风格 -->
         <item name="colorPrimary">@color/colorPrimary</item>
