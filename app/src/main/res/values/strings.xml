@@ -111,6 +111,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_lecture">东南大学人文讲堂</string>
+    <string name="action_lecturerecord">听讲记录</string>
 
 
     <!--系统设置-->

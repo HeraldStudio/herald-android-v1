@@ -1,14 +1,16 @@
 package cn.seu.herald_android.mod_query.lecture;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
+import android.view.Window;
+import android.widget.ListView;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -24,11 +26,14 @@ import okhttp3.Call;
 
 public class LectureActivity extends BaseAppCompatActivity {
 
-    //容纳刷卡记录卡片布局的RecyclerView
-    RecyclerView recyclerView_shuaka;
-    //用于切换讲座预告和打卡记录的tab
-    TabHost tabHost;
-    TabWidget tabWidget;
+    //容纳讲座预告卡片布局的RecyclerView
+    RecyclerView recyclerView_notice;
+    //打卡记录对话框
+    AlertDialog.Builder builder;
+    AlertDialog dialog;
+    //记录列表
+    ListView list_record;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,54 +54,41 @@ public class LectureActivity extends BaseAppCompatActivity {
                 finish();
             }
         });
-        //加载tab
-        tabHost = (TabHost)findViewById(R.id.tabhost);
-        tabHost.setup();
-        //人文讲座预告的tab
-        TabHost.TabSpec specNotice = tabHost.newTabSpec("red");
-        //已听讲座的的tab
-        TabHost.TabSpec specNums = tabHost.newTabSpec("yellow");
-        //tab上的布局加载
-        View view_notice = LayoutInflater.from(getBaseContext()).inflate(R.layout.tabitem_lecture_selected,null);
-        View view_nums = LayoutInflater.from(getBaseContext()).inflate(R.layout.tabitem_lecture_selected,null);
-        TextView tv_tab_notice = (TextView)view_notice.findViewById(R.id.tv_tabitem);
-        TextView tv_tab_nums = (TextView)view_nums.findViewById(R.id.tv_tabitem);
-        tv_tab_notice.setText("讲座预告");
-        tv_tab_nums.setText("刷卡记录");
-        specNotice.setIndicator(view_notice);
-        specNums.setIndicator(view_nums);
 
-        //设置点击切换
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String tabId) {
-                for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
-                    View child1 = tabHost.getTabWidget().getChildTabViewAt(i);
-                    TextView tv_child1 = (TextView) child1.findViewById(R.id.tv_tabitem);
-                    tv_child1.setTextColor(getResources().getColor(R.color.colorLecturesecondary_text));
-                }
-                View child = tabHost.getCurrentTabView();
-                TextView tv_child = (TextView) child.findViewById(R.id.tv_tabitem);
-                tv_child.setTextColor(getResources().getColor(R.color.colorLectureprimary));
-            }
-        });
-        //设置tab内容
-        specNotice.setContent(R.id.widget_layout_red);
-        specNums.setContent(R.id.widget_layout_yellow);
-        //添加tab
-        tabHost.addTab(specNotice);
-        tabHost.addTab(specNums);
         //RecyclerView加载
-        recyclerView_shuaka = (RecyclerView)findViewById(R.id.recyclerview_lecture_shuaka);
-        //设置高度适应设备
-        //获取屏幕长度
+        recyclerView_notice = (RecyclerView)findViewById(R.id.recyclerview_lecture_notice);
+        recyclerView_notice.setLayoutManager(new LinearLayoutManager(this));
+
+        //加载对话框
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setTitle("最新讲座消息获取中");
+        progressDialog.setMessage("请稍后...");
+
     }
 
     public void loadCache(){
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lecture, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_lecturerecord){
+            //展示刷卡记录
+            displayLectureRecords();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void refresh(){
+        progressDialog.show();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LECTURE))
@@ -106,20 +98,24 @@ public class LectureActivity extends BaseAppCompatActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         getApiHepler().dealApiException(e);
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             //数据解析
                             JSONArray jsonArray = json_res.getJSONObject("content").getJSONArray("detial");
                             //json数组转化并且构造adapter
-                            LectureRecordAdapter lectureRecordAdapter = new LectureRecordAdapter(getBaseContext(),
-                                    LectureRecordItem.transfromJSONArrayToArrayList(jsonArray));
+                            LectureAdapter lectureAdapter = new LectureAdapter(getBaseContext(),
+                                    LectureItem.transfromJSONArrayToArrayList(jsonArray));
                             //设置adapter
-                            recyclerView_shuaka.setAdapter(lectureRecordAdapter);
-                            showMsg("刷卡记录已刷新");
+                            recyclerView_notice.setAdapter(lectureAdapter);
+                            //刷新打卡记录缓存
+                            getCacheHelper().setCache("herald_lecture_records", jsonArray.toString());
+                            showMsg("已获取最新讲座预告");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             showMsg("数据解析出错");
@@ -127,5 +123,37 @@ public class LectureActivity extends BaseAppCompatActivity {
                     }
                 });
     }
+
+    public void displayLectureRecords(){
+        //打卡记录对话框加载
+        builder = new AlertDialog.Builder(this);
+        dialog = builder.create();
+        dialog.show();
+
+        //对话框窗口设置布局文件
+        Window window = dialog.getWindow();
+        window.setContentView(R.layout.content_dialog_lecture_record);
+
+        //获取对话窗口中的listview
+        list_record = (ListView)window.findViewById(R.id.list_lecture_record);
+
+        //获取缓存记录
+        String cache = getCacheHelper().getCache("herald_lecture_records");
+        if(!cache.equals("")){
+            try {
+                JSONArray jsonArray = new JSONArray(cache);
+                list_record.setAdapter(new LectureRecordAdapter(
+                        getBaseContext(),
+                        R.layout.listviewitem_lecture_record,
+                        LectureItem.transfromJSONArrayToArrayList(jsonArray)));
+            }catch (JSONException e){
+                e.printStackTrace();
+                showMsg("缓存解析失败，请重试。");
+            }
+
+        }
+    }
+
+
 
 }

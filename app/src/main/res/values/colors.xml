@@ -20,14 +20,15 @@
 
 
     <!--人文讲座页面-->
-    <color name="colorLectureprimary">#F44336</color>
-    <color name="colorLectureprimary_dark">#D32F2F</color>
-    <color name="colorLectureprimary_light">#FFCDD2</color>
-    <color name="colorLectureaccent">#536DFE</color>
+    <color name="colorLectureprimary">#795548</color>
+    <color name="colorLectureprimary_dark">#5D4037</color>
+    <color name="colorLectureprimary_light">#D7CCC8</color>
+    <color name="colorLectureaccent">#FF5252</color>
     <color name="colorLectureprimary_text">#212121</color>
     <color name="colorLecturesecondary_text">#727272</color>
     <color name="colorLectureicons">#FFFFFF</color>
     <color name="colorLecturedivider">#B6B6B6</color>
+
 
 
     <color name="black_overlay">#66000000</color>
