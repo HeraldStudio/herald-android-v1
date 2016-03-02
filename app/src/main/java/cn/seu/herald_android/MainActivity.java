@@ -19,6 +19,8 @@ import org.json.JSONObject;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
+import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
+import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 import okhttp3.Call;
@@ -99,7 +101,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
             //打开查询助手
-            Intent intent = new Intent(MainActivity.this, CardActivity.class);
+            Intent intent = new Intent(MainActivity.this, GradeActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             //打开设置

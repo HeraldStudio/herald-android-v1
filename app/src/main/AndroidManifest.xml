@@ -53,6 +53,10 @@
         <activity
             android:name=".mod_query.cardextra.CardActivity"
             android:label="@string/title_activity_card"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".mod_query.experiment.ExperimentActivity"
+            android:label="@string/title_activity_experiment"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

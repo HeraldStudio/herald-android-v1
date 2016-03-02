@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_query.cardextra;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,10 @@ public class CardActivity extends BaseAppCompatActivity {
                 finish();
             }
         });
+        //禁用collapsingToolbarLayout的伸缩标题
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
         //recyclerview初始化
         recyclerViewCard = (RecyclerView)findViewById(R.id.recyclerview_card);
         //设置布局

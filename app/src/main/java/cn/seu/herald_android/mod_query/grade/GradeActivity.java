@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_query.grade;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -64,6 +65,11 @@ public class GradeActivity extends BaseAppCompatActivity {
         });
         //沉浸式状态栏颜色
         setStatusBarColor(this, getResources().getColor(R.color.colorGradeprimary_dark));
+
+        //设置collapsingToolbarLayout标题禁用
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
         //控件初始化
         tableview_grade = (SortableTableView<GradeItem>)findViewById(R.id.tableview_grade);
         tv_gpa = (TextView)findViewById(R.id.tv_grade_gpawithoutrevamp);
@@ -155,13 +161,13 @@ public class GradeActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {
                                 //请求成功则缓存并且刷新
                                 getCacheHelper().setCache("herald_grade_gpa", response);
                                 loadCache();
-                                progressDialog.dismiss();
                                 showMsg("刷新成功！");
                             }
                         } catch (JSONException e) {

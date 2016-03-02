@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_query.lecture;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -55,6 +56,10 @@ public class LectureActivity extends BaseAppCompatActivity {
                 finish();
             }
         });
+
+        //设置伸缩标题禁用
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
 
         //RecyclerView加载
         recyclerView_notice = (RecyclerView)findViewById(R.id.recyclerview_lecture_notice);
