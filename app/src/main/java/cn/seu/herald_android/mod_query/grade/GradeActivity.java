@@ -85,7 +85,7 @@ public class GradeActivity extends BaseAppCompatActivity {
                 tv_header.setText(headers[columnIndex]);
                 tv_header.setTextSize(13f);
                 tv_header.setGravity(Gravity.CENTER);
-                tv_header.setTextColor(getResources().getColor(R.color.colorGradeicons));
+                tv_header.setTextColor(getResources().getColor(R.color.colorIcons));
                 return tv_header;
             }
         };

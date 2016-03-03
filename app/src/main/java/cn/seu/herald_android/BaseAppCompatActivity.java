@@ -12,8 +12,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
+import okhttp3.Call;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ApiHelper apiHelper;
@@ -35,6 +42,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public void showMsg(String msg){
         Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
+
     public ApiHelper getApiHepler(){
         return apiHelper;
     }

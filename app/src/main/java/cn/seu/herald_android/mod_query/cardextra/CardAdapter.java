@@ -34,14 +34,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @Override
     public void onBindViewHolder(CardViewHolder holder, int position) {
         CardItem cardItem = list.get(position);
-//        判断日期是否显示
+//        判断日期和分割线是否显示，用来给每天的消费记录分组
         if(position == 0 || !list.get(position).getDate().equals(list.get(position-1).getDate()) ) {
             holder.divider.setVisibility(View.VISIBLE);
             holder.tv_date.setVisibility(View.VISIBLE);
+        }else {
+            holder.divider.setVisibility(View.GONE);
+            holder.tv_date.setVisibility(View.GONE);
         }
+        //判断消费是否为负，如果不为负，则为正，需要设置成其他颜色
+        if (!cardItem.getPrice().startsWith("-")) {
+            //如果不为负，则设置绿色和加号
+            holder.tv_price.setText("+"+cardItem.getPrice());
+            holder.tv_price.setTextColor(context.getResources().getColor(R.color.relaxBlue));
+        }else {
+            //如果为负则设置成红色
+            holder.tv_price.setText(cardItem.getPrice());
+            holder.tv_price.setTextColor(context.getResources().getColor(R.color.relexRed));
+        }
+
         holder.tv_date.setText(cardItem.getDate());
         holder.tv_time.setText(cardItem.getTime());
-        holder.tv_price.setText(cardItem.getPrice());
         holder.tv_type.setText(cardItem.getType());
         holder.tv_system.setText(cardItem.getSystem());
         holder.tv_left.setText(cardItem.getLeft());

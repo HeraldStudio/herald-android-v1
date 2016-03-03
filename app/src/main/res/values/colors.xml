@@ -13,21 +13,29 @@
     <color name="colorGradeprimary_dark">#388E3C</color>
     <color name="colorGradeprimary_light">#C8E6C9</color>
     <color name="colorGradeaccent">#4CAF50</color>
-    <color name="colorGradeprimary_text">#212121</color>
-    <color name="colorGradesecondary_text">#727272</color>
-    <color name="colorGradeicons">#FFFFFF</color>
-    <color name="colorGradedivider">#B6B6B6</color>
+
 
 
     <!--人文讲座页面-->
-    <color name="colorLectureprimary">#795548</color>
-    <color name="colorLectureprimary_dark">#5D4037</color>
-    <color name="colorLectureprimary_light">#D7CCC8</color>
+    <color name="colorLectureprimary">#F44336</color>
+    <color name="colorLectureprimary_dark">#D32F2F</color>
+    <color name="colorLectureprimary_light">#FFCDD2</color>
     <color name="colorLectureaccent">#FF5252</color>
-    <color name="colorLectureprimary_text">#212121</color>
-    <color name="colorLecturesecondary_text">#727272</color>
-    <color name="colorLectureicons">#FFFFFF</color>
-    <color name="colorLecturedivider">#B6B6B6</color>
+
+
+
+    <!--实验-->
+    <color name="colorExperimentprimary">#673AB7</color>
+    <color name="colorExperimentprimary_dark">#512DA8</color>
+    <color name="colorExperimentprimary_light">#a17aea</color>
+    <color name="colorExperimentaccent">#607D8B</color>
+
+    <!--一卡通-->
+
+    <color name="colorCardprimary">#3F51B5</color>
+    <color name="colorCardprimary_dark">#303F9F</color>
+    <color name="colorCardprimary_light">#C5CAE9</color>
+    <color name="colorCardaccent">#536DFE</color>
 
 
 
@@ -40,6 +48,6 @@
     <color name="relaxGray">#727272</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
-    <color name="coloricons">#FFFFFF</color>
+    <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#B6B6B6</color>
 </resources>

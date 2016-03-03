@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:text="刷卡记录"
                 android:textSize="17sp"
-                android:textColor="@color/colorLecturesecondary_text"/>
+                android:textColor="@color/colorSecondaryText"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

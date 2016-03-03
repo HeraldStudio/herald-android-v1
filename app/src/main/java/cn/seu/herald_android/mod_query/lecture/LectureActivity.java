@@ -57,6 +57,10 @@ public class LectureActivity extends BaseAppCompatActivity {
             }
         });
 
+
+        //沉浸式工具栏
+        setStatusBarColor(this,getResources().getColor(R.color.colorLectureprimary));
+
         //设置伸缩标题禁用
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);

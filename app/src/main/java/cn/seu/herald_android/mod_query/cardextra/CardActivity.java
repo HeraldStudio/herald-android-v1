@@ -56,6 +56,9 @@ public class CardActivity extends BaseAppCompatActivity {
                 finish();
             }
         });
+
+        //沉浸式
+        setStatusBarColor(this,getResources().getColor(R.color.colorCardprimary));
         //禁用collapsingToolbarLayout的伸缩标题
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
@@ -64,6 +67,7 @@ public class CardActivity extends BaseAppCompatActivity {
         recyclerViewCard = (RecyclerView)findViewById(R.id.recyclerview_card);
         //设置布局
         recyclerViewCard.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCard.setHasFixedSize(true);
         tv_extra = (TextView)findViewById(R.id.tv_extra);
     }
 

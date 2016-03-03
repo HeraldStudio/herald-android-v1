@@ -34,6 +34,26 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ExperimentTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 实验查询风格 -->
+        <item name="colorPrimary">@color/colorExperimentprimary</item>
+        <item name="colorPrimaryDark">@color/colorExperimentprimary_dark</item>
+        <item name="colorAccent">@color/colorExperimentaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="CardTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 一卡通查询风格 -->
+        <item name="colorPrimary">@color/colorCardprimary</item>
+        <item name="colorPrimaryDark">@color/colorCardprimary_dark</item>
+        <item name="colorAccent">@color/colorCardaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

@@ -101,11 +101,11 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
             //打开查询助手
-            Intent intent = new Intent(MainActivity.this, GradeActivity.class);
+            Intent intent = new Intent(MainActivity.this, ExperimentActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             //打开设置
-            Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
+            Intent intent = new Intent(MainActivity.this, GradeActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         } else if (id == R.id.nav_join) {

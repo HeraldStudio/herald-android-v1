@@ -60,7 +60,7 @@ public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
 //        tv_cell.setText(text);
         TextView tv_cell = new TextView(getContext());
         tv_cell.setText(text);
-        tv_cell.setTextColor(getResources().getColor(R.color.colorGradesecondary_text));
+        tv_cell.setTextColor(getResources().getColor(R.color.colorSecondaryText));
         tv_cell.setPadding(10, 10, 10, 10);
         tv_cell.setGravity(Gravity.CENTER);
         return tv_cell;

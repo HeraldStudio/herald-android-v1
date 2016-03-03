@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/tv_time"
         android:textSize="15sp"
-        android:textColor="@color/colorLectureprimary_text"
+        android:textColor="@color/colorPrimaryText"
         android:text="时间"/>
     <TextView
         android:layout_width="wrap_content"
@@ -21,6 +21,6 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/tv_place"
         android:textSize="13sp"
-        android:textColor="@color/colorLecturesecondary_text"
+        android:textColor="@color/colorSecondaryText"
         android:text="地点"/>
 </LinearLayout>
