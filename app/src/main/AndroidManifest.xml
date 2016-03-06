@@ -27,41 +27,87 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".mod_settings.SysSettingsActivity"
             android:label="@string/title_activity_sys_settings"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_SETTINGS" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".mod_query.QueryActivity"
             android:label="@string/title_activity_query"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_MAIN" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".mod_query.schoolbus.SchoolBusActivity"
             android:label="@string/title_activity_schoolbus"
-            android:theme="@style/QuerySchoolBusTheme" />
+            android:theme="@style/QuerySchoolBusTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".mod_query.grade.GradeActivity"
-            android:theme="@style/QueryGradeTheme" />
+            android:label="@string/title_activity_grade"
+            android:theme="@style/QueryGradeTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_GRADE" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".mod_query.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
-            android:theme="@style/LectureTheme" />
+            android:theme="@style/LectureTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_LECTURE" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".mod_query.cardextra.CardActivity"
             android:label="@string/title_activity_card"
-            android:theme="@style/CardTheme" />
+            android:theme="@style/CardTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_CARD" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".mod_query.experiment.ExperimentActivity"
             android:label="@string/title_activity_experiment"
-            android:theme="@style/ExperimentTheme" />
+            android:theme="@style/ExperimentTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_EXPERIMENT" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".mod_query.emptyroom.EmptyRoomActivity"
             android:label="@string/title_activity_empty_room"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_EMPTYROOM" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

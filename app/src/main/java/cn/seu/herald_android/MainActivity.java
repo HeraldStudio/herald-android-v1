@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -43,6 +45,9 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     //主页轮播栏插件
     private SliderLayout sliderLayout;
+
+    //显示推送消息的WebView
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +153,9 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //轮播栏加载
         setupSliderLayout();
+
+        //webview加载
+        setupWebView();
     }
 
     public void setupSliderLayout(){
@@ -181,6 +189,26 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         sliderLayout.setCustomAnimation(new DescriptionAnimation());
         //切换间隔
         sliderLayout.setDuration(4000);
+    }
+
+    public void setupPersonalBox(){
+        //加载用户自己设置的快捷方式
+    }
+
+    public void setupWebView(){
+        webView = (WebView) findViewById(R.id.inform_webview);
+        //WebView加载web资源
+        webView.loadUrl("http://my404.club:3000");
+        //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // TODO Auto-generated method stub
+                //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
+                view.loadUrl(url);
+                return true;
+            }
+        });
     }
 
 

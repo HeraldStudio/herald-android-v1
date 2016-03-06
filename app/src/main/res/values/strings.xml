@@ -21,6 +21,7 @@
     <string name="title_activity_sys_settings">系统设置</string>
     <string name="title_activity_query">查询助手</string>
     <string name="title_activity_schoolbus">校车时刻表</string>
+    <string name="title_activity_grade">校车时刻表</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -123,5 +124,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+
     <!--系统设置-->
+    <string name="default_shortcutenabled">
+        {
+            "schoolbus":0,
+            "library":0,
+            "lecture:0,
+            "grade":0,
+            "experiment":0,
+            "emptyroom":0,
+            "cardextra":0
+        }
+    </string>
 </resources>

@@ -20,17 +20,20 @@ import org.json.JSONObject;
 
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
 import okhttp3.Call;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ApiHelper apiHelper;
     private CacheHelper cacheHelper;
+    private SettingsHelper settingsHelper;
     ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.apiHelper = new ApiHelper(this);
         this.cacheHelper = new CacheHelper(getBaseContext(),this);
+        this.settingsHelper = new SettingsHelper(this);
 
         //加载刷新对话框
         progressDialog = new ProgressDialog(this);
