@@ -176,8 +176,6 @@ public class GradeActivity extends BaseAppCompatActivity {
                         }
                     }
                 });
-
-
     }
 
 

@@ -57,7 +57,11 @@
         <activity
             android:name=".mod_query.experiment.ExperimentActivity"
             android:label="@string/title_activity_experiment"
-            android:theme="@style/ExperimentTheme"></activity>
+            android:theme="@style/ExperimentTheme" />
+        <activity
+            android:name=".mod_query.emptyroom.EmptyRoomActivity"
+            android:label="@string/title_activity_empty_room"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -118,6 +118,10 @@
     <string name="action_card_sync">刷新</string>
     <string name="action_card_settings">设置</string>
     <string name="title_activity_experiment">实验助手</string>
+    <string name="title_activity_empty_room">EmptyRoomActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--系统设置-->
 </resources>

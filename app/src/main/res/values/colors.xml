@@ -39,6 +39,13 @@
 
 
 
+    <!--校车查询-->
+    <color name="colorSchoolBusprimary">#009688</color>
+    <color name="colorSchoolBusprimary_dark">#00796B</color>
+    <color name="colorSchoolBusprimary_light">#B2DFDB</color>
+    <color name="colorSchoolBusaccent">#8BC34A</color>
+
+
     <color name="black_overlay">#66000000</color>
     <color name="white">#ffffffff</color>
     <color name="colorGray">#3e3e3e</color>

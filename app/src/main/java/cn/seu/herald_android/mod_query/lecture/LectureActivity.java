@@ -93,6 +93,25 @@ public class LectureActivity extends BaseAppCompatActivity {
     }
 
     private void loadCache(){
+        String cache =  getCacheHelper().getCache("herald_lecture_records");
+        if(!cache.equals("")){
+            try{
+                //数据解析
+                JSONArray jsonArray = new JSONObject(cache).getJSONObject("content").getJSONArray("detial");
+                //json数组转化并且构造adapter
+                LectureAdapter lectureAdapter = new LectureAdapter(getBaseContext(),
+                        LectureItem.transfromJSONArrayToArrayList(jsonArray));
+                //设置adapter
+                recyclerView_notice.setAdapter(lectureAdapter);
+                //刷新打卡记录缓存
+            }catch (JSONException e){
+                e.printStackTrace();
+                showMsg("缓存解析出错，请刷新后再试。");
+            }
+
+        }else{
+            showMsg("暂无缓存或者缓存已失效，请重新刷新。");
+        }
 
     }
 
@@ -108,6 +127,8 @@ public class LectureActivity extends BaseAppCompatActivity {
                     public void onError(Call call, Exception e) {
                         getApiHepler().dealApiException(e);
                         progressDialog.dismiss();
+                        showMsg("由于网络错误获取最新讲座预告失败，已加载缓存。");
+                        loadCache();
                     }
 
                     @Override
@@ -115,16 +136,10 @@ public class LectureActivity extends BaseAppCompatActivity {
                         progressDialog.dismiss();
                         try {
                             JSONObject json_res = new JSONObject(response);
-                            //数据解析
-                            JSONArray jsonArray = json_res.getJSONObject("content").getJSONArray("detial");
-                            //json数组转化并且构造adapter
-                            LectureAdapter lectureAdapter = new LectureAdapter(getBaseContext(),
-                                    LectureItem.transfromJSONArrayToArrayList(jsonArray));
-                            //设置adapter
-                            recyclerView_notice.setAdapter(lectureAdapter);
-                            //刷新打卡记录缓存
-                            getCacheHelper().setCache("herald_lecture_records", jsonArray.toString());
-                            showMsg("已获取最新讲座预告");
+                            if(json_res.getInt("code")==200){
+                                getCacheHelper().setCache("herald_lecture_records", json_res.toString());
+                                showMsg("已获取最新讲座预告");
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             showMsg("数据解析出错");

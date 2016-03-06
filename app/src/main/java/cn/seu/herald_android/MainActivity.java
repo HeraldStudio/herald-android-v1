@@ -12,47 +12,45 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
+import cn.seu.herald_android.mod_query.emptyroom.EmptyRoomActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
+import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 import okhttp3.Call;
-public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private NavigationView navigationView;
+    //显示欢迎信息的tv
     private TextView tv_hello;
     private TextView tv_nav_user;
+
+    //主页轮播栏插件
+    private SliderLayout sliderLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        tv_hello = (TextView)findViewById(R.id.tv_main_hello);
-
-        //获取侧边栏布局
-        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
         init();
-        refreshUI();
     }
+
 
     @Override
     public void onBackPressed() {
@@ -61,7 +59,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-
         }
     }
 
@@ -101,7 +98,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
             //打开查询助手
-            Intent intent = new Intent(MainActivity.this, ExperimentActivity.class);
+            Intent intent = new Intent(MainActivity.this, SchoolBusActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             //打开设置
@@ -124,7 +121,66 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
 
     public void init(){
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        //抽屉布局
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        tv_hello = (TextView)findViewById(R.id.tv_main_hello);
+
+        //获取侧边栏布局
+        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
+
+
+        //刷新个人信息显示的UI
         refreshUI();
+
+        //轮播栏加载
+        setupSliderLayout();
+    }
+
+    public void setupSliderLayout(){
+        sliderLayout = (SliderLayout)findViewById(R.id.sliderlayout_main);
+        HashMap<String,String> url_maps = new HashMap<>();
+        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
+        //加载图片
+        for(String name : url_maps.keySet()){
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
+                    .description(name)
+                    .image(url_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra",name);
+
+            sliderLayout.addSlider(textSliderView);
+        }
+        //设置轮播选项
+        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        //圆点位置
+        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
+        //描述动画
+        sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        //切换间隔
+        sliderLayout.setDuration(4000);
     }
 
 
@@ -175,4 +231,25 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         refreshUI();
     }
 
+
+    //以下是所用轮播栏插件的相关接口
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        //轮播栏滑动时的动作监听
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        //轮播栏被选中时的动作
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+
+    }
 }

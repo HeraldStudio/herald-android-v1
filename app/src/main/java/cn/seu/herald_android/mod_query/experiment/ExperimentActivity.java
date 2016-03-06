@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ExpandableListAdapter;
@@ -94,6 +96,21 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
         //设置适配器
         viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievementArrayList));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sync, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_sync){
+            refreshCache();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void loadCache(){

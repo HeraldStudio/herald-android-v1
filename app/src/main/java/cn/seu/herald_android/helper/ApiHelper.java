@@ -32,7 +32,7 @@ public class ApiHelper {
     public static String APPID = "34cc6df78cfa7cd457284e4fc377559e";
     private static String url = "http://115.28.27.150/api/";
     public static String auth_url = "http://115.28.27.150/uc/auth";
-
+    public static String android_service_url = "http://192.168.1.109:/uc/auth";
     //可用doRequest调用的API
     //SRTP学分查询
     public static final int API_SRTP=0;
@@ -114,11 +114,12 @@ public class ApiHelper {
         return ApiHelper.url+ApiHelper.apiNames[api];
     }
 
+
     public void checkAuth(){
         //检查uuid的正确情况，如果正确则更新个人信息
         String uuid = getUUID();
         if(uuid == ""){
-            Toast.makeText(context, "请登录", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "请登录", Toast.LENGTH_SHORT).show();
             doLogout();
         }
     }
@@ -126,11 +127,11 @@ public class ApiHelper {
 
     public void dealApiException(Exception e){
         if (e instanceof SocketTimeoutException) {
-            Toast.makeText(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀", Toast.LENGTH_SHORT).show();
         } else if (e instanceof ConnectException) {
-            Toast.makeText(context, "网络连接错误，请检查您的网络连接~", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "网络连接错误，请检查您的网络连接~", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "很抱歉，发生了未知的错误T.T", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "很抱歉，发生了未知的错误T.T", Toast.LENGTH_SHORT).show();
         }
     }
 
