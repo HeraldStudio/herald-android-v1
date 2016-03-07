@@ -28,9 +28,13 @@
             android:id="@+id/tv_main_hello"
             android:text="Hello!" />
     </LinearLayout>
-    <WebView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:id="@+id/inform_webview">
-    </WebView>
+    <GridView
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridview_main_shortcutbox"
+        android:columnWidth="90dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth">
+    </GridView>
 </LinearLayout>

@@ -38,6 +38,7 @@
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -48,6 +49,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_MAIN" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -56,6 +58,7 @@
             android:theme="@style/QuerySchoolBusTheme" >
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -66,6 +69,7 @@
             android:theme="@style/QueryGradeTheme" >
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_GRADE" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -76,6 +80,7 @@
             android:theme="@style/LectureTheme" >
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_LECTURE" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -85,7 +90,8 @@
             android:label="@string/title_activity_card"
             android:theme="@style/CardTheme" >
             <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_CARD" />
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_CARDEXTRA" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -96,6 +102,7 @@
             android:theme="@style/ExperimentTheme" >
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXPERIMENT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -106,6 +113,17 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EMPTYROOM" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.seunet.SeunetActivity"
+            android:label="@string/title_activity_seunet"
+            android:theme="@style/SeunetTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_SEUNET" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
     </application>

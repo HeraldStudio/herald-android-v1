@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.lecture;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +14,10 @@ import cn.seu.herald_android.R;
 /**
  * Created by heyon on 2016/3/1.
  */
-public class LectureAdapter extends RecyclerView.Adapter<LectureAdapter.LectureRecord>{
+public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdapter.LectureRecord>{
     Context context;
-    ArrayList<LectureItem> list;
-    public LectureAdapter(Context context, ArrayList<LectureItem> list) {
+    ArrayList<LectureRecordItem> list;
+    public LectureNoticeAdapter(Context context, ArrayList<LectureRecordItem> list) {
         this.context = context;
         this.list = list;
     }
@@ -31,9 +30,9 @@ public class LectureAdapter extends RecyclerView.Adapter<LectureAdapter.LectureR
 
     @Override
     public void onBindViewHolder(LectureRecord holder, int position) {
-        LectureItem lectureItem = list.get(position);
-        holder.tv_time.setText(lectureItem.time);
-        holder.tv_place.setText(lectureItem.place);
+        LectureRecordItem lectureRecordItem = list.get(position);
+        holder.tv_time.setText(lectureRecordItem.time);
+        holder.tv_place.setText(lectureRecordItem.place);
     }
 
     @Override

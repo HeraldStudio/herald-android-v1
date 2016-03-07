@@ -52,6 +52,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     public CacheHelper getCacheHelper(){return cacheHelper;}
 
+    public SettingsHelper getSettingsHelper(){
+        return settingsHelper;
+    }
+
     public void startActivityAndFinish(Intent intent){
         startActivity(intent);
         finish();

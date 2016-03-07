@@ -60,12 +60,22 @@ public class LoginActivity extends BaseAppCompatActivity {
                 doLogin();
             }
         });
+
+        //判断是否是首次启动
+        int launchtimes = getSettingsHelper().getLaunchTimes();
+        if(0==launchtimes){
+            //是第一次启动则启用默认设置
+            getSettingsHelper().setDefaultConfig();
+        }
+
+        //启动次数递增
+        getSettingsHelper().updateLanuchTimes(launchtimes+1);
     }
 
     @Override
     public void onBackPressed() {
         finish();
-        Toast.makeText(getApplicationContext(),"退出先声网客户端",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "退出先声网客户端",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

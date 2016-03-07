@@ -54,6 +54,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="SeunetTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 一卡通查询风格 -->
+        <item name="colorPrimary">@color/colorSeuNetprimary</item>
+        <item name="colorPrimaryDark">@color/colorSeuNetprimary_dark</item>
+        <item name="colorAccent">@color/colorSeuNetaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
