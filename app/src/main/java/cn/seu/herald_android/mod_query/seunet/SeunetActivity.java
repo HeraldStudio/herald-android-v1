@@ -204,11 +204,11 @@ public class SeunetActivity extends BaseAppCompatActivity {
         SliceValue sliceValue_left = new SliceValue(1f-used_per);
         //设置已用的流量部分的颜色
         sliceValue_used.setLabel(used_per * 100 + "%");
-        sliceValue_used.setColor(getResources().getColor(R.color.colorSeuNetaccent));
+        sliceValue_used.setColor(getResources().getColor(R.color.colorSeuNetprimary));
         //设置未使用的流量部分的颜色
         sliceValue_left.setLabel((1f - used_per) * 100 + "%");
         sliceValue_left.setTarget(used_per * 100);
-        sliceValue_left.setColor(Color.parseColor("#7cc6dc"));
+        sliceValue_left.setColor(getResources().getColor(R.color.colorSeuNetaccent));
         values.add(sliceValue_used);
         values.add(sliceValue_left);
         PieChartData pieChartData = new PieChartData(values);

@@ -8,7 +8,8 @@
     android:paddingRight="6dp"
     android:paddingTop="4dp">
     <TextView
-        android:layout_width="wrap_content"
+        android:gravity="left"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:id="@+id/tv_time"
@@ -16,11 +17,12 @@
         android:textColor="@color/colorPrimaryText"
         android:text="时间"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:layout_gravity="center_horizontal"
         android:id="@+id/tv_place"
-        android:textSize="13sp"
+        android:textSize="9sp"
         android:textColor="@color/colorSecondaryText"
         android:text="地点"/>
 </LinearLayout>

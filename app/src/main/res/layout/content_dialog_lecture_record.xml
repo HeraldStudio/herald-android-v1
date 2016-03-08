@@ -2,40 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorLectureprimary"
-    android:gravity="center_horizontal"
-    android:padding="5dp">
-    <android.support.v7.widget.CardView
+    android:layout_height="400dp"
+    android:gravity="center_horizontal">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp">
+        android:layout_height="400dp">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal">
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@mipmap/xiaohui"/>
-            <TextView
-                android:padding="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="刷卡记录"
-                android:textSize="17sp"
-                android:textColor="@color/colorSecondaryText"/>
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-    <android.support.v7.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp">
-        <ListView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/list_lecture_record">
-        </ListView>
-    </android.support.v7.widget.CardView>
+            android:layout_height="400dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:padding="16dp"
+                android:background="@drawable/header_bg_lecture_record">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已听讲座次数"
+                    android:textColor="@color/colorIcons"
+                    android:textSize="11sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_recordcount"
+                    android:text="0"
+                    android:layout_centerInParent="true"
+                    android:textSize="30sp"
+                    android:textColor="@color/colorIcons"/>
+            </RelativeLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:id="@+id/list_lecture_record">
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

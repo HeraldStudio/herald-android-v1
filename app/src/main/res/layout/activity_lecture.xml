@@ -24,7 +24,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/dalitang2"
+                android:src="@drawable/zhiyuzhishan"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed"

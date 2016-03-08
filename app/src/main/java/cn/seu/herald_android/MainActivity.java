@@ -62,6 +62,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //检查登录状态，如果未登录则跳转到
         init();
     }
 
@@ -118,7 +119,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             //打开设置
             Intent intent = new Intent(MainActivity.this, GradeActivity.class);
             startActivity(intent);
-//            overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
+
         } else if (id == R.id.nav_join) {
             //显示加入我们对话框
 
@@ -135,11 +136,30 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
 
     public void init(){
+
+        //切换动画
+        overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
+
+        //设置侧边栏
+        setupDrawer();
+
+        //刷新个人信息显示的UI
+        refreshUI();
+
+        //轮播栏加载
+        setupSliderLayout();
+
+        //webview加载
+        //setupWebView();
+
+        //快捷盒子加载
+        setupGridViewShortCutBox();
+    }
+
+    public void setupDrawer(){
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
         //抽屉布局
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -155,19 +175,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         //获取侧边栏布局
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
-
-
-        //刷新个人信息显示的UI
-        refreshUI();
-
-        //轮播栏加载
-        setupSliderLayout();
-
-        //webview加载
-        //setupWebView();
-
-        //快捷盒子加载
-        setupGridViewShortCutBox();
     }
 
     public void setupSliderLayout(){

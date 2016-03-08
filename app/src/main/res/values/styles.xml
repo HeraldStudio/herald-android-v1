@@ -11,9 +11,9 @@
 
     <style name="QueryGradeTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 成绩查询页风格 -->
-        <item name="colorPrimary">@color/colorPrimaryGreen</item>
-        <item name="colorPrimaryDark">#22844d</item>
-        <item name="colorAccent">#a4de29</item>
+        <item name="colorPrimary">@color/colorGradeprimary</item>
+        <item name="colorPrimaryDark">@color/colorGradeprimary_dark</item>
+        <item name="colorAccent">@color/colorGradeaccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -55,7 +55,7 @@
     </style>
 
     <style name="SeunetTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- 一卡通查询风格 -->
+        <!-- 校园网查询风格 -->
         <item name="colorPrimary">@color/colorSeuNetprimary</item>
         <item name="colorPrimaryDark">@color/colorSeuNetprimary_dark</item>
         <item name="colorAccent">@color/colorSeuNetaccent</item>

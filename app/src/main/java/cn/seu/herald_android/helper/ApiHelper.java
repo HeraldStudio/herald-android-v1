@@ -32,6 +32,11 @@ public class ApiHelper {
     public static String APPID = "34cc6df78cfa7cd457284e4fc377559e";
     private static String url = "http://115.28.27.150/api/";
     public static String auth_url = "http://115.28.27.150/uc/auth";
+    //微信端的接口url
+    /**
+     * 微信端接口主要为讲座预告的接口，由于服务器端一些转发的问题，url为wechat2前缀
+     */
+    public static String wechat_lecture_notice_url = "http://115.28.27.150/wechat2/lecture";
     public static String android_service_url = "http://192.168.1.109:/uc/auth";
     //可用doRequest调用的API
     //SRTP学分查询

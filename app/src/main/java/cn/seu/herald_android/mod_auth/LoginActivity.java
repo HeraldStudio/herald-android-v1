@@ -35,10 +35,6 @@ public class LoginActivity extends BaseAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.notoolbar);
         setSupportActionBar(toolbar);
         init();
-        if(getApiHepler().isLogin()){
-            startActivity(new Intent(getBaseContext(),MainActivity.class));
-            finish();
-        }
     }
 
     public void init(){
@@ -61,15 +57,7 @@ public class LoginActivity extends BaseAppCompatActivity {
             }
         });
 
-        //判断是否是首次启动
-        int launchtimes = getSettingsHelper().getLaunchTimes();
-        if(0==launchtimes){
-            //是第一次启动则启用默认设置
-            getSettingsHelper().setDefaultConfig();
-        }
 
-        //启动次数递增
-        getSettingsHelper().updateLanuchTimes(launchtimes+1);
     }
 
     @Override

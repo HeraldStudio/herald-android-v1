@@ -111,8 +111,10 @@ public class SettingsHelper {
     public void setDefaultModuleShortCut(){
         //快捷方式的默认设置
         setModuleShortCutEnabled(MODULE_GRADE,true);
-        setModuleShortCutEnabled(MODULE_CARDEXTRA,true);
+        setModuleShortCutEnabled(MODULE_CARDEXTRA, true);
     }
+
+
 
 
     /**
@@ -178,9 +180,6 @@ public class SettingsHelper {
     public void updateLanuchTimes(int times){
         setCache("herald_settings_launtchtime",times+"");
     }
-
-
-
 
 
     private String getCache(String cacheName){

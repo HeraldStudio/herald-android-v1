@@ -64,11 +64,11 @@ public class GradeActivity extends BaseAppCompatActivity {
             }
         });
         //沉浸式状态栏颜色
-        setStatusBarColor(this, getResources().getColor(R.color.colorGradeprimary_dark));
+        setStatusBarColor(this, getResources().getColor(R.color.colorGradeprimary));
 
         //设置collapsingToolbarLayout标题禁用
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
+//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+//        collapsingToolbarLayout.setTitleEnabled(false);
 
         //控件初始化
         tableview_grade = (SortableTableView<GradeItem>)findViewById(R.id.tableview_grade);

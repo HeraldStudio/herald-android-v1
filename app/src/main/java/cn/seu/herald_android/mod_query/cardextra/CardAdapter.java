@@ -46,7 +46,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         if (!cardItem.getPrice().startsWith("-")) {
             //如果不为负，则设置绿色和加号
             holder.tv_price.setText("+"+cardItem.getPrice());
-            holder.tv_price.setTextColor(context.getResources().getColor(R.color.relaxBlue));
+            holder.tv_price.setTextColor(context.getResources().getColor(R.color.colorCardprimary));
         }else {
             //如果为负则设置成红色
             holder.tv_price.setText(cardItem.getPrice());
