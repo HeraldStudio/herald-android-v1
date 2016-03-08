@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <cn.seu.herald_android.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,7 +20,7 @@
             android:title="@string/index_title_name"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </android.support.design.widget.AppBarLayout>
+    </cn.seu.herald_android.CustomAppBarLayout>
 
     <include layout="@layout/content_main" />
 

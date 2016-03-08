@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="cn.seu.herald_android.mod_query.cardextra.CardActivity">
-    <android.support.design.widget.AppBarLayout
+    <cn.seu.herald_android.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,7 +20,7 @@
             app:layout_collapseMode="pin"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:titleMarginTop="15dp" />
-    </android.support.design.widget.AppBarLayout>
+    </cn.seu.herald_android.CustomAppBarLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

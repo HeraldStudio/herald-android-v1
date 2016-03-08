@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_query.lecture.LectureActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <cn.seu.herald_android.CustomAppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
@@ -38,7 +38,7 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+    </cn.seu.herald_android.CustomAppBarLayout>
 
     <include layout="@layout/content_lecture" />
 </android.support.design.widget.CoordinatorLayout>

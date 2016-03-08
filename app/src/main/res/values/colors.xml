@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#469edc</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#42a5f5</color>
+    <color name="colorPrimaryDark">#42a5f5</color>
     <color name="colorAccent">#6f92d2</color>
     <color name="colorPrimaryGreen">#20a65c</color>
     <color name="colorPrimaryGreenDark">#b4eab3</color>
@@ -10,7 +10,7 @@
 
     <!--成绩页面-->
     <color name="colorGradeprimary">#4CAF50</color>
-    <color name="colorGradeprimary_dark">#388E3C</color>
+    <color name="colorGradeprimary_dark">#4CAF50</color>
     <color name="colorGradeprimary_light">#C8E6C9</color>
     <color name="colorGradeaccent">#4CAF50</color>
 
@@ -18,31 +18,31 @@
 
     <!--人文讲座页面-->
     <color name="colorLectureprimary">#F44336</color>
-    <color name="colorLectureprimary_dark">#D32F2F</color>
+    <color name="colorLectureprimary_dark">#F44336</color>
     <color name="colorLectureprimary_light">#FFCDD2</color>
     <color name="colorLectureaccent">#FF5252</color>
 
     <!--实验-->
     <color name="colorExperimentprimary">#673AB7</color>
-    <color name="colorExperimentprimary_dark">#512DA8</color>
+    <color name="colorExperimentprimary_dark">#673AB7</color>
     <color name="colorExperimentprimary_light">#a17aea</color>
     <color name="colorExperimentaccent">#607D8B</color>
 
     <!--一卡通-->
     <color name="colorCardprimary">#03A9F4</color>
-    <color name="colorCardprimary_dark">#0288D1</color>
+    <color name="colorCardprimary_dark">#03A9F4</color>
     <color name="colorCardprimary_light">#B3E5FC</color>
     <color name="colorCardaccent">#448AFF</color>
 
     <!--校车查询-->
     <color name="colorSchoolBusprimary">#009688</color>
-    <color name="colorSchoolBusprimary_dark">#00796B</color>
+    <color name="colorSchoolBusprimary_dark">#009688</color>
     <color name="colorSchoolBusprimary_light">#B2DFDB</color>
     <color name="colorSchoolBusaccent">#8BC34A</color>
 
     <!--校园网-->
-    <color name="colorSeuNetprimary">#8BC34A</color>
-    <color name="colorSeuNetprimary_dark">#689F38</color>
+    <color name="colorSeuNetprimary">#7cb342</color>
+    <color name="colorSeuNetprimary_dark">#7cb342</color>
     <color name="colorSeuNetprimary_light">#DCEDC8</color>
     <color name="colorSeuNetaccent">#469edc</color>
 
