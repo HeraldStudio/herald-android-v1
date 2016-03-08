@@ -172,6 +172,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                                 showMsg("刷新成功");
                                 getCacheHelper().setCache("herald_experiment",response);
                             }
+                            loadCache();
                         }catch (JSONException e){
                             e.printStackTrace();
                             showMsg("数据解析失败");

@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
@@ -27,7 +24,12 @@ public class SettingsHelper {
      * 模块图标资源文件的添加
      *
      */
+    //模块类型列表
+    public static final int MODULE_TYPE_QUERY =0;
     //功能模块列表
+    /**
+     * 查询类模块
+     */
     public static final int MODULE_SCHOOLBUS = 0;
     public static final int MODULE_LIBRARY = 1;
     public static final int MODULE_LECTURE = 2;
@@ -36,6 +38,7 @@ public class SettingsHelper {
     public static final int MODULE_EMPTYROOM = 5;
     public static final int MODULE_CARDEXTRA = 6;
     public static final int MODULE_SEUNET = 7;
+
 
     //模块数目
     public static final int NUM_OF_MODULE = 8;
@@ -90,17 +93,17 @@ public class SettingsHelper {
             R.mipmap.ic_seunet
     };
 
+    //模块类型
+
     private Context context;
-    private Activity activity;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
 
-    public SettingsHelper(Activity activity){
-        this.activity = activity;
-        this.context = activity.getBaseContext();
-        this.pref = activity.getSharedPreferences("herald_settings", Context.MODE_PRIVATE);
-        this.editor = activity.getSharedPreferences("herald_settings", Context.MODE_PRIVATE).edit();
+    public SettingsHelper(Context context){
+        this.context = context;
+        this.pref = context.getSharedPreferences("herald_settings", Context.MODE_PRIVATE);
+        this.editor = context.getSharedPreferences("herald_settings", Context.MODE_PRIVATE).edit();
     }
 
     public void setDefaultConfig(){
@@ -208,14 +211,14 @@ public class SettingsHelper {
         //图片资源
         int ic_id;
         //是否被选为快捷方式
-        boolean enabled;
+        boolean enabledShortCut;
         //启动的activity的action
         String actions;
         //名字
         String name;
-        public ShortCutSetting(int moduleId, boolean enabled, String actions) {
+        public ShortCutSetting(int moduleId, boolean enabledShortCut, String actions) {
             this.moduleId = moduleId;
-            this.enabled = enabled;
+            this.enabledShortCut = enabledShortCut;
             this.actions = actions;
             this.ic_id = moduleIconsId[moduleId];
             this.name = moduleNamesTips[moduleId];
@@ -225,8 +228,8 @@ public class SettingsHelper {
             return moduleId;
         }
 
-        public boolean isEnabled() {
-            return enabled;
+        public boolean isEnabledShortCut() {
+            return enabledShortCut;
         }
 
         public String getActions() {

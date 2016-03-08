@@ -108,12 +108,6 @@ public class ApiHelper {
             "user",
             "room"
     };
-    public ApiHelper(final Activity activity){
-        this.activity = activity;
-        this.context = activity.getBaseContext();
-        this.pref = activity.getSharedPreferences("herald", Context.MODE_PRIVATE);
-        this.editor = activity.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
-    }
 
     public ApiHelper(Context context){
         this.context = context;
@@ -149,12 +143,15 @@ public class ApiHelper {
 
 
     public void doLogout() throws ClassCastException{
-        //清除信息
+        //清除授权信息
         setAuthCache("uuid", "");
         setAuthCache("cardnum", "");
         setAuthCache("schoolnum", "");
         setAuthCache("name", "");
         setAuthCache("sex", "");
+        //清除模块缓存
+        CacheHelper cacheHelper = new CacheHelper(context);
+        cacheHelper.clearAllModuleCache();
         //跳转到登录页
         Intent intent = new Intent(context,LoginActivity.class);
         if(activity instanceof BaseAppCompatActivity){

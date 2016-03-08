@@ -32,7 +32,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.apiHelper = new ApiHelper(this);
-        this.cacheHelper = new CacheHelper(getBaseContext(),this);
+        this.cacheHelper = new CacheHelper(this);
         this.settingsHelper = new SettingsHelper(this);
 
         //加载刷新对话框
@@ -68,7 +68,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * @param color   状态栏颜色值
      */
     public  void setStatusBarColor(Activity activity, int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                ||Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
             // 设置状态栏透明
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             // 生成一个状态栏大小的矩形

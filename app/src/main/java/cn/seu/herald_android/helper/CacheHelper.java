@@ -9,13 +9,24 @@ import android.content.SharedPreferences;
  */
 public class CacheHelper {
     private Context context;
-    private Activity activity;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
-    public CacheHelper(Context context,Activity activity){
+
+    //缓存名称列表,注销时将取消这些缓存
+    public static String[] cacheNames=new String[]{
+            "herald_card",
+            "herald_grade_gpa",
+            "herald_lecture_records",
+            "herald_schoolbus_cache",
+            "herald_lecture_notices",
+            "herald_experiment"
+    };
+
+
+    public CacheHelper(Context context){
         this.context = context;
-        this.pref = activity.getSharedPreferences("herald", Context.MODE_PRIVATE);
-        this.editor = activity.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
+        this.pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
+        this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }
 
     public String getCache(String cacheName){
@@ -38,5 +49,12 @@ public class CacheHelper {
         SharedPreferences.Editor editor= context.getSharedPreferences("herald",context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         return editor.commit();
+    }
+
+
+    public void clearAllModuleCache(){
+        for(int i = 0;i<cacheNames.length;i++){
+            setCache(cacheNames[i],"");
+        }
     }
 }

@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
@@ -39,16 +35,10 @@ import java.util.HashMap;
 
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_query.QueryActivity;
-import cn.seu.herald_android.mod_query.cardextra.CardActivity;
-import cn.seu.herald_android.mod_query.emptyroom.EmptyRoomActivity;
-import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
-import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
-import cn.seu.herald_android.mod_shortcut.ShortCutBoxGridViewAdapter;
 import cn.seu.herald_android.mod_wifi.NetworkService;
 import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
@@ -254,12 +244,11 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         {
             SettingsHelper.ShortCutSetting shortCutSettingItem = settingArrayList.get(i);
             HashMap<String, Object> map = new HashMap<>();
-            if(shortCutSettingItem.isEnabled()){
+            if(shortCutSettingItem.isEnabledShortCut()){
                 map.put("ItemIcon", shortCutSettingItem.getIc_id());//添加图标
                 map.put("ItemName", shortCutSettingItem.getName());//添加按钮文字
                 map.put("Aciton",shortCutSettingItem.getActions());//添加打开模块的动作
                 shorcutHashMapArrayList.add(map);
-
             }
         }
         //生成适配器的元素
@@ -273,7 +262,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //获得点击项的map
-                HashMap<String, Object> clickItemMap =(HashMap<String, Object>)parent.getItemAtPosition(position);
+                HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
                 Intent intent = new Intent();
                 intent.setAction(clickItemMap.get("Aciton").toString());
                 startActivity(intent);

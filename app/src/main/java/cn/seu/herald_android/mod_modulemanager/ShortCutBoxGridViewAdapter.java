@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_shortcut;
+package cn.seu.herald_android.mod_modulemanager;
 
 import android.content.Context;
 import android.view.LayoutInflater;
