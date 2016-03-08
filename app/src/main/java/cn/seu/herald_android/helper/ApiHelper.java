@@ -115,6 +115,12 @@ public class ApiHelper {
         this.editor = activity.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }
 
+    public ApiHelper(Context context){
+        this.context = context;
+        this.pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
+        this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
+    }
+
     public static String getApiUrl(int api){
         return ApiHelper.url+ApiHelper.apiNames[api];
     }

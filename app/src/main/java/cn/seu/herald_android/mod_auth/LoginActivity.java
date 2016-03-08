@@ -10,18 +10,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.StringCallback;
+import cn.seu.herald_android.R;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;
-import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
 import okhttp3.Call;
-import okhttp3.Response;
 
 public class LoginActivity extends BaseAppCompatActivity {
     TextView tv_card;
@@ -36,6 +35,7 @@ public class LoginActivity extends BaseAppCompatActivity {
         setSupportActionBar(toolbar);
         init();
     }
+
 
     public void init(){
         //空间初始化
@@ -70,6 +70,7 @@ public class LoginActivity extends BaseAppCompatActivity {
         startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());
     }
+
 
     private void doLogin(){
         //登录函数
@@ -134,10 +135,6 @@ public class LoginActivity extends BaseAppCompatActivity {
                         }
                     }
                 });
+
     }
-
-
-
-
-
 }

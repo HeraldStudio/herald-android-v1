@@ -1,8 +1,14 @@
 package cn.seu.herald_android;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -41,7 +47,9 @@ import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
+
 import cn.seu.herald_android.mod_shortcut.ShortCutBoxGridViewAdapter;
+import cn.seu.herald_android.mod_wifi.NetworkService;
 import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private NavigationView navigationView;
@@ -51,6 +59,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     //主页轮播栏插件
     private SliderLayout sliderLayout;
+
 
     //显示推送消息的WebView
     private WebView webView;
@@ -62,7 +71,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //检查登录状态，如果未登录则跳转到
         init();
     }
 
@@ -98,6 +106,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
         }else if(id == R.id.action_logout){
             getApiHepler().doLogout();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -126,13 +135,14 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         } else if (id == R.id.nav_send) {
             //打开给我们发送建议的窗口
 
-        }else{
+        } else {
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     public void init(){
@@ -144,6 +154,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         setupDrawer();
 
         //刷新个人信息显示的UI
+
         refreshUI();
 
         //轮播栏加载
@@ -154,6 +165,28 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //快捷盒子加载
         setupGridViewShortCutBox();
+
+        //启用wifi自动登录
+        setupServiceForWifi();
+    }
+
+    public void setupServiceForWifi(){
+        //启动自动登录服务
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN)) {
+            //检查Service状态
+            boolean isServiceRunning = false;
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if ("cn.seu.herald_android.mod_wifi.NetworkService".equals(service.service.getClassName())) {
+                    isServiceRunning = true;
+                }
+            }
+            if (!isServiceRunning) {
+                Intent i = new Intent(this, NetworkService.class);
+                startService(i);
+            }
+        }
     }
 
     public void setupDrawer(){
@@ -226,6 +259,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                 map.put("ItemName", shortCutSettingItem.getName());//添加按钮文字
                 map.put("Aciton",shortCutSettingItem.getActions());//添加打开模块的动作
                 shorcutHashMapArrayList.add(map);
+
             }
         }
         //生成适配器的元素
@@ -304,6 +338,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                         }
                     }
                 });
+
     }
 
     @Override
