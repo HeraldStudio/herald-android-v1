@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import okhttp3.Call;
 
 public class LoginActivity extends BaseAppCompatActivity {
@@ -98,6 +99,8 @@ public class LoginActivity extends BaseAppCompatActivity {
                         btn_login.setEnabled(true);
                         String uuid = response;
                         getApiHepler().setAuthCache("uuid", uuid);
+                        NetworkLoginHelper.getInstance(LoginActivity.this)
+                                .setAuth(tv_card.getText().toString(), tv_pwd.getText().toString());
                         checkUUID();
                     }
                 });
@@ -129,6 +132,8 @@ public class LoginActivity extends BaseAppCompatActivity {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新输入账号密码
                                 showMsg("密码错误请重新登录");
                                 getApiHepler().doLogout();
+                                NetworkLoginHelper.getInstance(LoginActivity.this)
+                                        .setAuth("", "");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

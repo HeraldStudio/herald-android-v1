@@ -7,26 +7,22 @@ import javax.crypto.Cipher;
  */
 public class EncryptHelper {
     /**
-     * 默认构造方法，使用默认密钥
-     */
-    public EncryptHelper() throws Exception {
-        this(strDefaultKey);
-    }
-    /**
      * 指定密钥构造方法
      * @param strKey  指定的密钥
-     * @throws Exception
      */
-    public EncryptHelper(String strKey) throws Exception {
+    public EncryptHelper(String strKey) {
         // Security.addProvider(new com.sun.crypto.provider.SunJCE());
-        Key key = getKey(strKey.getBytes());
-        encryptCipher = Cipher.getInstance("DES");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, key);
-        decryptCipher = Cipher.getInstance("DES");
-        decryptCipher.init(Cipher.DECRYPT_MODE, key);
+        try {
+            Key key = getKey(strKey.getBytes());
+            encryptCipher = Cipher.getInstance("DES");
+            encryptCipher.init(Cipher.ENCRYPT_MODE, key);
+            decryptCipher = Cipher.getInstance("DES");
+            decryptCipher.init(Cipher.DECRYPT_MODE, key);
+        } catch (Exception e){
+            encryptCipher = null;
+            decryptCipher = null;
+        }
     }
-    /** 字符串默认键值 */
-    private static String strDefaultKey = "national";
     /** 加密工具 */
     private Cipher encryptCipher = null;
     /** 解密工具 */
@@ -86,8 +82,12 @@ public class EncryptHelper {
      * @param strIn  需加密的字符串
      * @return 加密后的字符串
      */
-    public String encrypt(String strIn) throws Exception {
-        return byteArr2HexStr(encrypt(strIn.getBytes()));
+    public String encrypt(String strIn){
+        try {
+            return byteArr2HexStr(encrypt(strIn.getBytes()));
+        } catch (Exception e) {
+            return strIn;
+        }
     }
     /**
      * 解密字节数组
@@ -102,8 +102,12 @@ public class EncryptHelper {
      * @param strIn  需解密的字符串
      * @return 解密后的字符串
      */
-    public String decrypt(String strIn) throws Exception {
-        return new String(decrypt(hexStr2ByteArr(strIn)));
+    public String decrypt(String strIn) {
+        try {
+            return new String(decrypt(hexStr2ByteArr(strIn)));
+        } catch (Exception e) {
+            return strIn;
+        }
     }
     /**
      * 从指定字符串生成密钥，密钥所需的字节数组长度为8位 不足8位时后面补0，超出8位只取前8位

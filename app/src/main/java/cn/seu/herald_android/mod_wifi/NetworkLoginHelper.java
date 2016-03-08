@@ -10,6 +10,9 @@ import android.os.Message;
 import android.os.NetworkOnMainThreadException;
 import android.widget.Toast;
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,96 +21,106 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.EncryptHelper;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class NetworkLoginHelper {
 
+    private static NetworkLoginHelper instance;
+
     private Context context;
 
-    private String username, password;
+    public static NetworkLoginHelper getInstance(Context context){
+        if(instance == null) {
+            instance = new NetworkLoginHelper();
+            instance.context = context;
+        }
+        return instance;
+    }
 
-    private Runnable task = null;
+    public void setAuth(String username, String password){
+        try {
+            String encrypted = new EncryptHelper(username).encrypt(password);
+            CacheHelper helper = new CacheHelper(context);
+            helper.setCache("netUser", username);
+            helper.setCache("netPwd", password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    // 用于执行任何需要网络的任务，作用是在执行前检查是否使用校园网络，如果使用了校园网络且未登录，则先登录校园网络
-    public void checkNetworkAndDoAfter(Context context, String username, String password, Runnable task) {
-
-        this.context = context;
-        this.username = username;
-        this.password = password;
-        this.task = task;
-
-        WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+    public void checkAndLogin() {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         String ssid = wifiInfo.getSSID().replaceAll("\"", "");
         if (ssid.equals("seu-wlan") || ssid.equals("seu-dorm")) {
             checkOnlineStatus();
-        } else if (task != null) {
-            task.run();
+        } else {
+            // Do nothing
         }
     }
 
     private void checkOnlineStatus() {
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    //检查网络服务是否在线
-//                    OkHttpClient client = new OkHttpClient();
-//                    client.setReadTimeout(5, TimeUnit.SECONDS);
-//                    client.setConnectTimeout(5, TimeUnit.SECONDS);
-//                    Request request = new Request.Builder()
-//                            .url("http://w.seu.edu.cn/portal/init.php").build();
-//                    Response response = client.newCall(request).execute();
-//
-//                    String str = response.body().string();
-//                    Message msg = new Message();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("result", response.isSuccessful() ? "success" : "fail");
-//                    bundle.putString("login", str.indexOf("notlogin") >= 0 ? "null" : "old");
-//                    bundle.putString("response", str);
-//                    msg.setData(bundle);
-//                    handler.sendMessage(msg);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-    }
+        OkHttpUtils.get().url("http://w.seu.edu.cn/portal/init.php").build()
+                .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                Message msg = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("result", "fail");
+                msg.setData(bundle);
+                handler.sendMessage(msg);
+            }
 
+            @Override
+            public void onResponse(String response) {
+                Message msg = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("result", "success");
+                bundle.putString("login", response.contains("notlogin") ? "null" : "old");
+                bundle.putString("response", response);
+                msg.setData(bundle);
+                handler.sendMessage(msg);
+            }
+        });
+    }
 
     private void loginToService() {
         //登陆网络服务
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    OkHttpClient client = new OkHttpClient();
-//                    client.setReadTimeout(5, TimeUnit.SECONDS);
-//                    client.setConnectTimeout(5, TimeUnit.SECONDS);
-//                    RequestBody body = new FormEncodingBuilder()
-//                            .add("username", username)
-//                            .add("password", password)
-//                            .build();
-//                    Request request = new Request.Builder()
-//                            .url("http://w.seu.edu.cn/portal/login.php")
-//                            .post(body)
-//                            .build();
-//                    Response response = client.newCall(request).execute();
-//
-//                    String str = response.body().string();
-//                    Message msg = new Message();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("result", response.isSuccessful() ? "success" : "fail");
-//                    bundle.putString("login", "new");
-//                    bundle.putString("response", str);
-//                    msg.setData(bundle);
-//                    handler.sendMessage(msg);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+        CacheHelper helper = new CacheHelper(context);
+        String username = helper.getCache("netUser");
+        EncryptHelper helper1 = new EncryptHelper(username);
+        String password = helper1.decrypt(helper.getCache("netPwd"));
+
+        OkHttpUtils.post().url("http://w.seu.edu.cn/portal/login.php")
+                .addParams("username", username)
+                .addParams("password", password).build()
+                .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                Message msg = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("result", "fail");
+                msg.setData(bundle);
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Message msg = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("result", "success");
+                bundle.putString("login", "new");
+                bundle.putString("response", response);
+                msg.setData(bundle);
+                handler.sendMessage(msg);
+            }
+        });
     }
 
     private Handler handler = new Handler() {
@@ -136,12 +149,11 @@ public class NetworkLoginHelper {
                                 info.getString("login_remain"),
                                 formatTime(info.getString("login_time"))
                         };
-                        Toast.makeText(context, "已帮您自动登录" + ssid + "无线网络\n" +
+                        Toast.makeText(context, "登陆" + ssid + "无线网络成功\n" +
                                 "账户名：" + infoStr[0] + " (已登录" + infoStr[1] + "个设备)\n" +
                                 "登录IP：" + infoStr[2] + "\n" +
                                 "登录位置：" + infoStr[3] + "\n" +
                                 "到期时间：" + infoStr[4] + " (剩余" + infoStr[5] + "天)", Toast.LENGTH_LONG).show();
-                        if (task != null) task.run();
 
                     } else if (data.getString("login").equals("old")) {
 
@@ -162,21 +174,20 @@ public class NetworkLoginHelper {
                                 "登录位置：" + infoStr[3] + "\n" +
                                 "在线时长：" + infoStr[6] + "\n" +
                                 "到期时间：" + infoStr[4] + " (剩余" + infoStr[5] + "天)", Toast.LENGTH_LONG).show();
-                        if (task != null) task.run();
                     }
                 } catch (JSONException e) {
                     try {
                         String error = new JSONObject(data.getString("response")).getString("error");
                         Toast.makeText(context, "尝试登陆" + ssid + "无线网络失败\n" + error
-                                , Toast.LENGTH_LONG).show();
+                                , Toast.LENGTH_SHORT).show();
                     } catch (JSONException e2) {
                         e2.printStackTrace();
                     }
                 }
             } else {
                 // 连接失败
-                Toast.makeText(context, "尝试连接" + ssid + "登录页面失败，请尝试切换网络"
-                        , Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "网络信号不佳，" + ssid + "无法登录"
+                        , Toast.LENGTH_SHORT).show();
             }
         }
     };
