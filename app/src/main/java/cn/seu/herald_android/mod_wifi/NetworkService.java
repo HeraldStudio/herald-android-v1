@@ -59,11 +59,6 @@ public class NetworkService extends Service {
             String ssid = wifiInfo.getSSID().replaceAll("\"", "");
             if (ssid.equals("seu-wlan") || ssid.equals("seu-dorm")) {
                 if (sp.getString("password", "").equals("")) {
-                    Toast.makeText(context, "您没有登录，无法享受自动登录seu-wlan的功能，" +
-                            "请先登录您的校园网账户~", Toast.LENGTH_SHORT).show();
-                    Intent intent2 = new Intent(NetworkService.this, LoginActivity.class);
-                    intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent2);
                     return;
                 }
                 try {
