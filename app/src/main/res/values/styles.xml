@@ -64,6 +64,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="PedetailTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 跑操查询风格 -->
+        <item name="colorPrimary">@color/colorPedetailprimary</item>
+        <item name="colorPrimaryDark">@color/colorPedetailprimaryDark</item>
+        <item name="colorAccent">@color/colorPedetailaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

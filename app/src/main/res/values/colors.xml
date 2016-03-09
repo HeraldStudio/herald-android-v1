@@ -46,6 +46,13 @@
     <color name="colorSeuNetprimary_light">#DCEDC8</color>
     <color name="colorSeuNetaccent">#469edc</color>
 
+    <!--跑操-->
+    <color name="colorPedetailprimary">#26a69a</color>
+    <color name="colorPedetailprimaryDark">#26a69a</color>
+    <color name="colorPedetailprimarySemiFade">#d026a69a</color>
+    <color name="colorPedetailprimaryFade">#8026a69a</color>
+    <color name="colorPedetailaccent">#26a69a</color>
+    <color name="colorPedetailcalendarBg">#ffffff</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="white">#ffffffff</color>

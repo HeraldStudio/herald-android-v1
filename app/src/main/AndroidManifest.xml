@@ -125,18 +125,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".mod_query.pedetail.PedetailActivity"
+            android:label="@string/title_activity_pedetail"
+            android:launchMode="singleTask"
+            android:theme="@style/PedetailTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_PEDETAIL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".mod_welcome.WelcomeActivity"
-            android:label="@string/app_name">
+            android:name=".mod_welcome.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".mod_wifi.NetworkShortcutActivity"
-            android:theme="@style/AppTheme.Invisible">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <receiver android:name=".mod_wifi.NetworkChangeReceiver">

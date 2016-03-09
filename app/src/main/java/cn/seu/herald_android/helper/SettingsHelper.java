@@ -38,10 +38,11 @@ public class SettingsHelper {
     public static final int MODULE_EMPTYROOM = 5;
     public static final int MODULE_CARDEXTRA = 6;
     public static final int MODULE_SEUNET = 7;
+    public static final int MODULE_PEDETAIL = 8;
 
 
     //模块数目
-    public static final int NUM_OF_MODULE = 8;
+    public static final int NUM_OF_MODULE = 9;
 
 
     //模块名字
@@ -53,7 +54,8 @@ public class SettingsHelper {
             "experiment",
             "emptyroom",
             "cardextra",
-            "seunet"
+            "seunet",
+            "pedetail"
     };
 
     //模块名字文字提示
@@ -65,7 +67,8 @@ public class SettingsHelper {
             "实验",
             "空教室",
             "一卡通",
-            "校园网"
+            "校园网",
+            "跑操"
     };
 
     //模块action
@@ -77,7 +80,8 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
             "cn.seu.herald_android.MODULE_QUERY_EMPTYROOM",
             "cn.seu.herald_android.MODULE_QUERY_CARDEXTRA",
-            "cn.seu.herald_android.MODULE_QUERY_SEUNET"
+            "cn.seu.herald_android.MODULE_QUERY_SEUNET",
+            "cn.seu.herald_android.MODULE_QUERY_PEDETAIL"
     };
 
 
@@ -90,7 +94,8 @@ public class SettingsHelper {
             R.mipmap.ic_experiment,
             R.mipmap.ic_emptyroom,
             R.mipmap.ic_card,
-            R.mipmap.ic_seunet
+            R.mipmap.ic_seunet,
+            R.mipmap.ic_pedetail
     };
 
     //模块类型
