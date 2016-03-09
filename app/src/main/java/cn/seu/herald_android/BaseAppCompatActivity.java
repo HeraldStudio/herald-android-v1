@@ -157,6 +157,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         // 获取该主题下的主色调
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+
+        // 获取根视图
         View rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
 
         // 使用改色调构建SnackBar

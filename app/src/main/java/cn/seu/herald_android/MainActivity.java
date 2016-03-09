@@ -212,11 +212,11 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             sliderLayout.addSlider(textSliderView);
         }
         //设置轮播选项
-        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default);
         //圆点位置
         sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         //描述动画
-        sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        //sliderLayout.setCustomAnimation(new DescriptionAnimation());
         //切换间隔
         sliderLayout.setDuration(4000);
     }

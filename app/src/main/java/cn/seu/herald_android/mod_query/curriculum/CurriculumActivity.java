@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_query.curriculum;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,13 +46,13 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-                finish();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+            finish();
         });
+
+        //沉浸式
+        setStatusBarColor(this, getResources().getColor(R.color.colorPedetailprimary));
 
         pager = (ViewPager) findViewById(R.id.pager);
 
