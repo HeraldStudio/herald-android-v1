@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_query.pedetail;
+package cn.seu.herald_android;
 
 import android.graphics.Color;
 import android.graphics.Typeface;

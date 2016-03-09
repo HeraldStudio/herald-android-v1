@@ -85,6 +85,7 @@ public class ExprimentExpandAdapter extends BaseExpandableListAdapter {
         tv_day.setText("时间段："+experimentItem.day);
         tv_teacher.setText("指导老师："+experimentItem.teacher);
         tv_address.setText("实验地点："+experimentItem.address);
+        experimentItem.grade = experimentItem.grade.replace("null", "");
         tv_grade.setText(experimentItem.grade);
         return contentView;
     }

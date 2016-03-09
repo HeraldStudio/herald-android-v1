@@ -134,6 +134,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".mod_query.curriculum.CurriculumActivity"
+            android:label="@string/title_activity_curriculum"
+            android:launchMode="singleTask"
+            android:theme="@style/CurriculumTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_CURRICULUM" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".mod_welcome.WelcomeActivity">
             <intent-filter>

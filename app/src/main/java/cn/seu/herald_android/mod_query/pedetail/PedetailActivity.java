@@ -309,50 +309,8 @@ public class PedetailActivity extends BaseAppCompatActivity {
                 || pager.getAdapter().getCount() == 0) {
             // 还没有加载到信息就出错了
         } else {
-            showSnackBar(pager, message);
+            showSnackBar(message);
         }
         getProgressDialog().hide();
-    }
-
-    /**
-     * TODO 以下所有内容考虑移动到 {@link BaseAppCompatActivity}
-     */
-
-    /**
-     * 实现将任何与尺寸有关的任务延迟到启动完毕后进行。
-     * 这些任务可以通过调用runMeasurementDependentTask(Runnable)来执行，
-     * 该方法将自动判断当前是否可以获取尺寸，如果不可以，自动将该任务推迟到可以
-     * 获取尺寸时再执行；如果当前可以获取尺寸，则将立即执行该任务。
-     */
-    private List<Runnable> onLoadTasks = new ArrayList<>();
-    private boolean firstCreate = true;
-
-    protected void runMeasurementDependentTask(Runnable task) {
-        if (firstCreate) {
-            onLoadTasks.add(task);
-        } else {
-            task.run();
-        }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (firstCreate) {
-            for (; onLoadTasks.size() > 0;) {
-                onLoadTasks.get(0).run();
-                onLoadTasks.remove(0);
-            }
-        }
-        firstCreate = false;
-    }
-
-    // 显示一个SnackBar
-    protected void showSnackBar(View v, String message){
-        new CustomSnackBar().view(v)
-                .backgroundColor(ContextCompat.getColor(this, R.color.colorPedetailprimary))
-                .text(message, null)
-                .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
-                .duration(CustomSnackBar.SnackBarDuration.LONG).show();
     }
 }

@@ -120,12 +120,15 @@ public class ExperimentActivity extends BaseAppCompatActivity {
             try{
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
                 //实验种类集合
-                String[] titles = {"文科及医学实验选做","文科及医学实验","基础性实验(下)","基础性实验(下)选做"};
+                String[] titles = {"文科及医学实验选做","文科及医学实验",
+                        "基础性实验(上)","基础性实验(上)选做",
+                        "基础性实验(下)","基础性实验(下)选做"};
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
                 ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();
                 //根据每种集合加载不同的子view
                 for(int i=0;i<titles.length;i++){
+                    if(!json_content.has(titles[i])) continue;
                     String jsonArray_str = json_content.getString(titles[i]);
                     if(!jsonArray_str.equals("")){
                         //如果有实验则加载数据和子项布局

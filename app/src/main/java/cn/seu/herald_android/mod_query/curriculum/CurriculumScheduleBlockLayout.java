@@ -20,8 +20,6 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
 
     private int layout;
 
-    private boolean curTerm;
-
     private Pair<String, String> teacherAndGPA;
 
     private static int color[] = {
@@ -37,11 +35,10 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
 
     public CurriculumScheduleBlockLayout(Context c, ClassInfo info,
                                          Pair<String, String> teacherAndGPA,
-                                         boolean isToday, boolean curTerm) {
+                                         boolean isToday) {
         super(c);
         classInfo = info;
         this.teacherAndGPA = teacherAndGPA;
-        this.curTerm = curTerm;
         layout = isToday ? R.layout.curriculumitem_today : R.layout.curriculumitem_normal;
     }
 
@@ -90,8 +87,7 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
                                 + (classInfo.getPlace().startsWith("(双)") ? "周双" : "") + "周"
                                 + classInfo.weekNum + "\n" +
                                 "上课时间：" + classInfo.getStartTime() + "~" + classInfo.getEndTime() + "节 (" + classInfo.getTimePeriod() + ")\n" +
-                                (teacherAndGPA == null ? (curTerm ? "获取教师及学分信息失败，请刷新"
-                                        : "非本学期，无法获取教师及学分信息") :
+                                (teacherAndGPA == null ? "获取教师及学分信息失败，请刷新" :
                                         ("授课教师：" + teacherAndGPA.first + "\n" +
                                                 "课程学分：" + teacherAndGPA.second)))
                 .create();

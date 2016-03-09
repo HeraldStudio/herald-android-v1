@@ -73,6 +73,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="CurriculumTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 跑操查询风格 -->
+        <item name="colorPrimary">@color/colorCurriculumPrimary</item>
+        <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
+        <item name="colorAccent">@color/colorCurriculumAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

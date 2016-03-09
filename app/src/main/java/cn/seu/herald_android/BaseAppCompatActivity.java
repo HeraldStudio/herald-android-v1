@@ -3,26 +3,25 @@ package cn.seu.herald_android;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
-import okhttp3.Call;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ApiHelper apiHelper;
@@ -53,7 +52,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     public void showMsg(String msg){
-        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT).show();
+        showSnackBar(msg);
     }
 
     public ApiHelper getApiHepler(){
@@ -118,5 +117,53 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     public ProgressDialog getProgressDialog(){
         return progressDialog;
+    }
+
+    /**
+     * TODO 以下所有内容考虑移动到 {@link BaseAppCompatActivity}
+     */
+
+    /**
+     * 实现将任何与尺寸有关的任务延迟到启动完毕后进行。
+     * 这些任务可以通过调用runMeasurementDependentTask(Runnable)来执行，
+     * 该方法将自动判断当前是否可以获取尺寸，如果不可以，自动将该任务推迟到可以
+     * 获取尺寸时再执行；如果当前可以获取尺寸，则将立即执行该任务。
+     */
+    private List<Runnable> onLoadTasks = new ArrayList<>();
+    private boolean firstCreate = true;
+
+    protected void runMeasurementDependentTask(Runnable task) {
+        if (firstCreate) {
+            onLoadTasks.add(task);
+        } else {
+            task.run();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (firstCreate) {
+            for (; onLoadTasks.size() > 0;) {
+                onLoadTasks.get(0).run();
+                onLoadTasks.remove(0);
+            }
+        }
+        firstCreate = false;
+    }
+
+    // 显示一个SnackBar
+    protected void showSnackBar(String message){
+        // 获取该主题下的主色调
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        View rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+
+        // 使用改色调构建SnackBar
+        new CustomSnackBar().view(rootView)
+                .backgroundColor(ContextCompat.getColor(this, typedValue.resourceId))
+                .text(message, null)
+                .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
+                .duration(CustomSnackBar.SnackBarDuration.LONG).show();
     }
 }

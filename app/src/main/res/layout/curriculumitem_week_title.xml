@@ -13,14 +13,14 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="13sp"
-        android:textColor="@color/curriculumbackgroundSubtitle"
+        android:textColor="@color/curriculumcolorSubtitle"
         android:layout_gravity="center_horizontal" />
 
     <View
         android:id="@+id/stripe"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/colorAccent"
+        android:background="?attr/colorAccent"
         android:visibility="invisible"/>
 
 </LinearLayout>

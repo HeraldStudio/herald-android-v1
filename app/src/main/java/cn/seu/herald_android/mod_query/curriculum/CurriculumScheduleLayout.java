@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
     private int week, width = 0, height = 0;
 
     // 是否当前周
-    private boolean curWeek, curTerm;
+    private boolean curWeek;
 
     // 表示当前学期课程信息的JSON对象
     private JSONObject obj;
@@ -87,19 +89,19 @@ public class CurriculumScheduleLayout extends FrameLayout {
     // 本视图只需要手动创建，不会从xml中创建
     public CurriculumScheduleLayout(Context context, JSONObject obj,
                                     Map<String, Pair<String, String>> sidebar, int week,
-                                    boolean curWeek, boolean curTerm) {
+                                    boolean curWeek) {
         super(context);
         this.obj = obj;
         this.sidebar = sidebar;
         this.week = week;
         this.curWeek = curWeek;
-        this.curTerm = curTerm;
     }
 
     // 要显示在屏幕上时再进行添加view的操作，显著提高应用启动速度
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
         try {
             // 获取屏幕缩放率、宽度和高度，并计算页面要占的高度（总高度-标题栏高度-系统顶栏高度）
             DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -181,6 +183,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
             // 如果是本周，定时刷新时间指示条
             if (curWeek) {
+                Log.e("curWeek", "1");
                 refreshTimeHand();
                 IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(Intent.ACTION_TIME_TICK);
@@ -239,7 +242,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
             ClassInfo info = list.get(i);
 
             CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(
-                    getContext(), info, sidebar.get(info.getClassName()), widenToday && dayDelta == 0, curTerm);
+                    getContext(), info, sidebar.get(info.getClassName()), widenToday && dayDelta == 0);
 
             // 向右偏移
             block.setX(
@@ -306,9 +309,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        // 被回收时，先移除子控件
         removeAllViews();
-
         // 防火防盗防泄漏
         if (curWeek) {
             getContext().unregisterReceiver(timeChangeReceiver);
