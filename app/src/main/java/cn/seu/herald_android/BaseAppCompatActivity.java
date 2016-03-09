@@ -78,15 +78,16 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * @param color   状态栏颜色值
      */
     public  void setStatusBarColor(Activity activity, int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-                ||Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置状态栏透明
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // 生成一个状态栏大小的矩形
-            View statusView = createStatusView(activity, color);
-            // 添加 statusView 到布局中
-            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-            decorView.addView(statusView);
+            if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
+                // 生成一个状态栏大小的矩形
+                View statusView = createStatusView(activity, color);
+                // 添加 statusView 到布局中
+                ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+                decorView.addView(statusView);
+            }
             // 设置根布局的参数
             ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
             rootView.setFitsSystemWindows(true);

@@ -54,6 +54,26 @@
     <color name="colorPedetailaccent">#26a69a</color>
     <color name="colorPedetailcalendarBg">#ffffff</color>
 
+    <!--课表-->
+    <color name="colorCurriculumPrimary">#00abd4</color>
+    <color name="colorCurriculumPrimaryDark">#00abd4</color>
+    <color name="colorCurriculumAccent">#00abd4</color>
+    <color name="colorCurriculumAccentFade">#d000abd4</color>
+    <color name="curriculumstripeColor">#d8d8d8</color>
+    <color name="curriculumtimeHandColor">#c000abd4</color>
+    <color name="curriculumcolorSubtitle">#333</color>
+    <color name="curriculumbackgroundSubtitle">#fff</color>
+    <color name="curriculumbackgroundSnackBar">#00abd4</color>
+    <color name="curriculumcolor1">#f5629a</color>
+    <color name="curriculumcolor2">#fe8d3f</color>
+    <color name="curriculumcolor3">#ecad07</color>
+    <color name="curriculumcolor4">#a1d213</color>
+    <color name="curriculumcolor5">#12ca98</color>
+    <color name="curriculumcolor6">#00abd4</color>
+    <color name="curriculumcolor7">#6d9ff4</color>
+    <color name="curriculumcolor8">#9f73ff</color>
+    <color name="curriculumcolorMask">#28000000</color>
+
     <color name="black_overlay">#66000000</color>
     <color name="white">#ffffffff</color>
     <color name="colorGray">#3e3e3e</color>

@@ -70,6 +70,8 @@ public class ApiHelper {
     public static final int API_ROOM=14;
     //跑操详情查询
     public static final int API_PEDETAIL=15;
+    //学期列表查询
+    public static final int API_TERM=16;
 
 
     //需用其他方式访问的
@@ -108,7 +110,8 @@ public class ApiHelper {
             "lecturenotice",
             "user",
             "room",
-            "pedetail"
+            "pedetail",
+            "term"
     };
 
 
@@ -208,7 +211,7 @@ public class ApiHelper {
 
     public boolean setAuthCache(String cacheName,String cacheValue){
         //用于更新存储的某项信息
-        SharedPreferences.Editor editor= context.getSharedPreferences("herald_auth",context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor= context.getSharedPreferences("herald_auth",Context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         return editor.commit();
     }

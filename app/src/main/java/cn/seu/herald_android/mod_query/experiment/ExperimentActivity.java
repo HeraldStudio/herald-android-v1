@@ -74,7 +74,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         });
 
         //沉浸式
-        //setStatusBarColor(this,getResources().getColor(R.color.colorExperimentprimary));
+        setStatusBarColor(this,getResources().getColor(R.color.colorExperimentprimary));
 
         //实验类型列表加载
         expandableListView = (ExpandableListView)findViewById(R.id.expandableListView);
