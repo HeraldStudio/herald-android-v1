@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.helper.AdapterHelper;
 import cn.seu.herald_android.helper.ApiHelper;
 import okhttp3.Call;
 
@@ -33,7 +32,7 @@ public class LectureActivity extends BaseAppCompatActivity {
     RecyclerView recyclerView_notice;
     //打卡记录对话框
     AlertDialog.Builder builder;
-    AlertDialog dialog;
+    AlertDialog dialog_lecture_records;
     //打卡记录列表
     ListView list_record;
     //打卡记录次数
@@ -79,6 +78,7 @@ public class LectureActivity extends BaseAppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setTitle("最新讲座消息获取中");
         progressDialog.setMessage("请稍后...");
+
     }
 
     @Override
@@ -154,6 +154,25 @@ public class LectureActivity extends BaseAppCompatActivity {
                         }
                     }
                 });
+    }
+
+
+
+    public void displayLectureRecords(){
+        //加载打卡记录对话框
+        builder = new AlertDialog.Builder(this);
+        dialog_lecture_records = builder.create();
+        //show函数需要在getWindow前调用
+        dialog_lecture_records.show();
+        //对话框窗口设置布局文件
+        Window window = dialog_lecture_records.getWindow();
+        window.setContentView(R.layout.content_dialog_lecture_record);
+
+        //获取对话窗口中的listview
+        list_record = (ListView)window.findViewById(R.id.list_lecture_record);
+        //获得对话框中的打卡次数textview
+        tv_count = (TextView)window.findViewById(R.id.tv_recordcount);
+
         //获取已听讲座
         OkHttpUtils
                 .post()
@@ -175,6 +194,8 @@ public class LectureActivity extends BaseAppCompatActivity {
                             JSONObject json_res = new JSONObject(response);
                             if(json_res.getInt("code")==200){
                                 getCacheHelper().setCache("herald_lecture_records", json_res.toString());
+                                loadRecordCache();
+                                showMsg("获取讲座记录成功");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -184,22 +205,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void displayLectureRecords(){
-        //打卡记录对话框加载
-        builder = new AlertDialog.Builder(this);
-        dialog = builder.create();
-        dialog.show();
-
-        //对话框窗口设置布局文件
-        Window window = dialog.getWindow();
-        window.setContentView(R.layout.content_dialog_lecture_record);
-
-        //获取对话窗口中的listview
-        list_record = (ListView)window.findViewById(R.id.list_lecture_record);
-        //获得对话框中的打卡次数textview
-        tv_count = (TextView)window.findViewById(R.id.tv_recordcount);
-
-        //获取缓存记录
+    public void loadRecordCache(){
         String cache = getCacheHelper().getCache("herald_lecture_records");
         if(!cache.equals("")){
             try {

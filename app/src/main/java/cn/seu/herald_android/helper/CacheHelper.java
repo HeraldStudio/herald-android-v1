@@ -19,7 +19,8 @@ public class CacheHelper {
             "herald_lecture_records",
             "herald_schoolbus_cache",
             "herald_lecture_notices",
-            "herald_experiment"
+            "herald_experiment",
+            "herald_nic"
     };
 
 

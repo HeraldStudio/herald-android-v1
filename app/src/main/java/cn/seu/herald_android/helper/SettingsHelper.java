@@ -1,12 +1,12 @@
 package cn.seu.herald_android.helper;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_modulemanager.SeuModule;
 
 /**
  * Created by heyon on 2015/12/14.
@@ -152,11 +152,11 @@ public class SettingsHelper {
      * 获得所有模块的快捷方式设置情况对象
      * @return
      */
-    public ArrayList<ShortCutSetting> getShortCutSettingList(){
+    public ArrayList<SeuModule> getSeuModuleList(){
         //获得所有模块快捷方式设置列表
-        ArrayList<ShortCutSetting> list = new ArrayList<>();
+        ArrayList<SeuModule> list = new ArrayList<>();
         for(int i=0;i<NUM_OF_MODULE;i++){
-            list.add(new ShortCutSetting(i,getModuleShortCutEnabled(i),moduleActions[i]));
+            list.add(new SeuModule(i,getModuleShortCutEnabled(i),moduleActions[i]));
         }
         return list;
     }
@@ -205,43 +205,5 @@ public class SettingsHelper {
     }
 
 
-    public class ShortCutSetting{
-        //模块ID
-        int moduleId;
-        //图片资源
-        int ic_id;
-        //是否被选为快捷方式
-        boolean enabledShortCut;
-        //启动的activity的action
-        String actions;
-        //名字
-        String name;
-        public ShortCutSetting(int moduleId, boolean enabledShortCut, String actions) {
-            this.moduleId = moduleId;
-            this.enabledShortCut = enabledShortCut;
-            this.actions = actions;
-            this.ic_id = moduleIconsId[moduleId];
-            this.name = moduleNamesTips[moduleId];
-        }
 
-        public int getModuleId() {
-            return moduleId;
-        }
-
-        public boolean isEnabledShortCut() {
-            return enabledShortCut;
-        }
-
-        public String getActions() {
-            return actions;
-        }
-
-        public int getIc_id() {
-            return ic_id;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 }

@@ -17,6 +17,9 @@ import cn.seu.herald_android.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -89,7 +92,13 @@ public class LoginActivity extends BaseAppCompatActivity {
                         progressDialog.dismiss();
                         btn_login.setEnabled(true);
                         //处理Api错误
-                        getApiHepler().dealApiException(e);
+                        if (e instanceof SocketTimeoutException) {
+                            showMsg("抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
+                        } else if (e instanceof ConnectException) {
+                            showMsg("网络连接错误，请检查您的网络连接");
+                        } else {
+                            showMsg("一卡通和统一查询密码不匹配，请核对后再试");
+                        }
                     }
 
                     @Override
@@ -114,7 +123,14 @@ public class LoginActivity extends BaseAppCompatActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         //错误检测
-                        getApiHepler().dealApiException(e);
+                        e.printStackTrace();
+                        if (e instanceof SocketTimeoutException) {
+                            showMsg("抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
+                        } else if (e instanceof ConnectException) {
+                            showMsg("网络连接错误，请检查您的网络连接");
+                        } else {
+                            showMsg("一卡通和统一查询密码不匹配，请核对后再试");
+                        }
                     }
 
                     @Override

@@ -115,6 +115,16 @@ public class ApiHelper {
         this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }
 
+
+    //用到logout函数的部分应该调用此函数
+    public ApiHelper(Activity activity){
+        this.activity =activity;
+        this.context = activity.getBaseContext();
+        this.pref = activity.getSharedPreferences("herald", Context.MODE_PRIVATE);
+        this.editor = activity.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
+    }
+
+
     public static String getApiUrl(int api){
         return ApiHelper.url+ApiHelper.apiNames[api];
     }
@@ -123,7 +133,7 @@ public class ApiHelper {
     public void checkAuth(){
         //检查uuid的正确情况，如果正确则更新个人信息
         String uuid = getUUID();
-        if(uuid == ""){
+        if(uuid.equals("")){
             Toast.makeText(context, "请登录", Toast.LENGTH_SHORT).show();
             doLogout();
         }
@@ -131,6 +141,7 @@ public class ApiHelper {
 
 
     public void dealApiException(Exception e){
+        e.printStackTrace();
         if (e instanceof SocketTimeoutException) {
             Toast.makeText(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀", Toast.LENGTH_SHORT).show();
         } else if (e instanceof ConnectException) {
@@ -142,7 +153,7 @@ public class ApiHelper {
 
 
 
-    public void doLogout() throws ClassCastException{
+    public void doLogout(){
         //清除授权信息
         setAuthCache("uuid", "");
         setAuthCache("cardnum", "");
@@ -153,12 +164,12 @@ public class ApiHelper {
         CacheHelper cacheHelper = new CacheHelper(context);
         cacheHelper.clearAllModuleCache();
         //跳转到登录页
+
         Intent intent = new Intent(context,LoginActivity.class);
-        if(activity instanceof BaseAppCompatActivity){
-            ((BaseAppCompatActivity) activity).startActivityAndFinish(intent);
-        }else{
-            throw new ClassCastException();
-        }
+        //如果activity为空会抛出异常
+        activity.startActivity(intent);
+        activity.finish();
+
     }
 
 

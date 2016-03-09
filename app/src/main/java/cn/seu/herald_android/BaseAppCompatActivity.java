@@ -31,9 +31,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //此处apihelper用到activity跳转，所以需要传入activity为参数
         this.apiHelper = new ApiHelper(this);
-        this.cacheHelper = new CacheHelper(this);
-        this.settingsHelper = new SettingsHelper(this);
+        this.cacheHelper = new CacheHelper(getBaseContext());
+        this.settingsHelper = new SettingsHelper(getBaseContext());
 
         //加载刷新对话框
         progressDialog = new ProgressDialog(this);

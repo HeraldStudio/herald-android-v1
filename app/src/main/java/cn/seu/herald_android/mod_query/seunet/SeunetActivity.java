@@ -71,6 +71,8 @@ public class SeunetActivity extends BaseAppCompatActivity {
         setStatusBarColor(this,getResources().getColor(R.color.colorSeuNetprimary));
         //初始化流量显示饼状图
         pieChartView_wlan = (PieChartView)findViewById(R.id.chartwlan);
+        //设置饼图不旋转
+        pieChartView_wlan.setChartRotationEnabled(false);
         //余额显示的tv
         tv_leftmoney = (TextView)findViewById(R.id.tv_extra_money);
         //已用流量
@@ -173,6 +175,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 sliceValue.setLabel("未开通");
                 values.add(new SliceValue(1f));
                 PieChartData pieChartData = new PieChartData(values);
+                //为控件设置数据
                 pieChartView_wlan.setPieChartData(pieChartData);
             }else{
                 String str_use = json.getJSONObject("web").getString("used");

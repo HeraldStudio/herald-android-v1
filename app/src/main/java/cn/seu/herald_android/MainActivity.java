@@ -34,9 +34,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_modulemanager.SeuModule;
+import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
+import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
-import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
 import cn.seu.herald_android.mod_wifi.NetworkService;
@@ -112,7 +113,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             // Handle the camera action
         } else if (id == R.id.nav_assistant) {
             //打开查询助手
-            Intent intent = new Intent(MainActivity.this, SchoolBusActivity.class);
+            Intent intent = new Intent(MainActivity.this, QueryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             //打开设置
@@ -145,13 +146,10 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //刷新个人信息显示的UI
 
-        refreshUI();
+        refreshWelcome();
 
         //轮播栏加载
         setupSliderLayout();
-
-        //webview加载
-        //setupWebView();
 
         //快捷盒子加载
         setupGridViewShortCutBox();
@@ -236,27 +234,18 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     public void setupGridViewShortCutBox(){
         //加载用户自己设置的快捷方式
         gv_ShortCutBox = (GridView)findViewById(R.id.gridview_main_shortcutbox);
+        refreshGridViewShortCutBox();
+    }
+
+    public void refreshGridViewShortCutBox(){
         //加载适配器
         //获取设置为快捷方式的查询模块
-        ArrayList<SettingsHelper.ShortCutSetting> settingArrayList = getSettingsHelper().getShortCutSettingList();
-        ArrayList<HashMap<String, Object>> shorcutHashMapArrayList = new ArrayList<>();
-        for(int i=0;i<settingArrayList.size();i++)
-        {
-            SettingsHelper.ShortCutSetting shortCutSettingItem = settingArrayList.get(i);
-            HashMap<String, Object> map = new HashMap<>();
-            if(shortCutSettingItem.isEnabledShortCut()){
-                map.put("ItemIcon", shortCutSettingItem.getIc_id());//添加图标
-                map.put("ItemName", shortCutSettingItem.getName());//添加按钮文字
-                map.put("Aciton",shortCutSettingItem.getActions());//添加打开模块的动作
-                shorcutHashMapArrayList.add(map);
-            }
-        }
-        //生成适配器的元素
-        SimpleAdapter saImageItems = new SimpleAdapter(this, shorcutHashMapArrayList,
-                R.layout.gridviewitem_shortcut, new String[] {"ItemIcon","ItemName"},
-                new int[] {R.id.ic_shortcut,R.id.tv_shortcut});
+        ArrayList<SeuModule> settingArrayList = getSettingsHelper().getSeuModuleList();
+        SimpleAdapter simpleAdapter = ShortCutBoxDisplayAdapter.getShortCutBoxViewSimpleAdapter(
+                this, settingArrayList
+        );
         //添加并且显示
-        gv_ShortCutBox.setAdapter(saImageItems);
+        gv_ShortCutBox.setAdapter(simpleAdapter);
         //添加响应
         gv_ShortCutBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -268,27 +257,9 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                 startActivity(intent);
             }
         });
-
-}
-
-    public void setupWebView(){
-//        webView = (WebView) findViewById(R.id.inform_webview);
-//        //WebView加载web资源
-//        webView.loadUrl("http://my404.club:3000");
-//        //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
-//        webView.setWebViewClient(new WebViewClient(){
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                // TODO Auto-generated method stub
-//                //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-//                view.loadUrl(url);
-//                return true;
-//            }
-//        });
     }
 
-
-    public void refreshUI(){
+    public void refreshWelcome(){
         //如果缓存存在的话先设置欢迎信息和侧边栏信息
         tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
         tv_nav_user.setText(getApiHepler().getAuthCache("name"));
@@ -333,7 +304,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     @Override
     protected void onRestart() {
         super.onRestart();
-        refreshUI();
+        refreshWelcome();
+        refreshGridViewShortCutBox();
     }
 
 
