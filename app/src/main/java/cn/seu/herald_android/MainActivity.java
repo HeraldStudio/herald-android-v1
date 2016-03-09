@@ -40,7 +40,8 @@ import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
-import cn.seu.herald_android.mod_wifi.NetworkService;
+import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
+
 import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private NavigationView navigationView;
@@ -138,6 +139,10 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     public void init(){
 
+        //登陆校园wifi
+        //
+        // checkAndLoginWifi();
+
         //切换动画
         overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
 
@@ -145,7 +150,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         setupDrawer();
 
         //刷新个人信息显示的UI
-
         refreshWelcome();
 
         //轮播栏加载
@@ -153,28 +157,14 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //快捷盒子加载
         setupGridViewShortCutBox();
-
-        //启用wifi自动登录
-        setupServiceForWifi();
     }
 
-    public void setupServiceForWifi(){
-        //启动自动登录服务
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.getBoolean("autoLogin", SysSettingsActivity.DEFAULT_AUTO_LOGIN)) {
-            //检查Service状态
-            boolean isServiceRunning = false;
-            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if ("cn.seu.herald_android.mod_wifi.NetworkService".equals(service.service.getClassName())) {
-                    isServiceRunning = true;
-                }
-            }
-            if (!isServiceRunning) {
-                Intent i = new Intent(this, NetworkService.class);
-                startService(i);
-            }
-        }
+    public void checkAndLoginWifi(){
+        NetworkLoginHelper.getInstance(this).checkAndLogin();
+        /*if(new CacheHelper(this).getCache("wifi").equals("")){
+            new NetworkShortcutHelper(this).addShortcut();
+            new CacheHelper(this).setCache("wifi", "created");
+        }*/
     }
 
     public void setupDrawer(){

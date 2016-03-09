@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import okhttp3.Call;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
@@ -36,11 +37,19 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         this.cacheHelper = new CacheHelper(getBaseContext());
         this.settingsHelper = new SettingsHelper(getBaseContext());
 
+        NetworkLoginHelper.getInstance(this).registerReceiver();
+
         //加载刷新对话框
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setTitle("最新数据获取中");
         progressDialog.setMessage("请稍后...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        NetworkLoginHelper.getInstance(this).unregisterReceiver();
+        super.onDestroy();
     }
 
     public void showMsg(String msg){
@@ -73,11 +82,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 ||Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
             // 设置状态栏透明
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            /*
             // 生成一个状态栏大小的矩形
             View statusView = createStatusView(activity, color);
             // 添加 statusView 到布局中
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             decorView.addView(statusView);
+            */
             // 设置根布局的参数
             ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
             rootView.setFitsSystemWindows(true);

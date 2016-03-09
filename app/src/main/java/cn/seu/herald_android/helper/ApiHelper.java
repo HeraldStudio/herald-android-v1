@@ -69,6 +69,8 @@ public class ApiHelper {
     public static final int API_USER=13;
     //宿舍查询
     public static final int API_ROOM=14;
+    //跑操详情查询
+    public static final int API_PEDETAIL=15;
 
 
     //需用其他方式访问的
@@ -106,11 +108,13 @@ public class ApiHelper {
             "schoolbus",
             "lecturenotice",
             "user",
-            "room"
+            "room",
+            "pedetail"
     };
 
-    public ApiHelper(Context context){
-        this.context = context;
+    public ApiHelper(Activity activity){
+        context = activity;
+        this.activity = activity;
         this.pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
         this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }

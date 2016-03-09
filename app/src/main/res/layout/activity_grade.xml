@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_query.grade.GradeActivity">
-    <android.support.design.widget.AppBarLayout
+    <cn.seu.herald_android.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -73,7 +73,7 @@
                 android:text="时间"
                 />
         </LinearLayout>
-    </android.support.design.widget.AppBarLayout>
+    </cn.seu.herald_android.CustomAppBarLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

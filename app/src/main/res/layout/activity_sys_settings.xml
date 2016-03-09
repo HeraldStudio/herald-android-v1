@@ -18,28 +18,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="16sp"
-            android:background="#fff"
-            android:text="网络助手设置"/>
-        <Switch
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-
-            android:text="seu-wlan自动登录"
-            android:id="@+id/autoLogin" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@drawable/menuitem_line"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textSize="16sp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"

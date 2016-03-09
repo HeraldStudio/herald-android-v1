@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import java.net.SocketTimeoutException;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import okhttp3.Call;
 
 public class LoginActivity extends BaseAppCompatActivity {
@@ -99,14 +101,18 @@ public class LoginActivity extends BaseAppCompatActivity {
                         } else {
                             showMsg("一卡通和统一查询密码不匹配，请核对后再试");
                         }
+
                     }
 
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext(), "resp1=" + response, Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
                         btn_login.setEnabled(true);
                         String uuid = response;
                         getApiHepler().setAuthCache("uuid", uuid);
+                        NetworkLoginHelper.getInstance(LoginActivity.this)
+                                .setAuth(tv_card.getText().toString(), tv_pwd.getText().toString());
                         checkUUID();
                     }
                 });
@@ -122,6 +128,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
+                        Toast.makeText(getApplicationContext(), "error2=" + e.toString(), Toast.LENGTH_LONG).show();
                         //错误检测
                         e.printStackTrace();
                         if (e instanceof SocketTimeoutException) {
@@ -131,10 +138,12 @@ public class LoginActivity extends BaseAppCompatActivity {
                         } else {
                             showMsg("一卡通和统一查询密码不匹配，请核对后再试");
                         }
+
                     }
 
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext(), "resp2=" + response, Toast.LENGTH_LONG).show();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {
@@ -145,6 +154,8 @@ public class LoginActivity extends BaseAppCompatActivity {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新输入账号密码
                                 showMsg("密码错误请重新登录");
                                 getApiHepler().doLogout();
+                                NetworkLoginHelper.getInstance(LoginActivity.this)
+                                        .setAuth("", "");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
