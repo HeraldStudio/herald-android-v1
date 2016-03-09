@@ -69,6 +69,8 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
         //初始化控件
         tabLayout = (TabLayout)findViewById(R.id.tablayout_schoolbus);
         viewPager = (ViewPager)findViewById(R.id.schoolbus_viewpager);
+        //设置Tab当前页标志的颜色
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorSchoolBusprimary));
     }
 
     @Override
