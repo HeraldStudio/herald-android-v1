@@ -26,7 +26,6 @@ import okhttp3.Call;
  */
 public class ApiHelper {
     private Context context;
-    private Activity activity;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     public static String APPID = "34cc6df78cfa7cd457284e4fc377559e";
@@ -112,20 +111,14 @@ public class ApiHelper {
             "pedetail"
     };
 
-    public ApiHelper(Activity activity){
-        context = activity;
-        this.activity = activity;
-        this.pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
-        this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
-    }
+
 
 
     //用到logout函数的部分应该调用此函数
-    public ApiHelper(Activity activity){
-        this.activity =activity;
-        this.context = activity.getBaseContext();
-        this.pref = activity.getSharedPreferences("herald", Context.MODE_PRIVATE);
-        this.editor = activity.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
+    public ApiHelper(Context context){
+        this.context = context;
+        this.pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
+        this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }
 
 
@@ -169,11 +162,14 @@ public class ApiHelper {
         cacheHelper.clearAllModuleCache();
         //跳转到登录页
 
-        Intent intent = new Intent(context,LoginActivity.class);
-        //如果activity为空会抛出异常
-        activity.startActivity(intent);
-        activity.finish();
 
+        //如果activity为空会抛出异常
+        if( context instanceof Activity){
+            Activity activity = (Activity)context;
+            Intent intent = new Intent(activity,LoginActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
+        }
     }
 
 

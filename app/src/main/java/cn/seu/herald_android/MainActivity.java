@@ -264,6 +264,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                         //错误检测
                         getApiHepler().dealApiException(e);
                     }
+
                     @Override
                     public void onResponse(String response) {
                         try {
@@ -272,10 +273,10 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                                 //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
                                 //更新首页欢迎信息和侧边栏信息
                                 JSONObject json_content = json_res.getJSONObject("content");
-                                getApiHepler().setAuthCache("name",json_content.getString("name"));
-                                getApiHepler().setAuthCache("sex",json_content.getString("sex"));
-                                getApiHepler().setAuthCache("cardnum",json_content.getString("cardnum"));
-                                getApiHepler().setAuthCache("schoolnum",json_content.getString("schoolnum"));
+                                getApiHepler().setAuthCache("name", json_content.getString("name"));
+                                getApiHepler().setAuthCache("sex", json_content.getString("sex"));
+                                getApiHepler().setAuthCache("cardnum", json_content.getString("cardnum"));
+                                getApiHepler().setAuthCache("schoolnum", json_content.getString("schoolnum"));
                                 tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
                                 tv_nav_user.setText(getApiHepler().getAuthCache("name"));
                             } else {
@@ -292,12 +293,11 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         refreshWelcome();
         refreshGridViewShortCutBox();
     }
-
 
     //以下是所用轮播栏插件的相关接口
     @Override
