@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -90,11 +91,13 @@ public class LoginActivity extends BaseAppCompatActivity {
                         progressDialog.dismiss();
                         btn_login.setEnabled(true);
                         //处理Api错误
+                        Toast.makeText(getApplicationContext(), "error1=" + e.toString(), Toast.LENGTH_LONG).show();
                         getApiHepler().dealApiException(e);
                     }
 
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext(), "resp1=" + response, Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
                         btn_login.setEnabled(true);
                         String uuid = response;
@@ -116,12 +119,15 @@ public class LoginActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
+                        Toast.makeText(getApplicationContext(), "error2=" + e.toString(), Toast.LENGTH_LONG).show();
                         //错误检测
+                        Log.e("response", e.toString());
                         getApiHepler().dealApiException(e);
                     }
 
                     @Override
                     public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext(), "resp2=" + response, Toast.LENGTH_LONG).show();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {

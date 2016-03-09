@@ -1,13 +1,19 @@
 package cn.seu.herald_android.mod_wifi;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.NetworkOnMainThreadException;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -35,12 +41,30 @@ public class NetworkLoginHelper {
 
     private Context context;
 
+    private boolean registered = false;
+
     public static NetworkLoginHelper getInstance(Context context){
         if(instance == null) {
             instance = new NetworkLoginHelper();
             instance.context = context;
         }
         return instance;
+    }
+
+    public void registerReceiver(){
+        if(!registered) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            context.registerReceiver(NetworkChangeReceiver.getInstance(), filter);
+            registered = true;
+        }
+    }
+
+    public void unregisterReceiver(){
+        if(registered) {
+            context.unregisterReceiver(NetworkChangeReceiver.getInstance());
+            registered = false;
+        }
     }
 
     public void setAuth(String username, String password){
@@ -55,6 +79,7 @@ public class NetworkLoginHelper {
     }
 
     public void checkAndLogin() {
+        Log.e("login",String.valueOf(this.hashCode()));
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         String ssid = wifiInfo.getSSID().replaceAll("\"", "");
@@ -133,7 +158,6 @@ public class NetworkLoginHelper {
             if (data.getString("result").equals("success")) {
                 try {
                     if (data.getString("login").equals("null")) {
-
                         // 未登录状态，开始登录
                         loginToService();
                     } else if (data.getString("login").equals("new")) {
@@ -155,26 +179,7 @@ public class NetworkLoginHelper {
                                 "登录位置：" + infoStr[3] + "\n" +
                                 "到期时间：" + infoStr[4] + " (剩余" + infoStr[5] + "天)", Toast.LENGTH_LONG).show();
 
-                    } else if (data.getString("login").equals("old")) {
-
-                        // 早已登录状态
-                        JSONObject info = new JSONObject(data.getString("response"));
-                        String[] infoStr = {
-                                info.getString("login_username"),
-                                info.getString("login_index"),
-                                info.getString("login_ip"),
-                                unicodeToString(info.getString("login_location")),
-                                info.getString("login_expire"),
-                                info.getString("login_remain"),
-                                formatTime(info.getString("login_time"))
-                        };
-                        Toast.makeText(context, "您的" + ssid + "仍在线，无需重复登录\n" +
-                                "账户名：" + infoStr[0] + " (已登录" + infoStr[1] + "个设备)\n" +
-                                "登录IP：" + infoStr[2] + "\n" +
-                                "登录位置：" + infoStr[3] + "\n" +
-                                "在线时长：" + infoStr[6] + "\n" +
-                                "到期时间：" + infoStr[4] + " (剩余" + infoStr[5] + "天)", Toast.LENGTH_LONG).show();
-                    }
+                    } else if (data.getString("login").equals("old")) {}
                 } catch (JSONException e) {
                     try {
                         String error = new JSONObject(data.getString("response")).getString("error");
@@ -185,9 +190,6 @@ public class NetworkLoginHelper {
                     }
                 }
             } else {
-                // 连接失败
-                Toast.makeText(context, "网络信号不佳，" + ssid + "无法登录"
-                        , Toast.LENGTH_SHORT).show();
             }
         }
     };

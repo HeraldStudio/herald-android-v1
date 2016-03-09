@@ -34,15 +34,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
-import cn.seu.herald_android.mod_wifi.NetworkShortcutActivity;
-import cn.seu.herald_android.mod_wifi.NetworkShortcutHelper;
+
 import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private NavigationView navigationView;
@@ -141,7 +139,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     public void init(){
 
         //登陆校园wifi
-        checkAndLoginWifi();
+        //
+        // checkAndLoginWifi();
 
         //切换动画
         overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);

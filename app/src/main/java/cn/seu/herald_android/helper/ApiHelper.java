@@ -109,8 +109,9 @@ public class ApiHelper {
             "room"
     };
 
-    public ApiHelper(Context context){
-        this.context = context;
+    public ApiHelper(Activity activity){
+        context = activity;
+        this.activity = activity;
         this.pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);
         this.editor = context.getSharedPreferences("herald", Context.MODE_PRIVATE).edit();
     }

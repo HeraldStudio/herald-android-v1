@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import okhttp3.Call;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
@@ -35,11 +36,19 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         this.cacheHelper = new CacheHelper(this);
         this.settingsHelper = new SettingsHelper(this);
 
+        NetworkLoginHelper.getInstance(this).registerReceiver();
+
         //加载刷新对话框
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setTitle("最新数据获取中");
         progressDialog.setMessage("请稍后...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        NetworkLoginHelper.getInstance(this).unregisterReceiver();
+        super.onDestroy();
     }
 
     public void showMsg(String msg){
