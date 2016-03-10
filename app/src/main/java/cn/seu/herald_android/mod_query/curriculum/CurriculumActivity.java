@@ -52,7 +52,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         });
 
         //沉浸式
-        setStatusBarColor(this, getResources().getColor(R.color.colorPedetailprimary));
+        setStatusBarColor(this, getResources().getColor(R.color.colorCurriculumPrimary));
 
         pager = (ViewPager) findViewById(R.id.pager);
 
@@ -142,6 +142,20 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         PagesAdapter adapter = new PagesAdapter(this, data, sidebar);
         pager.setAdapter(adapter);
         pager.setCurrentItem(adapter.getCurrentPage());
+        setTitle("第"+(adapter.getCurrentPage()+1)+"周");
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int p1, float p2, int p3) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                setTitle("第"+(position+1)+"周");
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
     }
 
     @Override

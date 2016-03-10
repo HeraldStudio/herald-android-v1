@@ -38,7 +38,7 @@
     <color name="colorSchoolBusprimary">#009688</color>
     <color name="colorSchoolBusprimary_dark">#009688</color>
     <color name="colorSchoolBusprimary_light">#B2DFDB</color>
-    <color name="colorSchoolBusaccent">#8BC34A</color>
+    <color name="colorSchoolBusaccent">#009688</color>
 
     <!--校园网-->
     <color name="colorSeuNetprimary">#7cb342</color>

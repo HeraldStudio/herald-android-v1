@@ -36,7 +36,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         CardItem cardItem = list.get(position);
 //        判断日期和分割线是否显示，用来给每天的消费记录分组
         if(position == 0 || !list.get(position).getDate().equals(list.get(position-1).getDate()) ) {
-            holder.divider.setVisibility(View.VISIBLE);
+            holder.divider.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
             holder.tv_date.setVisibility(View.VISIBLE);
         }else {
             holder.divider.setVisibility(View.GONE);

@@ -142,6 +142,8 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 }
                 ExprimentExpandAdapter exprimentExpandAdapter = new ExprimentExpandAdapter(getBaseContext(),parentArray,childArray);
                 expandableListView.setAdapter(exprimentExpandAdapter);
+                if(exprimentExpandAdapter.getGroupCount() > 0)
+                    expandableListView.expandGroup(0);
             }catch (JSONException e){
                 showMsg("缓存解析失败，请刷新后再试");
                 e.printStackTrace();

@@ -30,6 +30,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,6 +41,7 @@ import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
+import cn.seu.herald_android.mod_timeline.TimelineView;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 import okhttp3.Call;
@@ -157,6 +159,9 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //快捷盒子加载
         setupGridViewShortCutBox();
+
+        // 时间轴加载
+        setupTimelineView();
     }
 
     public void checkAndLoginWifi(){
@@ -290,6 +295,12 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                     }
                 });
 
+    }
+
+    private void setupTimelineView(){
+        TimelineView view = (TimelineView)findViewById(R.id.timeline);
+        view.setActivity(this);
+        view.loadContent(false);
     }
 
     @Override

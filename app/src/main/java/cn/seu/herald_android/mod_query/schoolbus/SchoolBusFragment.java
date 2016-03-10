@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
@@ -42,7 +43,10 @@ public class SchoolBusFragment extends Fragment{
         //控件初始化
         expandableListView = (ExpandableListView)view.findViewById(R.id.expandableListView);
         //设定适配器
-        expandableListView.setAdapter(new SchoolBusExpandAdapter(getContext(),titles,childViews));
+        SchoolBusExpandAdapter adapter = new SchoolBusExpandAdapter(getContext(), titles, childViews);
+        expandableListView.setAdapter(adapter);
+        if(adapter.getGroupCount() > 0)
+            expandableListView.expandGroup(0);
         return  view;
     }
 }

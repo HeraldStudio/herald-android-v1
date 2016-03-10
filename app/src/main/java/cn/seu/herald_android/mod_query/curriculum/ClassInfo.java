@@ -3,6 +3,13 @@ package cn.seu.herald_android.mod_query.curriculum;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+
+import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_timeline.TimelineView;
+
 /**
  * 单次课程信息的类
  */
@@ -71,4 +78,5 @@ public class ClassInfo {
         int hour = time / 60;
         return hour + (minute < 10 ? ":0" : ":") + minute;
     }
+
 }

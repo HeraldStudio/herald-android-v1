@@ -5,6 +5,11 @@ import org.json.JSONException;
 
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+
+import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_timeline.TimelineView;
 
 /**
  * Created by heyon on 2016/3/1.
@@ -22,7 +27,8 @@ public class CardItem {
     String system;
     //消费后余额
     String left;
-    public CardItem(String date,String time, String price, String type, String system, String left) {
+
+    public CardItem(String date, String time, String price, String type, String system, String left) {
         this.date = date;
         this.time = time;
         this.price = price;
@@ -55,9 +61,9 @@ public class CardItem {
         return time;
     }
 
-    public static ArrayList<CardItem> transfromJSONArrayToArrayList(JSONArray jsonArray)throws JSONException {
+    public static ArrayList<CardItem> transfromJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<CardItem> list = new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             list.add(new CardItem(
                     jsonArray.getJSONObject(i).getString("date").split(" ")[0],
                     jsonArray.getJSONObject(i).getString("date").split(" ")[1],
@@ -69,6 +75,5 @@ public class CardItem {
         }
         return list;
     }
-
 
 }

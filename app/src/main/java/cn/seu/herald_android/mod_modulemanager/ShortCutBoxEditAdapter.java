@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.helper.ModuleHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 
 /**
