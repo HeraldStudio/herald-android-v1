@@ -122,19 +122,23 @@
             android:theme="@style/SeunetTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SEUNET" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".mod_query.pedetail.PedetailActivity"
+        <activity
+            android:name=".mod_query.pedetail.PedetailActivity"
             android:label="@string/title_activity_pedetail"
             android:launchMode="singleTask"
             android:theme="@style/PedetailTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_PEDETAIL" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".mod_query.curriculum.CurriculumActivity"
+        <activity
+            android:name=".mod_query.curriculum.CurriculumActivity"
             android:label="@string/title_activity_curriculum"
             android:launchMode="singleTask"
             android:theme="@style/CurriculumTheme">
@@ -143,17 +147,29 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".mod_welcome.WelcomeActivity">
+        <activity android:name=".mod_welcome.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver android:name=".mod_wifi.NetworkChangeReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".mod_webmodule.WebModuleActivity">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.WEBMODULE_GYMORDER" />
+                <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
+                <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
+
 </manifest>
