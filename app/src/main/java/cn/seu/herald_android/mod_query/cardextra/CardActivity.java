@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_query.cardextra;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.mod_query.grade.GradeItem;
 import cn.seu.herald_android.mod_query.grade.GradeItemDataAdapter;
 import okhttp3.Call;
@@ -144,6 +146,36 @@ public class CardActivity extends BaseAppCompatActivity {
                         }catch (JSONException e){
                             e.printStackTrace();
                             showMsg("数据解析失败");
+                        }
+
+                    }
+                });
+    }
+
+    public static void remoteRefreshCache(Context context){
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_CARD))
+                .addParams("uuid", apiHelper.getUUID())
+                .addParams("timedelta", "7")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject json_res = new JSONObject(response);
+                            if(json_res.getInt("code")==200) {
+                                cacheHelper.setCache("herald_card",response);
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
                         }
 
                     }

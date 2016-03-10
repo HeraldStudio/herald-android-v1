@@ -24,6 +24,7 @@ import java.util.List;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.cardextra.CardAdapter;
 import cn.seu.herald_android.mod_query.cardextra.CardItem;
 
@@ -56,10 +57,17 @@ public class TimelineView extends ListView {
         super(context, attrs);
     }
 
+    private Runnable hideRefresh = null;
+
+    public void setHideRefresh(Runnable hideRefresh) {
+        this.hideRefresh = hideRefresh;
+    }
+
     public void loadContent(boolean refresh) {
         itemList = new ArrayList<>();
         if (refresh) {
             //TODO add refresh method
+            CardActivity.remoteRefreshCache(getContext());
         }
         loadContentCard();
 
@@ -67,6 +75,8 @@ public class TimelineView extends ListView {
 
         Collections.sort(itemList, Item.comparator);
         setAdapter(new TimelineAdapter());
+        if(hideRefresh != null)
+            hideRefresh.run();
     }
 
     private void loadContentCard() {

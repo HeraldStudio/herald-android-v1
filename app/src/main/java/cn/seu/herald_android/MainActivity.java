@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -298,9 +299,14 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
     private void setupTimelineView(){
+        SwipeRefreshLayout srl = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
         TimelineView view = (TimelineView)findViewById(R.id.timeline);
         view.setActivity(this);
         view.loadContent(false);
+        srl.setOnRefreshListener(() -> {
+            view.loadContent(true);
+        });
+        view.setHideRefresh(() -> srl.setRefreshing(false));
     }
 
     @Override

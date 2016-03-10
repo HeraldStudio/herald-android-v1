@@ -41,6 +41,7 @@
         android:stretchMode="columnWidth">
     </GridView>
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <cn.seu.herald_android.mod_timeline.TimelineView

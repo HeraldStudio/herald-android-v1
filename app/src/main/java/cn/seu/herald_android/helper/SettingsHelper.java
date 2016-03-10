@@ -103,7 +103,6 @@ public class SettingsHelper {
             R.mipmap.ic_lecture,
             R.mipmap.ic_grade,
             R.mipmap.ic_experiment,
-            R.mipmap.ic_curriculum,
             R.mipmap.ic_card,
             R.mipmap.ic_seunet,
             R.mipmap.ic_pedetail,
