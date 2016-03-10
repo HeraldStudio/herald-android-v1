@@ -2,23 +2,12 @@ package cn.seu.herald_android.mod_query.experiment;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -34,6 +23,8 @@ import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_achievement.Achievement;
+import cn.seu.herald_android.mod_achievement.AchievementFactory;
+import cn.seu.herald_android.mod_achievement.AchievementViewPagerAdapter;
 import okhttp3.Call;
 
 public class ExperimentActivity extends BaseAppCompatActivity {
@@ -74,7 +65,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         });
 
         //沉浸式
-        setStatusBarColor(this,getResources().getColor(R.color.colorExperimentprimary));
+        setStatusBarColor(this, getResources().getColor(R.color.colorExperimentprimary));
 
         //实验类型列表加载
         expandableListView = (ExpandableListView)findViewById(R.id.expandableListView);
@@ -84,18 +75,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
         //成就墙viewPager
         viewPager = (ViewPager)findViewById(R.id.chengjiu_viewpager);
-
-        //成就列表
-        achievementArrayList = new ArrayList<>();
-        achievementArrayList.add(new Achievement(Achievement.HERALD,"先与声","参加海螺工作室客户端内测的首批用户的标志。","2016-3-3"));
-        achievementArrayList.add(new Achievement(Achievement.SHIYAN,"挑战物理女王的勇士","选择了周立新老师的实验，最终得分低于60。","2016-3-3"));
-
-        //设置成就数目
-        tv_numofAchievement = (TextView)findViewById(R.id.tv_num);
-        tv_numofAchievement.setText(String.format("成就墙(%d/%d)",achievementArrayList.size(),20));
-
-        //设置适配器
-        viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievementArrayList));
     }
 
     @Override
@@ -138,12 +117,16 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         //加入到list中
                         parentArray.add(titles[i]);
                         childArray.add(item_list);
+                        //根据数据列表获得成就列表并且加入到成就列表中
+                        achievementArrayList.addAll(AchievementFactory.getExperimentAchievement(item_list));
                     }
                 }
+                //设置成就列表
+                setupAchievementWall();
+                //设置伸缩列表
                 ExprimentExpandAdapter exprimentExpandAdapter = new ExprimentExpandAdapter(getBaseContext(),parentArray,childArray);
                 expandableListView.setAdapter(exprimentExpandAdapter);
-                if(exprimentExpandAdapter.getGroupCount() > 0)
-                    expandableListView.expandGroup(0);
+
             }catch (JSONException e){
                 showMsg("缓存解析失败，请刷新后再试");
                 e.printStackTrace();
@@ -184,5 +167,13 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public void setupAchievementWall(){
+        //设置成就数目
+        tv_numofAchievement = (TextView)findViewById(R.id.tv_num);
+        tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievementArrayList.size(), 20));
+        //设置适配器
+        viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievementArrayList));
     }
 }

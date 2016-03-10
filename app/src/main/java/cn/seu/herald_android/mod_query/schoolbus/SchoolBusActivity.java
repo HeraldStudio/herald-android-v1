@@ -109,6 +109,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                             if(json_res.getInt("code")==200){
                                 getCacheHelper().setCache("herald_schoolbus_cache",json_res.toString());
                                 loadListWithCace();
+                                showMsg("获取最新校车时刻表成功");
                             }
                         }catch (JSONException e2){
                             e2.printStackTrace();

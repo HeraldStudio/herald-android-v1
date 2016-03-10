@@ -40,4 +40,28 @@ public class ExperimentItem {
         }
         return list;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
 }

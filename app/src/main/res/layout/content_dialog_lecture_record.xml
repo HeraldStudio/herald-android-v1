@@ -4,39 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:gravity="center_horizontal">
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
-        <LinearLayout
+        android:layout_height="400dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:padding="16dp"
-                android:background="@drawable/header_bg_lecture_record">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="已听讲座次数"
-                    android:textColor="@color/colorIcons"
-                    android:textSize="11sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tv_recordcount"
-                    android:text="0"
-                    android:layout_centerInParent="true"
-                    android:textSize="30sp"
-                    android:textColor="@color/colorIcons"/>
-            </RelativeLayout>
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:id="@+id/list_lecture_record">
-            </ListView>
-        </LinearLayout>
-    </ScrollView>
+            android:layout_height="150dp"
+            android:padding="16dp"
+            android:background="@drawable/header_bg_lecture_record">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已听讲座次数"
+                android:textColor="@color/colorIcons"
+                android:textSize="11sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_recordcount"
+                android:text="0"
+                android:layout_centerInParent="true"
+                android:textSize="30sp"
+                android:textColor="@color/colorIcons"/>
+        </RelativeLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:id="@+id/list_lecture_record">
+        </ListView>
+    </LinearLayout>
 </LinearLayout>

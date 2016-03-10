@@ -17,7 +17,6 @@ public class SettingsHelper {
     /**
      * 新加入功能时需要做的事情有:
      * 功能模块列表增加相应列
-     * 模块数目增加
      * 对应模块名字增加
      * 对应模块名字中文提示增加
      * 启动模块的ACTION的添加，同时在manifests文件里注册
@@ -35,15 +34,16 @@ public class SettingsHelper {
     public static final int MODULE_LECTURE = 2;
     public static final int MODULE_GRADE = 3;
     public static final int MODULE_EXPERIMENT = 4;
-    public static final int MODULE_EMPTYROOM = 5;
-    public static final int MODULE_CARDEXTRA = 6;
-    public static final int MODULE_SEUNET = 7;
-    public static final int MODULE_PEDETAIL = 8;
-    public static final int MODULE_CURRICULUM = 9;
+    public static final int MODULE_CARDEXTRA = 5;
+    public static final int MODULE_SEUNET = 6;
+    public static final int MODULE_PEDETAIL = 7;
+    public static final int MODULE_CURRICULUM = 8;
+//    public static final int MODULE_EMPTYROOM = 9;
+//    public static final int MODULE_GYMORDER = 10;
+//    public static final int MODULE_QUANYI = 11;
 
 
-    //模块数目
-    public static final int NUM_OF_MODULE = 10;
+
 
 
     //模块名字
@@ -53,11 +53,13 @@ public class SettingsHelper {
             "lecture",
             "grade",
             "experiment",
-            "emptyroom",
             "cardextra",
             "seunet",
             "pedetail",
-            "curriculum"
+            "curriculum",
+//            "emptyroom",
+//            "gymorder",
+//            "quanyi"
     };
 
     //模块名字文字提示
@@ -67,11 +69,13 @@ public class SettingsHelper {
             "人文讲座",
             "GPA",
             "实验",
-            "空教室",
             "一卡通",
             "校园网",
             "跑操",
-            "课程表"
+            "课程表",
+//            "空教室",
+//            "场馆预约",
+//            "权益服务"
     };
 
     //模块action
@@ -81,11 +85,14 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_LECTURE",
             "cn.seu.herald_android.MODULE_QUERY_GRADE",
             "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
-            "cn.seu.herald_android.MODULE_QUERY_EMPTYROOM",
             "cn.seu.herald_android.MODULE_QUERY_CARDEXTRA",
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_PEDETAIL",
-            "cn.seu.herald_android.MODULE_QUERY_CURRICULUM"
+            "cn.seu.herald_android.MODULE_QUERY_CURRICULUM",
+//            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
+//            "cn.seu.herald_android.WEBMODULE_GYMORDER",
+//            "cn.seu.herald_android.WEBMODULE_QUANYI",
+
     };
 
 
@@ -96,11 +103,14 @@ public class SettingsHelper {
             R.mipmap.ic_lecture,
             R.mipmap.ic_grade,
             R.mipmap.ic_experiment,
-            R.mipmap.ic_emptyroom,
+            R.mipmap.ic_curriculum,
             R.mipmap.ic_card,
             R.mipmap.ic_seunet,
             R.mipmap.ic_pedetail,
-            R.mipmap.ic_emptyroom
+            R.mipmap.ic_curriculum,
+//            R.mipmap.ic_emptyroom,
+//            R.mipmap.ic_gym,
+//            R.mipmap.ic_quanyi
     };
 
     //模块类型
@@ -165,7 +175,7 @@ public class SettingsHelper {
     public ArrayList<SeuModule> getSeuModuleList(){
         //获得所有模块快捷方式设置列表
         ArrayList<SeuModule> list = new ArrayList<>();
-        for(int i=0;i<NUM_OF_MODULE;i++){
+        for(int i=0;i<moduleNames.length;i++){
             list.add(new SeuModule(i,getModuleShortCutEnabled(i),moduleActions[i]));
         }
         return list;

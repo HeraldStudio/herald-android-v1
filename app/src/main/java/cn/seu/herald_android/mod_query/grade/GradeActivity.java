@@ -29,9 +29,6 @@ import okhttp3.Call;
 
 public class GradeActivity extends BaseAppCompatActivity {
 
-    private static final String[][] DATA_TO_SHOW = { { "This", "is", "a", "test" },
-            { "and", "a", "second", "test" } };
-
     SortableTableView<GradeItem> tableview_grade;
     ProgressDialog progressDialog;
     //展示首修GPA的TV
@@ -80,7 +77,7 @@ public class GradeActivity extends BaseAppCompatActivity {
         TableHeaderAdapter tableHeaderAdapter = new TableHeaderAdapter(this) {
             @Override
             public View getHeaderView(int columnIndex, ViewGroup parentView) {
-                String headers[] = {"课程","学期","成绩","类型","绩点"};
+                String headers[] = {"课程","学期","成绩","类型","学分"};
                 TextView tv_header = new TextView(getContext());
                 tv_header.setText(headers[columnIndex]);
                 tv_header.setTextSize(13f);

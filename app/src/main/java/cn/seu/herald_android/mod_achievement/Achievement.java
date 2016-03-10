@@ -5,7 +5,7 @@ package cn.seu.herald_android.mod_achievement;
  */
 public class Achievement {
     public static final int HERALD = 0;
-    public static final int SHIYAN = 1;
+    public static final int EXPERIMENT = 1;
     public static final int PAOCAO = 2;
     //成就类型
     int type;
@@ -36,5 +36,12 @@ public class Achievement {
 
     public String getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Achievement achievement = (Achievement)o;
+        return (this.type == achievement.type &&
+                this.name == achievement.name);
     }
 }
