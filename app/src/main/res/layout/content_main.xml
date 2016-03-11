@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#eee"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.MainActivity"
@@ -30,16 +31,6 @@
             android:id="@+id/tv_main_hello"
             android:text="Hello!" />
     </LinearLayout>
-    <GridView
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gridview_main_shortcutbox"
-        android:columnWidth="90dp"
-        android:numColumns="auto_fit"
-        android:visibility="gone"
-        android:stretchMode="columnWidth">
-    </GridView>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
@@ -48,6 +39,8 @@
             android:id="@+id/timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="7dp"
+            android:listSelector="@drawable/null_selector"
             android:divider="#00000000">
 
         </cn.seu.herald_android.mod_timeline.TimelineView>

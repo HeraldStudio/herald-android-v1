@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_query.experiment.ExperimentActivity">
 
-    <cn.seu.herald_android.CustomAppBarLayout
+    <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -39,7 +39,7 @@
                 android:layout_height="100dp">
             </android.support.v4.view.ViewPager>
         </RelativeLayout>
-    </cn.seu.herald_android.CustomAppBarLayout>
+    </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/content_experiment" />
 </android.support.design.widget.CoordinatorLayout>

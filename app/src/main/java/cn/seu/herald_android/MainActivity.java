@@ -1,12 +1,8 @@
 package cn.seu.herald_android;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,12 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
@@ -32,13 +25,9 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.mod_modulemanager.SeuModule;
-import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
@@ -158,12 +147,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //轮播栏加载
         setupSliderLayout();
-
-        //快捷盒子加载
-        setupGridViewShortCutBox();
-
-        // 时间轴加载
-        setupTimelineView();
     }
 
     public void checkAndLoginWifi(){
@@ -228,34 +211,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         sliderLayout.setDuration(4000);
     }
 
-    public void setupGridViewShortCutBox(){
-        //加载用户自己设置的快捷方式
-        gv_ShortCutBox = (GridView)findViewById(R.id.gridview_main_shortcutbox);
-        refreshGridViewShortCutBox();
-    }
-
-    public void refreshGridViewShortCutBox(){
-        //加载适配器
-        //获取设置为快捷方式的查询模块
-        ArrayList<SeuModule> settingArrayList = getSettingsHelper().getSeuModuleList();
-        SimpleAdapter simpleAdapter = ShortCutBoxDisplayAdapter.getShortCutBoxViewSimpleAdapter(
-                this, settingArrayList
-        );
-        //添加并且显示
-        gv_ShortCutBox.setAdapter(simpleAdapter);
-        //添加响应
-        gv_ShortCutBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //获得点击项的map
-                HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
-                Intent intent = new Intent();
-                intent.setAction(clickItemMap.get("Aciton").toString());
-                startActivity(intent);
-            }
-        });
-    }
-
     public void refreshWelcome(){
         //如果缓存存在的话先设置欢迎信息和侧边栏信息
         tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
@@ -299,7 +254,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     }
 
-    private void setupTimelineView(){
+    private void refreshTimelineView(){
         SwipeRefreshLayout srl = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
         srl.setColorSchemeResources(R.color.colorPrimary);
         TimelineView view = (TimelineView)findViewById(R.id.timeline);
@@ -315,7 +270,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     protected void onResume() {
         super.onResume();
         refreshWelcome();
-        refreshGridViewShortCutBox();
+        refreshTimelineView();
     }
 
     //以下是所用轮播栏插件的相关接口

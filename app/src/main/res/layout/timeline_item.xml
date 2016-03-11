@@ -26,24 +26,29 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="15dp" />
 
-    <LinearLayout
-        android:orientation="vertical"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/content"
-        android:id="@+id/attachedContainer"
-        android:visibility="gone"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"></LinearLayout>
-
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/content"
+        android:visibility="gone"
+        android:id="@+id/hsv">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/attachedContainer"/>
+    </HorizontalScrollView>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_alignParentBottom="false"
         android:background="#eee"
-        android:layout_below="@+id/attachedContainer">
+        android:visibility="gone"
+        android:layout_below="@+id/hsv">
 
         <Button
             android:layout_width="wrap_content"

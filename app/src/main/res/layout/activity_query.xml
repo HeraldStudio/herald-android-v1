@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_query.QueryActivity">
 
-    <cn.seu.herald_android.CustomAppBarLayout
+    <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,7 +20,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" >
         </android.support.v7.widget.Toolbar>
 
-    </cn.seu.herald_android.CustomAppBarLayout>
+    </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/content_query" />
 </android.support.design.widget.CoordinatorLayout>

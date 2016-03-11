@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 
 /**
@@ -93,6 +95,11 @@ public class MarkedCalendarView extends FrameLayout {
             tv.setText(String.valueOf(i));
 
             // 将格子添加到容器和链表
+            v.setOnClickListener(v1 -> {
+                if(getContext() instanceof BaseAppCompatActivity){
+                    ((BaseAppCompatActivity)getContext()).showMsg("该日无跑操记录");
+                }
+            });
             gv.addView(v);
             views.add(v);
         }
@@ -114,7 +121,11 @@ public class MarkedCalendarView extends FrameLayout {
         tv.setTextColor(Color.WHITE);
 
         v.setOnClickListener(view -> {
-            new AlertDialog.Builder(getContext()).setTitle("跑操记录详情").setMessage(info.toString()).show();
+            if(getContext() instanceof BaseAppCompatActivity){
+                ((BaseAppCompatActivity)getContext()).showMsg(info.toString());
+            } else {
+                new AlertDialog.Builder(getContext()).setTitle("跑操记录详情").setMessage(info.toString()).show();
+            }
         });
     }
 

@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_query.curriculum;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,4 +80,17 @@ public class ClassInfo {
         return hour + (minute < 10 ? ":0" : ":") + minute;
     }
 
+    public Calendar getTermStart(JSONObject termStart) throws JSONException {
+        return getTermStart(termStart.getInt("month"), termStart.getInt("day"));
+    }
+
+    public Calendar getTermStart(int month, int day){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        if(cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
+        }
+        return cal;
+    }
 }

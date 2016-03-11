@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,7 +182,6 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
             // 如果是本周，定时刷新时间指示条
             if (curWeek) {
-                Log.e("curWeek", "1");
                 refreshTimeHand();
                 IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(Intent.ACTION_TIME_TICK);
@@ -242,7 +240,8 @@ public class CurriculumScheduleLayout extends FrameLayout {
             ClassInfo info = list.get(i);
 
             CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(
-                    getContext(), info, sidebar.get(info.getClassName()), widenToday && dayDelta == 0);
+                    getContext(), info, sidebar.get(info.getClassName()),
+                    widenToday && dayDelta == 0, false);
 
             // 向右偏移
             block.setX(

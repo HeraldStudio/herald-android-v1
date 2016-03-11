@@ -20,6 +20,8 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
 
     private int layout;
 
+    private boolean showDetail;
+
     private Pair<String, String> teacherAndGPA;
 
     private static int color[] = {
@@ -35,11 +37,12 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
 
     public CurriculumScheduleBlockLayout(Context c, ClassInfo info,
                                          Pair<String, String> teacherAndGPA,
-                                         boolean isToday) {
+                                         boolean isToday, boolean showDetail) {
         super(c);
         classInfo = info;
         this.teacherAndGPA = teacherAndGPA;
         layout = isToday ? R.layout.curriculumitem_today : R.layout.curriculumitem_normal;
+        this.showDetail = showDetail;
     }
 
     // 要显示在屏幕上时再进行添加view的操作，显著提高应用启动速度
@@ -60,6 +63,11 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
         className.setText(classInfo.getClassName());
         TextView classPlace = (TextView) findViewById(R.id.classPlace);
         classPlace.setText(classInfo.getPlace());
+        if(showDetail) {
+            TextView classTime = (TextView) findViewById(R.id.classTime);
+            classTime.setVisibility(VISIBLE);
+            classTime.setText(classInfo.getTimePeriod());
+        }
 
         setOnClickListener(this);
     }

@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".mod_query.pedetail.PedetailActivity">
 
-    <cn.seu.herald_android.CustomAppBarLayout
+    <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -45,7 +45,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="当前月跑操次数"
+                        android:text="该月跑操次数"
                         android:textSize="13sp"/>
                 </LinearLayout>
                 <LinearLayout
@@ -93,7 +93,7 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-    </cn.seu.herald_android.CustomAppBarLayout>
+    </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/content_pedetail" />
 

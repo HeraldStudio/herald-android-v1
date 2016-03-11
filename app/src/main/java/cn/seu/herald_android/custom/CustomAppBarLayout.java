@@ -1,4 +1,4 @@
-package cn.seu.herald_android;
+package cn.seu.herald_android.custom;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;

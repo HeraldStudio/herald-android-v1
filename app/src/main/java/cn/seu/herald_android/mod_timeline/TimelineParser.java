@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_timeline;
 import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import org.json.JSONArray;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.ClassInfo;
@@ -23,70 +25,8 @@ import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
 
 public class TimelineParser {
 
-    public static ArrayList<TimelineView.Item> parseCardAndAddToList(
-            JSONArray jsonArray, ArrayList<TimelineView.Item> list) throws JSONException {
-
-        int N = jsonArray.length();
-        HashMap<String, Float> dayCostMap = new HashMap<>();
-        for (int i = 0; i < N; i++) {
-            String date = jsonArray.getJSONObject(i).getString("date").split(" ")[0];
-            float cost = Float.valueOf(jsonArray.getJSONObject(i).getString("price"));
-            // 充值暂不计算在内
-            if (cost >= 0) continue;
-            // 同一天的累加在一起
-            if (dayCostMap.containsKey(date)) {
-                Float flt = dayCostMap.get(date);
-                dayCostMap.remove(date);
-                dayCostMap.put(date, flt - cost);
-            } else { // 不同天的新增一个键
-                dayCostMap.put(date, -cost);
-            }
-        }
-        float total = 0f;
-        for (String date : dayCostMap.keySet()) {
-            float cost = dayCostMap.get(date);
-            total += cost;
-        }
-        // 求日均消费
-        if (dayCostMap.size() < 1) return null;
-        float average = total / dayCostMap.size();
-
-        // 转换为时间轴项目
-        for (String date : dayCostMap.keySet()) {
-            float cost = dayCostMap.get(date);
-            Calendar calendar = Calendar.getInstance();
-            String[] ymd = date.split("/");
-            int[] ymdInt = {Integer.valueOf(ymd[0]),
-                    Integer.valueOf(ymd[1]),
-                    Integer.valueOf(ymd[2])};
-            calendar.set(ymdInt[0], ymdInt[1] - 1, ymdInt[2] + 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            long time = calendar.getTimeInMillis();
-            // 还没到时间的暂不显示
-            if(time > Calendar.getInstance().getTimeInMillis()) continue;
-
-            TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
-                    time, "昨天的一卡通消费已出账，共消费" + roundMoney(cost) + "元，" +
-                    (cost == average ? "与一周平均消费相当，" :
-                            (cost > average ? ("比一周平均消费高了" + roundMoney(cost - average) + "元，请注意节省开销哦~")
-                                    : ("比一周平均消费低了" + roundMoney(average - cost) + "元，继续努力吧~")
-                            )
-                    )
-            );
-
-            list.add(item);
-        }
-        return list;
-    }
-
-    public static String roundMoney(float src) {
-        int k = (int) (src * 100);
-        return (k / 100) + "." + (k % 100);
-    }
-
     public static ArrayList<TimelineView.Item> parseCurriculumAndAddToList(Context context,
-            JSONObject jsonObject, ArrayList<TimelineView.Item> list) throws JSONException {
+                                                                           JSONObject jsonObject, ArrayList<TimelineView.Item> list) throws JSONException {
 
         // 读取侧栏信息
         String sidebar = new CacheHelper(context).getCache("herald_sidebar");
@@ -102,63 +42,99 @@ public class TimelineParser {
 
         // 读取开学日期
         int startMonth = jsonObject.getJSONObject("startdate").getInt("month");
-        int startDate =  jsonObject.getJSONObject("startdate").getInt("day");
+        int startDate = jsonObject.getJSONObject("startdate").getInt("day");
         Calendar termStart = Calendar.getInstance();
         termStart.set(termStart.get(Calendar.YEAR), startMonth, startDate);
 
         // 如果开学日期比今天还晚，则是去年开学的。这里用while保证了thisWeek永远大于零
-        while (termStart.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+        while (termStart.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
             termStart.set(Calendar.YEAR, termStart.get(Calendar.YEAR) - 1);
         }
-        termStart.set(Calendar.HOUR_OF_DAY, 0);
-        termStart.set(Calendar.MINUTE, 0);
+        termStart = CalendarUtils.toSharpDay(termStart);
+        final long now = Calendar.getInstance().getTimeInMillis();
 
         // 计算当前周
         Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, 0);
-        today.set(Calendar.MINUTE, 0);
+        today = CalendarUtils.toSharpDay(today);
 
-        Calendar lastWeek = Calendar.getInstance();
-        lastWeek.setTimeInMillis(today.getTimeInMillis() - 7 * 24 * 60 * 60 * 1000);
+        // 枚举今天的课程
+        int dayDelta = (int) (today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24;
+        int week = dayDelta / 7 + 1;
+        int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
+        JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+        for (int j = 0; j < array.length(); j++) {
+            ClassInfo info = new ClassInfo(array.getJSONArray(j));
+            // 如果该课程本周上课
+            if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
+                // 上课时间
+                long startTime = today.getTimeInMillis();
+                startTime += CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getStartTime() - 1] * 60 * 1000;
 
-        // 枚举7天前到今天的课程
-        Calendar i = Calendar.getInstance();
-        i.setTimeInMillis(Math.max(lastWeek.getTimeInMillis(), termStart.getTimeInMillis()));
-        for(; i.getTimeInMillis() <= today.getTimeInMillis(); i.set(Calendar.DATE, i.get(Calendar.DATE)+1)){
-            int dayDelta = (int)(i.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24;
-            int week = dayDelta / 7 + 1;
-            int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
-            JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
-            // 枚举星期相同的课程列表
-            for(int j = 0; j < array.length(); j++) {
-                ClassInfo info = new ClassInfo(array.getJSONArray(j));
-                // 如果该课程本周上课
-                if(info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)){
-                    // 计算开始时间，提前10分钟
-                    long time = i.getTimeInMillis();
-                    time += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getStartTime() - 1] - 10) * 60 * 1000;
+                // 下课时间，为了提前显示下节课，将下课前10分钟即认为已下课
+                long endTime = today.getTimeInMillis();
+                endTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 35) * 60 * 1000;
 
-                    // 没到提醒时间的跳过
-                    if(time > Calendar.getInstance().getTimeInMillis()) continue;
-
-                    TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                            time, "“" + info.getClassName() + "”课程将在十分钟后开始，地点在"
-                            + info.getPlace().replace("(单)","").replace("(双)", "")
-                            + "，请注意时间，按时上课哦~"
-                    );
-
-                    info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                    CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(context,
-                            info, sidebarInfo.get(info.getClassName()), false);
-                    block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
-
-                    int density = (int) context.getResources().getDisplayMetrics().density;
-                    item.attachedView = block;
-
-                    list.add(item);
+                String message;
+                long time;
+                // 如果前面课程都已下课，本课程还没上课，显示该课程的提示，时间为上课时间
+                if (now < startTime) {
+                    time = startTime;
+                    message = "下节课：";
+                } else if (now < endTime) { // 如果本课程正在上课，显示正在上课的提示，时间为现在
+                    time = now;
+                    message = "正在上课：";
+                } else { // 如果本课程已下课，扔给下个循环做处理
+                    continue;
                 }
+
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
+                        time, message + info.getClassName()
+                );
+
+                info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(context,
+                        info, sidebarInfo.get(info.getClassName()), false, true);
+                block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+
+                int density = (int) context.getResources().getDisplayMetrics().density;
+                item.attachedView.add(block);
+
+                list.add(item);
+
+                // 若今天课程还没结束，此处退出函数
+                return list;
             }
         }
+
+        // 若今天课程都结束了，显示明天课程
+        // 枚举明天的课程
+        dayDelta = (int) (today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24 + 1;
+        week = dayDelta / 7 + 1;
+        dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
+        array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+
+        int classCount = 0;
+        ArrayList<View> viewList = new ArrayList<>();
+        for (int j = 0; j < array.length(); j++) {
+            ClassInfo info = new ClassInfo(array.getJSONArray(j));
+            // 如果该课程本周上课
+            if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
+                classCount++;
+                info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(context,
+                        info, sidebarInfo.get(info.getClassName()), false, true);
+                block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+                viewList.add(block);
+            }
+        }
+        TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
+                today.getTimeInMillis() + 1000 * 60 * 60 * 24,
+                classCount == 0 ? "明天没有课程，娱乐之余请注意作息安排哦~" : "明天有" + classCount + "节课"
+        );
+
+        item.attachedView = viewList;
+
+        list.add(item);
 
         return list;
     }

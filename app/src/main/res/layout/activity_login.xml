@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_auth.LoginActivity">
 
-    <cn.seu.herald_android.CustomAppBarLayout
+    <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -19,7 +19,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </cn.seu.herald_android.CustomAppBarLayout>
+    </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/content_login" />
 

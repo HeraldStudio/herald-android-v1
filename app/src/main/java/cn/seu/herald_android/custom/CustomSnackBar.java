@@ -1,4 +1,4 @@
-package cn.seu.herald_android;
+package cn.seu.herald_android.custom;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 public class CustomSnackBar {
 
-    enum SnackBarDuration {
+    public enum SnackBarDuration {
         SHORT, LONG, INDEFINITE
     }
 
