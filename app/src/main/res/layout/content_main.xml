@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_main_hello"
             android:text="Hello!" />
+
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
