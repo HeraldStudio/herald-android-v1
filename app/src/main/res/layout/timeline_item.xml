@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f0f0f0">
+    android:background="@drawable/timeline_item_bg">
 
     <ImageView
         android:layout_width="36dp"
@@ -10,47 +10,21 @@
         android:id="@+id/avatar"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:src="@mipmap/ic_card" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="一卡通助手"
-        android:id="@+id/name"
-        android:layout_alignTop="@+id/avatar"
-        android:layout_toEndOf="@+id/avatar"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
-        android:textColor="#333"
-        android:textSize="15sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="10分钟前"
-        android:id="@+id/time"
-        android:layout_marginLeft="0dp"
-        android:layout_below="@+id/name"
-        android:layout_alignStart="@+id/name"
-        android:layout_marginTop="5dp"
-        android:textColor="#666"
-        android:textSize="13sp" />
+        android:src="@mipmap/ic_card" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="昨天的一卡通消费已出账，共消费45.5元，比日均消费高了3.7元，请注意节省开销哦~"
         android:id="@+id/content"
-        android:layout_marginLeft="20dp"
         android:textColor="#333"
         android:textSize="15sp"
-        android:layout_below="@+id/time"
+        android:layout_below="@+id/avatar"
+        android:layout_margin="15dp"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp" />
+        android:layout_alignParentEnd="true" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -64,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="分享"
+            android:background="?android:selectableItemBackground"
             android:id="@+id/button"
             android:layout_weight="1" />
 
@@ -71,8 +46,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="置顶"
+            android:background="?android:selectableItemBackground"
             android:id="@+id/button2"
             android:layout_weight="1" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/avatar"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_alignBottom="@+id/avatar"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一卡通助手"
+            android:id="@+id/name"
+            android:layout_alignTop="@+id/avatar"
+            android:layout_toEndOf="@+id/avatar"
+            android:textColor="#333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10分钟前"
+            android:id="@+id/time"
+            android:layout_marginLeft="0dp"
+            android:layout_below="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:textColor="#666"
+            android:textSize="13sp" />
     </LinearLayout>
 </RelativeLayout>

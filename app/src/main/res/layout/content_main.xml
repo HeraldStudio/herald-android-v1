@@ -47,7 +47,8 @@
         <cn.seu.herald_android.mod_timeline.TimelineView
             android:id="@+id/timeline"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:divider="#00000000">
 
         </cn.seu.herald_android.mod_timeline.TimelineView>
     </android.support.v4.widget.SwipeRefreshLayout>
