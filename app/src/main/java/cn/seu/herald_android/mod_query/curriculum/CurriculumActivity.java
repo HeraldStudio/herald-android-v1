@@ -1,5 +1,6 @@
 package cn.seu.herald_android.mod_query.curriculum;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,7 @@ import java.net.SocketTimeoutException;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.CacheHelper;
 import okhttp3.Call;
 
 /******************************************************************************
@@ -122,6 +124,56 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                             handleException(e);
                         }
 
+                    }
+                });
+    }
+
+    public static void remoteRefreshCache(Context context, Runnable onFinish) {
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
+                .addParams("uuid",apiHelper.getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                        onFinish.run();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray array = new JSONObject(response).getJSONArray("content");
+                            cacheHelper.setCache("herald_sidebar", array.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        OkHttpUtils
+                                .post()
+                                .url(ApiHelper.getApiUrl(ApiHelper.API_CURRICULUM))
+                                .addParams("uuid",apiHelper.getUUID())
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e) {
+                                        apiHelper.dealApiException(e);
+                                        onFinish.run();
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try{
+                                            JSONObject object = new JSONObject(response).getJSONObject("content");
+                                            cacheHelper.setCache("herald_curriculum", object.toString());
+                                        } catch (JSONException e){
+                                            e.printStackTrace();
+                                        }
+                                        onFinish.run();
+                                    }
+                                });
                     }
                 });
     }

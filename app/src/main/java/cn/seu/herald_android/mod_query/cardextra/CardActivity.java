@@ -152,7 +152,7 @@ public class CardActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public static void remoteRefreshCache(Context context){
+    public static void remoteRefreshCache(Context context, Runnable onFinish){
         ApiHelper apiHelper = new ApiHelper(context);
         CacheHelper cacheHelper = new CacheHelper(context);
         OkHttpUtils
@@ -174,8 +174,10 @@ public class CardActivity extends BaseAppCompatActivity {
                             if(json_res.getInt("code")==200) {
                                 cacheHelper.setCache("herald_card",response);
                             }
+                            onFinish.run();
                         }catch (JSONException e){
                             e.printStackTrace();
+                            onFinish.run();
                         }
 
                     }

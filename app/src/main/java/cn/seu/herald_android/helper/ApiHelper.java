@@ -18,6 +18,7 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.mod_auth.LoginActivity;
 import okhttp3.Call;
 
@@ -134,20 +135,19 @@ public class ApiHelper {
         //检查uuid的正确情况，如果正确则更新个人信息
         String uuid = getUUID();
         if(uuid.equals("")){
-            Toast.makeText(context, "请登录", Toast.LENGTH_SHORT).show();
+            ContextUtils.showMessage(context, "请登录");
             doLogout();
         }
     }
 
-
     public void dealApiException(Exception e){
         e.printStackTrace();
         if (e instanceof SocketTimeoutException) {
-            Toast.makeText(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀", Toast.LENGTH_SHORT).show();
+            ContextUtils.showMessage(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
         } else if (e instanceof ConnectException) {
-            Toast.makeText(context, "网络连接错误，请检查您的网络连接~", Toast.LENGTH_SHORT).show();
+            ContextUtils.showMessage(context, "网络连接错误，请检查您的网络连接~");
         } else {
-            Toast.makeText(context, "很抱歉，发生了未知的错误T.T", Toast.LENGTH_SHORT).show();
+            ContextUtils.showMessage(context, "很抱歉，发生了未知的错误T.T");
         }
     }
 

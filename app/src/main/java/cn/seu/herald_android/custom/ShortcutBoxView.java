@@ -18,6 +18,7 @@ import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
 public class ShortcutBoxView extends GridView {
     public ShortcutBoxView(Context c, AttributeSet a){
         super(c, a);
+        refresh();
     }
 
     // 由于需要嵌套在ListView中，要重写onMeasure()防止高度获取出错
@@ -30,6 +31,9 @@ public class ShortcutBoxView extends GridView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+    }
+
+    public void refresh(){
         //加载适配器
         //获取设置为快捷方式的查询模块
         ArrayList<SeuModule> settingArrayList = new SettingsHelper(getContext()).getSeuModuleList();
@@ -48,9 +52,5 @@ public class ShortcutBoxView extends GridView {
         });
         if(simpleAdapter.getCount() == 0) setVisibility(GONE);
         else setVisibility(VISIBLE);
-    }
-
-    public void refresh(){
-        ((SimpleAdapter)getAdapter()).notifyDataSetChanged();
     }
 }

@@ -147,6 +147,17 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //轮播栏加载
         setupSliderLayout();
+
+        // 加载时间轴
+        refreshTimelineView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshWelcome();
+        // 单独重载快捷方式列表
+        refreshShortcutBox();
     }
 
     public void checkAndLoginWifi(){
@@ -255,6 +266,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
     private void refreshTimelineView(){
+        refreshShortcutBox();
         SwipeRefreshLayout srl = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
         srl.setColorSchemeResources(R.color.colorPrimary);
         TimelineView view = (TimelineView)findViewById(R.id.timeline);
@@ -263,15 +275,15 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             view.loadContent(true);
         });
         view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
+        runMeasurementDependentTask(() -> srl.setRefreshing(true));
         view.loadContent(true);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        refreshWelcome();
-        refreshTimelineView();
+    private void refreshShortcutBox(){
+        TimelineView view = (TimelineView)findViewById(R.id.timeline);
+        view.refreshShortcut();
     }
+
 
     //以下是所用轮播栏插件的相关接口
     @Override

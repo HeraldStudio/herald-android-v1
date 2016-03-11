@@ -20,12 +20,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Vector;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
+import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 
 public class TimelineView extends ListView {
 
@@ -67,19 +69,18 @@ public class TimelineView extends ListView {
 
     private TimelineAdapter adapter;
 
+    private final Vector threads = new Vector();
+
     public void loadContent(boolean refresh) {
-        if(shortcutBox == null) {
-            shortcutBox = (ShortcutBoxView)
-                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
-            addHeaderView(shortcutBox);
-        } else {
-            shortcutBox.refresh();
-        }
 
         itemList = new ArrayList<>();
+
         if (refresh) {
-            //TODO add refresh method
-            CardActivity.remoteRefreshCache(getContext());
+            threads.add(new Object());
+            CurriculumActivity.remoteRefreshCache(getContext(), () -> {
+                if(threads.size() > 0) threads.remove(0);
+                loadContent(false);
+            });
         }
 
         loadContentCurriculum();
@@ -90,8 +91,18 @@ public class TimelineView extends ListView {
         } else {
             adapter.notifyDataSetChanged();
         }
-        if(hideRefresh != null)
+        if(hideRefresh != null && threads.size() == 0)
             hideRefresh.run();
+    }
+
+    public void refreshShortcut(){
+        if(shortcutBox == null) {
+            shortcutBox = (ShortcutBoxView)
+                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
+            addHeaderView(shortcutBox);
+        } else {
+            shortcutBox.refresh();
+        }
     }
 
     private void loadContentCurriculum() {
@@ -100,12 +111,8 @@ public class TimelineView extends ListView {
         String cache = activity.getCacheHelper().getCache("herald_curriculum");
         if (cache.equals("")) return;
 
-        try {
-            JSONObject json_cache = new JSONObject(cache);
-            itemList = TimelineParser.parseCurriculumAndAddToList(getContext(), json_cache, itemList);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        itemList = TimelineParser.parseCurriculumAndAddToList(getContext(), cache, itemList);
+
     }
 
     public class TimelineAdapter extends BaseAdapter {
@@ -146,10 +153,7 @@ public class TimelineView extends ListView {
             content.setText(item.info);
             avatar.setImageDrawable(getResources()
                     .getDrawable(activity.getSettingsHelper().moduleIconsId[item.module]));
-            avatar.setOnClickListener((v1) -> {
-                activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[item.module]));
-            });
-            name.setOnClickListener((v1) -> {
+            v.setOnClickListener((v1) -> {
                 activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[item.module]));
             });
 
@@ -183,7 +187,9 @@ public class TimelineView extends ListView {
         todayCal.set(Calendar.DATE, 1);
         long nextYear = todayCal.getTimeInMillis();
 
-        if(now < time) {
+        // 允许1秒的误差
+        if(now <= time + 1000) {
+            if(now > time) time = now;
             // 对明天全天的事件单独处理
             if(time == tomorrow){
                 return "明天";
@@ -194,7 +200,7 @@ public class TimelineView extends ListView {
                 deltaMinute %= 60;
                 if(deltaHour != 0) return deltaHour + "小时后";
                 if(deltaMinute != 0) return deltaMinute + "分钟后";
-                return "马上";
+                return "现在";
             }
             if(time <= dayAfterTomorrow){
                 return "明天 " + new SimpleDateFormat("H:mm").format(calendar.getTime());
