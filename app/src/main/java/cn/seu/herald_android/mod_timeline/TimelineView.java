@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
@@ -34,6 +35,7 @@ public class TimelineView extends ListView {
         private int module;
         private long time;
         private String info;
+        public View attachedView;
 
         public Item(int module, long time, String info) {
             this.module = module;
@@ -102,7 +104,7 @@ public class TimelineView extends ListView {
 
         try {
             JSONObject json_cache = new JSONObject(cache);
-            itemList = TimelineParser.parseCurriculumAndAddToList(json_cache, itemList);
+            itemList = TimelineParser.parseCurriculumAndAddToList(getContext(), json_cache, itemList);
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -127,29 +129,74 @@ public class TimelineView extends ListView {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            Item item = getItem(position);
+
             View v = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
             TextView name = (TextView)v.findViewById(R.id.name);
             TextView time = (TextView)v.findViewById(R.id.time);
             TextView content = (TextView)v.findViewById(R.id.content);
             ImageView avatar = (ImageView)v.findViewById(R.id.avatar);
+            ViewGroup attachedContainer = (ViewGroup)v.findViewById(R.id.attachedContainer);
 
-            name.setText(activity.getSettingsHelper().moduleNamesTips[getItem(position).module]);
+            name.setText(activity.getSettingsHelper().moduleNamesTips[item.module]);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(getItem(position).time);
-            String dateTime = new SimpleDateFormat("yyyy年M月d日 H:mm").format(calendar.getTime());
+            calendar.setTimeInMillis(item.time);
+            String dateTime = timeInNaturalLanguage(calendar);
             time.setText(dateTime);
 
-            content.setText(getItem(position).info);
+            content.setText(item.info);
             avatar.setImageDrawable(getResources()
-                    .getDrawable(activity.getSettingsHelper().moduleIconsId[getItem(position).module]));
+                    .getDrawable(activity.getSettingsHelper().moduleIconsId[item.module]));
             avatar.setOnClickListener((v1) -> {
-                activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[getItem(position).module]));
+                activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[item.module]));
             });
             name.setOnClickListener((v1) -> {
-                activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[getItem(position).module]));
+                activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[item.module]));
             });
+
+
+            if(item.attachedView != null){
+                attachedContainer.setVisibility(VISIBLE);
+                if(item.attachedView.getParent() != null){
+                    ((ViewGroup) item.attachedView.getParent()).removeView(item.attachedView);
+                }
+                attachedContainer.addView(item.attachedView);
+            }
 
             return v;
         }
+    }
+
+    public static String timeInNaturalLanguage(Calendar calendar) {
+        long time = calendar.getTimeInMillis();
+        long now = Calendar.getInstance().getTimeInMillis();
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.set(Calendar.HOUR_OF_DAY, 0);
+        todayCal.set(Calendar.MINUTE, 0);
+        long today = todayCal.getTimeInMillis();
+        todayCal.setTimeInMillis(todayCal.getTimeInMillis() - 1000 * 60 * 60 * 24);
+        long yesterday = todayCal.getTimeInMillis();
+        todayCal.setTimeInMillis(todayCal.getTimeInMillis() + 1000 * 60 * 60 * 24);
+        todayCal.set(Calendar.MONTH, 0);
+        todayCal.set(Calendar.DATE, 1);
+        long thisYear = todayCal.getTimeInMillis();
+
+        if(now > time) {
+            if(time >= today){
+                int deltaMinute = (int)((now - time) / 1000 / 60);
+                int deltaHour = deltaMinute / 60;
+                deltaMinute %= 60;
+                if(deltaHour != 0) return deltaHour + "小时前";
+                if(deltaMinute != 0) return deltaMinute + "分钟前";
+                return "刚刚";
+            }
+            if(time >= yesterday){
+                return "昨天 " + new SimpleDateFormat("H:mm").format(calendar.getTime());
+            }
+            if(time >= thisYear){
+                return new SimpleDateFormat("M-d H:mm").format(calendar.getTime());
+            }
+        }
+        return new SimpleDateFormat("yyyy-M-d H:mm").format(calendar.getTime());
     }
 }

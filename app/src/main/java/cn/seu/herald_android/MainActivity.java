@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -300,13 +301,14 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     private void setupTimelineView(){
         SwipeRefreshLayout srl = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+        srl.setColorSchemeResources(R.color.colorPrimary);
         TimelineView view = (TimelineView)findViewById(R.id.timeline);
         view.setActivity(this);
-        view.loadContent(false);
         srl.setOnRefreshListener(() -> {
             view.loadContent(true);
         });
-        view.setHideRefresh(() -> srl.setRefreshing(false));
+        view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
+        view.loadContent(true);
     }
 
     @Override

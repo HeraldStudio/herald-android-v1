@@ -1,6 +1,9 @@
 package cn.seu.herald_android.mod_timeline;
 
+import android.content.Context;
 import android.util.Log;
+import android.util.Pair;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,9 +12,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
+import cn.seu.herald_android.R;
+import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.ClassInfo;
+import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleBlockLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
 
 public class TimelineParser {
@@ -78,8 +85,20 @@ public class TimelineParser {
         return (k / 100) + "." + (k % 100);
     }
 
-    public static ArrayList<TimelineView.Item> parseCurriculumAndAddToList(
+    public static ArrayList<TimelineView.Item> parseCurriculumAndAddToList(Context context,
             JSONObject jsonObject, ArrayList<TimelineView.Item> list) throws JSONException {
+
+        // 读取侧栏信息
+        String sidebar = new CacheHelper(context).getCache("herald_sidebar");
+        Map<String, Pair<String, String>> sidebarInfo = new HashMap<>();
+
+        // 将课程的授课教师和学分信息放入键值对
+        JSONArray sidebarArray = new JSONArray(sidebar);
+        for (int i = 0; i < sidebarArray.length(); i++) {
+            JSONObject obj = sidebarArray.getJSONObject(i);
+            sidebarInfo.put(obj.getString("course"),
+                    new Pair<>(obj.getString("lecturer"), obj.getString("credit")));
+        }
 
         // 读取开学日期
         int startMonth = jsonObject.getJSONObject("startdate").getInt("month");
@@ -125,8 +144,16 @@ public class TimelineParser {
                     TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                             time, "“" + info.getClassName() + "”课程将在十分钟后开始，地点在"
                             + info.getPlace().replace("(单)","").replace("(双)", "")
-                            + "，请注意时间，及时上课哦~"
+                            + "，请注意时间，按时上课哦~"
                     );
+
+                    info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                    CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(context,
+                            info, sidebarInfo.get(info.getClassName()), false);
+                    block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+
+                    int density = (int) context.getResources().getDisplayMetrics().density;
+                    item.attachedView = block;
 
                     list.add(item);
                 }
