@@ -160,6 +160,12 @@ public class TimelineView extends ListView {
         }
 
         @Override
+        public void notifyDataSetChanged() {
+            now = Calendar.getInstance().getTimeInMillis();
+            super.notifyDataSetChanged();
+        }
+
+        @Override
         public int getCount() {
             return itemList.size();
         }
