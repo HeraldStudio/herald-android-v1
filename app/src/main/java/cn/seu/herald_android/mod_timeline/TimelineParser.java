@@ -32,7 +32,6 @@ public class TimelineParser {
      * 读取课表缓存，转换成对应的时间轴条目
      **/
     public static TimelineView.Item getCurriculumItem(Context context) {
-
         String cache = new CacheHelper(context).getCache("herald_curriculum");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
@@ -156,9 +155,11 @@ public class TimelineParser {
             item.attachedView = viewList;
 
             return item;
-        } catch (JSONException e) {
+        } catch (Exception e) {
+            // 清除出错的数据，使下次懒惰刷新时刷新课表
+            new CacheHelper(context).setCache("herald_curriculum", "");
             return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                    now, false, "X_X 课表数据加载失败，请进入课表模块手动刷新"
+                    now, false, "课表数据加载失败，请手动刷新"
             );
         }
     }
@@ -282,8 +283,10 @@ public class TimelineParser {
             return item;
 
         } catch (Exception e) {// JSONException, NumberFormatException
+            // 清除出错的数据，使下次懒惰刷新时刷新实验
+            new CacheHelper(context).setCache("herald_experiment", "");
             return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                    now, false, "X_X 实验数据加载失败，请进入实验模块手动刷新"
+                    now, false, "实验数据加载失败，手动刷新"
             );
         }
     }
@@ -344,7 +347,7 @@ public class TimelineParser {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             return new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
-                    now, false, "X_X 人文讲座数据加载失败，请手动刷新"
+                    now, false, "人文讲座数据加载失败，请手动刷新"
             );
         }
     }

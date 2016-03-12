@@ -94,6 +94,8 @@ public class TimelineView extends ListView {
         itemList = new ArrayList<>();
 
         if (refresh) {
+            // 懒惰刷新
+
             // 仅当工作日且处于跑操时间时刷新跑操预报
             Calendar nowCal = Calendar.getInstance();
             int week = nowCal.get(Calendar.DAY_OF_WEEK);
