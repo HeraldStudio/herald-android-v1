@@ -51,7 +51,7 @@ public class TimelineView extends ListView {
                     if(item1.important != item2.important){
                         return item1.important ? -1 : 1;
                     }
-                    return (int)(item1.time - item2.time);
+                    return 0;
                 };
     }
 
@@ -152,6 +152,12 @@ public class TimelineView extends ListView {
 
     public class TimelineAdapter extends BaseAdapter {
 
+        private long now;
+
+        public TimelineAdapter(){
+            now = Calendar.getInstance().getTimeInMillis();
+        }
+
         @Override
         public int getCount() {
             return itemList.size();
@@ -182,7 +188,7 @@ public class TimelineView extends ListView {
             name.setText(activity.getSettingsHelper().moduleNamesTips[item.module]);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(item.time);
-            String dateTime = timeInNaturalLanguage(calendar);
+            String dateTime = timeInNaturalLanguage(calendar, now);
             time.setText(dateTime);
 
             content.setText(item.info);
@@ -207,10 +213,12 @@ public class TimelineView extends ListView {
         }
     }
 
-    public static String timeInNaturalLanguage(Calendar calendar) {
-        long time = calendar.getTimeInMillis();
-        long now = Calendar.getInstance().getTimeInMillis();
+    // 因为此函数在getView()中被调用，视图回收再分配时，时间可能发生变化，所以此函数内不能调用Calendar.getInstance()
+    // 而应该用固定的now参数代表刷新时的时间
+    public static String timeInNaturalLanguage(Calendar dest, long now) {
+        long time = dest.getTimeInMillis();
         Calendar todayCal = Calendar.getInstance();
+        todayCal.setTimeInMillis(now);
         todayCal = CalendarUtils.toSharpDay(todayCal);
         todayCal.setTimeInMillis(todayCal.getTimeInMillis() + 1000 * 60 * 60 * 24);
         long tomorrow = todayCal.getTimeInMillis();
@@ -222,8 +230,8 @@ public class TimelineView extends ListView {
         todayCal.set(Calendar.DATE, 1);
         long nextYear = todayCal.getTimeInMillis();
 
-        // 允许1秒的误差
-        if(now <= time + 1000) {
+        // 允许5秒的误差
+        if(now <= time + 5 * 1000) {
             if(now > time) time = now;
             // 将明天零点视为明天全天事件
             if(time == tomorrow){
@@ -238,12 +246,12 @@ public class TimelineView extends ListView {
                 return "现在";
             }
             if(time <= dayAfterTomorrow){
-                return "明天 " + new SimpleDateFormat("H:mm").format(calendar.getTime());
+                return "明天 " + new SimpleDateFormat("H:mm").format(dest.getTime());
             }
             if(time <= nextYear){
-                return new SimpleDateFormat("M-d H:mm").format(calendar.getTime());
+                return new SimpleDateFormat("M-d H:mm").format(dest.getTime());
             }
         }
-        return new SimpleDateFormat("yyyy-M-d H:mm").format(calendar.getTime());
+        return new SimpleDateFormat("yyyy-M-d H:mm").format(dest.getTime());
     }
 }
