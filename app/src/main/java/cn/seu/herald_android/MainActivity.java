@@ -16,16 +16,10 @@ import android.webkit.WebView;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_query.QueryActivity;
@@ -36,15 +30,10 @@ import cn.seu.herald_android.mod_timeline.TimelineView;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 import okhttp3.Call;
-public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationView navigationView;
     //显示欢迎信息的tv
-    private TextView tv_hello;
     private TextView tv_nav_user;
-
-    //主页轮播栏插件
-    private SliderLayout sliderLayout;
-
 
     //显示推送消息的WebView
     private WebView webView;
@@ -145,9 +134,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         //刷新个人信息显示的UI
         refreshWelcome();
 
-        //轮播栏加载
-        setupSliderLayout();
-
         // 加载时间轴
         refreshTimelineView();
     }
@@ -182,49 +168,13 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        tv_hello = (TextView)findViewById(R.id.tv_main_hello);
-
         //获取侧边栏布局
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
     }
 
-    public void setupSliderLayout(){
-        sliderLayout = (SliderLayout)findViewById(R.id.sliderlayout_main);
-        HashMap<String,String> url_maps = new HashMap<>();
-        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        //加载图片
-        for(String name : url_maps.keySet()){
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra",name);
-
-            sliderLayout.addSlider(textSliderView);
-        }
-        //设置轮播选项
-        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Default);
-        //圆点位置
-        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
-        //描述动画
-        //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-        //切换间隔
-        sliderLayout.setDuration(4000);
-    }
-
     public void refreshWelcome(){
         //如果缓存存在的话先设置欢迎信息和侧边栏信息
-        tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
         tv_nav_user.setText(getApiHepler().getAuthCache("name"));
         OkHttpUtils
                 .post()
@@ -250,7 +200,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                                 getApiHepler().setAuthCache("sex", json_content.getString("sex"));
                                 getApiHepler().setAuthCache("cardnum", json_content.getString("cardnum"));
                                 getApiHepler().setAuthCache("schoolnum", json_content.getString("schoolnum"));
-                                tv_hello.setText("你好！" + getApiHepler().getAuthCache("name") + "同学");
                                 tv_nav_user.setText(getApiHepler().getAuthCache("name"));
                             } else {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
@@ -281,28 +230,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     private void refreshShortcutBox(){
         TimelineView view = (TimelineView)findViewById(R.id.timeline);
-        view.refreshShortcut();
-    }
-
-
-    //以下是所用轮播栏插件的相关接口
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        //轮播栏滑动时的动作监听
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        //轮播栏被选中时的动作
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-
+        view.refreshHeaders();
     }
 }

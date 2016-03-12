@@ -150,7 +150,7 @@ public class TimelineParser {
             return item;
         } catch (JSONException e) {
             return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                    now, "X_X 课表数据加载失败，请手动刷新"
+                    now, "X_X 课表数据加载失败，请进入课表模块手动刷新"
             );
         }
     }

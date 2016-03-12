@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
+import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 
 public class TimelineView extends ListView {
@@ -63,7 +65,11 @@ public class TimelineView extends ListView {
 
     private ShortcutBoxView shortcutBox;
 
+    private SliderView slider;
+
     private TimelineAdapter adapter;
+
+    private View topPadding;
 
     private final Vector threads = new Vector();
 
@@ -72,11 +78,14 @@ public class TimelineView extends ListView {
         itemList = new ArrayList<>();
 
         if (refresh) {
-            threads.add(new Object());
-            CurriculumActivity.remoteRefreshCache(getContext(), () -> {
-                if(threads.size() > 0) threads.remove(0);
-                loadContent(false);
-            });
+            // 仅当课表数据不存在时刷新
+            if(activity.getCacheHelper().getCache("herald_curriculum").equals("")) {
+                threads.add(new Object());
+                CurriculumActivity.remoteRefreshCache(getContext(), () -> {
+                    if (threads.size() > 0) threads.remove(0);
+                    loadContent(false);
+                });
+            }
         }
 
         // 加载并解析课表数据
@@ -97,7 +106,26 @@ public class TimelineView extends ListView {
             hideRefresh.run();
     }
 
-    public void refreshShortcut(){
+    public void refreshHeaders(){
+        // dp单位值
+        float dp = getContext().getResources().getDisplayMetrics().density;
+
+        if(topPadding == null) {
+            // 顶部增加一个padding
+            View v = new View(getContext());
+            v.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (7 * dp)));
+            addHeaderView(v);
+        }
+
+        if(slider == null){
+            slider = (SliderView)
+                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+
+            // 设置高度。在其他地方设置没用。
+            slider.setLayoutParams(new AbsListView.LayoutParams(-1, (int)(200 * dp)));
+            addHeaderView(slider);
+        }
+
         if(shortcutBox == null) {
             shortcutBox = (ShortcutBoxView)
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
