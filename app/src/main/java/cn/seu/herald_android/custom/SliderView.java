@@ -2,7 +2,11 @@ package cn.seu.herald_android.custom;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewParent;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -45,6 +49,16 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         //切换间隔
         setDuration(4000);
     }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        for(ViewParent v = getParent(); v != null; v = v.getParent()) {
+            if(v instanceof CustomSwipeRefreshLayout)
+                ((CustomSwipeRefreshLayout) v).noScroll = ev.getAction() == MotionEvent.ACTION_MOVE;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
