@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_query.pedetail;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
+import com.squareup.picasso.Cache;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -35,7 +37,9 @@ import java.util.Map;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.CacheHelper;
 import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
@@ -46,6 +50,10 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
     // 跑操次数数字
     private TextView count, monthCount;
+
+    public static final int[] FORECAST_TIME_PERIOD = {
+            6 * 60 + 20, 7 * 60 + 20
+    };
 
     /********************************
      * 初始化
@@ -67,10 +75,10 @@ public class PedetailActivity extends BaseAppCompatActivity {
         });
 
         //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         //沉浸式
-        setStatusBarColor(this,getResources().getColor(R.color.colorPedetailprimary));
+        setStatusBarColor(this, getResources().getColor(R.color.colorPedetailprimary));
 
         pager = (ViewPager) findViewById(R.id.calendarPager);
 
@@ -102,7 +110,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHepler().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -112,22 +120,45 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        try{
+                        try {
                             JSONArray array = new JSONObject(response).getJSONArray("content");
-
-                            runOnUiThread(() -> {
-                                getCacheHelper().setCache("herald_pedetail", array.toString());
-
-                                // 下一环节
-                                readLocal();
-
-                                // 隐藏刷新控件，为了美观，先延时0.5秒
-                                getProgressDialog().hide();
-                            });
-                        }catch (JSONException e){
+                            getCacheHelper().setCache("herald_pedetail", array.toString());
+                            // 下一环节
+                            readLocal();
+                            // 隐藏刷新控件，为了美观，先延时0.5秒
+                            getProgressDialog().hide();
+                        } catch (JSONException e) {
                             handleException(e);
                         }
+                    }
+                });
+    }
 
+    public static void refreshForecast(Context context, Runnable doAfter) {
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_PC))
+                .addParams("uuid", apiHelper.getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                        doAfter.run();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
+                            cacheHelper.setCache("herald_pc_date", String.valueOf(today));
+                            cacheHelper.setCache("herald_pc_forecast", new JSONObject(response).getString("content"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        doAfter.run();
                     }
                 });
     }
@@ -256,7 +287,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                 }
             });
 
-            if(infoList.size() == 0){
+            if (infoList.size() == 0) {
                 showErrorMessage("本学期暂时没有跑操记录");
             }
         } catch (Exception e) {

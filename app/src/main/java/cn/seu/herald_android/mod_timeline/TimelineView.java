@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Vector;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
@@ -27,6 +28,9 @@ import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
+import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
+import cn.seu.herald_android.mod_query.lecture.LectureActivity;
+import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
 public class TimelineView extends ListView {
 
@@ -83,14 +87,29 @@ public class TimelineView extends ListView {
 
     private View topPadding;
 
-    private final Vector threads = new Vector();
+    private final Vector<Object> threads = new Vector<>();
 
     public void loadContent(boolean refresh) {
 
         itemList = new ArrayList<>();
 
         if (refresh) {
-            // 仅当课表数据不存在时刷新
+            // 仅当工作日且处于跑操时间时刷新跑操预报
+            Calendar nowCal = Calendar.getInstance();
+            int week = nowCal.get(Calendar.DAY_OF_WEEK);
+            long now = nowCal.getTimeInMillis();
+            long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
+            long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
+            long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
+            if(week != Calendar.SATURDAY && week != Calendar.SUNDAY && startTime <= now && now < endTime) {
+                threads.add(new Object());
+                PedetailActivity.refreshForecast(getContext(), () -> {
+                    if (threads.size() > 0) threads.remove(0);
+                    loadContent(false);
+                });
+            }
+
+            // 仅当课表数据不存在时刷新课表
             if(activity.getCacheHelper().getCache("herald_curriculum").equals("")) {
                 threads.add(new Object());
                 CurriculumActivity.remoteRefreshCache(getContext(), () -> {
@@ -98,21 +117,41 @@ public class TimelineView extends ListView {
                     loadContent(false);
                 });
             }
+
+            // 仅当实验数据不存在时刷新实验
+            if(activity.getCacheHelper().getCache("herald_experiment").equals("")) {
+                threads.add(new Object());
+                ExperimentActivity.remoteRefreshCache(getContext(), () -> {
+                    if (threads.size() > 0) threads.remove(0);
+                    loadContent(false);
+                });
+            }
+
+            // 直接刷新人文讲座预告
+            threads.add(new Object());
+            LectureActivity.remoteRefreshCache(getContext(), () -> {
+                if (threads.size() > 0) threads.remove(0);
+                loadContent(false);
+            });
         }
 
+        // 加载并解析跑操预报数据
+        Item item = TimelineParser.getPeForecastItem(getContext());
+        if(item != null) itemList.add(item);
+
         // 加载并解析课表数据
-        String cache = activity.getCacheHelper().getCache("herald_curriculum");
-        itemList.add(TimelineParser.getCurriculumItem(getContext(), cache));
+        itemList.add(TimelineParser.getCurriculumItem(getContext()));
 
         // 加载并解析实验数据
-        cache = activity.getCacheHelper().getCache("herald_experiment");
-        itemList.add(TimelineParser.getExperimentItem(getContext(), cache));
+        itemList.add(TimelineParser.getExperimentItem(getContext()));
 
         // 加载并解析人文讲座预告数据
-        cache = activity.getCacheHelper().getCache("herald_lecture_notices");
-        itemList.add(TimelineParser.getLectureItem(getContext(), cache));
+        itemList.add(TimelineParser.getLectureItem(getContext()));
 
+        // 有消息的排在前面，没消息的排在后面
         Collections.sort(itemList, Item.comparator);
+
+        // 更新适配器，结束刷新
         if(adapter == null) {
             setAdapter(adapter = new TimelineAdapter());
         } else {

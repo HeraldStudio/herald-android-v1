@@ -31,8 +31,9 @@ public class TimelineParser {
     /**
      * 读取课表缓存，转换成对应的时间轴条目
      **/
-    public static TimelineView.Item getCurriculumItem(Context context, String cache) {
+    public static TimelineView.Item getCurriculumItem(Context context) {
 
+        String cache = new CacheHelper(context).getCache("herald_curriculum");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONObject jsonObject = new JSONObject(cache);
@@ -166,7 +167,8 @@ public class TimelineParser {
     /**
      * 读取实验缓存，转换成对应的时间轴条目
      **/
-    public static TimelineView.Item getExperimentItem(Context context, String cache) {
+    public static TimelineView.Item getExperimentItem(Context context) {
+        String cache = new CacheHelper(context).getCache("herald_experiment");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONObject json_content = new JSONObject(cache).getJSONObject("content");
@@ -281,7 +283,7 @@ public class TimelineParser {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                    now, false, "X_X 实验数据加载失败，请手动刷新"
+                    now, false, "X_X 实验数据加载失败，请进入实验模块手动刷新"
             );
         }
     }
@@ -289,7 +291,8 @@ public class TimelineParser {
     /**
      * 读取人文讲座预告缓存，转换成对应的时间轴条目
      **/
-    public static TimelineView.Item getLectureItem(Context context, String cache) {
+    public static TimelineView.Item getLectureItem(Context context) {
+        String cache = new CacheHelper(context).getCache("herald_lecture_notices");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
@@ -344,5 +347,40 @@ public class TimelineParser {
                     now, false, "X_X 人文讲座数据加载失败，请手动刷新"
             );
         }
+    }
+
+    /**
+     * 读取跑操预报缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineView.Item getPeForecastItem(Context context) {
+        CacheHelper helper = new CacheHelper(context);
+        String date = helper.getCache("herald_pc_date");
+        String forecast = helper.getCache("herald_pc_forecast");
+        String firstRun = helper.getCache("herald_pc_firstrun");
+        final long now = Calendar.getInstance().getTimeInMillis();
+
+        // 不在跑操时间
+        if(!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))){
+            if(firstRun.equals("")) { // 首次启动强制显示跑操卡片
+                helper.setCache("herald_pc_firstrun", "false");
+                return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                        now, true, "跑操助手将在早上跑操时间显示当天跑操预报"
+                );
+            } else {
+                return null;
+            }
+        }
+
+        // 在跑操时间，但还没有跑操预告信息
+        if(!forecast.contains("跑操")) {
+            return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                    now, true, "目前暂无跑操预报信息，请稍后刷新重试"
+            );
+        }
+
+        // 有跑操预告信息
+        return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                now, true, "小猴预测：" + forecast
+        );
     }
 }
