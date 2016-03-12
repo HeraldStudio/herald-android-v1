@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.mod_modulemanager.SeuModule;
@@ -117,6 +118,8 @@ public class SettingsHelper {
     private Context context;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+
+
 
 
     public SettingsHelper(Context context){
