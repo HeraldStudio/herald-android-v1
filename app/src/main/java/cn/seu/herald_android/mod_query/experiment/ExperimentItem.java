@@ -6,23 +6,44 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import cn.seu.herald_android.custom.CalendarUtils;
+
 /**
  * Created by heyon on 2016/3/3.
  */
 public class ExperimentItem {
     String name;
     String date;
-    String day;
+    String time;
     String teacher;
     String address;
     String grade;
-    public ExperimentItem(String name, String date, String day, String teacher, String address, String grade) {
+    public ExperimentItem(String name, String date, String time, String teacher, String address, String grade) {
         this.name = name;
         this.date = date;
-        this.day = day;
+        this.time = getTimePeriod(time);
         this.teacher = teacher;
         this.address = address;
         this.grade = grade;
+    }
+
+    private String getTimePeriod(String time) {
+        int timeStamp;
+        switch (time){
+            case "上午":
+                timeStamp = ExperimentActivity.EXPERIMENT_BEGIN_TIME[0];
+                break;
+            case "下午":
+                timeStamp = ExperimentActivity.EXPERIMENT_BEGIN_TIME[1];
+                break;
+            case "晚上":
+                timeStamp = ExperimentActivity.EXPERIMENT_BEGIN_TIME[2];
+                break;
+            default:
+                return "未知";
+        }
+        return CalendarUtils.formatHourMinuteStamp(timeStamp) + "~"
+                + CalendarUtils.formatHourMinuteStamp(timeStamp + 3 * 60);
     }
 
     public static ArrayList<ExperimentItem> transfromJSONArrayToArrayList(JSONArray jsonArray)throws JSONException{
@@ -49,8 +70,8 @@ public class ExperimentItem {
         return date;
     }
 
-    public String getDay() {
-        return day;
+    public String getTime() {
+        return time;
     }
 
     public String getTeacher() {

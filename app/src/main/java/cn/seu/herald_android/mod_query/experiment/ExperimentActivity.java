@@ -39,6 +39,11 @@ public class ExperimentActivity extends BaseAppCompatActivity {
     //成就列表
     ArrayList<Achievement> achievementArrayList = new ArrayList<>();
 
+    // 每节实验开始的时间，以(Hour * 60 + Minute)形式表示
+    // 本程序假定每节实验都是3小时
+    public static final int[] EXPERIMENT_BEGIN_TIME = {
+            9 * 60 + 45, 13 * 60 + 45, 18 * 60 + 15
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +53,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         loadCache();
     }
 
-    public void init(){
+    public void init() {
         //toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,20 +64,20 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         });
 
         //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
         //沉浸式
         setStatusBarColor(this, getResources().getColor(R.color.colorExperimentprimary));
 
         //实验类型列表加载
-        expandableListView = (ExpandableListView)findViewById(R.id.expandableListView);
+        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             expandableListView.setNestedScrollingEnabled(true);
         }
 
         //成就墙viewPager
-        viewPager = (ViewPager)findViewById(R.id.chengjiu_viewpager);
+        viewPager = (ViewPager) findViewById(R.id.chengjiu_viewpager);
     }
 
     @Override
@@ -84,25 +89,25 @@ public class ExperimentActivity extends BaseAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_sync){
+        if (id == R.id.action_sync) {
             refreshCache();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadCache(){
+    public void loadCache() {
         //如果缓存不为空则加载缓存，反之刷新缓存
         String cache = getCacheHelper().getCache("herald_experiment");
-        if(!cache.equals("")){
-            try{
+        if (!cache.equals("")) {
+            try {
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
                 ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();
                 //根据每种集合加载不同的子view
-                for(int i=0;i<json_content.length();i++){
+                for (int i = 0; i < json_content.length(); i++) {
                     String jsonArray_str = json_content.getString(json_content.names().getString(i));
-                    if(!jsonArray_str.equals("")){
+                    if (!jsonArray_str.equals("")) {
                         //如果有实验则加载数据和子项布局
                         JSONArray jsonArray = new JSONArray(jsonArray_str);
                         //根据数组长度获得实验的Item集合
@@ -117,28 +122,28 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 //设置成就列表
                 setupAchievementWall();
                 //设置伸缩列表
-                ExprimentExpandAdapter exprimentExpandAdapter = new ExprimentExpandAdapter(getBaseContext(),parentArray,childArray);
+                ExprimentExpandAdapter exprimentExpandAdapter = new ExprimentExpandAdapter(getBaseContext(), parentArray, childArray);
                 expandableListView.setAdapter(exprimentExpandAdapter);
 
-                if(exprimentExpandAdapter.getGroupCount() > 0)
+                if (exprimentExpandAdapter.getGroupCount() > 0)
                     expandableListView.expandGroup(0);
 
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 showMsg("缓存解析失败，请刷新后再试");
                 e.printStackTrace();
             }
-        }else {
+        } else {
             refreshCache();
         }
     }
 
 
-    public void refreshCache(){
+    public void refreshCache() {
         getProgressDialog().show();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHepler().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -150,14 +155,14 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         getProgressDialog().dismiss();
-                        try{
+                        try {
                             JSONObject json_res = new JSONObject(response);
-                            if(json_res.getInt("code")==200){
+                            if (json_res.getInt("code") == 200) {
                                 showMsg("刷新成功");
-                                getCacheHelper().setCache("herald_experiment",response);
+                                getCacheHelper().setCache("herald_experiment", response);
                             }
                             loadCache();
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                             showMsg("数据解析失败");
                         }
@@ -165,9 +170,9 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void setupAchievementWall(){
+    public void setupAchievementWall() {
         //设置成就数目
-        tv_numofAchievement = (TextView)findViewById(R.id.tv_num);
+        tv_numofAchievement = (TextView) findViewById(R.id.tv_num);
         tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievementArrayList.size(), 20));
         //设置适配器
         viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievementArrayList));

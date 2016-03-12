@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_experiment">
     <cn.seu.herald_android.mod_query.experiment.ExperimentListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:scrollbarStyle="outsideOverlay"

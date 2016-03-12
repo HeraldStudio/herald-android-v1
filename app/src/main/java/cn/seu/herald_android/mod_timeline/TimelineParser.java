@@ -19,9 +19,11 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_achievement.AchievementFactory;
 import cn.seu.herald_android.mod_query.curriculum.ClassInfo;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleBlockLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
+import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
 
 public class TimelineParser {
 
@@ -99,7 +101,6 @@ public class TimelineParser {
                             info, sidebarInfo.get(info.getClassName()), false, true);
                     block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
 
-                    int density = (int) context.getResources().getDisplayMetrics().density;
                     item.attachedView.add(block);
 
                     // 若今天课程还没结束，此处退出函数
@@ -111,7 +112,7 @@ public class TimelineParser {
             Calendar halfPastSix = CalendarUtils.toSharpDay(Calendar.getInstance());
             halfPastSix.set(Calendar.HOUR_OF_DAY, 18);
             halfPastSix.set(Calendar.MINUTE, 30);
-            if(classCount == 0 && now < halfPastSix.getTimeInMillis()) {
+            if (classCount == 0 && now < halfPastSix.getTimeInMillis()) {
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                         now, "今天没有课程，娱乐之余请注意作息安排哦~"
                 );
@@ -147,7 +148,7 @@ public class TimelineParser {
             item.attachedView = viewList;
 
             return item;
-        } catch (JSONException e){
+        } catch (JSONException e) {
             return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                     now, "X_X 课表数据加载失败，请手动刷新"
             );
@@ -155,14 +156,45 @@ public class TimelineParser {
     }
 
 
-    /*public static TimelineView.Item getExperimentItem(Context context, String cache) {
+  /*  public static TimelineView.Item getExperimentItem(Context context, String cache) {
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONObject json_content = new JSONObject(cache).getJSONObject("content");
-            for(int i = 0; i < json_content.length(); i++){
+            for (int i = 0; i < json_content.length(); i++) {
+                String jsonArray_str = json_content.getString(json_content.names().getString(i));
+                if (!jsonArray_str.equals("")) {
+                    //如果有实验则加载数据和子项布局
+                    JSONArray jsonArray = new JSONArray(jsonArray_str);
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        ExperimentItem item = new ExperimentItem(
+                                jsonObject.getString("name"),
+                                jsonObject.getString("Date"),
+                                jsonObject.getString("Day"),
+                                jsonObject.getString("Teacher"),
+                                jsonObject.getString("Address"),
+                                jsonObject.getString("Grade")
+                        );
+                        String[] ymdStr = item.getDate()
+                                .split("日")[0].replace("年","-").replace("月","-").split("-");
+                        int[] ymd = {
+                                Integer.valueOf(ymdStr[0]),
+                                Integer.valueOf(ymdStr[1]),
+                                Integer.valueOf(ymdStr[2])
+                        };
+                        Calendar time = Calendar.getInstance();
+                        time.set(ymd[0], ymd[1] - 1, ymd[2]);
+                        time = CalendarUtils.toSharpDay(time);
 
+                        // 属于同一周
+                        if(CalendarUtils.toSharpWeek(time).getTimeInMillis()
+                                == CalendarUtils.toSharpWeek(Calendar.getInstance()).getTimeInMillis()){
+                            if()
+                        }
+                    }
+                }
             }
-        } catch (JSONException e){
+        } catch (Exception e) {// JSONException, NumberFormatException
             return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                     now, "X_X 实验数据加载失败，请手动刷新"
             );

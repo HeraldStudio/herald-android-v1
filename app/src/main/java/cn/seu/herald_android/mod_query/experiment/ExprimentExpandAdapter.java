@@ -82,7 +82,7 @@ public class ExprimentExpandAdapter extends BaseExpandableListAdapter {
         TextView tv_grade = (TextView)contentView.findViewById(R.id.tv_grade);
         tv_name.setText(experimentItem.name);
         tv_date.setText("实验日期："+experimentItem.date);
-        tv_day.setText("时间段："+experimentItem.day);
+        tv_day.setText("时间段："+experimentItem.time);
         tv_teacher.setText("指导老师："+experimentItem.teacher);
         tv_address.setText("实验地点："+experimentItem.address);
         experimentItem.grade = experimentItem.grade.replace("null", "");
