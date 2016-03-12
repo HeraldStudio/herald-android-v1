@@ -24,8 +24,8 @@ public class ExperimentBlockLayout extends LinearLayout {
         tv_teacher.setText("指导老师："+item.teacher);
         tv_address.setText("实验地点："+item.address);
         tv_grade.setText(item.grade.replace("null", ""));
-        contentView.setLayoutParams(new LayoutParams(-2, -2));
-        contentView.setBackground(context.getResources().getDrawable(R.drawable.timeline_experiment_block_bg));
+        contentView.setLayoutParams(new LayoutParams(-1, -2));
+        contentView.setBackground(context.getResources().getDrawable(R.drawable.timeline_attached_block_bg));
         addView(contentView);
     }
 }

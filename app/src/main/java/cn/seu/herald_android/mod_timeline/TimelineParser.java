@@ -19,8 +19,8 @@ import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.ClassInfo;
-import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleBlockLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
+import cn.seu.herald_android.mod_query.curriculum.CurriculumTimelineBlockLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
 import cn.seu.herald_android.mod_query.lecture.LectureBlockLayout;
@@ -101,8 +101,9 @@ public class TimelineParser {
                     );
 
                     info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                    CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(context,
-                            info, sidebarInfo.get(info.getClassName()), false, true);
+                    Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                    CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                            info, pair == null ? "获取失败" : pair.first);
                     block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
 
                     item.attachedView.add(block);
@@ -137,8 +138,10 @@ public class TimelineParser {
                 if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                     classCount++;
                     info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                    CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(context,
-                            info, sidebarInfo.get(info.getClassName()), false, true);
+
+                    Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                    CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                            info, pair == null ? "获取失败" : pair.first);
                     block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
                     viewList.add(block);
                 }
