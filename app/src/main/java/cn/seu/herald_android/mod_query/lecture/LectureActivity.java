@@ -145,7 +145,11 @@ public class LectureActivity extends BaseAppCompatActivity {
                             JSONObject json_res = new JSONObject(response);
                             if(json_res.getInt("code")==200){
                                 getCacheHelper().setCache("herald_lecture_notices", json_res.toString());
-                                showMsg("已获取最新讲座预告");
+                                if(json_res.getJSONArray("content").length() == 0) {
+                                    showMsg("最近暂无讲座预告信息");
+                                } else {
+                                    showMsg("已获取最新讲座预告");
+                                }
                                 loadNoticeCache();
                             }
                         } catch (JSONException e) {

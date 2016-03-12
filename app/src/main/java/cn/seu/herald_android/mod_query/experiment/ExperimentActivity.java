@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_query.experiment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -45,24 +46,21 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_experiment);
         init();
         loadCache();
-
     }
 
     public void init(){
         //toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        //设置按钮
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-                finish();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+            finish();
         });
+
+        //禁用collapsingToolbarLayout的伸缩标题
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
 
         //沉浸式
         setStatusBarColor(this, getResources().getColor(R.color.colorExperimentprimary));
@@ -98,24 +96,19 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         if(!cache.equals("")){
             try{
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
-                //实验种类集合
-                String[] titles = {"文科及医学实验选做","文科及医学实验",
-                        "基础性实验(上)","基础性实验(上)选做",
-                        "基础性实验(下)","基础性实验(下)选做"};
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
                 ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();
                 //根据每种集合加载不同的子view
-                for(int i=0;i<titles.length;i++){
-                    if(!json_content.has(titles[i])) continue;
-                    String jsonArray_str = json_content.getString(titles[i]);
+                for(int i=0;i<json_content.length();i++){
+                    String jsonArray_str = json_content.getString(json_content.names().getString(i));
                     if(!jsonArray_str.equals("")){
                         //如果有实验则加载数据和子项布局
                         JSONArray jsonArray = new JSONArray(jsonArray_str);
                         //根据数组长度获得实验的Item集合
                         ArrayList<ExperimentItem> item_list = ExperimentItem.transfromJSONArrayToArrayList(jsonArray);
                         //加入到list中
-                        parentArray.add(titles[i]);
+                        parentArray.add(json_content.names().getString(i));
                         childArray.add(item_list);
                         //根据数据列表获得成就列表并且加入到成就列表中
                         achievementArrayList.addAll(AchievementFactory.getExperimentAchievement(item_list));
@@ -126,6 +119,9 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 //设置伸缩列表
                 ExprimentExpandAdapter exprimentExpandAdapter = new ExprimentExpandAdapter(getBaseContext(),parentArray,childArray);
                 expandableListView.setAdapter(exprimentExpandAdapter);
+
+                if(exprimentExpandAdapter.getGroupCount() > 0)
+                    expandableListView.expandGroup(0);
 
             }catch (JSONException e){
                 showMsg("缓存解析失败，请刷新后再试");

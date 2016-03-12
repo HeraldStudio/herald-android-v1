@@ -12,9 +12,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,7 +23,6 @@ import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
-import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 
 public class TimelineView extends ListView {
@@ -83,7 +79,13 @@ public class TimelineView extends ListView {
             });
         }
 
-        loadContentCurriculum();
+        // 加载并解析课表数据
+        String cache = activity.getCacheHelper().getCache("herald_curriculum");
+        itemList.add(TimelineParser.getCurriculumItem(getContext(), cache));
+
+        // 加载并解析实验数据
+        //cache = activity.getCacheHelper().getCache("herald_experiment");
+        //itemList.add(TimelineParser.getExperimentItem(getContext(), cache));
 
         Collections.sort(itemList, Item.comparator);
         if(adapter == null) {
@@ -103,16 +105,6 @@ public class TimelineView extends ListView {
         } else {
             shortcutBox.refresh();
         }
-    }
-
-    private void loadContentCurriculum() {
-
-        //尝试加载缓存
-        String cache = activity.getCacheHelper().getCache("herald_curriculum");
-        if (cache.equals("")) return;
-
-        itemList = TimelineParser.parseCurriculumAndAddToList(getContext(), cache, itemList);
-
     }
 
     public class TimelineAdapter extends BaseAdapter {

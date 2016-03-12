@@ -25,8 +25,7 @@ import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
 
 public class TimelineParser {
 
-    public static ArrayList<TimelineView.Item> parseCurriculumAndAddToList(
-            Context context, String cache, ArrayList<TimelineView.Item> list) {
+    public static TimelineView.Item getCurriculumItem(Context context, String cache) {
 
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
@@ -103,10 +102,8 @@ public class TimelineParser {
                     int density = (int) context.getResources().getDisplayMetrics().density;
                     item.attachedView.add(block);
 
-                    list.add(item);
-
                     // 若今天课程还没结束，此处退出函数
-                    return list;
+                    return item;
                 }
             }
 
@@ -118,8 +115,7 @@ public class TimelineParser {
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                         now, "今天没有课程，娱乐之余请注意作息安排哦~"
                 );
-                list.add(item);
-                return list;
+                return item;
             }
 
             // 若今天没课但过了下午6点半，或者课程都结束了，显示明天课程
@@ -150,15 +146,26 @@ public class TimelineParser {
 
             item.attachedView = viewList;
 
-            list.add(item);
-
-            return list;
+            return item;
         } catch (JSONException e){
-            TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
+            return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                     now, "X_X 课表数据加载失败，请手动刷新"
             );
-            list.add(item);
-            return list;
         }
     }
+
+
+    /*public static TimelineView.Item getExperimentItem(Context context, String cache) {
+        final long now = Calendar.getInstance().getTimeInMillis();
+        try {
+            JSONObject json_content = new JSONObject(cache).getJSONObject("content");
+            for(int i = 0; i < json_content.length(); i++){
+
+            }
+        } catch (JSONException e){
+            return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
+                    now, "X_X 实验数据加载失败，请手动刷新"
+            );
+        }
+    }*/
 }

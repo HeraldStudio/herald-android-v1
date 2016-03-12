@@ -56,12 +56,9 @@ public class SeunetActivity extends BaseAppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-                finish();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+            finish();
         });
 
         //禁用collapsingToolbarLayout的伸缩标题
