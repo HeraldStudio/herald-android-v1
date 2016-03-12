@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.seu.herald_android.R;
 
@@ -19,19 +20,13 @@ import cn.seu.herald_android.R;
  * Created by heyon on 2016/3/7.
  */
 public class ShortCutBoxDisplayAdapter extends ArrayAdapter<SeuModule> {
-    //设置为显示的快捷方式列表
-    ArrayList<SeuModule> list;
-    //布局
-    int resource;
-    public ShortCutBoxDisplayAdapter(Context context, int resource, ArrayList<SeuModule> list) {
-        super(context, resource);
-        this.resource = resource;
-        this.list = list;
+    public ShortCutBoxDisplayAdapter(Context context, int resource, List<SeuModule> objects) {
+        super(context, resource, objects);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SeuModule seuModule = list.get(position);
+        SeuModule seuModule = getItem(position);
         if( convertView == null ){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_edit_shortcut,null);
         }
@@ -55,6 +50,7 @@ public class ShortCutBoxDisplayAdapter extends ArrayAdapter<SeuModule> {
                 map.put("ItemIcon", seuModuleItem.getIc_id());//添加图标
                 map.put("ItemName", seuModuleItem.getName());//添加按钮文字
                 map.put("Aciton", seuModuleItem.getActions());//添加打开模块的动作
+                map.put("ModuleId",seuModuleItem.getModuleId());//添加模块对应id
                 shorcutHashMapArrayList.add(map);
             }
         }

@@ -1,6 +1,8 @@
 package cn.seu.herald_android.custom;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
@@ -42,7 +44,7 @@ public class ShortcutBoxView extends GridView {
         );
         //添加并且显示
         setAdapter(simpleAdapter);
-        //添加响应
+        //添加点击响应
         setOnItemClickListener((parent, view, position, id) -> {
             //获得点击项的map
             HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
@@ -50,6 +52,26 @@ public class ShortcutBoxView extends GridView {
             intent.setAction(clickItemMap.get("Aciton").toString());
             getContext().startActivity(intent);
         });
+        //添加长按响应,询问用户是否从快捷栏上删除
+        setOnItemLongClickListener((parent, view, position, id) -> {
+            HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
+            int moduleId =(int)clickItemMap.get("ModuleId");
+            SettingsHelper settingsHelper  = new SettingsHelper(getContext());
+            new AlertDialog.Builder(getContext())
+                    .setMessage("确定移除此模块的快捷方式吗")
+                    .setPositiveButton("确定",(dialog, which) -> {
+                        //设置为不可用
+                        settingsHelper.setModuleShortCutEnabled(moduleId,false);
+                        //重新刷新界面
+                        refresh();
+                    })
+                    .setNegativeButton("取消", (dialog1, which1) ->{
+
+            }).show();
+            //返回true以保证setOnItemClickListener不再执行
+            return true;
+        });
+
         if(simpleAdapter.getCount() == 0) setVisibility(GONE);
         else setVisibility(VISIBLE);
     }

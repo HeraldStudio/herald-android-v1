@@ -177,6 +177,8 @@ public class LectureActivity extends BaseAppCompatActivity {
         //获得对话框中的打卡次数textview
         tv_count = (TextView)window.findViewById(R.id.tv_recordcount);
 
+        //加载讲座记录时显示刷新框
+        progressDialog.show();
         //获取已听讲座
         OkHttpUtils
                 .post()
