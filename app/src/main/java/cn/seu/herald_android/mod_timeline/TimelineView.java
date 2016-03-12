@@ -41,8 +41,9 @@ public class TimelineView extends ListView {
             this.info = info;
         }
 
+        // 按时间先后顺序排列
         public static Comparator<Item> comparator =
-                (item1, item2) -> (int)(item2.time - item1.time);
+                (item1, item2) -> (int)(item1.time - item2.time);
     }
 
     private ArrayList<Item> itemList;
@@ -93,8 +94,8 @@ public class TimelineView extends ListView {
         itemList.add(TimelineParser.getCurriculumItem(getContext(), cache));
 
         // 加载并解析实验数据
-        //cache = activity.getCacheHelper().getCache("herald_experiment");
-        //itemList.add(TimelineParser.getExperimentItem(getContext(), cache));
+        cache = activity.getCacheHelper().getCache("herald_experiment");
+        itemList.add(TimelineParser.getExperimentItem(getContext(), cache));
 
         Collections.sort(itemList, Item.comparator);
         if(adapter == null) {
@@ -210,7 +211,7 @@ public class TimelineView extends ListView {
         // 允许1秒的误差
         if(now <= time + 1000) {
             if(now > time) time = now;
-            // 对明天全天的事件单独处理
+            // 将明天零点视为明天全天事件
             if(time == tomorrow){
                 return "明天";
             }
