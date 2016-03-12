@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
@@ -101,12 +102,12 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             //打开设置
-            Intent intent = new Intent(MainActivity.this, GradeActivity.class);
+            Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_join) {
-            //显示加入我们对话框
-
+        } else if (id == R.id.nav_aboutus) {
+            //显示关于我们
+            Intent intent = new Intent(MainActivity.this, AboutusActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_send) {
             //打开给我们发送建议的窗口
 

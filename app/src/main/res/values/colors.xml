@@ -54,6 +54,10 @@
     <color name="colorPedetailaccent">#26a69a</color>
     <color name="colorPedetailcalendarBg">#ffffff</color>
 
+    <!--关于我们-->
+    <color name="colorAboutusprimary">#d32f2f</color>
+    <color name="colorAboutusprimaryDark">#d32f2f</color>
+    <color name="colorAboutusprimaryAccent">#d32f2f</color>
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
     <color name="colorCurriculumPrimaryDark">#00abd4</color>

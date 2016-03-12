@@ -1,9 +1,8 @@
-package cn.seu.herald_android.mod_welcome;
+package cn.seu.herald_android.mod_communicate;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import cn.seu.herald_android.MainActivity;
