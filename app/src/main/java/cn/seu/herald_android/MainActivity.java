@@ -32,8 +32,9 @@ import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private NavigationView navigationView;
-    //显示欢迎信息的tv
+    //显示侧边栏欢迎信息的tv
     private TextView tv_nav_user;
+    private TextView tv_nav_cardnum;
 
     //显示推送消息的WebView
     private WebView webView;
@@ -171,6 +172,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         //获取侧边栏布局
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
+
+        tv_nav_cardnum = (TextView)headerLayout.findViewById(R.id.tv_nav_usercard);
     }
 
     public void refreshWelcome(){
@@ -201,6 +204,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                                 getApiHepler().setAuthCache("cardnum", json_content.getString("cardnum"));
                                 getApiHepler().setAuthCache("schoolnum", json_content.getString("schoolnum"));
                                 tv_nav_user.setText(getApiHepler().getAuthCache("name"));
+                                tv_nav_cardnum.setText(getApiHepler().getAuthCache("cardnum"));
                             } else {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
                                 showMsg("登录信息已失效，请重新登录");
