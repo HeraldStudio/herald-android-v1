@@ -112,9 +112,9 @@ public class TimelineView extends ListView {
 
         if(topPadding == null) {
             // 顶部增加一个padding
-            View v = new View(getContext());
-            v.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (7 * dp)));
-            addHeaderView(v);
+            topPadding = new View(getContext());
+            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (7 * dp)));
+            addHeaderView(topPadding);
         }
 
         if(slider == null){
