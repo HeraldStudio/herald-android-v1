@@ -241,7 +241,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
             CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(
                     getContext(), info, sidebar.get(info.getClassName()),
-                    widenToday && dayDelta == 0, false);
+                    widenToday && dayDelta == 0);
 
             // 向右偏移
             block.setX(

@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -182,8 +183,8 @@ public class TimelineView extends ListView {
             TextView time = (TextView)v.findViewById(R.id.time);
             TextView content = (TextView)v.findViewById(R.id.content);
             ImageView avatar = (ImageView)v.findViewById(R.id.avatar);
-            HorizontalScrollView hsv = (HorizontalScrollView)v.findViewById(R.id.hsv);
             ViewGroup attachedContainer = (ViewGroup)v.findViewById(R.id.attachedContainer);
+            ViewGroup hsv = (ViewGroup)v.findViewById(R.id.hsv);
 
             name.setText(activity.getSettingsHelper().moduleNamesTips[item.module]);
             Calendar calendar = Calendar.getInstance();
@@ -201,11 +202,20 @@ public class TimelineView extends ListView {
 
             if(item.attachedView.size() != 0){
                 hsv.setVisibility(VISIBLE);
+                boolean firstChild = true;
+                float dp = getContext().getResources().getDisplayMetrics().density;
                 for(View k : item.attachedView) {
+                    if(!firstChild) {
+                        View padding = new View(getContext());
+                        padding.setLayoutParams(new LinearLayout.LayoutParams((int) (12 * dp), 1));
+                        attachedContainer.addView(padding);
+                    }
+
                     if (k.getParent() != null) {
                         ((ViewGroup) k.getParent()).removeView(k);
                     }
                     attachedContainer.addView(k);
+                    firstChild = false;
                 }
             }
 

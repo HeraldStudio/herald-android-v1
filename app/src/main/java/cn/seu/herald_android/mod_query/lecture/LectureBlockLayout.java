@@ -22,8 +22,8 @@ public class LectureBlockLayout extends LinearLayout {
         tv_topic.setText(item.getTopic());
         contentView.findViewById(R.id.line_divider).setVisibility(GONE);
         float dp = context.getResources().getDisplayMetrics().density;
-        contentView.setLayoutParams(new LayoutParams((int)(280 * dp), -2));
-        contentView.setBackground(context.getResources().getDrawable(R.drawable.timeline_experiment_block_bg));
+        contentView.setLayoutParams(new LayoutParams(-1, -2));
+        contentView.setBackground(context.getResources().getDrawable(R.drawable.timeline_attached_block_bg));
         addView(contentView);
     }
 }
