@@ -23,6 +23,8 @@ import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleBlockLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
+import cn.seu.herald_android.mod_query.lecture.LectureBlockLayout;
+import cn.seu.herald_android.mod_query.lecture.LectureNoticeItem;
 
 public class TimelineParser {
 
@@ -184,7 +186,7 @@ public class TimelineParser {
                                 jsonObject.getString("Grade")
                         );
                         String[] ymdStr = item.getDate()
-                                .split("日")[0].replace("年","-").replace("月","-").split("-");
+                                .split("日")[0].replace("年", "-").replace("月", "-").split("-");
                         int[] ymd = {
                                 Integer.valueOf(ymdStr[0]),
                                 Integer.valueOf(ymdStr[1]),
@@ -195,16 +197,16 @@ public class TimelineParser {
                         time = CalendarUtils.toSharpDay(time);
 
                         // 属于同一周
-                        if(CalendarUtils.toSharpWeek(time).getTimeInMillis()
-                                == CalendarUtils.toSharpWeek(Calendar.getInstance()).getTimeInMillis()){
+                        if (CalendarUtils.toSharpWeek(time).getTimeInMillis()
+                                == CalendarUtils.toSharpWeek(Calendar.getInstance()).getTimeInMillis()) {
                             // 如果发现今天有实验
                             Calendar nowCal = Calendar.getInstance();
-                            if(CalendarUtils.toSharpDay(time).getTimeInMillis()
-                                    ==CalendarUtils.toSharpDay(nowCal).getTimeInMillis()){
+                            if (CalendarUtils.toSharpDay(time).getTimeInMillis()
+                                    == CalendarUtils.toSharpDay(nowCal).getTimeInMillis()) {
                                 // 如果是半小时之内快要开始的实验，放弃之前所有操作，直接返回这个实验的提醒
                                 int nowStamp = nowCal.get(Calendar.HOUR_OF_DAY) * 60 + nowCal.get(Calendar.MINUTE);
                                 int startStamp = item.getBeginStamp();
-                                if(nowStamp < startStamp && nowStamp >= startStamp - 30){
+                                if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                                             now, true, "你有1个实验即将开始，请注意时间准时参加~"
@@ -215,7 +217,7 @@ public class TimelineParser {
 
                                 // 如果是已经开始还未结束的实验，放弃之前所有操作，直接返回这个实验的提醒
                                 int endStamp = startStamp + 3 * 60;
-                                if(nowStamp >= startStamp && nowStamp < endStamp){
+                                if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                                             now, true, "1个实验正在进行"
@@ -225,13 +227,13 @@ public class TimelineParser {
                                 }
 
                                 // 如果这个实验已经结束，跳过它
-                                if(nowStamp >= endStamp){
+                                if (nowStamp >= endStamp) {
                                     continue;
                                 }
 
                                 // 如果是第一次发现今天有实验，则清空列表（之前放在列表里的都不是今天的）
                                 // 然后做标记，以后不再记录不是今天的实验
-                                if(!todayHasExperiments) {
+                                if (!todayHasExperiments) {
                                     experiments.clear();
                                     todayHasExperiments = true;
                                 }
@@ -242,13 +244,13 @@ public class TimelineParser {
                             }
 
                             // 如果不是今天的实验但已经结束，跳过它
-                            if(CalendarUtils.toSharpDay(time).getTimeInMillis()
-                                    <=CalendarUtils.toSharpDay(nowCal).getTimeInMillis()){
+                            if (CalendarUtils.toSharpDay(time).getTimeInMillis()
+                                    <= CalendarUtils.toSharpDay(nowCal).getTimeInMillis()) {
                                 continue;
                             }
 
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
-                            if(!todayHasExperiments) {
+                            if (!todayHasExperiments) {
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                 experiments.add(block);
                             }
@@ -261,7 +263,7 @@ public class TimelineParser {
             int N = experiments.size();
 
             // 今天和本周均无实验
-            if(N == 0){
+            if (N == 0) {
                 return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                         now, false, "实验助手可以智能提醒你参加即将开始的实验"
                 );
@@ -277,6 +279,66 @@ public class TimelineParser {
         } catch (Exception e) {// JSONException, NumberFormatException
             return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                     now, false, "X_X 实验数据加载失败，请手动刷新"
+            );
+        }
+    }
+
+    /**
+     * 读取人文讲座预告缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineView.Item getLectureItem(Context context, String cache) {
+        final long now = Calendar.getInstance().getTimeInMillis();
+        try {
+            JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
+            ArrayList<View> lectures = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json_item = jsonArray.getJSONObject(i);
+                String dateStr = json_item.getString("date").split("日")[0];
+                String[] date = dateStr.replaceAll("年", "-").replaceAll("月", "-").split("-");
+                String[] mdStr = {date[date.length - 2], date[date.length - 1]};
+
+                int[] md = {
+                        Integer.valueOf(mdStr[0]),
+                        Integer.valueOf(mdStr[1])
+                };
+                Calendar time = Calendar.getInstance();
+                if (time.get(Calendar.MONTH) + 1 == md[0] && time.get(Calendar.DAY_OF_MONTH) == md[1]) {
+                    if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 18 * 60 + 30) {
+
+                        LectureBlockLayout block = new LectureBlockLayout(context, new LectureNoticeItem(
+                                json_item.getString("date"),
+                                json_item.getString("topic"),
+                                json_item.getString("speaker"),
+                                json_item.getString("location")
+                        ));
+                        lectures.add(block);
+                    }
+                }
+            }
+
+            // 今天有人文讲座
+            if (lectures.size() > 0) {
+                Calendar time = Calendar.getInstance();
+                time = CalendarUtils.toSharpDay(time);
+                time.set(Calendar.HOUR_OF_DAY, 18);
+                time.set(Calendar.MINUTE, 30);
+
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
+                        time.getTimeInMillis(), true, "今天有新的人文讲座，有兴趣的同学欢迎来参加~"
+                );
+                item.attachedView = lectures;
+                return item;
+            }
+
+            // 今天无人文讲座
+            return new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
+                    now, false, "今天暂无人文讲座信息，点我查看以后的预告"
+            );
+
+        } catch (Exception e) {// JSONException, NumberFormatException
+            return new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
+                    now, false, "X_X 人文讲座数据加载失败，请手动刷新"
             );
         }
     }

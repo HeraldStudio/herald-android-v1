@@ -65,6 +65,7 @@ public class TimelineView extends ListView {
 
     public TimelineView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setVerticalScrollBarEnabled(false);
     }
 
     private Runnable hideRefresh = null;
@@ -105,6 +106,10 @@ public class TimelineView extends ListView {
         // 加载并解析实验数据
         cache = activity.getCacheHelper().getCache("herald_experiment");
         itemList.add(TimelineParser.getExperimentItem(getContext(), cache));
+
+        // 加载并解析人文讲座预告数据
+        cache = activity.getCacheHelper().getCache("herald_lecture_notices");
+        itemList.add(TimelineParser.getLectureItem(getContext(), cache));
 
         Collections.sort(itemList, Item.comparator);
         if(adapter == null) {
