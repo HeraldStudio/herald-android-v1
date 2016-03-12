@@ -191,8 +191,32 @@ public class TimelineParser {
                         if(CalendarUtils.toSharpWeek(time).getTimeInMillis()
                                 == CalendarUtils.toSharpWeek(Calendar.getInstance()).getTimeInMillis()){
                             // 如果发现今天有实验
+                            Calendar nowCal = Calendar.getInstance();
                             if(CalendarUtils.toSharpDay(time).getTimeInMillis()
-                                    ==CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()){
+                                    ==CalendarUtils.toSharpDay(nowCal).getTimeInMillis()){
+                                // 如果是半小时之内快要开始的实验，放弃之前所有操作，直接返回这个实验的提醒
+                                int nowStamp = nowCal.get(Calendar.HOUR_OF_DAY) * 60 + nowCal.get(Calendar.MINUTE);
+                                int startStamp = item.getBeginStamp();
+                                if(nowStamp < startStamp && nowStamp >= startStamp - 30){
+                                    ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                                    TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
+                                            now, "你有1个实验即将开始，请注意时间准时参加~"
+                                    );
+                                    item1.attachedView.add(block);
+                                    return item1;
+                                }
+
+                                // 如果是已经开始还未结束的实验，放弃之前所有操作，直接返回这个实验的提醒
+                                int endStamp = startStamp + 3 * 60;
+                                if(nowStamp >= startStamp && nowStamp < endStamp){
+                                    ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                                    TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
+                                            now, "1个实验正在进行"
+                                    );
+                                    item1.attachedView.add(block);
+                                    return item1;
+                                }
+
                                 // 如果是第一次发现今天有实验，则清空列表（列表里都不是今天的）
                                 // 然后做标记，以后不再记录不是今天的实验
                                 if(!todayHasExperiments) {
