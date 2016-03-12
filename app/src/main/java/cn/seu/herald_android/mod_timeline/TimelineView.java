@@ -33,17 +33,26 @@ public class TimelineView extends ListView {
         private int module;
         private long time;
         private String info;
+        // 消息是否重要，不重要的消息总在后面
+        private boolean important;
         public ArrayList<View> attachedView = new ArrayList<>();
 
-        public Item(int module, long time, String info) {
+        public Item(int module, long time, boolean important, String info) {
             this.module = module;
             this.time = time;
+            this.important = important;
             this.info = info;
         }
 
         // 按时间先后顺序排列
         public static Comparator<Item> comparator =
-                (item1, item2) -> (int)(item1.time - item2.time);
+                (item1, item2) -> {
+                    // 不重要的消息总在后面
+                    if(item1.important != item2.important){
+                        return item1.important ? -1 : 1;
+                    }
+                    return (int)(item1.time - item2.time);
+                };
     }
 
     private ArrayList<Item> itemList;

@@ -26,6 +26,7 @@ public class ExperimentBlockLayout extends LinearLayout {
         item.grade = item.grade.replace("null", "");
         tv_grade.setText(item.grade);
         contentView.setLayoutParams(new LayoutParams(-2, -2));
+        contentView.setBackground(context.getResources().getDrawable(R.drawable.timeline_experiment_block_bg));
         addView(contentView);
     }
 }
