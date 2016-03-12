@@ -365,9 +365,9 @@ public class TimelineParser {
         // 不在跑操时间
         if(!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))){
             if(firstRun.equals("")) { // 首次启动强制显示跑操卡片
-                helper.setCache("herald_pc_firstrun", "false");
                 return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                        now, true, "跑操助手将在早上跑操时间显示当天跑操预报"
+                        now, true, "跑操助手将在早上跑操时间显示当天跑操预报。\n" +
+                        "今后不在跑操时间的时候，跑操助手将自动隐藏，不会打扰主人的~"
                 );
             } else {
                 return null;

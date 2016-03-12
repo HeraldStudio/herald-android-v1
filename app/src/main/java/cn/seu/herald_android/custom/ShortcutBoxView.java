@@ -52,13 +52,13 @@ public class ShortcutBoxView extends GridView {
             intent.setAction(clickItemMap.get("Aciton").toString());
             getContext().startActivity(intent);
         });
-        //添加长按响应,询问用户是否从快捷栏上删除
+        //添加长按响应,询问用户是否从快捷栏上删除·
         setOnItemLongClickListener((parent, view, position, id) -> {
             HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
             int moduleId =(int)clickItemMap.get("ModuleId");
             SettingsHelper settingsHelper  = new SettingsHelper(getContext());
             new AlertDialog.Builder(getContext())
-                    .setMessage("确定移除此模块的快捷方式吗")
+                    .setMessage("确定移除此模块的快捷方式吗？\n(可在侧边栏→查询助手中找回)")
                     .setPositiveButton("确定",(dialog, which) -> {
                         //设置为不可用
                         settingsHelper.setModuleShortCutEnabled(moduleId,false);

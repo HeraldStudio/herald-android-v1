@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="70dp"
-    android:layout_height="70dp">
+    android:layout_height="80dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,16 +10,15 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal">
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="5dp"
-            android:id="@+id/ic_shortcut"
-            />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="7dp"
+            android:id="@+id/ic_shortcut" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_shortcut"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textColor="@color/colorSecondaryText"
             android:text="快捷方式"/>
     </LinearLayout>

@@ -148,6 +148,13 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         refreshShortcutBox();
     }
 
+    @Override
+    protected void onDestroy() {
+        // 从第二次启动开始不再强制显示跑操提醒
+        getCacheHelper().setCache("herald_pc_firstrun", "false");
+        super.onDestroy();
+    }
+
     public void checkAndLoginWifi(){
         NetworkLoginHelper.getInstance(this).checkAndLogin();
         /*if(new CacheHelper(this).getCache("wifi").equals("")){

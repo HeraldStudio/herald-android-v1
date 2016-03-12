@@ -137,6 +137,7 @@ public class SettingsHelper {
         //快捷方式的默认设置
         setModuleShortCutEnabled(MODULE_GRADE,true);
         setModuleShortCutEnabled(MODULE_CARDEXTRA, true);
+        setModuleShortCutEnabled(MODULE_LIBRARY, false);
     }
 
 
