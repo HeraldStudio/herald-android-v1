@@ -82,6 +82,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AboutusTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 关于我们 -->
+        <item name="colorPrimary">@color/colorAboutusprimary</item>
+        <item name="colorPrimaryDark">@color/colorAboutusprimaryDark</item>
+        <item name="colorAccent">@color/colorAboutusprimaryAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

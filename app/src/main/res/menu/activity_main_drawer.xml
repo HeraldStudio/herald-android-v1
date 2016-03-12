@@ -24,7 +24,7 @@
                 <!--android:icon="@drawable/ic_menu_share"-->
                 <!--android:title="Share" />-->
             <item
-                android:id="@+id/nav_join"
+                android:id="@+id/nav_aboutus"
                 android:icon="@drawable/ic_extension_24dp"
                 android:title="关于我们" />
             <item
