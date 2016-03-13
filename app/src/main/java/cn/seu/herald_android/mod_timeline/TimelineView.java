@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_timeline;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

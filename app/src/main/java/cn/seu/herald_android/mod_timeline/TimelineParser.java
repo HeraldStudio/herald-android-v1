@@ -114,14 +114,14 @@ public class TimelineParser {
             }
 
             // 若今天没课，且在下午6点半之前，显示今天没课
-            Calendar halfPastSix = CalendarUtils.toSharpDay(Calendar.getInstance());
+            /*Calendar halfPastSix = CalendarUtils.toSharpDay(Calendar.getInstance());
             halfPastSix.set(Calendar.HOUR_OF_DAY, 18);
             halfPastSix.set(Calendar.MINUTE, 30);
             if (classCount == 0 && now < halfPastSix.getTimeInMillis()) {
                 return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                         now, false, "今天没有课程，娱乐之余请注意作息安排哦~"
                 );
-            }
+            }*/
 
             // 若今天没课但过了下午6点半，或者课程都结束了，显示明天课程
             // 枚举明天的课程
@@ -129,6 +129,7 @@ public class TimelineParser {
             week = dayDelta / 7 + 1;
             dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
             array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+            boolean todayHasClasses = classCount != 0;
 
             classCount = 0;
             ArrayList<View> viewList = new ArrayList<>();
@@ -147,9 +148,14 @@ public class TimelineParser {
                 }
             }
             TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                    today.getTimeInMillis() + 1000 * 60 * 60 * 24,
+                    // 如果两天都没课，显示时间为今天，否则显示为明天
+                    today.getTimeInMillis() + (classCount == 0 && !todayHasClasses ? 0 : 1000 * 60 * 60 * 24),
+                    // 有课则置顶，没课不置顶
                     classCount != 0,
-                    classCount == 0 ? "明天没有课程，娱乐之余请注意作息安排哦~" : "明天有" + classCount + "节课"
+                            // 如果明天没课
+                    classCount == 0 ? (todayHasClasses ? "明天" : "今明两天都") + "没有课程，娱乐之余请注意作息安排哦~"
+                            // 如果明天有课
+                            : (todayHasClasses ? "今天的课程已经结束，" : "今天没有课程，") + "明天有" + classCount + "节课"
             );
 
             item.attachedView = viewList;
