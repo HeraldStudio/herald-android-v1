@@ -14,21 +14,23 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".mod_auth.LoginActivity"
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".mod_settings.SysSettingsActivity"
             android:label="@string/title_activity_sys_settings"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_SETTINGS" />
@@ -39,6 +41,7 @@
         <activity
             android:name=".mod_query.QueryActivity"
             android:label="@string/title_activity_query"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -50,6 +53,7 @@
         <activity
             android:name=".mod_query.schoolbus.SchoolBusActivity"
             android:label="@string/title_activity_schoolbus"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/QuerySchoolBusTheme">
             <intent-filter>
@@ -61,6 +65,7 @@
         <activity
             android:name=".mod_query.grade.GradeActivity"
             android:label="@string/title_activity_grade"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/QueryGradeTheme">
             <intent-filter>
@@ -72,6 +77,7 @@
         <activity
             android:name=".mod_query.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/LectureTheme">
             <intent-filter>
@@ -83,6 +89,7 @@
         <activity
             android:name=".mod_query.cardextra.CardActivity"
             android:label="@string/title_activity_card"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/CardTheme">
             <intent-filter>
@@ -94,6 +101,7 @@
         <activity
             android:name=".mod_query.experiment.ExperimentActivity"
             android:label="@string/title_activity_experiment"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/ExperimentTheme">
             <intent-filter>
@@ -105,6 +113,7 @@
         <activity
             android:name=".mod_query.emptyroom.EmptyRoomActivity"
             android:label="@string/title_activity_empty_room"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -116,6 +125,7 @@
         <activity
             android:name=".mod_query.seunet.SeunetActivity"
             android:label="@string/title_activity_seunet"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/SeunetTheme">
             <intent-filter>
@@ -127,6 +137,7 @@
         <activity
             android:name=".mod_query.pedetail.PedetailActivity"
             android:label="@string/title_activity_pedetail"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/PedetailTheme">
             <intent-filter>
@@ -138,6 +149,7 @@
         <activity
             android:name=".mod_query.curriculum.CurriculumActivity"
             android:label="@string/title_activity_curriculum"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/CurriculumTheme">
             <intent-filter>
@@ -146,7 +158,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".mod_communicate.WelcomeActivity">
+        <activity android:name=".mod_communicate.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -160,7 +173,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".mod_webmodule.WebModuleActivity">
+        <activity android:name=".mod_webmodule.WebModuleActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.WEBMODULE_GYMORDER" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
@@ -172,6 +186,7 @@
         <activity
             android:name=".mod_communicate.AboutusActivity"
             android:label="@string/title_activity_aboutus"
+            android:screenOrientation="portrait"
             android:theme="@style/AboutusTheme"></activity>
     </application>
 

@@ -201,7 +201,9 @@ public class TimelineView extends ListView {
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
 
             // 设置高度。在其他地方设置没用。
-            slider.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (180 * dp)));
+            float resolution = 2 / 1f;
+            int height = (int)(getContext().getResources().getDisplayMetrics().widthPixels / resolution);
+            slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
             addHeaderView(slider);
         }
 

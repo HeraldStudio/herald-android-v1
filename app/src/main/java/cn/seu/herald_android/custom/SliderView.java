@@ -40,6 +40,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
 
             addSlider(sliderView);
         }
+        
         //设置轮播选项
         setPresetTransformer(SliderLayout.Transformer.Default);
         //圆点位置
@@ -47,7 +48,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         //描述动画
         //sliderLayout.setCustomAnimation(new DescriptionAnimation());
         //切换间隔
-        setDuration(4000);
+        setDuration(5000);
     }
 
     @Override
