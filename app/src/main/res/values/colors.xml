@@ -54,7 +54,12 @@
     <color name="colorPedetailaccent">#26a69a</color>
     <color name="colorPedetailcalendarBg">#ffffff</color>
 
+    <!--srtp-->
+    <color name="colorSrtpprimary">#FFEF5350</color>
+    <color name="colorSrtpprimaryDark">#FFEF5350</color>
+    <color name="colorSrtpaccent">#FFEF5350</color>
     <!--关于我们-->
+
     <color name="colorAboutusprimary">#d32f2f</color>
     <color name="colorAboutusprimaryDark">#d32f2f</color>
     <color name="colorAboutusprimaryAccent">#d32f2f</color>

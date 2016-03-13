@@ -20,7 +20,8 @@ public class CacheHelper {
             "herald_schoolbus_cache",
             "herald_lecture_notices",
             "herald_experiment",
-            "herald_nic"
+            "herald_nic",
+            "herald_srtp"
     };
 
 

@@ -39,6 +39,7 @@ public class SettingsHelper {
     public static final int MODULE_SEUNET = 6;
     public static final int MODULE_PEDETAIL = 7;
     public static final int MODULE_CURRICULUM = 8;
+    public static final int MODULE_SRTP = 9;
 //    public static final int MODULE_EMPTYROOM = 9;
 //    public static final int MODULE_GYMORDER = 10;
 //    public static final int MODULE_QUANYI = 11;
@@ -58,6 +59,7 @@ public class SettingsHelper {
             "seunet",
             "pedetail",
             "curriculum",
+            "srtp",
 //            "emptyroom",
 //            "gymorder",
 //            "quanyi"
@@ -74,6 +76,7 @@ public class SettingsHelper {
             "校园网",
             "跑操",
             "课程表",
+            "课外研学",
 //            "空教室",
 //            "场馆预约",
 //            "权益服务"
@@ -90,6 +93,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_PEDETAIL",
             "cn.seu.herald_android.MODULE_QUERY_CURRICULUM",
+            "cn.seu.herald_android.MODULE_QUERY_SRTP",
 //            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
 //            "cn.seu.herald_android.WEBMODULE_GYMORDER",
 //            "cn.seu.herald_android.WEBMODULE_QUANYI",
@@ -108,6 +112,7 @@ public class SettingsHelper {
             R.mipmap.ic_seunet,
             R.mipmap.ic_pedetail,
             R.mipmap.ic_curriculum,
+            R.mipmap.ic_srtp,
 //            R.mipmap.ic_emptyroom,
 //            R.mipmap.ic_gym,
 //            R.mipmap.ic_quanyi
