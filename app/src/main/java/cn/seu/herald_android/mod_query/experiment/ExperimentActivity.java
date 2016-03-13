@@ -1,5 +1,6 @@
 package cn.seu.herald_android.mod_query.experiment;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.mod_achievement.Achievement;
 import cn.seu.herald_android.mod_achievement.AchievementFactory;
 import cn.seu.herald_android.mod_achievement.AchievementViewPagerAdapter;
@@ -166,6 +168,36 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                             e.printStackTrace();
                             showMsg("数据解析失败");
                         }
+                    }
+                });
+    }
+
+    public static void remoteRefreshCache(Context context, Runnable doAfter) {
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
+                .addParams("uuid", apiHelper.getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                        doAfter.run();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json_res = new JSONObject(response);
+                            if (json_res.getInt("code") == 200) {
+                                cacheHelper.setCache("herald_experiment", response);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        doAfter.run();
                     }
                 });
     }

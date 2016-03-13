@@ -21,7 +21,7 @@
     <string name="title_activity_sys_settings">系统设置</string>
     <string name="title_activity_query">查询助手</string>
     <string name="title_activity_schoolbus">校车时刻表</string>
-    <string name="title_activity_grade">校车时刻表</string>
+    <string name="title_activity_grade">成绩查询</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

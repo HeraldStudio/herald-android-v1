@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_query.lecture;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.CacheHelper;
 import okhttp3.Call;
 
 public class LectureActivity extends BaseAppCompatActivity {
@@ -160,7 +162,36 @@ public class LectureActivity extends BaseAppCompatActivity {
                 });
     }
 
+    public static void remoteRefreshCache(Context context, Runnable doAfter){
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        //获取讲座预告
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.wechat_lecture_notice_url)
+                .addParams("uuid", apiHelper.getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                        doAfter.run();
+                    }
 
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json_res = new JSONObject(response);
+                            if(json_res.getInt("code")==200){
+                                cacheHelper.setCache("herald_lecture_notices", json_res.toString());
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        doAfter.run();
+                    }
+                });
+    }
 
     public void displayLectureRecords(){
         //加载打卡记录对话框

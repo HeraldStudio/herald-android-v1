@@ -1,13 +1,11 @@
 package cn.seu.herald_android.mod_timeline;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,8 +29,8 @@ public class TimelineParser {
     /**
      * 读取课表缓存，转换成对应的时间轴条目
      **/
-    public static TimelineView.Item getCurriculumItem(Context context, String cache) {
-
+    public static TimelineView.Item getCurriculumItem(Context context) {
+        String cache = new CacheHelper(context).getCache("herald_curriculum");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONObject jsonObject = new JSONObject(cache);
@@ -97,7 +95,7 @@ public class TimelineParser {
                     }
 
                     TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                            time, true, message + info.getClassName()
+                            time, TimelineView.Item.CONTENT_NOTIFY, message + info.getClassName()
                     );
 
                     info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
@@ -114,14 +112,14 @@ public class TimelineParser {
             }
 
             // 若今天没课，且在下午6点半之前，显示今天没课
-            Calendar halfPastSix = CalendarUtils.toSharpDay(Calendar.getInstance());
+            /*Calendar halfPastSix = CalendarUtils.toSharpDay(Calendar.getInstance());
             halfPastSix.set(Calendar.HOUR_OF_DAY, 18);
             halfPastSix.set(Calendar.MINUTE, 30);
             if (classCount == 0 && now < halfPastSix.getTimeInMillis()) {
                 return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                         now, false, "今天没有课程，娱乐之余请注意作息安排哦~"
                 );
-            }
+            }*/
 
             // 若今天没课但过了下午6点半，或者课程都结束了，显示明天课程
             // 枚举明天的课程
@@ -129,6 +127,7 @@ public class TimelineParser {
             week = dayDelta / 7 + 1;
             dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
             array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+            boolean todayHasClasses = classCount != 0;
 
             classCount = 0;
             ArrayList<View> viewList = new ArrayList<>();
@@ -147,17 +146,24 @@ public class TimelineParser {
                 }
             }
             TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                    today.getTimeInMillis() + 1000 * 60 * 60 * 24,
-                    classCount != 0,
-                    classCount == 0 ? "明天没有课程，娱乐之余请注意作息安排哦~" : "明天有" + classCount + "节课"
+                    // 如果两天都没课，显示时间为今天，否则显示为明天
+                    today.getTimeInMillis() + (classCount == 0 && !todayHasClasses ? 0 : 1000 * 60 * 60 * 24),
+                    // 若明天有课，则属于有内容不提醒状态；否则属于无内容状态
+                    classCount == 0 ? TimelineView.Item.NO_CONTENT : TimelineView.Item.CONTENT_NO_NOTIFY,
+                            // 如果明天没课
+                    classCount == 0 ? (todayHasClasses ? "明天" : "今明两天都") + "没有课程，娱乐之余请注意作息安排哦"
+                            // 如果明天有课
+                            : (todayHasClasses ? "今天的课程已经结束，" : "今天没有课程，") + "明天有" + classCount + "节课"
             );
 
             item.attachedView = viewList;
 
             return item;
-        } catch (JSONException e) {
+        } catch (Exception e) {
+            // 清除出错的数据，使下次懒惰刷新时刷新课表
+            new CacheHelper(context).setCache("herald_curriculum", "");
             return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                    now, false, "X_X 课表数据加载失败，请进入课表模块手动刷新"
+                    now, TimelineView.Item.NO_CONTENT, "课表数据加载失败，请手动刷新"
             );
         }
     }
@@ -166,12 +172,16 @@ public class TimelineParser {
     /**
      * 读取实验缓存，转换成对应的时间轴条目
      **/
-    public static TimelineView.Item getExperimentItem(Context context, String cache) {
+    public static TimelineView.Item getExperimentItem(Context context) {
+        String cache = new CacheHelper(context).getCache("herald_experiment");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONObject json_content = new JSONObject(cache).getJSONObject("content");
             boolean todayHasExperiments = false;
-            ArrayList<View> experiments = new ArrayList<>();
+            // 时间未到的所有实验
+            ArrayList<View> allExperiments = new ArrayList<>();
+            // 今天的实验或当前周的实验。若今天无实验，则为当前周的实验
+            ArrayList<View> currExperiments = new ArrayList<>();
 
             for (int i = 0; i < json_content.length(); i++) {
                 String jsonArray_str = json_content.getString(json_content.names().getString(i));
@@ -199,6 +209,12 @@ public class TimelineParser {
                         time.set(ymd[0], ymd[1] - 1, ymd[2]);
                         time = CalendarUtils.toSharpDay(time);
 
+                        // 没开始的实验全部单独记录下来
+                        if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+                            ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                            allExperiments.add(block);
+                        }
+
                         // 属于同一周
                         if (CalendarUtils.toSharpWeek(time).getTimeInMillis()
                                 == CalendarUtils.toSharpWeek(Calendar.getInstance()).getTimeInMillis()) {
@@ -212,7 +228,7 @@ public class TimelineParser {
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                                            now, true, "你有1个实验即将开始，请注意时间准时参加~"
+                                            now, TimelineView.Item.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
                                     );
                                     item1.attachedView.add(block);
                                     return item1;
@@ -223,7 +239,7 @@ public class TimelineParser {
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                                            now, true, "1个实验正在进行"
+                                            now, TimelineView.Item.CONTENT_NOTIFY, "1个实验正在进行"
                                     );
                                     item1.attachedView.add(block);
                                     return item1;
@@ -237,13 +253,13 @@ public class TimelineParser {
                                 // 如果是第一次发现今天有实验，则清空列表（之前放在列表里的都不是今天的）
                                 // 然后做标记，以后不再记录不是今天的实验
                                 if (!todayHasExperiments) {
-                                    experiments.clear();
+                                    currExperiments.clear();
                                     todayHasExperiments = true;
                                 }
 
                                 // 记录今天的实验
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                experiments.add(block);
+                                currExperiments.add(block);
                             }
 
                             // 如果不是今天的实验但已经结束，跳过它
@@ -255,7 +271,7 @@ public class TimelineParser {
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                experiments.add(block);
+                                currExperiments.add(block);
                             }
                         }
                     }
@@ -263,25 +279,33 @@ public class TimelineParser {
             }
 
             // 解析完毕，下面做统计
-            int N = experiments.size();
+            int N = currExperiments.size();
+            int M = allExperiments.size();
 
             // 今天和本周均无实验
             if (N == 0) {
-                return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                        now, false, "实验助手可以智能提醒你参加即将开始的实验"
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
+                        now, M == 0 ? TimelineView.Item.NO_CONTENT : TimelineView.Item.CONTENT_NO_NOTIFY,
+                        (M == 0 ? "你没有未完成的实验，" : ("本学期你还有" + M + "个实验，"))
+                            + "实验助手可以智能提醒你参加即将开始的实验"
                 );
+                item.attachedView = allExperiments;
+                return item;
             }
 
             // 今天或本周有实验
             TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                    now, true, (todayHasExperiments ? "今天有" : "本周有") + N + "个实验，请注意准时参加"
+                    now, TimelineView.Item.CONTENT_NO_NOTIFY,
+                    (todayHasExperiments ? "今天有" : "本周有") + N + "个实验，请注意准时参加"
             );
-            item.attachedView = experiments;
+            item.attachedView = currExperiments;
             return item;
 
         } catch (Exception e) {// JSONException, NumberFormatException
+            // 清除出错的数据，使下次懒惰刷新时刷新实验
+            new CacheHelper(context).setCache("herald_experiment", "");
             return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                    now, false, "X_X 实验数据加载失败，请手动刷新"
+                    now, TimelineView.Item.NO_CONTENT, "实验数据加载失败，手动刷新"
             );
         }
     }
@@ -289,7 +313,8 @@ public class TimelineParser {
     /**
      * 读取人文讲座预告缓存，转换成对应的时间轴条目
      **/
-    public static TimelineView.Item getLectureItem(Context context, String cache) {
+    public static TimelineView.Item getLectureItem(Context context) {
+        String cache = new CacheHelper(context).getCache("herald_lecture_notices");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
@@ -328,7 +353,8 @@ public class TimelineParser {
                 time.set(Calendar.MINUTE, 30);
 
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
-                        time.getTimeInMillis(), true, "今天有新的人文讲座，有兴趣的同学欢迎来参加~"
+                        time.getTimeInMillis(), TimelineView.Item.CONTENT_NOTIFY,
+                        "今天有新的人文讲座，有兴趣的同学欢迎来参加~"
                 );
                 item.attachedView = lectures;
                 return item;
@@ -336,13 +362,42 @@ public class TimelineParser {
 
             // 今天无人文讲座
             return new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
-                    now, false, "今天暂无人文讲座信息，点我查看以后的预告"
+                    now, TimelineView.Item.NO_CONTENT, "今天暂无人文讲座信息，点我查看以后的预告"
             );
 
         } catch (Exception e) {// JSONException, NumberFormatException
             return new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
-                    now, false, "X_X 人文讲座数据加载失败，请手动刷新"
+                    now, TimelineView.Item.NO_CONTENT, "人文讲座数据加载失败，请手动刷新"
             );
         }
+    }
+
+    /**
+     * 读取跑操预报缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineView.Item getPeForecastItem(Context context) {
+        CacheHelper helper = new CacheHelper(context);
+        String date = helper.getCache("herald_pc_date");
+        String forecast = helper.getCache("herald_pc_forecast");
+        final long now = Calendar.getInstance().getTimeInMillis();
+
+        // 不在跑操时间
+        if(!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))){
+            return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                    now, TimelineView.Item.NO_CONTENT, "跑操助手将在早上跑操时间显示当天跑操预报"
+            );
+        }
+
+        // 在跑操时间，但还没有跑操预告信息
+        if(!forecast.contains("跑操")) {
+            return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                    now, TimelineView.Item.NO_CONTENT, "目前暂无跑操预报信息，请稍后刷新重试"
+            );
+        }
+
+        // 有跑操预告信息
+        return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                now, TimelineView.Item.CONTENT_NOTIFY, "小猴预测：" + forecast
+        );
     }
 }
