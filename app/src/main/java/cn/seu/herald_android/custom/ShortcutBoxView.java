@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.SeuModule;
 import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
+import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class ShortcutBoxView extends GridView {
     public ShortcutBoxView(Context c, AttributeSet a){
@@ -55,19 +57,24 @@ public class ShortcutBoxView extends GridView {
         //添加长按响应,询问用户是否从快捷栏上删除·
         setOnItemLongClickListener((parent, view, position, id) -> {
             HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
-            int moduleId =(int)clickItemMap.get("ModuleId");
-            SettingsHelper settingsHelper  = new SettingsHelper(getContext());
+            int moduleId = (int) clickItemMap.get("ModuleId");
+            SettingsHelper settingsHelper = new SettingsHelper(getContext());
             new AlertDialog.Builder(getContext())
-                    .setMessage("确定移除此模块的快捷方式吗？\n(可在侧边栏→查询助手中找回)")
-                    .setPositiveButton("确定",(dialog, which) -> {
+                    .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
+                    .setPositiveButton("确定", (dialog, which) -> {
                         //设置为不可用
-                        settingsHelper.setModuleShortCutEnabled(moduleId,false);
-                        //重新刷新界面
-                        refresh();
+                        settingsHelper.setModuleShortCutEnabled(moduleId, false);
+                        //刷新整个列表
+                        for (ViewParent v = getParent(); v != null; v = v.getParent()){
+                            if(v instanceof TimelineView){
+                                ((TimelineView)v).loadContent(true);
+                                return;
+                            }
+                        }
                     })
-                    .setNegativeButton("取消", (dialog1, which1) ->{
+                    .setNegativeButton("取消", (dialog1, which1) -> {
 
-            }).show();
+                    }).show();
             //返回true以保证setOnItemClickListener不再执行
             return true;
         });

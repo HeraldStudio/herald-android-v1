@@ -24,7 +24,6 @@ import org.json.JSONObject;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
-import cn.seu.herald_android.mod_query.grade.GradeActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 
 import cn.seu.herald_android.mod_timeline.TimelineView;
@@ -136,16 +135,16 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         //刷新个人信息显示的UI
         refreshWelcome();
 
-        // 加载时间轴
-        refreshTimelineView();
+        // 在线刷新时间轴及快捷方式
+        loadTimelineView(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshWelcome();
-        // 单独重载快捷方式列表
-        refreshShortcutBox();
+        // 本地重载时间轴及快捷方式
+        loadTimelineView(false);
     }
 
     @Override
@@ -226,8 +225,9 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     }
 
-    private void refreshTimelineView(){
-        refreshShortcutBox();
+    // 刷新时间轴和快捷方式
+    // refresh 是否联网刷新
+    private void loadTimelineView(boolean refresh){
         SwipeRefreshLayout srl = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
         srl.setColorSchemeResources(R.color.colorPrimary);
         TimelineView view = (TimelineView)findViewById(R.id.timeline);
@@ -237,11 +237,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         });
         view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
         runMeasurementDependentTask(() -> srl.setRefreshing(true));
-        view.loadContent(true);
-    }
-
-    private void refreshShortcutBox(){
-        TimelineView view = (TimelineView)findViewById(R.id.timeline);
-        view.refreshHeaders();
+        // 快捷方式刷新在这里
+        view.loadContent(refresh);
     }
 }

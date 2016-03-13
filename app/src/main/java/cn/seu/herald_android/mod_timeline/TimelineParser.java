@@ -1,13 +1,11 @@
 package cn.seu.herald_android.mod_timeline;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
