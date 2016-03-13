@@ -196,20 +196,20 @@ public class TimelineView extends ListView {
         // dp单位值
         float dp = getContext().getResources().getDisplayMetrics().density;
 
-        if (topPadding == null) {
-            // 顶部增加一个padding
-            topPadding = new View(getContext());
-            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (7 * dp)));
-            addHeaderView(topPadding);
-        }
-
         if (slider == null) {
             slider = (SliderView)
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
 
             // 设置高度。在其他地方设置没用。
-            slider.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (200 * dp)));
+            slider.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (180 * dp)));
             addHeaderView(slider);
+        }
+
+        if (topPadding == null) {
+            // 顶部增加一个padding
+            topPadding = new View(getContext());
+            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (8 * dp)));
+            addHeaderView(topPadding);
         }
 
         if (shortcutBox == null) {
