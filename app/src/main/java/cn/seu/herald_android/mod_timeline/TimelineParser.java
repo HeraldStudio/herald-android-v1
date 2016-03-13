@@ -180,7 +180,10 @@ public class TimelineParser {
         try {
             JSONObject json_content = new JSONObject(cache).getJSONObject("content");
             boolean todayHasExperiments = false;
-            ArrayList<View> experiments = new ArrayList<>();
+            // 时间未到的所有实验
+            ArrayList<View> allExperiments = new ArrayList<>();
+            // 今天的实验或当前周的实验。若今天无实验，则为当前周的实验
+            ArrayList<View> currExperiments = new ArrayList<>();
 
             for (int i = 0; i < json_content.length(); i++) {
                 String jsonArray_str = json_content.getString(json_content.names().getString(i));
@@ -207,6 +210,12 @@ public class TimelineParser {
                         Calendar time = Calendar.getInstance();
                         time.set(ymd[0], ymd[1] - 1, ymd[2]);
                         time = CalendarUtils.toSharpDay(time);
+
+                        // 没开始的实验全部单独记录下来
+                        if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+                            ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                            allExperiments.add(block);
+                        }
 
                         // 属于同一周
                         if (CalendarUtils.toSharpWeek(time).getTimeInMillis()
@@ -246,13 +255,13 @@ public class TimelineParser {
                                 // 如果是第一次发现今天有实验，则清空列表（之前放在列表里的都不是今天的）
                                 // 然后做标记，以后不再记录不是今天的实验
                                 if (!todayHasExperiments) {
-                                    experiments.clear();
+                                    currExperiments.clear();
                                     todayHasExperiments = true;
                                 }
 
                                 // 记录今天的实验
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                experiments.add(block);
+                                currExperiments.add(block);
                             }
 
                             // 如果不是今天的实验但已经结束，跳过它
@@ -264,7 +273,7 @@ public class TimelineParser {
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                experiments.add(block);
+                                currExperiments.add(block);
                             }
                         }
                     }
@@ -272,20 +281,24 @@ public class TimelineParser {
             }
 
             // 解析完毕，下面做统计
-            int N = experiments.size();
+            int N = currExperiments.size();
+            int M = allExperiments.size();
 
             // 今天和本周均无实验
             if (N == 0) {
-                return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                        now, false, "实验助手可以智能提醒你参加即将开始的实验"
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
+                        now, false, (M == 0 ? "你没有未完成的实验，" : ("本学期你还有" + M + "个实验，"))
+                            + "实验助手可以智能提醒你参加即将开始的实验"
                 );
+                item.attachedView = allExperiments;
+                return item;
             }
 
             // 今天或本周有实验
             TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                     now, true, (todayHasExperiments ? "今天有" : "本周有") + N + "个实验，请注意准时参加"
             );
-            item.attachedView = experiments;
+            item.attachedView = currExperiments;
             return item;
 
         } catch (Exception e) {// JSONException, NumberFormatException
