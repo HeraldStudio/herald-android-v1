@@ -43,13 +43,14 @@ public class TimelineView extends ListView {
         private long time;
         private String info;
         // 消息是否重要，不重要的消息总在后面
-        private boolean important;
+        public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
+        private int importance;
         public ArrayList<View> attachedView = new ArrayList<>();
 
-        public Item(int module, long time, boolean important, String info) {
+        public Item(int module, long time, int importance, String info) {
             this.module = module;
             this.time = time;
-            this.important = important;
+            this.importance = importance;
             this.info = info;
         }
 
@@ -57,10 +58,7 @@ public class TimelineView extends ListView {
         public static Comparator<Item> comparator =
                 (item1, item2) -> {
                     // 不重要的消息总在后面
-                    if (item1.important != item2.important) {
-                        return item1.important ? -1 : 1;
-                    }
-                    return 0;
+                    return item1.importance - item2.importance;
                 };
     }
 
@@ -106,14 +104,14 @@ public class TimelineView extends ListView {
 
             // 当跑操模块开启时
             if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_PEDETAIL)) {
-                // 仅当工作日且处于跑操时间时刷新跑操预报
+                // 仅当处于跑操时间时刷新跑操预报
                 Calendar nowCal = Calendar.getInstance();
                 int week = nowCal.get(Calendar.DAY_OF_WEEK);
                 long now = nowCal.getTimeInMillis();
                 long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
                 long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
                 long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
-                if (week != Calendar.SATURDAY && week != Calendar.SUNDAY && startTime <= now && now < endTime) {
+                if (startTime <= now && now < endTime) {
                     threads.add(new Object());
                     PedetailActivity.refreshForecast(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
