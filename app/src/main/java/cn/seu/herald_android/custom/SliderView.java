@@ -40,7 +40,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
             DefaultSliderView sliderView = new DefaultSliderView(getContext());
             // initialize a SliderLayout
             sliderView
-                    .image(R.drawable.default_banner)
+                    .image(R.drawable.default_herald)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
             addSlider(sliderView);
