@@ -82,6 +82,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="SrtpTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 跑操查询风格 -->
+        <item name="colorPrimary">@color/colorSrtpprimary</item>
+        <item name="colorPrimaryDark">@color/colorSrtpprimaryDark</item>
+        <item name="colorAccent">@color/colorSrtpaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
     <style name="AboutusTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 关于我们 -->
         <item name="colorPrimary">@color/colorAboutusprimary</item>
@@ -90,6 +101,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
