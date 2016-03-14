@@ -4,6 +4,6 @@
         <nine-patch android:src="@drawable/timeline_item_bg"/>
     </item>
     <item android:state_pressed="true">
-        <nine-patch android:src="@drawable/timeline_item_bg"/>
+        <nine-patch android:src="@drawable/timeline_item_bg_pressed"/>
     </item>
 </selector>

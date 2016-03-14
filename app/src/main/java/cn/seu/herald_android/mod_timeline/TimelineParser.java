@@ -139,7 +139,7 @@ public class TimelineParser {
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                         now, TimelineView.Item.CONTENT_NO_NOTIFY,
                         (classAlmostEnd ? "快要下课了，" : "") +
-                        (firstClass ? "你今天有" : "你今天还有") + remainingClasses.size() + "节课"
+                        (firstClass ? "你今天有" : "你今天还有") + remainingClasses.size() + "节课，点我查看详情"
                 );
                 item.attachedView = remainingClasses;
                 return item;
@@ -380,7 +380,7 @@ public class TimelineParser {
 
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
                         time.getTimeInMillis(), TimelineView.Item.CONTENT_NO_NOTIFY,
-                        "今天有新的人文讲座，有兴趣的同学欢迎来参加~"
+                        "今天有新的人文讲座，有兴趣的同学欢迎来参加"
                 );
                 item.attachedView = lectures;
                 return item;
