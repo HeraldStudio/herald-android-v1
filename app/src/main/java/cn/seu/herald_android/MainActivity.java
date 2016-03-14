@@ -105,8 +105,16 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_send) {
             //打开给我们发送建议的窗口
-        } else {
-
+        } else if(id == R.id.nav_gymorder){
+            //场馆预约
+            Uri uri = Uri.parse("http://115.28.27.150/heraldapp/#/yuyue/home");
+            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if(id == R.id.nav_quanyi){
+            //权益部门
+            Uri uri = Uri.parse("https://jinshuju.net/f/By3aTK");
+            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

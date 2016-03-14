@@ -1,6 +1,8 @@
 package cn.seu.herald_android.mod_query.cardextra;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -107,6 +109,10 @@ public class CardActivity extends BaseAppCompatActivity {
         if (id == R.id.action_card_sync) {
             //点击刷新按钮时进行刷新
             refreshCache();
+        }else if(id == R.id.action_card_chongzhi) {
+            Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
+            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

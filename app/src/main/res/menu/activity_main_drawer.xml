@@ -17,6 +17,23 @@
 
     </group>
 
+    <item android:title="生活服务">
+        <menu>
+            <!--<item-->
+            <!--android:id="@+id/nav_share"-->
+            <!--android:icon="@drawable/ic_menu_share"-->
+            <!--android:title="Share" />-->
+            <item
+                android:id="@+id/nav_gymorder"
+                android:icon="@mipmap/ic_gym"
+                android:title="场馆预约" />
+            <item
+                android:id="@+id/nav_quanyi"
+                android:icon="@mipmap/ic_quanyi"
+                android:title="对话权益君" />
+        </menu>
+    </item>
+
     <item android:title="联系我们">
         <menu>
             <!--<item-->

@@ -6,4 +6,8 @@
         android:icon="@drawable/ic_sync_24dp"
         android:title="刷新"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_card_chongzhi"
+        android:title="充值"
+        app:showAsAction="ifRoom" />
 </menu>

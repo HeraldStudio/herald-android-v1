@@ -137,7 +137,7 @@
     <string name="action_card_sync">刷新</string>
     <string name="action_card_settings">设置</string>
 
-    <string name="title_activity_card">一卡通查询</string>
+    <string name="title_activity_card">一卡通</string>
     <string name="title_activity_experiment">实验助手</string>
     <string name="title_activity_empty_room">EmptyRoomActivity</string>
     <string name="title_activity_seunet">网络助手</string>
