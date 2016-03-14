@@ -8,9 +8,6 @@ import java.util.ArrayList;
 
 import cn.seu.herald_android.custom.CalendarUtils;
 
-/**
- * Created by heyon on 2016/3/3.
- */
 public class ExperimentItem {
     String name;
     String date;
@@ -27,6 +24,22 @@ public class ExperimentItem {
         this.address = address;
         this.grade = grade;
         this.beginStamp = getBeginHourMinuteStamp(time);
+    }
+
+    public static ArrayList<ExperimentItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+        ArrayList<ExperimentItem> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            list.add(new ExperimentItem(
+                    jsonObject.getString("name"),
+                    jsonObject.getString("Date"),
+                    jsonObject.getString("Day"),
+                    jsonObject.getString("Teacher"),
+                    jsonObject.getString("Address"),
+                    jsonObject.getString("Grade")
+            ));
+        }
+        return list;
     }
 
     private int getBeginHourMinuteStamp(String time){
@@ -53,22 +66,6 @@ public class ExperimentItem {
 
         return CalendarUtils.formatHourMinuteStamp(timeStamp) + "~"
                 + CalendarUtils.formatHourMinuteStamp(timeStamp + 3 * 60);
-    }
-
-    public static ArrayList<ExperimentItem> transfromJSONArrayToArrayList(JSONArray jsonArray)throws JSONException{
-        ArrayList<ExperimentItem> list = new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++){
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            list.add(new ExperimentItem(
-                    jsonObject.getString("name"),
-                    jsonObject.getString("Date"),
-                    jsonObject.getString("Day"),
-                    jsonObject.getString("Teacher"),
-                    jsonObject.getString("Address"),
-                    jsonObject.getString("Grade")
-            ));
-        }
-        return list;
     }
 
     public String getName() {

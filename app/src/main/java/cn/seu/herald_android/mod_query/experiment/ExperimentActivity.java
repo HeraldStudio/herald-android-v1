@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -32,6 +32,11 @@ import okhttp3.Call;
 
 public class ExperimentActivity extends BaseAppCompatActivity {
 
+    // 每节实验开始的时间，以(Hour * 60 + Minute)形式表示
+    // 本程序假定每节实验都是3小时
+    public static final int[] EXPERIMENT_BEGIN_TIME = {
+            9 * 60 + 45, 13 * 60 + 45, 18 * 60 + 15
+    };
     //实验类型列表
     ExpandableListView expandableListView;
     //成就墙展示View
@@ -41,11 +46,35 @@ public class ExperimentActivity extends BaseAppCompatActivity {
     //成就列表
     ArrayList<Achievement> achievementArrayList = new ArrayList<>();
 
-    // 每节实验开始的时间，以(Hour * 60 + Minute)形式表示
-    // 本程序假定每节实验都是3小时
-    public static final int[] EXPERIMENT_BEGIN_TIME = {
-            9 * 60 + 45, 13 * 60 + 45, 18 * 60 + 15
-    };
+    public static void remoteRefreshCache(Context context, Runnable doAfter) {
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
+                .addParams("uuid", apiHelper.getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                        doAfter.run();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject json_res = new JSONObject(response);
+                            if (json_res.getInt("code") == 200) {
+                                cacheHelper.setCache("herald_experiment", response);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        doAfter.run();
+                    }
+                });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +99,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         collapsingToolbarLayout.setTitleEnabled(false);
 
         //沉浸式
-        setStatusBarColor(this, getResources().getColor(R.color.colorExperimentprimary));
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorExperimentprimary));
 
         //实验类型列表加载
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
@@ -113,7 +142,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         //如果有实验则加载数据和子项布局
                         JSONArray jsonArray = new JSONArray(jsonArray_str);
                         //根据数组长度获得实验的Item集合
-                        ArrayList<ExperimentItem> item_list = ExperimentItem.transfromJSONArrayToArrayList(jsonArray);
+                        ArrayList<ExperimentItem> item_list = ExperimentItem.transformJSONArrayToArrayList(jsonArray);
                         //加入到list中
                         parentArray.add(json_content.names().getString(i));
                         childArray.add(item_list);
@@ -138,7 +167,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
             refreshCache();
         }
     }
-
 
     public void refreshCache() {
         getProgressDialog().show();
@@ -168,36 +196,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                             e.printStackTrace();
                             showMsg("数据解析失败");
                         }
-                    }
-                });
-    }
-
-    public static void remoteRefreshCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiException(e);
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                cacheHelper.setCache("herald_experiment", response);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        doAfter.run();
                     }
                 });
     }
