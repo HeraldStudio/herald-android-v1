@@ -43,7 +43,6 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
                     .image(R.drawable.default_banner)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
-
             addSlider(sliderView);
         }
 
@@ -60,10 +59,19 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
     private DefaultSliderView getDefultSliderViewWithUrl(String title,String imageUrl,String url){
         DefaultSliderView sliderView = new DefaultSliderView(getContext());
         // initialize a SliderLayout
-        sliderView
-                .image(imageUrl)
-                .setScaleType(BaseSliderView.ScaleType.Fit)
-                .setOnSliderClickListener(this);
+        if(!imageUrl.equals("")){
+            //如果图片url不为空的操作
+            sliderView
+                    .image(imageUrl)
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+        }else{
+            //为空则避免出现参数错误，返回默认的图片
+            sliderView
+                    .image(R.drawable.default_banner)
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+        }
         //add your extra information
         sliderView.bundle(new Bundle());
         sliderView.getBundle()
@@ -100,11 +108,13 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
     public void onSliderClick(BaseSliderView slider) {
         //点击时如果url不为空则打开图片所代表的网页
         String url = slider.getBundle().getString("url");
-        if (url==null||url.equals(""))
-            return;
-        Uri uri = Uri.parse(url);
-        Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
-        getContext().startActivity(intent);
+        try{
+            Uri uri = Uri.parse(url);
+            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            getContext().startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static class SliderViewItem{

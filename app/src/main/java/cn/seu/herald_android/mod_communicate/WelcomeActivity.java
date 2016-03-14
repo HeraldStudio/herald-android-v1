@@ -30,7 +30,6 @@ public class WelcomeActivity extends Activity {
                 //是第一次启动则启用默认设置
                 settingsHelper.setDefaultConfig();
             }
-
             //启动次数递增
             settingsHelper.updateLaunchTimes(launchtimes + 1);
             if (apiHelper.isLogin()) {

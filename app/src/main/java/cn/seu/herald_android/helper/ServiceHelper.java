@@ -25,8 +25,8 @@ public class ServiceHelper {
     Context context;
     ApiHelper apiHelper;
     //安卓服务端的接口
-    //public static String android_service_url = "http://android.heraldstudio.com/";
-    public static String android_service_url = "http://192.168.1.109:3000/";
+    public static String android_service_url = "http://android.heraldstudio.com/";
+    //public static String android_service_url = "http://192.168.1.109:3000/";
     public static final int SERVICE_VERSION = 0;
     public static final int SERVICE_DOWNLOAD = 1;
     private static String[] serviceNames = new String[]{

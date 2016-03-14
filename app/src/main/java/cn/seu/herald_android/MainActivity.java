@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -90,7 +89,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.nav_info) {
-            // Handle the camera action
+            //注销登录
+            getApiHelper().doLogout();
         } else if (id == R.id.nav_assistant) {
             //打开查询助手
             Intent intent = new Intent(MainActivity.this, QueryActivity.class);
@@ -105,7 +105,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.nav_send) {
             //打开给我们发送建议的窗口
-
         } else {
 
         }
@@ -132,7 +131,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         // 在线刷新时间轴及快捷方式
         loadTimelineView(true);
         //检查版本更新，获取推送消息
-        checkVersion();
+        checkVersionAndPushMessage();
     }
 
     @Override
@@ -237,7 +236,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
 
-    private void checkVersion(){
+    private void checkVersionAndPushMessage(){
         //获取推送消息
         String pushMessage = getServiceHelper().getPushMessageContent();
         if (!pushMessage.equals("")){
@@ -288,7 +287,6 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                     .setNegativeButton("残忍拒绝", (dialog, which) -> {
                     }).show();
         }
-
         //拉取最新版本信息、轮播图url和推送消息
         getServiceHelper().refreshVersionCache();
     }

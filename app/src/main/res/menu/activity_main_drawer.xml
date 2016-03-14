@@ -3,17 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_info"
-            android:icon="@drawable/ic_account_box_24dp"
-            android:title="修改认证信息" />
-        <item
             android:id="@+id/nav_assistant"
             android:icon="@drawable/ic_layers_24dp"
             android:title="查询助手" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="设置" />
+            android:title="系统设置" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_account_box_24dp"
+            android:title="注销登录" />
 
     </group>
 
