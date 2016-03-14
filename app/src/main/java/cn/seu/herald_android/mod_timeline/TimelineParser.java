@@ -454,4 +454,33 @@ public class TimelineParser {
             );
         }
     }
+
+    /**
+     * 读取一卡通缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineView.Item getCardItem(Context context) {
+        CacheHelper helper = new CacheHelper(context);
+        String cache = helper.getCache("herald_card");
+        final long now = Calendar.getInstance().getTimeInMillis();
+        try {
+
+            JSONObject json_cache = new JSONObject(cache).getJSONObject("content");
+            //获取余额并且设置
+            String left = json_cache.getString("left");
+            float extra = Float.valueOf(left);
+            if(extra < 20){
+                return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
+                        now, TimelineView.Item.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
+                );
+            } else {
+                return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
+                        now, TimelineView.Item.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"
+                );
+            }
+        } catch (Exception e) {
+            return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
+                    now, TimelineView.Item.NO_CONTENT, "一卡通余额数据加载失败，请手动刷新"
+            );
+        }
+    }
 }

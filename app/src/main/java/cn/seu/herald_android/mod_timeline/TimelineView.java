@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_timeline;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
@@ -186,13 +188,22 @@ public class TimelineView extends ListView {
                     loadContent(false);
                 });
             }
+
+            // 当一卡通模块开启时
+            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+                // 直接刷新一卡通数据
+                threads.add(new Object());
+                CardActivity.remoteRefreshCache(getContext(), () -> {
+                    if (threads.size() > 0) threads.remove(0);
+                    loadContent(false);
+                });
+            }
         }
 
         // 判断各模块是否开启并加载对应数据
         if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_PEDETAIL)) {
             // 加载并解析跑操预报数据
-            Item item = TimelineParser.getPeForecastItem(getContext());
-            if (item != null) itemList.add(item);
+            itemList.add(TimelineParser.getPeForecastItem(getContext()));
         }
 
         if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CURRICULUM)) {
@@ -208,6 +219,11 @@ public class TimelineView extends ListView {
         if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_LECTURE)) {
             // 加载并解析人文讲座预告数据
             itemList.add(TimelineParser.getLectureItem(getContext()));
+        }
+
+        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+            // 加载并解析一卡通数据
+            itemList.add(TimelineParser.getCardItem(getContext()));
         }
 
         // 有消息的排在前面，没消息的排在后面
@@ -294,19 +310,25 @@ public class TimelineView extends ListView {
             ImageView avatar = (ImageView) v.findViewById(R.id.avatar);
             ViewGroup attachedContainer = (ViewGroup) v.findViewById(R.id.attachedContainer);
             ViewGroup hsv = (ViewGroup) v.findViewById(R.id.hsv);
+            View notifyDot = v.findViewById(R.id.notify_dot);
 
             name.setText(activity.getSettingsHelper().moduleNamesTips[item.module]);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(item.time);
             String dateTime = timeInNaturalLanguage(calendar, now);
             time.setText(dateTime);
-
             content.setText(item.info);
+
+            if(item.getImportance() == Item.CONTENT_NOTIFY){
+                notifyDot.setVisibility(VISIBLE);
+            }
+
             avatar.setImageDrawable(getResources()
                     .getDrawable(activity.getSettingsHelper().moduleIconsId[item.module]));
             v.setOnClickListener((v1) -> {
                 activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[item.module]));
             });
+
             v.setOnLongClickListener(v1 -> {
                 SettingsHelper settingsHelper  = new SettingsHelper(getContext());
                 new AlertDialog.Builder(getContext())

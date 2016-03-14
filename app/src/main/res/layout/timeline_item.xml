@@ -11,13 +11,20 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:src="@mipmap/ic_card" />
+        android:layout_marginLeft="15dp" />
+
+    <View
+        android:id="@+id/notify_dot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/timeline_notify_dot"
+        android:layout_alignRight="@+id/avatar"
+        android:layout_alignTop="@+id/avatar"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="昨天的一卡通消费已出账，共消费45.5元，比日均消费高了3.7元，请注意节省开销哦~"
         android:id="@+id/content"
         android:textColor="#333"
         android:textSize="15sp"
@@ -41,32 +48,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/attachedContainer"/>
     </HorizontalScrollView>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="false"
-        android:background="#eee"
-        android:visibility="gone"
-        android:layout_below="@+id/hsv">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="分享"
-            android:background="?android:selectableItemBackground"
-            android:id="@+id/button"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="置顶"
-            android:background="?android:selectableItemBackground"
-            android:id="@+id/button2"
-            android:layout_weight="1" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -81,7 +62,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一卡通助手"
             android:id="@+id/name"
             android:layout_alignTop="@+id/avatar"
             android:layout_toEndOf="@+id/avatar"
@@ -91,7 +71,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10分钟前"
             android:id="@+id/time"
             android:layout_marginLeft="0dp"
             android:layout_below="@+id/name"
