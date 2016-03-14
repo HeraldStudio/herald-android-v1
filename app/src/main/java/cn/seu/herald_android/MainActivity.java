@@ -236,7 +236,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             view.loadContent(true);
         });
         view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
-        runMeasurementDependentTask(() -> srl.setRefreshing(true));
+        if(refresh)
+            runMeasurementDependentTask(() -> srl.setRefreshing(true));
         // 快捷方式刷新在这里
         view.loadContent(refresh);
     }
