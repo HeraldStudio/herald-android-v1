@@ -122,7 +122,7 @@ public class CardActivity extends BaseAppCompatActivity {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_CARD))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHepler().getUUID())
                 .addParams("timedelta","7")
                 .build()
                 .execute(new StringCallback() {
@@ -165,6 +165,7 @@ public class CardActivity extends BaseAppCompatActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         apiHelper.dealApiException(e);
+                        onFinish.run();
                     }
 
                     @Override
@@ -174,12 +175,10 @@ public class CardActivity extends BaseAppCompatActivity {
                             if(json_res.getInt("code")==200) {
                                 cacheHelper.setCache("herald_card",response);
                             }
-                            onFinish.run();
                         }catch (JSONException e){
                             e.printStackTrace();
-                            onFinish.run();
                         }
-
+                        onFinish.run();
                     }
                 });
     }
