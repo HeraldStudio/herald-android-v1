@@ -3,16 +3,13 @@ package cn.seu.herald_android.mod_timeline;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.text.Editable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.HeaderViewListAdapter;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Vector;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
@@ -41,83 +37,70 @@ import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
 public class TimelineView extends ListView {
 
-    public static class Item {
-        private int module;
-        private long time;
-        private String info;
-        private String notificationTitle;
-        private String notificationDesc;
-
-        // 消息是否重要，不重要的消息总在后面
-        public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
-        private int importance;
-        public ArrayList<View> attachedView = new ArrayList<>();
-
-        public Item(int module, long time, int importance, String info) {
-            this.module = module;
-            this.time = time;
-            this.importance = importance;
-            this.info = info;
-        }
-
-        public Item(int module, long time, String info, String title, String desc) {
-            this(module, time, CONTENT_NOTIFY, info);
-            this.notificationTitle = title;
-            this.notificationDesc = desc;
-        }
-
-        public String getNotificationTitle() {
-            return notificationTitle;
-        }
-
-        public String getNotificationDesc() {
-            return notificationDesc;
-        }
-
-        public int getImportance() {
-            return importance;
-        }
-
-        public int getModule() {
-            return module;
-        }
-
-        // 按时间先后顺序排列
-        public static Comparator<Item> comparator =
-                (item1, item2) -> {
-                    // 不重要的消息总在后面
-                    return item1.importance - item2.importance;
-                };
-    }
-
+    private final Vector<Object> threads = new Vector<>();
     private ArrayList<Item> itemList;
 
     private BaseAppCompatActivity activity;
-
-    public void setActivity(BaseAppCompatActivity activity) {
-        this.activity = activity;
-    }
+    private Runnable hideRefresh = null;
+    private ShortcutBoxView shortcutBox;
+    private SliderView slider;
+    private TimelineAdapter adapter;
+    private View topPadding;
 
     public TimelineView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setVerticalScrollBarEnabled(false);
     }
 
-    private Runnable hideRefresh = null;
+    // 因为此函数在getView()中被调用，视图回收再分配时，时间可能发生变化，所以此函数内不能调用Calendar.getInstance()
+    // 而应该用固定的now参数代表刷新时的时间
+    public static String timeInNaturalLanguage(Calendar dest, long now) {
+        long time = dest.getTimeInMillis();
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.setTimeInMillis(now);
+        todayCal = CalendarUtils.toSharpDay(todayCal);
+        todayCal.setTimeInMillis(todayCal.getTimeInMillis() + 1000 * 60 * 60 * 24);
+        long tomorrow = todayCal.getTimeInMillis();
+        todayCal.setTimeInMillis(todayCal.getTimeInMillis() + 1000 * 60 * 60 * 24);
+        long dayAfterTomorrow = todayCal.getTimeInMillis();
+        todayCal.setTimeInMillis(todayCal.getTimeInMillis() - 2 * 1000 * 60 * 60 * 24);
+        todayCal.set(Calendar.YEAR, todayCal.get(Calendar.YEAR) + 1);
+        todayCal.set(Calendar.MONTH, 0);
+        todayCal.set(Calendar.DATE, 1);
+        long nextYear = todayCal.getTimeInMillis();
+
+        // 允许5秒的误差
+        if (now <= time + 5 * 1000) {
+            if (now > time) time = now;
+            // 将明天零点视为明天全天事件
+            if (time == tomorrow) {
+                return "明天";
+            }
+            if (time < tomorrow) {
+                int deltaMinute = (int) ((time - now) / 1000 / 60);
+                int deltaHour = deltaMinute / 60;
+                deltaMinute %= 60;
+                if (deltaHour != 0) return deltaHour + "小时后";
+                if (deltaMinute != 0) return deltaMinute + "分钟后";
+                return "现在";
+            }
+            if (time <= dayAfterTomorrow) {
+                return "明天 " + new SimpleDateFormat("H:mm").format(dest.getTime());
+            }
+            if (time <= nextYear) {
+                return new SimpleDateFormat("M-d H:mm").format(dest.getTime());
+            }
+        }
+        return "已结束";
+    }
+
+    public void setActivity(BaseAppCompatActivity activity) {
+        this.activity = activity;
+    }
 
     public void setHideRefresh(Runnable hideRefresh) {
         this.hideRefresh = hideRefresh;
     }
-
-    private ShortcutBoxView shortcutBox;
-
-    private SliderView slider;
-
-    private TimelineAdapter adapter;
-
-    private View topPadding;
-
-    private final Vector<Object> threads = new Vector<>();
 
     public void loadContent(boolean refresh) {
 
@@ -144,8 +127,8 @@ public class TimelineView extends ListView {
                 long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
                 // 仅当今天缓存不存在或者最后消息还没到手，且已到开始时间时，允许刷新
-                if((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
-                        || !gotLastMessage) && now >= startTime){
+                if ((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
+                        || !gotLastMessage) && now >= startTime) {
                     threads.add(new Object());
                     PedetailActivity.refreshForecast(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
@@ -249,7 +232,7 @@ public class TimelineView extends ListView {
 
             // 设置高度。在其他地方设置没用。
             float resolution = 5 / 2f;
-            int height = (int)(getContext().getResources().getDisplayMetrics().widthPixels / resolution);
+            int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
             slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
             addHeaderView(slider);
         }
@@ -267,6 +250,33 @@ public class TimelineView extends ListView {
             addHeaderView(shortcutBox);
         } else {
             shortcutBox.refresh();
+        }
+    }
+
+    public static class Item {
+        // 消息是否重要，不重要的消息总在后面
+        public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
+        public ArrayList<View> attachedView = new ArrayList<>();
+        private int module;
+        private long time;
+        private String info;
+        private int importance;
+        // 按时间先后顺序排列
+        public static Comparator<Item> comparator =
+                (item1, item2) -> {
+                    // 不重要的消息总在后面
+                    return item1.importance - item2.importance;
+                };
+
+        public Item(int module, long time, int importance, String info) {
+            this.module = module;
+            this.time = time;
+            this.importance = importance;
+            this.info = info;
+        }
+
+        public int getImportance() {
+            return importance;
         }
     }
 
@@ -303,47 +313,48 @@ public class TimelineView extends ListView {
         public View getView(int position, View convertView, ViewGroup parent) {
             Item item = getItem(position);
 
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
-            TextView name = (TextView) v.findViewById(R.id.name);
-            TextView time = (TextView) v.findViewById(R.id.time);
-            TextView content = (TextView) v.findViewById(R.id.content);
-            ImageView avatar = (ImageView) v.findViewById(R.id.avatar);
-            ViewGroup attachedContainer = (ViewGroup) v.findViewById(R.id.attachedContainer);
-            ViewGroup hsv = (ViewGroup) v.findViewById(R.id.hsv);
-            View notifyDot = v.findViewById(R.id.notify_dot);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
+            }
+            TextView name = (TextView) convertView.findViewById(R.id.name);
+            TextView time = (TextView) convertView.findViewById(R.id.time);
+            TextView content = (TextView) convertView.findViewById(R.id.content);
+            ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
+            ViewGroup attachedContainer = (ViewGroup) convertView.findViewById(R.id.attachedContainer);
+            ViewGroup hsv = (ViewGroup) convertView.findViewById(R.id.hsv);
+            View notifyDot = convertView.findViewById(R.id.notify_dot);
 
-            name.setText(activity.getSettingsHelper().moduleNamesTips[item.module]);
+            name.setText(SettingsHelper.moduleNamesTips[item.module]);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(item.time);
             String dateTime = timeInNaturalLanguage(calendar, now);
             time.setText(dateTime);
             content.setText(item.info);
 
-            if(item.getImportance() == Item.CONTENT_NOTIFY){
-                notifyDot.setVisibility(VISIBLE);
-            }
+            notifyDot.setVisibility(item.getImportance() == Item.CONTENT_NOTIFY ? VISIBLE : GONE);
 
-            avatar.setImageDrawable(getResources()
-                    .getDrawable(activity.getSettingsHelper().moduleIconsId[item.module]));
-            v.setOnClickListener((v1) -> {
-                activity.startActivity(new Intent(activity.getSettingsHelper().moduleActions[item.module]));
-            });
+            avatar.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                    SettingsHelper.moduleIconsId[item.module]));
+            convertView.setOnClickListener((v1) ->
+                    activity.startActivity(new Intent(SettingsHelper.moduleActions[item.module])));
 
-            v.setOnLongClickListener(v1 -> {
-                SettingsHelper settingsHelper  = new SettingsHelper(getContext());
+            convertView.setOnLongClickListener(v1 -> {
+                SettingsHelper settingsHelper = new SettingsHelper(getContext());
                 new AlertDialog.Builder(getContext())
                         .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
-                        .setPositiveButton("确定",(dialog, which) -> {
+                        .setPositiveButton("确定", (dialog, which) -> {
                             //设置为不可用
-                            settingsHelper.setModuleShortCutEnabled(item.module,false);
+                            settingsHelper.setModuleShortCutEnabled(item.module, false);
                             loadContent(true);
                         })
-                        .setNegativeButton("取消", (dialog, which) ->{
+                        .setNegativeButton("取消", (dialog, which) -> {
 
                         }).show();
                 return true;
             });
 
+            hsv.setVisibility(GONE);
+            attachedContainer.removeAllViews();
 
             if (item.attachedView.size() != 0) {
                 hsv.setVisibility(VISIBLE);
@@ -364,49 +375,7 @@ public class TimelineView extends ListView {
                 }
             }
 
-            return v;
+            return convertView;
         }
-    }
-
-    // 因为此函数在getView()中被调用，视图回收再分配时，时间可能发生变化，所以此函数内不能调用Calendar.getInstance()
-    // 而应该用固定的now参数代表刷新时的时间
-    public static String timeInNaturalLanguage(Calendar dest, long now) {
-        long time = dest.getTimeInMillis();
-        Calendar todayCal = Calendar.getInstance();
-        todayCal.setTimeInMillis(now);
-        todayCal = CalendarUtils.toSharpDay(todayCal);
-        todayCal.setTimeInMillis(todayCal.getTimeInMillis() + 1000 * 60 * 60 * 24);
-        long tomorrow = todayCal.getTimeInMillis();
-        todayCal.setTimeInMillis(todayCal.getTimeInMillis() + 1000 * 60 * 60 * 24);
-        long dayAfterTomorrow = todayCal.getTimeInMillis();
-        todayCal.setTimeInMillis(todayCal.getTimeInMillis() - 2 * 1000 * 60 * 60 * 24);
-        todayCal.set(Calendar.YEAR, todayCal.get(Calendar.YEAR) + 1);
-        todayCal.set(Calendar.MONTH, 0);
-        todayCal.set(Calendar.DATE, 1);
-        long nextYear = todayCal.getTimeInMillis();
-
-        // 允许5秒的误差
-        if (now <= time + 5 * 1000) {
-            if (now > time) time = now;
-            // 将明天零点视为明天全天事件
-            if (time == tomorrow) {
-                return "明天";
-            }
-            if (time < tomorrow) {
-                int deltaMinute = (int) ((time - now) / 1000 / 60);
-                int deltaHour = deltaMinute / 60;
-                deltaMinute %= 60;
-                if (deltaHour != 0) return deltaHour + "小时后";
-                if (deltaMinute != 0) return deltaMinute + "分钟后";
-                return "现在";
-            }
-            if (time <= dayAfterTomorrow) {
-                return "明天 " + new SimpleDateFormat("H:mm").format(dest.getTime());
-            }
-            if (time <= nextYear) {
-                return new SimpleDateFormat("M-d H:mm").format(dest.getTime());
-            }
-        }
-        return "已结束";
     }
 }

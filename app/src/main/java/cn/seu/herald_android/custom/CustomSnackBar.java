@@ -8,31 +8,17 @@ import android.widget.TextView;
 
 public class CustomSnackBar {
 
-    public enum SnackBarDuration {
-        SHORT, LONG, INDEFINITE
-    }
-
     // Default snack bar will be showed for short duration
     private SnackBarDuration mSnackBarDuration = SnackBarDuration.SHORT;
-
     private OnActionClickListener mOnActionClickListener;
-
     private View mView;
-
     private String mTitleText;
-
     private String mActionText;
-
     private int mTitleTextColor = Color.WHITE;
-
     private int mActionTextColor = Color.YELLOW;
-
     private int mBackgroundColor = Color.BLACK;
-
     private Typeface mTfTitle = Typeface.DEFAULT;
-
     private Typeface mTfAction = Typeface.DEFAULT;
-
     private boolean isNeedClickEvent;
 
     // Assigning the view for which Snackbar responds
@@ -41,21 +27,21 @@ public class CustomSnackBar {
         return this;
     }
 
-    // Assigning the title and action text
-
     public CustomSnackBar text(String titleText, String actionText) {
         this.mTitleText = titleText;
         this.mActionText = actionText;
         return this;
     }
 
-    // To customize title and action text colors
+    // Assigning the title and action text
 
     public CustomSnackBar textColors(int titleTextColor, int actionTextColor) {
         this.mTitleTextColor = titleTextColor;
         this.mActionTextColor = actionTextColor;
         return this;
     }
+
+    // To customize title and action text colors
 
     // To customize background color of snack bar
     public CustomSnackBar backgroundColor(int backgroundColor) {
@@ -127,12 +113,16 @@ public class CustomSnackBar {
         getSnackBar().show();
     }
 
-
     // Listeners to handle SnackBar Action click
     public CustomSnackBar setOnClickListener(boolean isNeedClickEvent, OnActionClickListener onActionClickListener) {
         this.isNeedClickEvent = isNeedClickEvent;
         this.mOnActionClickListener = onActionClickListener;
         return this;
+    }
+
+
+    public enum SnackBarDuration {
+        SHORT, LONG, INDEFINITE
     }
 
     public interface OnActionClickListener {

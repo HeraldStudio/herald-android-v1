@@ -92,8 +92,8 @@ public class TimelineParser {
 
                     // 如果是还没到时间的课，放在“你今天(还)有x节课”的列表里备用
                     // 只要没有快上课或正在上课的提醒导致中途退出循环的话，这个列表就会显示
-                    if(now < startTime){
-                        if(now >= almostEndTime && now < endTime){
+                    if (now < startTime) {
+                        if (now >= almostEndTime && now < endTime) {
                             classAlmostEnd = true;
                         }
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
@@ -104,10 +104,9 @@ public class TimelineParser {
                     }
 
                     // 快要上课的紧急提醒
-                    if(now >= startTime - 15 * 60 * 1000 && now < startTime){
+                    if (now >= startTime - 15 * 60 * 1000 && now < startTime) {
                         TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                                startTime, info.getClassName() + " 即将开始上课，请注意时间，准时上课",
-                                "即将开始上课", info.getClassName() + " " + info.getPlace()
+                                startTime, TimelineView.Item.CONTENT_NOTIFY, info.getClassName() + " 即将开始上课，请注意时间，准时上课"
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
@@ -116,11 +115,10 @@ public class TimelineParser {
 
                         item.attachedView.add(block);
                         return item;
-                    } else if (now >= startTime && now < almostEndTime){
+                    } else if (now >= startTime && now < almostEndTime) {
                         // 正在上课的提醒
                         TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                                now, info.getClassName() + " 正在上课中",
-                                "正在上课", info.getClassName() + " " + info.getPlace()
+                                now, TimelineView.Item.CONTENT_NOTIFY, info.getClassName() + " 正在上课中"
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
@@ -135,12 +133,12 @@ public class TimelineParser {
             // 此处退出循环有三种可能：可能是今天没课，可能是课与课之间或早上的没上课状态，也可能是课上完了的状态
 
             // 如果不是课上完了的状态
-            if(remainingClasses.size() > 0){
+            if (remainingClasses.size() > 0) {
                 boolean firstClass = remainingClasses.size() == classCount;
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
                         now, TimelineView.Item.CONTENT_NO_NOTIFY,
                         (classAlmostEnd ? "快要下课了，" : "") +
-                        (firstClass ? "你今天有" : "你今天还有") + remainingClasses.size() + "节课，点我查看详情"
+                                (firstClass ? "你今天有" : "你今天还有") + remainingClasses.size() + "节课，点我查看详情"
                 );
                 item.attachedView = remainingClasses;
                 return item;
@@ -177,7 +175,7 @@ public class TimelineParser {
                     today.getTimeInMillis() + (classCount == 0 && !todayHasClasses ? 0 : 1000 * 60 * 60 * 24),
                     // 若明天有课，则属于有内容不提醒状态；否则属于无内容状态
                     classCount == 0 ? TimelineView.Item.NO_CONTENT : TimelineView.Item.CONTENT_NO_NOTIFY,
-                            // 如果明天没课
+                    // 如果明天没课
                     classCount == 0 ? (todayHasClasses ? "明天" : "今明两天都") + "没有课程，娱乐之余请注意作息安排哦"
                             // 如果明天有课
                             : (todayHasClasses ? "今天的课程已经结束，" : "今天没有课程，") + "明天有" + classCount + "节课"
@@ -237,7 +235,7 @@ public class TimelineParser {
                         time = CalendarUtils.toSharpDay(time);
 
                         // 没开始的实验全部单独记录下来
-                        if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+                        if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                             ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                             allExperiments.add(block);
                         }
@@ -255,8 +253,7 @@ public class TimelineParser {
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                                            now, "你有1个实验即将开始，请注意时间准时参加",
-                                            "实验即将开始", item.getName() + " 实验即将开始，请注意时间准时参加"
+                                            now, TimelineView.Item.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
                                     );
                                     item1.attachedView.add(block);
                                     return item1;
@@ -267,8 +264,7 @@ public class TimelineParser {
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                                            now, "1个实验正在进行",
-                                            "实验进行中", item.getName() + " (" + item.getAddress() + ")"
+                                            now, TimelineView.Item.CONTENT_NOTIFY, "1个实验正在进行"
                                     );
                                     item1.attachedView.add(block);
                                     return item1;
@@ -316,7 +312,7 @@ public class TimelineParser {
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                         now, M == 0 ? TimelineView.Item.NO_CONTENT : TimelineView.Item.CONTENT_NO_NOTIFY,
                         (M == 0 ? "你没有未完成的实验，" : ("本学期你还有" + M + "个实验，"))
-                            + "实验助手可以智能提醒你参加即将开始的实验"
+                                + "实验助手可以智能提醒你参加即将开始的实验"
                 );
                 item.attachedView = allExperiments;
                 return item;
@@ -415,20 +411,20 @@ public class TimelineParser {
         long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
         long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
-        if(now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))){
+        if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
                     now, TimelineView.Item.NO_CONTENT, "跑操预告刷新失败，请稍后重试"
             );
         }
-        if(now < startTime){
+        if (now < startTime) {
             // 跑操时间没到
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
                     now, TimelineView.Item.NO_CONTENT, "小猴会在早上跑操时间实时显示跑操预告"
             );
-        } else if(now >= endTime){
+        } else if (now >= endTime) {
             // 跑操时间已过
 
-            if(!forecast.contains("跑操")) {
+            if (!forecast.contains("跑操")) {
                 // 没有跑操预告信息
                 return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
                         now, TimelineView.Item.NO_CONTENT, "今天没有跑操预告信息"
@@ -449,8 +445,7 @@ public class TimelineParser {
 
             // 有跑操预告信息
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                    now, "小猴预测" + forecast,
-                    "跑操预报", "小猴预测" + forecast
+                    now, TimelineView.Item.CONTENT_NOTIFY, "小猴预测" + forecast
             );
         }
     }
@@ -468,7 +463,7 @@ public class TimelineParser {
             //获取余额并且设置
             String left = json_cache.getString("left");
             float extra = Float.valueOf(left);
-            if(extra < 20){
+            if (extra < 20) {
                 return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineView.Item.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
                 );

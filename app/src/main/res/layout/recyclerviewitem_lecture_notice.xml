@@ -4,44 +4,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_date"
-            android:textSize="11sp"
-            android:text="讲座日期"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="讲座日期"
+            android:textSize="11sp" />
+
+        <TextView
             android:id="@+id/tv_topic"
-            android:textSize="17sp"
-            android:textColor="@color/colorLectureprimary_dark"
-            android:text="讲座主题"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_speaker"
-            android:text="主讲"/>
+            android:text="讲座主题"
+            android:textColor="@color/colorLectureprimary_dark"
+            android:textSize="17sp" />
+
         <TextView
+            android:id="@+id/tv_speaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主讲" />
+
+        <TextView
+            android:id="@+id/tv_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="right"
-            android:id="@+id/tv_location"
-            android:textSize="11sp"
-            android:text="地点"/>
+            android:text="地点"
+            android:textSize="11sp" />
+
         <LinearLayout
+            android:id="@+id/line_divider"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:id="@+id/line_divider"
-            android:background="@color/colorDivider">
-        </LinearLayout>
+            android:background="@color/colorDivider"
+            android:orientation="horizontal" />
     </LinearLayout>
 </RelativeLayout>
 

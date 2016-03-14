@@ -1,7 +1,5 @@
 package cn.seu.herald_android.mod_query.emptyroom;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +9,6 @@ import android.view.ViewGroup;
 import cn.seu.herald_android.R;
 
 public class QueryFragment extends Fragment {
-
 
     public QueryFragment() {
         // Required empty public constructor

@@ -5,15 +5,13 @@
     <color name="colorAccent">#57b3ff</color>
     <color name="colorPrimaryGreen">#20a65c</color>
     <color name="colorPrimaryGreenDark">#b4eab3</color>
-    
-    
+
 
     <!--成绩页面-->
     <color name="colorGradeprimary">#4CAF50</color>
     <color name="colorGradeprimary_dark">#4CAF50</color>
     <color name="colorGradeprimary_light">#C8E6C9</color>
     <color name="colorGradeaccent">#4CAF50</color>
-
 
 
     <!--人文讲座页面-->

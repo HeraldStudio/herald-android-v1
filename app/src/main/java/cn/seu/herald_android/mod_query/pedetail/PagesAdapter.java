@@ -2,13 +2,12 @@ package cn.seu.herald_android.mod_query.pedetail;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -104,7 +103,7 @@ public class PagesAdapter extends PagerAdapter {
                 values1.add(new PointValue(0, j));
                 values1.add(new PointValue(dateCount, j));
                 lines.add(new Line(values1)
-                        .setColor(context.getResources().getColor(R.color.colorPedetailprimary))
+                        .setColor(ContextCompat.getColor(context, R.color.colorPedetailprimary))
                         .setStrokeWidth(1)
                         .setHasPoints(false));
             }
@@ -118,7 +117,7 @@ public class PagesAdapter extends PagerAdapter {
                 values1.add(new PointValue(j, -0.1f));
                 values1.add(new PointValue(j, 1.1f));
                 lines.add(new Line(values1)
-                        .setColor(context.getResources().getColor(R.color.colorPedetailprimary))
+                        .setColor(ContextCompat.getColor(context, R.color.colorPedetailprimary))
                         .setStrokeWidth(1)
                         .setHasPoints(false));
 
@@ -187,10 +186,6 @@ public class PagesAdapter extends PagerAdapter {
 
     public View getViewForItem(int position) {
         return viewList.get(position);
-    }
-
-    public int getYearMonth(int position) {
-        return ((MarkedCalendarView) viewList.get(position).findViewById(R.id.calendar)).getYearMonth();
     }
 
     public String getMonthTitle(int yearMonth) {

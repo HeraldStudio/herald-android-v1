@@ -3,30 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/ic_shortcut"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp" />
 
     <TextView
         android:id="@+id/tv_shortcut"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="left|center"
         android:layout_weight="1"
+        android:gravity="left|center"
         android:paddingLeft="10dp"
         android:textSize="13.5sp" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="#f0f0f0"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"/>
+        android:background="#f0f0f0" />
+
     <ImageButton
         android:id="@+id/ibtn_shortcut"
         android:layout_width="54dp"

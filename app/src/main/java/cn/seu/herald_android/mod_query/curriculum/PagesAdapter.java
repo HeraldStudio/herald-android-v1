@@ -5,7 +5,6 @@ import android.support.v4.view.PagerAdapter;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -59,18 +58,18 @@ public class PagesAdapter extends PagerAdapter {
 
             // 读取开学日期
             int startMonth = content.getJSONObject("startdate").getInt("month");
-            int startDate =  content.getJSONObject("startdate").getInt("day");
+            int startDate = content.getJSONObject("startdate").getInt("day");
             Calendar cal = Calendar.getInstance();
             cal.set(cal.get(Calendar.YEAR), startMonth, startDate);
 
             // 如果开学日期比今天还晚，则是去年开学的。这里用while保证了thisWeek永远大于零
-            while (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+            while (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                 cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
             }
 
             // 计算当前周
-            thisWeek = (int)((Calendar.getInstance().getTimeInMillis() - cal.getTimeInMillis())
-                / (1000 * 60 * 60 * 24 * 7) + 1);
+            thisWeek = (int) ((Calendar.getInstance().getTimeInMillis() - cal.getTimeInMillis())
+                    / (1000 * 60 * 60 * 24 * 7) + 1);
 
             // 实例化各页
             if (maxWeek == 0) {
@@ -96,7 +95,7 @@ public class PagesAdapter extends PagerAdapter {
         return viewList.size();
     }
 
-    public int getCurrentPage(){
+    public int getCurrentPage() {
         return Math.min(viewList.size(), thisWeek - 1);
     }
 

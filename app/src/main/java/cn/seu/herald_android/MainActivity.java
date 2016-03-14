@@ -12,12 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,22 +24,14 @@ import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
-
 import cn.seu.herald_android.mod_timeline.TimelineView;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
-
 import okhttp3.Call;
+
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private NavigationView navigationView;
     //显示侧边栏欢迎信息的tv
     private TextView tv_nav_user;
     private TextView tv_nav_cardnum;
-
-    //显示推送消息的WebView
-    private WebView webView;
-
-    //查询助手快捷方式
-    private GridView gv_ShortCutBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +70,8 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             Intent intent = new Intent(MainActivity.this, SysSettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
-        }else if(id == R.id.action_logout){
-            getApiHepler().doLogout();
-
+        } else if (id == R.id.action_logout) {
+            getApiHelper().doLogout();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -119,12 +109,10 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
 
-
-    public void init(){
+    public void init() {
 
         //登陆校园wifi
-        //
-        // checkAndLoginWifi();
+        checkAndLoginWifi();
 
         //切换动画
         overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
@@ -154,7 +142,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         super.onDestroy();
     }
 
-    public void checkAndLoginWifi(){
+    public void checkAndLoginWifi() {
         NetworkLoginHelper.getInstance(this).checkAndLogin();
         /*if(new CacheHelper(this).getCache("wifi").equals("")){
             new NetworkShortcutHelper(this).addShortcut();
@@ -162,7 +150,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         }*/
     }
 
-    public void setupDrawer(){
+    public void setupDrawer() {
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -173,29 +161,29 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //获取侧边栏布局
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        tv_nav_user = (TextView)headerLayout.findViewById(R.id.tv_nav_username);
+        tv_nav_user = (TextView) headerLayout.findViewById(R.id.tv_nav_username);
 
-        tv_nav_cardnum = (TextView)headerLayout.findViewById(R.id.tv_nav_usercard);
+        tv_nav_cardnum = (TextView) headerLayout.findViewById(R.id.tv_nav_usercard);
     }
 
-    public void refreshWelcome(){
+    public void refreshWelcome() {
         //如果缓存存在的话先设置欢迎信息和侧边栏信息
-        tv_nav_user.setText(getApiHepler().getAuthCache("name"));
+        tv_nav_user.setText(getApiHelper().getAuthCache("name"));
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_USER))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
                         //错误检测
-                        getApiHepler().dealApiException(e);
+                        getApiHelper().dealApiException(e);
                     }
 
                     @Override
@@ -206,16 +194,16 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                                 //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
                                 //更新首页欢迎信息和侧边栏信息
                                 JSONObject json_content = json_res.getJSONObject("content");
-                                getApiHepler().setAuthCache("name", json_content.getString("name"));
-                                getApiHepler().setAuthCache("sex", json_content.getString("sex"));
-                                getApiHepler().setAuthCache("cardnum", json_content.getString("cardnum"));
-                                getApiHepler().setAuthCache("schoolnum", json_content.getString("schoolnum"));
-                                tv_nav_user.setText(getApiHepler().getAuthCache("name"));
-                                tv_nav_cardnum.setText(getApiHepler().getAuthCache("cardnum"));
+                                getApiHelper().setAuthCache("name", json_content.getString("name"));
+                                getApiHelper().setAuthCache("sex", json_content.getString("sex"));
+                                getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
+                                getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
+                                tv_nav_user.setText(getApiHelper().getAuthCache("name"));
+                                tv_nav_cardnum.setText(getApiHelper().getAuthCache("cardnum"));
                             } else {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
                                 showMsg("登录信息已失效，请重新登录");
-                                getApiHepler().doLogout();
+                                getApiHelper().doLogout();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -227,16 +215,14 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     // 刷新时间轴和快捷方式
     // refresh 是否联网刷新
-    private void loadTimelineView(boolean refresh){
-        SwipeRefreshLayout srl = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+    private void loadTimelineView(boolean refresh) {
+        SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setColorSchemeResources(R.color.colorPrimary);
-        TimelineView view = (TimelineView)findViewById(R.id.timeline);
+        TimelineView view = (TimelineView) findViewById(R.id.timeline);
         view.setActivity(this);
-        srl.setOnRefreshListener(() -> {
-            view.loadContent(true);
-        });
+        srl.setOnRefreshListener(() -> view.loadContent(true));
         view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
-        if(refresh)
+        if (refresh)
             runMeasurementDependentTask(() -> srl.setRefreshing(true));
         // 快捷方式刷新在这里
         view.loadContent(refresh);

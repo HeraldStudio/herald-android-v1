@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Pair;
@@ -33,39 +32,14 @@ import cn.seu.herald_android.R;
 @SuppressLint("ViewConstructor")
 public class CurriculumScheduleLayout extends FrameLayout {
 
-    // 表示当前需要显示的列数，初始值为7，若周六或周日无课，对应地减去1或2
-    private int columnsCount;
-
-    // 表示周数，视图的宽度和高度
-    private int week, width = 0, height = 0;
-
-    // 是否当前周
-    private boolean curWeek;
-
-    // 表示当前学期课程信息的JSON对象
-    private JSONObject obj;
-
-    // 表示屏幕缩放率（平均每个dp中px的数量）
-    private float density;
-
-    // 当前时间的指示条（仅当本页为当前周、今天非休息日或有课时才会显示）
-    private View timeHand;
-
-    // 保存当前学期侧栏的键值对
-    private Map<String, Pair<String, String>> sidebar;
-
     // 常量，我校一天的课时数
     public static final int PERIOD_COUNT = 13;
-
     // 常量，今天所在列与其他列的宽度比值
     public static final float TODAY_WEIGHT = 1.5f;
-
     // 星期在JSON中的表示值
     public static final String[] WEEK_NUMS = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-
     // 星期在屏幕上的显示值
     public static final String[] WEEK_NUMS_CN = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
-
     // 以上的星期依次在Calendar中对应的值
     public static final int[] WEEK_NUMS_CALENDAR = {
             Calendar.MONDAY,
@@ -76,7 +50,6 @@ public class CurriculumScheduleLayout extends FrameLayout {
             Calendar.SATURDAY,
             Calendar.SUNDAY
     };
-
     // 每节课开始的时间，以(Hour * 60 + Minute)形式表示
     // 本程序假定每节课都是45分钟
     public static final int[] CLASS_BEGIN_TIME = {
@@ -84,6 +57,26 @@ public class CurriculumScheduleLayout extends FrameLayout {
             14 * 60, 14 * 60 + 50, 15 * 60 + 50, 16 * 60 + 40, 17 * 60 + 30,
             18 * 60 + 30, 19 * 60 + 20, 20 * 60 + 10
     };
+    // 表示当前需要显示的列数，初始值为7，若周六或周日无课，对应地减去1或2
+    private int columnsCount;
+    // 表示周数，视图的宽度和高度
+    private int week, width = 0, height = 0;
+    // 是否当前周
+    private boolean curWeek;
+    // 表示当前学期课程信息的JSON对象
+    private JSONObject obj;
+    // 表示屏幕缩放率（平均每个dp中px的数量）
+    private float density;
+    // 当前时间的指示条（仅当本页为当前周、今天非休息日或有课时才会显示）
+    private View timeHand;
+    BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshTimeHand();
+        }
+    };
+    // 保存当前学期侧栏的键值对
+    private Map<String, Pair<String, String>> sidebar;
 
     // 本视图只需要手动创建，不会从xml中创建
     public CurriculumScheduleLayout(Context context, JSONObject obj,
@@ -94,6 +87,21 @@ public class CurriculumScheduleLayout extends FrameLayout {
         this.sidebar = sidebar;
         this.week = week;
         this.curWeek = curWeek;
+    }
+
+    // 获取手机状态栏高度
+    public static int getStatusBarHeight(Context context) {
+        int statusBarHeight = 0;
+        try {
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            Object obj = c.newInstance();
+            Field field = c.getField("status_bar_height");
+            int x = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return statusBarHeight;
     }
 
     // 要显示在屏幕上时再进行添加view的操作，显著提高应用启动速度
@@ -194,13 +202,6 @@ public class CurriculumScheduleLayout extends FrameLayout {
         }
     }
 
-    BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            refreshTimeHand();
-        }
-    };
-
     // 绘制某一列的课表
     private void setColumnData(
             List<ClassInfo> list, // 该列的数据
@@ -219,7 +220,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
         v.setX((dayDelta > 0 ? columnIndex + addition : columnIndex) * width / (columnsCount + addition));
         v.setY(0);
         v.setLayoutParams(new LayoutParams(
-                (int)((dayDelta == 0 && widenToday ? TODAY_WEIGHT : 1) * width / (columnsCount + addition)),
+                (int) ((dayDelta == 0 && widenToday ? TODAY_WEIGHT : 1) * width / (columnsCount + addition)),
                 height / (PERIOD_COUNT + 1)));
         addView(v);
 
@@ -261,7 +262,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
             // 宽度和高度
             block.setLayoutParams(new LayoutParams(
                     // 宽度，如果今天相同星期被突出显示，且本列就是今天相同星期，就加宽，否则不加宽
-                    (int)((dayDelta == 0 && widenToday ? TODAY_WEIGHT : 1)
+                    (int) ((dayDelta == 0 && widenToday ? TODAY_WEIGHT : 1)
                             // 乘以每列的宽度
                             * width / (columnsCount + addition)),
                     // 高度
@@ -272,7 +273,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
         // 绘制时间指示条
         if (dayDelta == 0 && widenToday) {
             timeHand = new View(getContext());
-            timeHand.setLayoutParams(new LayoutParams((int)(TODAY_WEIGHT * width / (columnsCount + TODAY_WEIGHT - 1)), (int) density * 2));
+            timeHand.setLayoutParams(new LayoutParams((int) (TODAY_WEIGHT * width / (columnsCount + TODAY_WEIGHT - 1)), (int) density * 2));
             timeHand.setX(columnIndex * width / (columnsCount + TODAY_WEIGHT - 1));
             timeHand.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.curriculumtimeHandColor));
             addView(timeHand);
@@ -314,20 +315,5 @@ public class CurriculumScheduleLayout extends FrameLayout {
             getContext().unregisterReceiver(timeChangeReceiver);
         }
         super.onDetachedFromWindow();
-    }
-
-    // 获取手机状态栏高度
-    public static int getStatusBarHeight(Context context) {
-        int statusBarHeight = 0;
-        try {
-            Class<?> c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            statusBarHeight = context.getResources().getDimensionPixelSize(x);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        return statusBarHeight;
     }
 }

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,22 +25,31 @@ import cn.seu.herald_android.R;
  */
 public class MarkedCalendarView extends FrameLayout {
 
-    // 本页和今天的时间
-    Calendar thisPage, today;
-
-    private int yearMonth;
-
     // 用于保存本页每个日期控件的链表
     public List<View> views;
-
     // 对话框中刷新按钮的点击事件
     public DialogInterface.OnClickListener refreshListener;
+    // 本页和今天的时间
+    Calendar thisPage, today;
+    private int yearMonth;
 
     // Constructor
-    public MarkedCalendarView(Context context, AttributeSet attrs){ super(context, attrs); }
+    public MarkedCalendarView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    // 获取特定年月的天数，注意输入的month是从0开始的，与Calendar类的month表示方法一致
+    public static int getDayCountForMonth(int year, int month) {
+        return new int[]{31, (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) ? 29 : 28,
+                31, 30, 31, 30, 31, 31, 30, 31, 30, 31}[month];
+    }
+
+    public static int getDayCountForMonth(int yearMonth) {
+        return getDayCountForMonth(yearMonth / 12, yearMonth % 12);
+    }
 
     // 初始化月历页面
-    public void initialize(int yearMonth, List<ExerciseInfo> page){
+    public void initialize(int yearMonth, List<ExerciseInfo> page) {
 
         this.yearMonth = yearMonth;
         today = Calendar.getInstance();
@@ -53,8 +61,8 @@ public class MarkedCalendarView extends FrameLayout {
         thisPage.set(Calendar.DATE, 1);
 
         // 调整本页所在年月
-        thisPage.set(Calendar.YEAR, yearMonth/12);
-        thisPage.set(Calendar.MONTH, yearMonth%12);
+        thisPage.set(Calendar.YEAR, yearMonth / 12);
+        thisPage.set(Calendar.MONTH, yearMonth % 12);
 
         // 初始化容器和链表
         removeAllViews();
@@ -70,7 +78,7 @@ public class MarkedCalendarView extends FrameLayout {
         int day = thisPage.get(Calendar.DAY_OF_WEEK);
 
         // 开头按1号的星期数增加空格
-        for(int i = Calendar.SUNDAY; i < day; i++){
+        for (int i = Calendar.SUNDAY; i < day; i++) {
             View v = LayoutInflater.from(getContext()).inflate(R.layout.gridviewitem_pedetail, null);
             TextView tv = (TextView) v.findViewById(R.id.textView);
             tv.setVisibility(INVISIBLE);
@@ -78,15 +86,15 @@ public class MarkedCalendarView extends FrameLayout {
         }
 
         // 放置当月的日期
-        for(int i = 1; i <= getDayCountForMonth(year, month); i++){
+        for (int i = 1; i <= getDayCountForMonth(year, month); i++) {
             Calendar dt = Calendar.getInstance();
             dt.setFirstDayOfWeek(Calendar.SUNDAY);
             dt.set(year, month, i);
             View v = LayoutInflater.from(getContext()).inflate(R.layout.gridviewitem_pedetail, null);
 
             // 当月当天，显示“今天”标记
-            int todayYearMonth = today.get(Calendar.YEAR)*12+today.get(Calendar.MONTH);
-            if(todayYearMonth == yearMonth && today.get(Calendar.DATE) == i) {
+            int todayYearMonth = today.get(Calendar.YEAR) * 12 + today.get(Calendar.MONTH);
+            if (todayYearMonth == yearMonth && today.get(Calendar.DATE) == i) {
                 v.findViewById(R.id.today).setVisibility(VISIBLE);
             }
 
@@ -96,8 +104,8 @@ public class MarkedCalendarView extends FrameLayout {
 
             // 将格子添加到容器和链表
             v.setOnClickListener(v1 -> {
-                if(getContext() instanceof BaseAppCompatActivity){
-                    ((BaseAppCompatActivity)getContext()).showMsg("该日无跑操记录");
+                if (getContext() instanceof BaseAppCompatActivity) {
+                    ((BaseAppCompatActivity) getContext()).showMsg("该日无跑操记录");
                 }
             });
             gv.addView(v);
@@ -105,7 +113,7 @@ public class MarkedCalendarView extends FrameLayout {
         }
 
         // 添加该页跑操记录
-        for(int i = 0; i < page.size(); i++){
+        for (int i = 0; i < page.size(); i++) {
             setMarked(page.get(i));
         }
 
@@ -114,15 +122,15 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 为特定跑操记录添加标记，同时指定其弹出对话框中显示的数据
-    public void setMarked(ExerciseInfo info){
-        View v = views.get(info.getDateTime().get(Calendar.DATE)-1);
+    public void setMarked(ExerciseInfo info) {
+        View v = views.get(info.getDateTime().get(Calendar.DATE) - 1);
         TextView tv = (TextView) v.findViewById(R.id.textView);
         tv.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.pedetail_grid_selector_highlight));
         tv.setTextColor(Color.WHITE);
 
         v.setOnClickListener(view -> {
-            if(getContext() instanceof BaseAppCompatActivity){
-                ((BaseAppCompatActivity)getContext()).showMsg(info.toString());
+            if (getContext() instanceof BaseAppCompatActivity) {
+                ((BaseAppCompatActivity) getContext()).showMsg(info.toString());
             } else {
                 new AlertDialog.Builder(getContext()).setTitle("跑操记录详情").setMessage(info.toString()).show();
             }
@@ -131,15 +139,5 @@ public class MarkedCalendarView extends FrameLayout {
 
     public int getYearMonth() {
         return yearMonth;
-    }
-
-    // 获取特定年月的天数，注意输入的month是从0开始的，与Calendar类的month表示方法一致
-    public static int getDayCountForMonth(int year, int month){
-        return new int[]{31, (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) ? 29: 28,
-                31, 30, 31, 30, 31, 31, 30, 31, 30, 31}[month];
-    }
-
-    public static int getDayCountForMonth(int yearMonth){
-        return getDayCountForMonth(yearMonth/12, yearMonth%12);
     }
 }

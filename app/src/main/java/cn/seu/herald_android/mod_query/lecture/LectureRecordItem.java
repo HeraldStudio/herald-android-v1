@@ -18,9 +18,9 @@ public class LectureRecordItem {
         this.place = place;
     }
 
-    public static ArrayList<LectureRecordItem> transfromJSONArrayToArrayList(JSONArray jsonArray)throws JSONException{
+    public static ArrayList<LectureRecordItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<LectureRecordItem> list = new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             list.add(new LectureRecordItem(
                     jsonArray.getJSONObject(i).getString("date"),
                     jsonArray.getJSONObject(i).getString("place")

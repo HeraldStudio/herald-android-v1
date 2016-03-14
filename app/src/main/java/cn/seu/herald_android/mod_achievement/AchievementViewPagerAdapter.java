@@ -2,7 +2,6 @@ package cn.seu.herald_android.mod_achievement;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_achievement.Achievement;
 
-/**
- * Created by heyon on 2016/3/3.
- */
 public class AchievementViewPagerAdapter extends PagerAdapter {
     ArrayList<Achievement> achievementArrayList;
     Context context;
-    public AchievementViewPagerAdapter(Context context,ArrayList<Achievement> achievementArrayList) {
+
+    public AchievementViewPagerAdapter(Context context, ArrayList<Achievement> achievementArrayList) {
         this.achievementArrayList = achievementArrayList;
         this.context = context;
 
@@ -38,12 +34,12 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Achievement achievement = achievementArrayList.get(position);
-        View view = LayoutInflater.from(this.context).inflate(R.layout.viewpager_achievement_experiment,null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.viewpager_achievement_experiment, null);
         //设置成就名字
-        TextView tv_name = (TextView)view.findViewById(R.id.tv_name);
-        tv_name.setText(position+1+"."+achievement.getName());
+        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+        tv_name.setText(position + 1 + "." + achievement.getName());
         //成就描述
-        TextView tv_des = (TextView)view.findViewById(R.id.tv_des);
+        TextView tv_des = (TextView) view.findViewById(R.id.tv_des);
         tv_des.setText(achievement.getDes());
         container.addView(view);
         return view;

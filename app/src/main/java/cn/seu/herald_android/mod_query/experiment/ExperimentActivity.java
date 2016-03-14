@@ -153,10 +153,10 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 //设置成就列表
                 setupAchievementWall();
                 //设置伸缩列表
-                ExprimentExpandAdapter exprimentExpandAdapter = new ExprimentExpandAdapter(getBaseContext(), parentArray, childArray);
-                expandableListView.setAdapter(exprimentExpandAdapter);
+                ExperimentExpandAdapter experimentExpandAdapter = new ExperimentExpandAdapter(getBaseContext(), parentArray, childArray);
+                expandableListView.setAdapter(experimentExpandAdapter);
 
-                if (exprimentExpandAdapter.getGroupCount() > 0)
+                if (experimentExpandAdapter.getGroupCount() > 0)
                     expandableListView.expandGroup(0);
 
             } catch (JSONException e) {
@@ -173,12 +173,12 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
-                .addParams("uuid", getApiHepler().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        getApiHepler().dealApiException(e);
+                        getApiHelper().dealApiException(e);
                         getProgressDialog().dismiss();
                     }
 

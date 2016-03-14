@@ -3,7 +3,7 @@ package cn.seu.herald_android.mod_query.grade;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -18,18 +18,17 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
 import de.codecrafters.tableview.SortableTableView;
-
 import de.codecrafters.tableview.TableHeaderAdapter;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import okhttp3.Call;
 
 public class GradeActivity extends BaseAppCompatActivity {
 
-    SortableTableView<GradeItem> tableview_grade;
+    SortableTableView<GradeItem> tableViewGrade;
     ProgressDialog progressDialog;
     //展示首修GPA的TV
     TextView tv_gpa;
@@ -37,6 +36,7 @@ public class GradeActivity extends BaseAppCompatActivity {
     TextView tv_gpa2;
     //展示最后计算时间的TV
     TextView tv_time;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,48 +46,45 @@ public class GradeActivity extends BaseAppCompatActivity {
         loadCache();
     }
 
-    private void init(){
+    private void init() {
         //设置toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("成绩查询");
         setSupportActionBar(toolbar);
         //设置点击函数
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-                finish();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+            finish();
         });
         //沉浸式状态栏颜色
-        setStatusBarColor(this, getResources().getColor(R.color.colorGradeprimary));
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGradeprimary));
 
         //设置collapsingToolbarLayout标题禁用
 //        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
 //        collapsingToolbarLayout.setTitleEnabled(false);
 
         //控件初始化
-        tableview_grade = (SortableTableView<GradeItem>)findViewById(R.id.tableview_grade);
-        tv_gpa = (TextView)findViewById(R.id.tv_grade_gpawithoutrevamp);
-        tv_gpa2 = (TextView)findViewById(R.id.tv_grade_gpa);
-        tv_time = (TextView)findViewById(R.id.tv_grade_time);
+        tableViewGrade = (SortableTableView<GradeItem>) findViewById(R.id.tableview_grade);
+        tv_gpa = (TextView) findViewById(R.id.tv_grade_gpawithoutrevamp);
+        tv_gpa2 = (TextView) findViewById(R.id.tv_grade_gpa);
+        tv_time = (TextView) findViewById(R.id.tv_grade_time);
 
         //设置表头
         TableHeaderAdapter tableHeaderAdapter = new TableHeaderAdapter(this) {
             @Override
             public View getHeaderView(int columnIndex, ViewGroup parentView) {
-                String headers[] = {"课程","学期","成绩","类型","学分"};
+                String headers[] = {"课程", "学期", "成绩", "类型", "学分"};
                 TextView tv_header = new TextView(getContext());
                 tv_header.setText(headers[columnIndex]);
                 tv_header.setTextSize(13f);
                 tv_header.setGravity(Gravity.CENTER);
-                tv_header.setTextColor(getResources().getColor(R.color.colorIcons));
+                tv_header.setTextColor(ContextCompat.getColor(GradeActivity.this, R.color.colorIcons));
                 return tv_header;
             }
         };
-        tableview_grade.setHeaderBackgroundColor(getResources().getColor(R.color.colorGradeprimary));
-        tableview_grade.setHeaderAdapter(tableHeaderAdapter);
+        tableViewGrade.setHeaderBackgroundColor(ContextCompat.getColor(GradeActivity.this, R.color.colorGradeprimary));
+        tableViewGrade.setHeaderAdapter(tableHeaderAdapter);
 
 
         //刷新时的进度对话框
@@ -98,25 +95,25 @@ public class GradeActivity extends BaseAppCompatActivity {
     }
 
 
-    private void loadCache(){
+    private void loadCache() {
         try {
             //测试数据测试
             String cache = getCacheHelper().getCache("herald_grade_gpa");
-            if(!cache.equals("")){
+            if (!cache.equals("")) {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //获取计算后的绩点
-                if(jsonArray.getJSONObject(0).has("gpa")){
+                if (jsonArray.getJSONObject(0).has("gpa")) {
                     tv_gpa.setText(jsonArray.getJSONObject(0).getString("gpa without revamp"));
                     tv_gpa2.setText(jsonArray.getJSONObject(0).getString("gpa without revamp"));
-                    tv_time.setText("最后计算时间:"+jsonArray.getJSONObject(0).get("calculate time"));
+                    tv_time.setText("最后计算时间:" + jsonArray.getJSONObject(0).get("calculate time"));
                 }
                 //数据类型转换
-                GradeItemDataAdapter gradeItemDataAdapter = new GradeItemDataAdapter(this,GradeItem.transfromJSONArrayToArrayList(jsonArray));
+                GradeItemDataAdapter gradeItemDataAdapter = new GradeItemDataAdapter(this, GradeItem.transformJSONArrayToArrayList(jsonArray));
                 //设置成绩表单数据
-                tableview_grade.setDataAdapter(gradeItemDataAdapter);
+                tableViewGrade.setDataAdapter(gradeItemDataAdapter);
                 //设置行颜色变化
-                tableview_grade.setDataRowColoriser(new GradeItemDataAdapter.GradeRowColorizer(getBaseContext()));
-            }else{
+                tableViewGrade.setDataRowColoriser(new GradeItemDataAdapter.GradeRowColorizer(getBaseContext()));
+            } else {
                 refreshCache();
             }
         } catch (JSONException e) {
@@ -126,32 +123,32 @@ public class GradeActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_grade,menu);
+        getMenuInflater().inflate(R.menu.menu_grade, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_grade_sync){
+        if (id == R.id.action_grade_sync) {
             refreshCache();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshCache(){
+    private void refreshCache() {
         progressDialog.show();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_GPA))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .connTimeOut(20000)
                 .readTimeOut(18000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        getApiHepler().dealApiException(e);
+                        getApiHelper().dealApiException(e);
                         progressDialog.dismiss();
                         showMsg("请求超时。");
                     }

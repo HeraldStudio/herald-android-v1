@@ -4,16 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-import cn.seu.herald_android.R;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +18,7 @@ import java.net.SocketTimeoutException;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;
+import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import okhttp3.Call;
@@ -32,6 +28,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     TextView tv_pwd;
     Button btn_login;
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +39,10 @@ public class LoginActivity extends BaseAppCompatActivity {
     }
 
 
-    public void init(){
+    public void init() {
         //空间初始化
-        tv_card = (TextView)findViewById(R.id.tv_login_cardnum);
-        tv_pwd = (TextView)findViewById(R.id.tv_login_pwd);
+        tv_card = (TextView) findViewById(R.id.tv_login_cardnum);
+        tv_pwd = (TextView) findViewById(R.id.tv_login_pwd);
 
         //进度进度条
         progressDialog = new ProgressDialog(this);
@@ -53,13 +50,10 @@ public class LoginActivity extends BaseAppCompatActivity {
         progressDialog.setMessage("登录中");
 
         //绑定登录按钮点击函数
-        btn_login = (Button)findViewById(R.id.btn_login_login);
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //运行请求前先清除旧的uuid
-                doLogin();
-            }
+        btn_login = (Button) findViewById(R.id.btn_login_login);
+        btn_login.setOnClickListener(v -> {
+            //运行请求前先清除旧的uuid
+            doLogin();
         });
 
 
@@ -76,16 +70,16 @@ public class LoginActivity extends BaseAppCompatActivity {
     }
 
 
-    private void doLogin(){
+    private void doLogin() {
         //登录函数
         progressDialog.show();
         btn_login.setEnabled(false);
         OkHttpUtils
                 .post()
-                .url(getApiHepler().auth_url)
+                .url(ApiHelper.auth_url)
                 .addParams("user", tv_card.getText().toString())
-                .addParams("password",tv_pwd.getText().toString())
-                .addParams("appid", getApiHepler().APPID)
+                .addParams("password", tv_pwd.getText().toString())
+                .addParams("appid", ApiHelper.APPID)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -107,8 +101,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         btn_login.setEnabled(true);
-                        String uuid = response;
-                        getApiHepler().setAuthCache("uuid", uuid);
+                        getApiHelper().setAuthCache("uuid", response);
                         NetworkLoginHelper.getInstance(LoginActivity.this)
                                 .setAuth(tv_card.getText().toString(), tv_pwd.getText().toString());
                         checkUUID();
@@ -117,11 +110,11 @@ public class LoginActivity extends BaseAppCompatActivity {
     }
 
 
-    public void checkUUID(){
+    public void checkUUID() {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_USER))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -149,7 +142,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                             } else {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新输入账号密码
                                 showMsg("密码错误请重新登录");
-                                getApiHepler().doLogout();
+                                getApiHelper().doLogout();
                                 NetworkLoginHelper.getInstance(LoginActivity.this)
                                         .setAuth("", "");
                             }

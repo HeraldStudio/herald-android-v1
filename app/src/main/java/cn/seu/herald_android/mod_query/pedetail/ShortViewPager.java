@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class ShortViewPager extends ViewPager {
 
+    private Map<Integer, Integer> viewHeights = new HashMap<>();
+
     public ShortViewPager(Context context) {
         super(context);
     }
@@ -19,8 +21,6 @@ public class ShortViewPager extends ViewPager {
     public ShortViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
-    private Map<Integer, Integer> viewHeights = new HashMap<>();
 
     @Override
     public void setAdapter(PagerAdapter adapter) {
@@ -52,19 +52,19 @@ public class ShortViewPager extends ViewPager {
         int leftPos = (int) Math.floor(pos);
         int rightPos = (int) Math.ceil(pos);
 
-        if(getAdapter() != null) {
-            int height = (int)(getChildHeight(leftPos) * (1-offset) + getChildHeight(rightPos) * offset);
+        if (getAdapter() != null) {
+            int height = (int) (getChildHeight(leftPos) * (1 - offset) + getChildHeight(rightPos) * offset);
             setLayoutParams(new FrameLayout.LayoutParams(-1, height));
         }
         super.onPageScrolled(position, offset, offsetPixels);
     }
 
-    public int getChildHeight(int position){
+    public int getChildHeight(int position) {
 
         if (getAdapter() == null || !(getAdapter() instanceof PagesAdapter))
             return 0;
 
-        if(viewHeights.get(position) == null){
+        if (viewHeights.get(position) == null) {
             PagesAdapter adapter = (PagesAdapter) getAdapter();
             View child = adapter.getViewForItem(position);
             int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);

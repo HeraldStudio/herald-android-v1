@@ -7,22 +7,24 @@
     android:paddingLeft="6dp"
     android:paddingRight="6dp"
     android:paddingTop="4dp">
+
     <TextView
-        android:gravity="left"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:id="@+id/tv_time"
-        android:textSize="15sp"
-        android:textColor="@color/colorPrimaryText"
-        android:text="时间"/>
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
         android:layout_gravity="center_horizontal"
+        android:gravity="left"
+        android:text="时间"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="15sp" />
+
+    <TextView
         android:id="@+id/tv_place"
-        android:textSize="9sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="right"
+        android:text="地点"
         android:textColor="@color/colorSecondaryText"
-        android:text="地点"/>
+        android:textSize="9sp" />
 </LinearLayout>

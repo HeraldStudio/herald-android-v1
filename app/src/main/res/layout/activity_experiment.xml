@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_query.experiment.ExperimentActivity">
+
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapse_toolbar"
             android:layout_width="match_parent"
@@ -17,6 +19,7 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,8 +39,9 @@
                     android:id="@+id/chengjiu_viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true" />
             </RelativeLayout>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -47,5 +51,6 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </cn.seu.herald_android.custom.CustomAppBarLayout>
+
     <include layout="@layout/content_experiment" />
 </android.support.design.widget.CoordinatorLayout>

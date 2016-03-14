@@ -1,74 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    >
+    android:paddingTop="10dp">
+
     <LinearLayout
+        android:id="@+id/line_divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginBottom="16dp"
+        android:background="?attr/colorPrimary"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:id="@+id/line_divider"
-        android:background="?attr/colorPrimary">
-    </LinearLayout>
+        android:visibility="gone" />
+
     <TextView
+        android:id="@+id/tv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
+        android:text="日期"
         android:textColor="@color/colorPrimary"
-        android:visibility="gone"
-        android:id="@+id/tv_date"
-        android:text="日期"/>
+        android:visibility="gone" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:layout_marginBottom="5dp"
                 android:id="@+id/tv_time"
-                android:text="时间"/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="时间"
+                android:textSize="11sp" />
+
+            <TextView
                 android:id="@+id/tv_system"
-                android:textSize="13sp"
-                android:textColor="@color/colorPrimaryText"
-                android:text="地点"/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="地点"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="13sp" />
+
+            <TextView
                 android:id="@+id/tv_type"
-                android:textSize="11sp"
-                android:text="买"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="买"
+                android:textSize="11sp" />
         </LinearLayout>
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/relaxGreen"
             android:id="@+id/tv_left"
-            android:text="余额"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/tv_left"
-            android:textColor="@color/relexRed"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:text="余额"
+            android:textColor="@color/relaxGreen" />
+
+        <TextView
             android:id="@+id/tv_price"
-            android:text="消费"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tv_left"
+            android:text="消费"
+            android:textColor="@color/relexRed" />
     </RelativeLayout>
 </LinearLayout>
