@@ -1,6 +1,9 @@
 package cn.seu.herald_android.mod_timeline;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,7 +16,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.custom.CustomButton;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.ClassInfo;
@@ -464,13 +469,33 @@ public class TimelineParser {
             String left = json_cache.getString("left");
             float extra = Float.valueOf(left);
             if (extra < 20) {
-                return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineView.Item.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
                 );
+                CustomButton button = new CustomButton(context);
+                button.setText("在线充值");
+                button.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
+                button.setOnClickListener((v) -> {
+                    Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    context.startActivity(intent);
+                });
+                item.attachedView.add(button);
+                return item;
             } else {
-                return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineView.Item.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"
                 );
+                CustomButton button = new CustomButton(context);
+                button.setText("在线充值");
+                button.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
+                button.setOnClickListener((v) -> {
+                    Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    context.startActivity(intent);
+                });
+                item.attachedView.add(button);
+                return item;
             }
         } catch (Exception e) {
             return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
