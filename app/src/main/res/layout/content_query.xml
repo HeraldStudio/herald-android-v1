@@ -10,6 +10,10 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:divider="#f0f0f0"
+        android:dividerHeight="1dp"
         android:id="@+id/lsit_edit_shortcut">
     </ListView>
 </RelativeLayout>
