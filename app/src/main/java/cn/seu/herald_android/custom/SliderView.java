@@ -16,6 +16,8 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import java.util.HashMap;
 
+import cn.seu.herald_android.R;
+
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
     public SliderView(Context context, AttributeSet attrs) {
@@ -25,7 +27,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
         url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
         //加载图片
-        for(String name : url_maps.keySet()){
+        /*for(String name : url_maps.keySet()){
             DefaultSliderView sliderView = new DefaultSliderView(getContext());
             // initialize a SliderLayout
             sliderView
@@ -39,7 +41,15 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
                     .putString("extra",name);
 
             addSlider(sliderView);
-        }
+        }*/
+        DefaultSliderView sliderView = new DefaultSliderView(getContext());
+        // initialize a SliderLayout
+        sliderView
+                .image(R.drawable.default_banner)
+                .setScaleType(BaseSliderView.ScaleType.Fit)
+                .setOnSliderClickListener(this);
+
+        addSlider(sliderView);
         
         //设置轮播选项
         setPresetTransformer(SliderLayout.Transformer.Default);
@@ -47,8 +57,8 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         //描述动画
         //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-        //切换间隔
-        setDuration(5000);
+        //切换间隔，暂时调成不切换
+        setDuration(Long.MAX_VALUE);
     }
 
     @Override

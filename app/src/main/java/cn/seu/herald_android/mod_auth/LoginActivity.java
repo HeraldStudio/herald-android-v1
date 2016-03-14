@@ -68,7 +68,6 @@ public class LoginActivity extends BaseAppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        Toast.makeText(getApplicationContext(), "退出先声网客户端",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

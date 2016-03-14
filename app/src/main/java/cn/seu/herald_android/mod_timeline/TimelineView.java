@@ -43,6 +43,9 @@ public class TimelineView extends ListView {
         private int module;
         private long time;
         private String info;
+        private String notificationTitle;
+        private String notificationDesc;
+
         // 消息是否重要，不重要的消息总在后面
         public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
         private int importance;
@@ -53,6 +56,28 @@ public class TimelineView extends ListView {
             this.time = time;
             this.importance = importance;
             this.info = info;
+        }
+
+        public Item(int module, long time, String info, String title, String desc) {
+            this(module, time, CONTENT_NOTIFY, info);
+            this.notificationTitle = title;
+            this.notificationDesc = desc;
+        }
+
+        public String getNotificationTitle() {
+            return notificationTitle;
+        }
+
+        public String getNotificationDesc() {
+            return notificationDesc;
+        }
+
+        public int getImportance() {
+            return importance;
+        }
+
+        public int getModule() {
+            return module;
         }
 
         // 按时间先后顺序排列
@@ -207,7 +232,7 @@ public class TimelineView extends ListView {
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
 
             // 设置高度。在其他地方设置没用。
-            float resolution = 2 / 1f;
+            float resolution = 5 / 2f;
             int height = (int)(getContext().getResources().getDisplayMetrics().widthPixels / resolution);
             slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
             addHeaderView(slider);

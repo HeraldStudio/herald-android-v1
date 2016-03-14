@@ -106,8 +106,8 @@ public class TimelineParser {
                     // 快要上课的紧急提醒
                     if(now >= startTime - 15 * 60 * 1000 && now < startTime){
                         TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                                startTime, TimelineView.Item.CONTENT_NOTIFY, info.getClassName() + " 即将开始上课，" +
-                                "请注意时间，准时上课"
+                                startTime, info.getClassName() + " 即将开始上课，请注意时间，准时上课",
+                                "即将开始上课", info.getClassName() + " " + info.getPlace()
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
@@ -119,7 +119,8 @@ public class TimelineParser {
                     } else if (now >= startTime && now < almostEndTime){
                         // 正在上课的提醒
                         TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                                now, TimelineView.Item.CONTENT_NOTIFY, info.getClassName() + " 正在上课中"
+                                now, info.getClassName() + " 正在上课中",
+                                "正在上课", info.getClassName() + " " + info.getPlace()
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
@@ -254,7 +255,8 @@ public class TimelineParser {
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                                            now, TimelineView.Item.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
+                                            now, "你有1个实验即将开始，请注意时间准时参加",
+                                            "实验即将开始", item.getName() + " 实验即将开始，请注意时间准时参加"
                                     );
                                     item1.attachedView.add(block);
                                     return item1;
@@ -265,7 +267,8 @@ public class TimelineParser {
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
-                                            now, TimelineView.Item.CONTENT_NOTIFY, "1个实验正在进行"
+                                            now, "1个实验正在进行",
+                                            "实验进行中", item.getName() + " (" + item.getAddress() + ")"
                                     );
                                     item1.attachedView.add(block);
                                     return item1;
@@ -446,7 +449,8 @@ public class TimelineParser {
 
             // 有跑操预告信息
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                    now, TimelineView.Item.CONTENT_NOTIFY, "小猴预测" + forecast
+                    now, "小猴预测" + forecast,
+                    "跑操预报", "小猴预测" + forecast
             );
         }
     }

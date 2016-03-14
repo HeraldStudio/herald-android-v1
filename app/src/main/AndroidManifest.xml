@@ -186,6 +186,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <service android:name=".mod_notification.NotificationService2" android:process="herald.NotificationService2"/>
+        <service android:name=".mod_notification.NotificationService1" android:process="herald.NotificationService1"/>
+        <receiver android:name=".mod_notification.TimeChangeReceiver"/>
     </application>
 
 </manifest>

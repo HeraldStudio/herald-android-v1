@@ -79,5 +79,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#6fffffff"
-        android:text="\@Copyright 东南大学先声网"/>
+        android:text="\@Copyright 东南大学小猴偷米工作室"/>
 </RelativeLayout>
