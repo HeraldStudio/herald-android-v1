@@ -47,9 +47,9 @@ public class ShortcutBoxView extends GridView {
         //智能分配行数和列数
         int count = simpleAdapter.getCount();
         if(count > 5){
-            setNumColumns((count + 1) / ((count + 4) / 5));
+            setNumColumns(Math.max(4, (count + 1) / ((count + 4) / 5)));
         } else {
-            setNumColumns(count);
+            setNumColumns(Math.max(4, count));
         }
         //添加并且显示
         setAdapter(simpleAdapter);
@@ -65,6 +65,9 @@ public class ShortcutBoxView extends GridView {
         setOnItemLongClickListener((parent, view, position, id) -> {
             HashMap<String, Object> clickItemMap = (HashMap<String, Object>) parent.getItemAtPosition(position);
             int moduleId = (int) clickItemMap.get("ModuleId");
+
+            if(moduleId == -1) return false; // "添加"按钮不设置长按响应
+
             SettingsHelper settingsHelper = new SettingsHelper(getContext());
             new AlertDialog.Builder(getContext())
                     .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
