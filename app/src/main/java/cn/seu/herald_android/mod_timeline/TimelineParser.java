@@ -23,6 +23,7 @@ import cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
 import cn.seu.herald_android.mod_query.lecture.LectureBlockLayout;
 import cn.seu.herald_android.mod_query.lecture.LectureNoticeItem;
+import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
 public class TimelineParser {
 
@@ -68,6 +69,10 @@ public class TimelineParser {
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
             JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             int classCount = 0;
+            boolean classAlmostEnd = false;
+
+            ArrayList<View> remainingClasses = new ArrayList<>();
+
             for (int j = 0; j < array.length(); j++) {
                 ClassInfo info = new ClassInfo(array.getJSONArray(j));
                 // 如果该课程本周上课
@@ -77,51 +82,72 @@ public class TimelineParser {
                     long startTime = today.getTimeInMillis();
                     startTime += CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getStartTime() - 1] * 60 * 1000;
 
-                    // 下课时间，为了提前显示下节课，将下课前10分钟即认为已下课
+                    // 下课时间
                     long endTime = today.getTimeInMillis();
-                    endTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 35) * 60 * 1000;
+                    endTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 45) * 60 * 1000;
 
-                    String message;
-                    long time;
-                    // 如果前面课程都已下课，本课程还没上课，显示该课程的提示，时间为上课时间
-                    if (now < startTime) {
-                        time = startTime;
-                        message = "下节课：";
-                    } else if (now < endTime) { // 如果本课程正在上课，显示正在上课的提示，时间为现在
-                        time = now;
-                        message = "正在上课：";
-                    } else { // 如果本课程已下课，扔给下个循环做处理
-                        continue;
+                    // 快要下课的时间
+                    long almostEndTime = today.getTimeInMillis();
+                    almostEndTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 35) * 60 * 1000;
+
+                    // 如果是还没到时间的课，放在“你今天(还)有x节课”的列表里备用
+                    // 只要没有快上课或正在上课的提醒导致中途退出循环的话，这个列表就会显示
+                    if(now < startTime){
+                        if(now >= almostEndTime && now < endTime){
+                            classAlmostEnd = true;
+                        }
+                        info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                        Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                                info, pair == null ? "获取失败" : pair.first);
+                        remainingClasses.add(block);
                     }
 
-                    TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                            time, TimelineView.Item.CONTENT_NOTIFY, message + info.getClassName()
-                    );
+                    // 快要上课的紧急提醒
+                    if(now >= startTime - 15 * 60 * 1000 && now < startTime){
+                        TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
+                                startTime, TimelineView.Item.CONTENT_NOTIFY, info.getClassName() + " 即将开始上课，" +
+                                "请注意时间，准时上课"
+                        );
+                        info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                        Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                                info, pair == null ? "获取失败" : pair.first);
 
-                    info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                    Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                    CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
-                            info, pair == null ? "获取失败" : pair.first);
-                    block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+                        item.attachedView.add(block);
+                        return item;
+                    } else if (now >= startTime && now < almostEndTime){
+                        // 正在上课的提醒
+                        TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
+                                now, TimelineView.Item.CONTENT_NOTIFY, info.getClassName() + " 正在上课中"
+                        );
+                        info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                        Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                                info, pair == null ? "获取失败" : pair.first);
 
-                    item.attachedView.add(block);
-
-                    // 若今天课程还没结束，此处退出函数
-                    return item;
+                        item.attachedView.add(block);
+                        return item;
+                    }
                 }
             }
+            // 此处退出循环有三种可能：可能是今天没课，可能是课与课之间或早上的没上课状态，也可能是课上完了的状态
 
-            // 若今天没课，且在下午6点半之前，显示今天没课
-            /*Calendar halfPastSix = CalendarUtils.toSharpDay(Calendar.getInstance());
-            halfPastSix.set(Calendar.HOUR_OF_DAY, 18);
-            halfPastSix.set(Calendar.MINUTE, 30);
-            if (classCount == 0 && now < halfPastSix.getTimeInMillis()) {
-                return new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
-                        now, false, "今天没有课程，娱乐之余请注意作息安排哦~"
+            // 如果不是课上完了的状态
+            if(remainingClasses.size() > 0){
+                boolean firstClass = remainingClasses.size() == classCount;
+                TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_CURRICULUM,
+                        now, TimelineView.Item.CONTENT_NO_NOTIFY,
+                        (classAlmostEnd ? "快要下课了，" : "") +
+                        (firstClass ? "你今天有" : "你今天还有") + remainingClasses.size() + "节课"
                 );
-            }*/
+                item.attachedView = remainingClasses;
+                return item;
+            }
 
-            // 若今天没课但过了下午6点半，或者课程都结束了，显示明天课程
+            // 课上完了的状态
+
+            // 若今天没课，或者课上完了，显示明天课程
             // 枚举明天的课程
             dayDelta = (int) (today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24 + 1;
             week = dayDelta / 7 + 1;
@@ -353,7 +379,7 @@ public class TimelineParser {
                 time.set(Calendar.MINUTE, 30);
 
                 TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_LECTURE,
-                        time.getTimeInMillis(), TimelineView.Item.CONTENT_NOTIFY,
+                        time.getTimeInMillis(), TimelineView.Item.CONTENT_NO_NOTIFY,
                         "今天有新的人文讲座，有兴趣的同学欢迎来参加~"
                 );
                 item.attachedView = lectures;
@@ -381,23 +407,47 @@ public class TimelineParser {
         String forecast = helper.getCache("herald_pc_forecast");
         final long now = Calendar.getInstance().getTimeInMillis();
 
-        // 不在跑操时间
-        if(!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))){
+        Calendar nowCal = Calendar.getInstance();
+        long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
+        long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
+        long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
+
+        if(now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))){
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                    now, TimelineView.Item.NO_CONTENT, "跑操助手将在早上跑操时间显示当天跑操预报"
+                    now, TimelineView.Item.NO_CONTENT, "跑操预告刷新失败，请稍后重试"
             );
         }
-
-        // 在跑操时间，但还没有跑操预告信息
-        if(!forecast.contains("跑操")) {
+        if(now < startTime){
+            // 跑操时间没到
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                    now, TimelineView.Item.NO_CONTENT, "目前暂无跑操预报信息，请稍后刷新重试"
+                    now, TimelineView.Item.NO_CONTENT, "小猴会在早上跑操时间实时显示跑操预告"
+            );
+        } else if(now >= endTime){
+            // 跑操时间已过
+
+            if(!forecast.contains("跑操")) {
+                // 没有跑操预告信息
+                return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                        now, TimelineView.Item.NO_CONTENT, "今天没有跑操预告信息"
+                );
+            } else {
+                // 有跑操预告信息
+                return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                        now, TimelineView.Item.NO_CONTENT, "小猴预测" + forecast + "(已结束)"
+                );
+            }
+        } else {
+            // 还没有跑操预告信息
+            if (!forecast.contains("跑操")) {
+                return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                        now, TimelineView.Item.NO_CONTENT, "目前暂无跑操预报信息，请稍后刷新重试"
+                );
+            }
+
+            // 有跑操预告信息
+            return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                    now, TimelineView.Item.CONTENT_NOTIFY, "小猴预测" + forecast
             );
         }
-
-        // 有跑操预告信息
-        return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                now, TimelineView.Item.CONTENT_NOTIFY, "小猴预测：" + forecast
-        );
     }
 }

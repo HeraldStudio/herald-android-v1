@@ -135,7 +135,8 @@ public class MarkedCalendarView extends FrameLayout {
 
     // 获取特定年月的天数，注意输入的month是从0开始的，与Calendar类的month表示方法一致
     public static int getDayCountForMonth(int year, int month){
-        return new int[]{31, (year % 4 == 0 && year % 100 != 0) ? 29: 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}[month];
+        return new int[]{31, (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) ? 29: 28,
+                31, 30, 31, 30, 31, 31, 30, 31, 30, 31}[month];
     }
 
     public static int getDayCountForMonth(int yearMonth){

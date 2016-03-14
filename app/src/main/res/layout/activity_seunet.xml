@@ -41,7 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/tv_extra"
-                        android:text="电子钱包余额"
+                        android:text="校园网账户余额"
                         android:textSize="13sp"/>
                 </LinearLayout>
                 <LinearLayout

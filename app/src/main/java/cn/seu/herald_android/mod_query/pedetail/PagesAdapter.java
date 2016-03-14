@@ -163,7 +163,7 @@ public class PagesAdapter extends PagerAdapter {
         return multiMonths.size();
     }
 
-    public int getSubCount(int index){
+    public int getSubCount(int index) {
         return subCounts.get(index);
     }
 
@@ -185,7 +185,7 @@ public class PagesAdapter extends PagerAdapter {
         return v;
     }
 
-    public View getViewForItem(int position){
+    public View getViewForItem(int position) {
         return viewList.get(position);
     }
 
@@ -193,7 +193,7 @@ public class PagesAdapter extends PagerAdapter {
         return ((MarkedCalendarView) viewList.get(position).findViewById(R.id.calendar)).getYearMonth();
     }
 
-    public String getMonthTitle(int yearMonth){
-        return yearMonth/12 + "年" + yearMonth%12 + "月";
+    public String getMonthTitle(int yearMonth) {
+        return yearMonth / 12 + "年" + (yearMonth % 12 + 1) + "月";
     }
 }

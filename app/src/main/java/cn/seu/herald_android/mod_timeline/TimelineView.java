@@ -30,6 +30,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
+import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
@@ -104,17 +105,24 @@ public class TimelineView extends ListView {
 
             // 当跑操模块开启时
             if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_PEDETAIL)) {
-                // 仅当处于跑操时间时刷新跑操预报
+                CacheHelper helper = new CacheHelper(getContext());
+                String date = helper.getCache("herald_pc_date");
+                // 服务器端的跑操预告消息可能会出现中途更改的情况，因此只要没有得到跑操结束时的最后消息，就允许重复刷新
+                // 这个缓存用来记录当天的最后消息是否已经到手
+                boolean gotLastMessage = helper.getCache("herald_pc_last_message").equals("true");
                 Calendar nowCal = Calendar.getInstance();
-                int week = nowCal.get(Calendar.DAY_OF_WEEK);
-                long now = nowCal.getTimeInMillis();
+                long now = Calendar.getInstance().getTimeInMillis();
                 long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
                 long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
                 long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
-                if (startTime <= now && now < endTime) {
+
+                // 仅当今天缓存不存在或者最后消息还没到手，且已到开始时间时，允许刷新
+                if((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
+                        || !gotLastMessage) && now >= startTime){
                     threads.add(new Object());
                     PedetailActivity.refreshForecast(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
+                        if (now >= endTime) helper.setCache("herald_pc_last_message", "true");
                         loadContent(false);
                     });
                 }
