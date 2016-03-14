@@ -4,29 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewParent;
-import android.widget.Toast;
-
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import cn.seu.herald_android.R;
+
+
 
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
     ArrayList<SliderViewItem> sliderViewItemArrayList;
     public SliderView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
     }
 
     public void setupWithArrayList(ArrayList<SliderViewItem> sliderViewItemArrayList){
@@ -42,9 +37,14 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
             //加载图片
         }catch (Exception e){
             e.printStackTrace();
-            addSlider(getDefultSliderViewWithUrl("小猴偷米",
-                    "http://android.heraldstudio.com/sliderview",
-                    "http://android.heraldstudio.com/sliderview"));
+            DefaultSliderView sliderView = new DefaultSliderView(getContext());
+            // initialize a SliderLayout
+            sliderView
+                    .image(R.drawable.default_banner)
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+
+            addSlider(sliderView);
         }
 
         //设置轮播选项
@@ -53,8 +53,8 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         //描述动画
         //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-        //切换间隔
-        setDuration(5000);
+        //切换间隔，暂时调成不切换
+        setDuration(Long.MAX_VALUE);
     }
 
     private DefaultSliderView getDefultSliderViewWithUrl(String title,String imageUrl,String url){
@@ -75,8 +75,8 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        for(ViewParent v = getParent(); v != null; v = v.getParent()) {
-            if(v instanceof CustomSwipeRefreshLayout)
+        for (ViewParent v = getParent(); v != null; v = v.getParent()) {
+            if (v instanceof CustomSwipeRefreshLayout)
                 ((CustomSwipeRefreshLayout) v).noScroll = ev.getAction() == MotionEvent.ACTION_MOVE;
         }
         return super.dispatchTouchEvent(ev);

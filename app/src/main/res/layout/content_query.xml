@@ -7,9 +7,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.QueryActivity"
     tools:showIn="@layout/activity_query">
+
     <ListView
+        android:id="@+id/lsit_edit_shortcut"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lsit_edit_shortcut">
-    </ListView>
+        android:divider="#f0f0f0"
+        android:dividerHeight="1dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 </RelativeLayout>

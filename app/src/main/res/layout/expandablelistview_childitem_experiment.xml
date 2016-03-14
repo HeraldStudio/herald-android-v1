@@ -3,46 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_date"
-            android:textSize="11sp"
-            android:text="实验日期"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="实验日期"
+            android:textSize="11sp" />
+
+        <TextView
             android:id="@+id/tv_name"
-            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="实验名字"
             android:textColor="@color/colorExperimentprimary_dark"
-            android:text="实验名字"/>
+            android:textSize="17sp" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_day"
-            android:text="实验时段"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="实验时段" />
+
+        <TextView
             android:id="@+id/tv_teacher"
-            android:text="指导老师"/>
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="指导老师" />
+
+        <TextView
             android:id="@+id/tv_address"
-            android:text="地点"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地点" />
     </LinearLayout>
+
     <TextView
+        android:id="@+id/tv_grade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:textSize="17sp"
+        android:text="成绩"
         android:textColor="@color/colorExperimentprimary_light"
-        android:id="@+id/tv_grade"
-        android:text="成绩"/>
+        android:textSize="17sp" />
 </RelativeLayout>

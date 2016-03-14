@@ -6,7 +6,7 @@ import cn.seu.herald_android.helper.SettingsHelper;
  * 这个类的对象代表客户端中各个子模块
  * Created by heyon on 2016/3/8.
  */
-public class SeuModule{
+public class SeuModule {
     //模块ID
     int moduleId;
     //图片资源
@@ -17,6 +17,7 @@ public class SeuModule{
     String actions;
     //名字
     String name;
+
     public SeuModule(int moduleId, boolean enabledShortCut, String actions) {
         this.moduleId = moduleId;
         this.enabledShortCut = enabledShortCut;

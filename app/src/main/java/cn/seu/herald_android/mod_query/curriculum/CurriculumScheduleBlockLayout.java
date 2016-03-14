@@ -16,14 +16,6 @@ import cn.seu.herald_android.R;
 @SuppressLint("ViewConstructor")
 public class CurriculumScheduleBlockLayout extends FrameLayout implements View.OnClickListener {
 
-    private ClassInfo classInfo;
-
-    private int layout;
-
-    private boolean showDetail;
-
-    private Pair<String, String> teacherAndGPA;
-
     private static int color[] = {
             R.drawable.curriculum_block_bg_today1,
             R.drawable.curriculum_block_bg_today2,
@@ -34,6 +26,9 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
             R.drawable.curriculum_block_bg_today7,
             R.drawable.curriculum_block_bg_today8
     };
+    private ClassInfo classInfo;
+    private int layout;
+    private Pair<String, String> teacherAndGPA;
 
     public CurriculumScheduleBlockLayout(Context c, ClassInfo info,
                                          Pair<String, String> teacherAndGPA,

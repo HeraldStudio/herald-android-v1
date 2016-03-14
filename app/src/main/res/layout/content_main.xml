@@ -14,12 +14,13 @@
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <cn.seu.herald_android.mod_timeline.TimelineView
             android:id="@+id/timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:listSelector="@drawable/null_selector"
-            android:divider="#00000000">
+            android:divider="#00000000"
+            android:listSelector="@drawable/null_selector">
 
         </cn.seu.herald_android.mod_timeline.TimelineView>
     </cn.seu.herald_android.custom.CustomSwipeRefreshLayout>

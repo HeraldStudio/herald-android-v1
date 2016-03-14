@@ -1,8 +1,8 @@
 package cn.seu.herald_android.mod_query.grade;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,9 +13,6 @@ import cn.seu.herald_android.R;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.colorizers.TableDataRowColorizer;
 
-/**
- * Created by heyon on 2016/2/28.
- */
 public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
     public GradeItemDataAdapter(Context context, List<GradeItem> data) {
         super(context, data);
@@ -52,15 +49,14 @@ public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
     }
 
 
-
-    public View renderSimpleTextView(String text){
+    public View renderSimpleTextView(String text) {
         //为子项加载布局
 //        View view = LayoutInflater.from(getContext()).inflate(R.layout.tableviewitem_grade, null);
 //        TextView tv_cell =(TextView)view.findViewById(R.id.tv_gradetableitem);
 //        tv_cell.setText(text);
         TextView tv_cell = new TextView(getContext());
         tv_cell.setText(text);
-        tv_cell.setTextColor(getResources().getColor(R.color.colorSecondaryText));
+        tv_cell.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
         tv_cell.setPadding(10, 10, 10, 10);
         tv_cell.setGravity(Gravity.CENTER);
         return tv_cell;
@@ -68,7 +64,8 @@ public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
 
     public static class GradeRowColorizer implements TableDataRowColorizer<GradeItem> {
         Context context;
-        public GradeRowColorizer(Context context){
+
+        public GradeRowColorizer(Context context) {
             this.context = context;
         }
 
@@ -79,11 +76,11 @@ public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
         //用于设置行颜色的类
         @Override
         public int getRowColor(int rowIndex, GradeItem rowData) {
-            if(rowIndex%2==0){
+            if (rowIndex % 2 == 0) {
                 //如果是偶数列则设置颜色为淡绿色
-                return getContext().getResources().getColor(R.color.white);
-            }else{
-                return getContext().getResources().getColor(R.color.colorPrimaryGreenDark);
+                return ContextCompat.getColor(getContext(), R.color.white);
+            } else {
+                return ContextCompat.getColor(getContext(), R.color.colorPrimaryGreenDark);
             }
         }
     }

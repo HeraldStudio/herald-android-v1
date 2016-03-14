@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 
-public class CustomSwipeRefreshLayout extends SwipeRefreshLayout{
+public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
     public boolean noScroll = false;
 
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {

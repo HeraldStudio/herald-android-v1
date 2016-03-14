@@ -6,7 +6,7 @@ public class CalendarUtils {
 
     public static final long ONE_DAY = 1000 * 60 * 60 * 24;
 
-    public static Calendar toSharpDay(Calendar src){
+    public static Calendar toSharpDay(Calendar src) {
         // 复制这个Calendar
         Calendar dst = Calendar.getInstance();
         dst.setTimeInMillis(src.getTimeInMillis());
@@ -18,17 +18,17 @@ public class CalendarUtils {
         return dst;
     }
 
-    public static Calendar toSharpWeek(Calendar src){
+    public static Calendar toSharpWeek(Calendar src) {
         // 复制这个Calendar并转换为整数日
         Calendar dst = toSharpDay(src);
 
-        while (dst.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY){
+        while (dst.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
             dst.setTimeInMillis(dst.getTimeInMillis() - ONE_DAY);
         }
         return dst;
     }
 
-    public static String formatHourMinuteStamp(int hourMinute){
+    public static String formatHourMinuteStamp(int hourMinute) {
         int hour = hourMinute / 60;
         int minute = hourMinute % 60;
         return hour + (minute < 10 ? ":0" : ":") + minute;

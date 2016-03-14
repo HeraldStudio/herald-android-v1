@@ -6,12 +6,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-/**
- * Created by heyon on 2016/3/6.
- */
 public class SchoolBusViewPagerAdapter extends FragmentPagerAdapter {
     ArrayList<Fragment> fragmentArrayList;
     ArrayList<String> titleArrayList;
+
     public SchoolBusViewPagerAdapter(FragmentManager fm) {
         super(fm);
         fragmentArrayList = new ArrayList<>();
@@ -33,7 +31,7 @@ public class SchoolBusViewPagerAdapter extends FragmentPagerAdapter {
         return titleArrayList.get(position);
     }
 
-    public void add(Fragment fragment,String title){
+    public void add(Fragment fragment, String title) {
         fragmentArrayList.add(fragment);
         titleArrayList.add(title);
     }

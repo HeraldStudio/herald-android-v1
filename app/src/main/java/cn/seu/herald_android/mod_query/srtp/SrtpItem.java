@@ -6,9 +6,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by heyon on 2016/3/13.
- */
 public class SrtpItem {
     //从该srtp项目中获得的学分
     String credit;
@@ -33,6 +30,26 @@ public class SrtpItem {
         this.date = date;
         this.type = type;
         this.totalCredit = totalCredit;
+    }
+
+    public static ArrayList<SrtpItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+        ArrayList<SrtpItem> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject json_item = jsonArray.getJSONObject(i);
+            if (json_item.has("credit")) {
+                //判断不是首项才开始处理，首项为srtp总概况相关信息
+                list.add(new SrtpItem(
+                        json_item.getString("credit"),
+                        json_item.getString("proportion"),
+                        json_item.getString("project"),
+                        json_item.getString("department"),
+                        json_item.getString("date"),
+                        json_item.getString("type"),
+                        json_item.getString("total credit")
+                ));
+            }
+        }
+        return list;
     }
 
     public String getCredit() {
@@ -61,25 +78,5 @@ public class SrtpItem {
 
     public String getTotalCredit() {
         return totalCredit;
-    }
-
-    public static ArrayList<SrtpItem> transfromJSONArrayToArrayList(JSONArray jsonArray)throws JSONException {
-        ArrayList<SrtpItem> list = new ArrayList<>();
-        for(int i = 0;i<jsonArray.length();i++){
-            JSONObject json_item = jsonArray.getJSONObject(i);
-            if(json_item.has("credit")){
-                //判断不是首项才开始处理，首项为srtp总概况相关信息
-                list.add(new SrtpItem(
-                        json_item.getString("credit"),
-                        json_item.getString("proportion"),
-                        json_item.getString("project"),
-                        json_item.getString("department"),
-                        json_item.getString("date"),
-                        json_item.getString("type"),
-                        json_item.getString("total credit")
-                ));
-            }
-        }
-        return list;
     }
 }

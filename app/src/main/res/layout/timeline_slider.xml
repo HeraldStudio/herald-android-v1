@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.seu.herald_android.custom.SliderView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
-    <!--高度要在TimelineView.java中设置-->
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary" /><!--高度要在TimelineView.java中设置-->

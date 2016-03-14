@@ -6,9 +6,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by heyon on 2016/3/7.
- */
 public class LectureNoticeItem {
     String date;
     String topic;
@@ -20,6 +17,20 @@ public class LectureNoticeItem {
         this.topic = topic;
         this.speaker = speaker;
         this.location = location;
+    }
+
+    public static ArrayList<LectureNoticeItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+        ArrayList<LectureNoticeItem> list = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject json_item = jsonArray.getJSONObject(i);
+            list.add(new LectureNoticeItem(
+                    json_item.getString("date"),
+                    json_item.getString("topic"),
+                    json_item.getString("speaker"),
+                    json_item.getString("location")
+            ));
+        }
+        return list;
     }
 
     public String getDate() {
@@ -36,19 +47,5 @@ public class LectureNoticeItem {
 
     public String getLocation() {
         return location;
-    }
-
-    public static ArrayList<LectureNoticeItem> transfromJSONArrayToArrayList(JSONArray jsonArray)throws JSONException{
-        ArrayList<LectureNoticeItem> list = new ArrayList<>();
-        for(int i = 0;i<jsonArray.length();i++){
-            JSONObject json_item = jsonArray.getJSONObject(i);
-            list.add(new LectureNoticeItem(
-                    json_item.getString("date"),
-                    json_item.getString("topic"),
-                    json_item.getString("speaker"),
-                    json_item.getString("location")
-            ));
-        }
-        return list;
     }
 }

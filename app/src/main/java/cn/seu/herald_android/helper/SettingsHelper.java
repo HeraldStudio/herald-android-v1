@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.mod_modulemanager.SeuModule;
 
-/**
- * Created by heyon on 2015/12/14.
- */
 public class SettingsHelper {
 
 
@@ -22,10 +18,9 @@ public class SettingsHelper {
      * 对应模块名字中文提示增加
      * 启动模块的ACTION的添加，同时在manifests文件里注册
      * 模块图标资源文件的添加
-     *
      */
     //模块类型列表
-    public static final int MODULE_TYPE_QUERY =0;
+    public static final int MODULE_TYPE_QUERY = 0;
     //功能模块列表
     /**
      * 查询类模块
@@ -43,9 +38,6 @@ public class SettingsHelper {
 //    public static final int MODULE_EMPTYROOM = 9;
 //    public static final int MODULE_GYMORDER = 10;
 //    public static final int MODULE_QUANYI = 11;
-
-
-
 
 
     //模块名字
@@ -119,119 +111,106 @@ public class SettingsHelper {
     };
 
     //模块类型
-
-    private Context context;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
 
-
-
-    public SettingsHelper(Context context){
-        this.context = context;
+    public SettingsHelper(Context context) {
         this.pref = context.getSharedPreferences("herald_settings", Context.MODE_PRIVATE);
         this.editor = context.getSharedPreferences("herald_settings", Context.MODE_PRIVATE).edit();
     }
 
-    public void setDefaultConfig(){
+    public void setDefaultConfig() {
         //恢复默认设置
         setDefaultModuleShortCut();
     }
 
-    public void setDefaultModuleShortCut(){
+    public void setDefaultModuleShortCut() {
         //快捷方式的默认设置
-        setModuleShortCutEnabled(MODULE_GRADE,true);
+        setModuleShortCutEnabled(MODULE_GRADE, true);
         setModuleShortCutEnabled(MODULE_CARDEXTRA, true);
         setModuleShortCutEnabled(MODULE_LIBRARY, false);
     }
 
 
-
-
     /**
      * 用于设置某个模块是否在快捷方式盒子中显示
+     *
      * @param moduleID 模块ID
-     * @param flag      true为启用，false为禁用
+     * @param flag     true为启用，false为禁用
      */
-    public void setModuleShortCutEnabled(int moduleID,boolean flag){
+    public void setModuleShortCutEnabled(int moduleID, boolean flag) {
         //flag为true则设置为选中，否则设置为不选中
-        if (flag){
-            setCache("herald_settings_module_shortcutenabled_"+moduleNames[moduleID],"1");
-        }else {
-            setCache("herald_settings_module_shortcutenabled_"+moduleNames[moduleID],"0");
+        if (flag) {
+            setCache("herald_settings_module_shortcutenabled_" + moduleNames[moduleID], "1");
+        } else {
+            setCache("herald_settings_module_shortcutenabled_" + moduleNames[moduleID], "0");
         }
     }
 
     /**
      * 获得某个模块的快捷方式使用情况
-     * @param moduleID  模块ID
-     * @return
+     *
+     * @param moduleID 模块ID
      */
-    public boolean getModuleShortCutEnabled(int moduleID){
+    public boolean getModuleShortCutEnabled(int moduleID) {
         //获得某项模块的快捷图标是否显示
-        if(getCache("herald_settings_module_shortcutenabled_"+moduleNames[moduleID]).equals("0")){
-            return false;
-        }else {
-            return true;
-        }
+        return !getCache("herald_settings_module_shortcutenabled_" + moduleNames[moduleID]).equals("0");
     }
 
     /**
      * 获得所有模块的快捷方式设置情况对象
-     * @return
      */
-    public ArrayList<SeuModule> getSeuModuleList(){
+    public ArrayList<SeuModule> getSeuModuleList() {
         //获得所有模块快捷方式设置列表
         ArrayList<SeuModule> list = new ArrayList<>();
-        for(int i=0;i<moduleNames.length;i++){
-            list.add(new SeuModule(i,getModuleShortCutEnabled(i),moduleActions[i]));
+        for (int i = 0; i < moduleNames.length; i++) {
+            list.add(new SeuModule(i, getModuleShortCutEnabled(i), moduleActions[i]));
         }
         return list;
     }
 
     /**
      * 获得应用启动次数
-     * @return
      */
-    public int getLaunchTimes(){
-        String times = getCache("herald_settings_launtchtime");
-        if(times.equals("")){
-            setCache("herald_settings_launtchtime","0");
+    public int getLaunchTimes() {
+        String times = getCache("herald_settings_launch_time");
+        if (times.equals("")) {
+            setCache("herald_settings_launch_time", "0");
             return 0;
-        }else{
+        } else {
             return Integer.parseInt(times);
         }
     }
 
     /**
-     *
      * 设置应用启动次数
+     *
      * @param times 要设置的次数
      */
-    public void updateLanuchTimes(int times){
-        setCache("herald_settings_launtchtime",times+"");
+    public void updateLaunchTimes(int times) {
+        setCache("herald_settings_launch_time", times + "");
     }
 
 
-    private String getCache(String cacheName){
+    private String getCache(String cacheName) {
         //可用
         /**
          * uuid         认证用uuid
-         * cardnuim     一卡通号
+         * cardnum     一卡通号
          * schoolnum    学号
          * name         名字
          * sex          性别
          */
         //获得存储的某项信息
-        return pref.getString(cacheName,"");
+        return pref.getString(cacheName, "");
     }
 
-    private boolean setCache(String cacheName,String cacheValue){
+    private boolean setCache(String cacheName, String cacheValue) {
         //用于更新存储的某项信息
         editor.putString(cacheName, cacheValue);
         return editor.commit();
     }
-
 
 
 }

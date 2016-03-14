@@ -1,102 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/timeline_item_bg_selector">
+    android:background="@drawable/timeline_item_bg_selector"
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/avatar"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:id="@+id/avatar"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
-        android:src="@mipmap/ic_card" />
+        android:layout_marginTop="15dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="昨天的一卡通消费已出账，共消费45.5元，比日均消费高了3.7元，请注意节省开销哦~"
-        android:id="@+id/content"
-        android:textColor="#333"
-        android:textSize="15sp"
-        android:layout_below="@+id/avatar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="15dp" />
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:layout_below="@+id/content"
-        android:visibility="gone"
-        android:id="@+id/hsv">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/attachedContainer"/>
-    </HorizontalScrollView>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="false"
-        android:background="#eee"
-        android:visibility="gone"
-        android:layout_below="@+id/hsv">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="分享"
-            android:background="?android:selectableItemBackground"
-            android:id="@+id/button"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="置顶"
-            android:background="?android:selectableItemBackground"
-            android:id="@+id/button2"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <View
+        android:id="@+id/notify_dot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignRight="@+id/avatar"
         android:layout_alignTop="@+id/avatar"
-        android:layout_toEndOf="@+id/avatar"
+        android:background="@drawable/timeline_notify_dot"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/avatar"
+        android:layout_alignTop="@+id/avatar"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/avatar"
         android:gravity="center_vertical"
-        android:layout_marginLeft="10dp">
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一卡通助手"
-            android:id="@+id/name"
             android:layout_alignTop="@+id/avatar"
             android:layout_toEndOf="@+id/avatar"
             android:textColor="#333"
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10分钟前"
-            android:id="@+id/time"
-            android:layout_marginLeft="0dp"
-            android:layout_below="@+id/name"
             android:layout_alignStart="@+id/name"
+            android:layout_below="@+id/name"
+            android:layout_marginLeft="0dp"
             android:textColor="#666"
             android:textSize="13sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/avatar"
+        android:orientation="vertical"
+        android:padding="15dp">
+        <!--可能出现在卡片最底端的元素都不要加marginBottom，要换用paddingBottom，否则在Android4.3会出错-->
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:textSize="15sp" />
+
+        <HorizontalScrollView
+            android:id="@+id/hsv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/attachedContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
 </RelativeLayout>

@@ -1,23 +1,16 @@
 package cn.seu.herald_android.mod_query.pedetail;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
-import com.squareup.picasso.Cache;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -40,99 +33,17 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
-import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
 public class PedetailActivity extends BaseAppCompatActivity {
 
-    // 左右滑动分页的日历容器
-    private ViewPager pager;
-
-    // 跑操次数数字
-    private TextView count, monthCount;
-
     public static final int[] FORECAST_TIME_PERIOD = {
             6 * 60 + 20, 7 * 60 + 20
     };
-
-    /********************************
-     * 初始化
-     *********************************/
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pedetail);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-                finish();
-            }
-        });
-
-        //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
-        //沉浸式
-        setStatusBarColor(this, getResources().getColor(R.color.colorPedetailprimary));
-
-        pager = (ViewPager) findViewById(R.id.calendarPager);
-
-        // 设置下拉刷新控件的进度条颜色
-        count = (TextView) findViewById(R.id.tv_fullcount);
-        monthCount = (TextView) findViewById(R.id.tv_monthcount);
-
-        // 首先加载一次缓存数据（如未登录则弹出登陆窗口）
-        readLocal();
-
-        // 检查是否需要联网刷新，如果需要则刷新，不需要则取消
-        if (isRefreshNeeded()) refreshCache();
-    }
-
-    /*************************
-     * 实现::联网环节::获取学期
-     *************************/
-
-    public void refreshCache() {
-
-        // 先显示刷新控件
-        getProgressDialog().show();
-
-        // 读取uuid
-        String uuid = getApiHepler().getUUID();
-        if (uuid == null) return;
-
-
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
-                .addParams("uuid", getApiHepler().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        handleException(e);
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                            getCacheHelper().setCache("herald_pedetail", array.toString());
-                            // 下一环节
-                            readLocal();
-                            // 隐藏刷新控件，为了美观，先延时0.5秒
-                            getProgressDialog().hide();
-                        } catch (JSONException e) {
-                            handleException(e);
-                        }
-                    }
-                });
-    }
+    // 左右滑动分页的日历容器
+    private ViewPager pager;
+    // 跑操次数数字
+    private TextView count, monthCount;
 
     public static void refreshForecast(Context context, Runnable doAfter) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -159,6 +70,82 @@ public class PedetailActivity extends BaseAppCompatActivity {
                             e.printStackTrace();
                         }
                         doAfter.run();
+                    }
+                });
+    }
+
+    /********************************
+     * 初始化
+     *********************************/
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pedetail);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+        toolbar.setNavigationOnClickListener(v -> {
+            onBackPressed();
+            finish();
+        });
+
+        //禁用collapsingToolbarLayout的伸缩标题
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        //沉浸式
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPedetailprimary));
+
+        pager = (ViewPager) findViewById(R.id.calendarPager);
+
+        // 设置下拉刷新控件的进度条颜色
+        count = (TextView) findViewById(R.id.tv_fullcount);
+        monthCount = (TextView) findViewById(R.id.tv_monthcount);
+
+        // 首先加载一次缓存数据（如未登录则弹出登陆窗口）
+        readLocal();
+
+        // 检查是否需要联网刷新，如果需要则刷新，不需要则取消
+        if (isRefreshNeeded()) refreshCache();
+    }
+
+    /*************************
+     * 实现::联网环节::获取学期
+     *************************/
+
+    public void refreshCache() {
+
+        // 先显示刷新控件
+        getProgressDialog().show();
+
+        // 读取uuid
+        String uuid = getApiHelper().getUUID();
+        if (uuid == null) return;
+
+
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
+                .addParams("uuid", getApiHelper().getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        handleException(e);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray array = new JSONObject(response).getJSONArray("content");
+                            getCacheHelper().setCache("herald_pedetail", array.toString());
+                            // 下一环节
+                            readLocal();
+                            // 隐藏刷新控件，为了美观，先延时0.5秒
+                            getProgressDialog().hide();
+                        } catch (JSONException e) {
+                            handleException(e);
+                        }
                     }
                 });
     }
@@ -257,16 +244,12 @@ public class PedetailActivity extends BaseAppCompatActivity {
             // 根据实际需要，显示时应首先滑动到末页
             pager.setCurrentItem(adapter.getCount() - 1);
 
-            // 初始化标题文字的值
-            int yearMonth = adapter.getYearMonth(pager.getCurrentItem());
-
             // 初始化当月跑操次数的值
             int monthlyCountNum = adapter.getSubCount(pager.getCurrentItem());
             monthCount.setText(String.valueOf(monthlyCountNum));
 
             // 水平滚动分页控件的事件监听器
-            // noinspection deprecation
-            pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 }
 
@@ -336,12 +319,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
     // 显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
     public void showErrorMessage(String message) {
-        if (pager.getAdapter() == null
-                || pager.getAdapter().getCount() == 0) {
-            // 还没有加载到信息就出错了
-        } else {
-            showSnackBar(message);
-        }
+        showSnackBar(message);
         getProgressDialog().hide();
     }
 }

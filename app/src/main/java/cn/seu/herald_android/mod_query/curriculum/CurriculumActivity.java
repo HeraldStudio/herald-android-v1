@@ -2,12 +2,11 @@ package cn.seu.herald_android.mod_query.curriculum;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -36,6 +35,56 @@ public class CurriculumActivity extends BaseAppCompatActivity {
     // 水平分页控件
     protected ViewPager pager;
 
+    public static void remoteRefreshCache(Context context, Runnable onFinish) {
+        ApiHelper apiHelper = new ApiHelper(context);
+        CacheHelper cacheHelper = new CacheHelper(context);
+        OkHttpUtils
+                .post()
+                .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
+                .addParams("uuid", apiHelper.getUUID())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        apiHelper.dealApiException(e);
+                        onFinish.run();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray array = new JSONObject(response).getJSONArray("content");
+                            cacheHelper.setCache("herald_sidebar", array.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        OkHttpUtils
+                                .post()
+                                .url(ApiHelper.getApiUrl(ApiHelper.API_CURRICULUM))
+                                .addParams("uuid", apiHelper.getUUID())
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e) {
+                                        apiHelper.dealApiException(e);
+                                        onFinish.run();
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject object = new JSONObject(response).getJSONObject("content");
+                                            cacheHelper.setCache("herald_curriculum", object.toString());
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        onFinish.run();
+                                    }
+                                });
+                    }
+                });
+    }
+
     /********************************
      * 初始化
      *********************************/
@@ -53,7 +102,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         });
 
         //沉浸式
-        setStatusBarColor(this, getResources().getColor(R.color.colorCurriculumPrimary));
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorCurriculumPrimary));
 
         pager = (ViewPager) findViewById(R.id.pager);
 
@@ -72,7 +121,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -96,12 +145,12 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                 });
     }
 
-    private void refreshCacheStep2(){
+    private void refreshCacheStep2() {
 
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_CURRICULUM))
-                .addParams("uuid",getApiHepler().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -111,7 +160,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        try{
+                        try {
                             JSONObject object = new JSONObject(response).getJSONObject("content");
 
                             runOnUiThread(() -> {
@@ -120,60 +169,10 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                                 getProgressDialog().hide();
                                 readLocal();
                             });
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             handleException(e);
                         }
 
-                    }
-                });
-    }
-
-    public static void remoteRefreshCache(Context context, Runnable onFinish) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
-                .addParams("uuid",apiHelper.getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiException(e);
-                        onFinish.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                            cacheHelper.setCache("herald_sidebar", array.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        OkHttpUtils
-                                .post()
-                                .url(ApiHelper.getApiUrl(ApiHelper.API_CURRICULUM))
-                                .addParams("uuid",apiHelper.getUUID())
-                                .build()
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onError(Call call, Exception e) {
-                                        apiHelper.dealApiException(e);
-                                        onFinish.run();
-                                    }
-
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try{
-                                            JSONObject object = new JSONObject(response).getJSONObject("content");
-                                            cacheHelper.setCache("herald_curriculum", object.toString());
-                                        } catch (JSONException e){
-                                            e.printStackTrace();
-                                        }
-                                        onFinish.run();
-                                    }
-                                });
                     }
                 });
     }
@@ -185,7 +184,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
     private void readLocal() {
         String data = getCacheHelper().getCache("herald_curriculum");
         String sidebar = getCacheHelper().getCache("herald_sidebar");
-        if(data.equals("")){
+        if (data.equals("")) {
             refreshCache();
             return;
         }
@@ -193,19 +192,21 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         PagesAdapter adapter = new PagesAdapter(this, data, sidebar);
         pager.setAdapter(adapter);
         pager.setCurrentItem(adapter.getCurrentPage());
-        setTitle("第"+(adapter.getCurrentPage()+1)+"周");
+        setTitle("第" + (adapter.getCurrentPage() + 1) + "周");
 
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int p1, float p2, int p3) {}
-
-            @Override
-            public void onPageSelected(int position) {
-                setTitle("第"+(position+1)+"周");
+            public void onPageScrolled(int p1, float p2, int p3) {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageSelected(int position) {
+                setTitle("第" + (position + 1) + "周");
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
         });
     }
 
@@ -264,11 +265,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
 
     // 显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
     public void showErrorMessage(String message) {
-        if (pager.getAdapter() == null || pager.getAdapter().getCount() == 0) {
-            // 还没有加载到课表信息就出错了
-        } else {
-            showSnackBar(message);
-        }
+        showSnackBar(message);
         getProgressDialog().hide();
     }
 }
