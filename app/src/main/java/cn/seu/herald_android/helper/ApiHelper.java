@@ -37,7 +37,7 @@ public class ApiHelper {
      * 微信端接口主要为讲座预告的接口，由于服务器端一些转发的问题，url为wechat2前缀
      */
     public static String wechat_lecture_notice_url = "http://115.28.27.150/wechat2/lecture";
-    public static String android_service_url = "http://192.168.1.109:/uc/auth";
+
     //可用doRequest调用的API
     //SRTP学分查询
     public static final int API_SRTP=0;
@@ -73,6 +73,8 @@ public class ApiHelper {
     public static final int API_PEDETAIL=15;
     //学期列表查询
     public static final int API_TERM=16;
+
+
 
 
     //需用其他方式访问的
@@ -129,6 +131,8 @@ public class ApiHelper {
     public static String getApiUrl(int api){
         return ApiHelper.url+ApiHelper.apiNames[api];
     }
+
+
 
 
     public void checkAuth(){

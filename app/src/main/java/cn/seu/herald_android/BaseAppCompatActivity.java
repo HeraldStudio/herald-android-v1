@@ -20,6 +20,7 @@ import java.util.List;
 import cn.seu.herald_android.custom.CustomSnackBar;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
@@ -27,6 +28,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private ApiHelper apiHelper;
     private CacheHelper cacheHelper;
     private SettingsHelper settingsHelper;
+    private ServiceHelper serviceHelper;
     ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         this.apiHelper = new ApiHelper(this);
         this.cacheHelper = new CacheHelper(getBaseContext());
         this.settingsHelper = new SettingsHelper(getBaseContext());
+        this.serviceHelper = new ServiceHelper(this);
 
         NetworkLoginHelper.getInstance(this).registerReceiver();
 
@@ -65,10 +68,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return settingsHelper;
     }
 
-    public void startActivityAndFinish(Intent intent){
-        startActivity(intent);
-        finish();
+    public ServiceHelper getServiceHelper() {
+        return serviceHelper;
     }
+
+
 
     /**
      * 设置状态栏颜色

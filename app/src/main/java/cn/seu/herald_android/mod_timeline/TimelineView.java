@@ -30,6 +30,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
+import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
@@ -202,6 +203,12 @@ public class TimelineView extends ListView {
             float resolution = 2 / 1f;
             int height = (int)(getContext().getResources().getDisplayMetrics().widthPixels / resolution);
             slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
+
+            // 为轮播栏设置内容
+            ServiceHelper serviceHelper = new ServiceHelper(getContext());
+            ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = serviceHelper.getSliderViewItemArray();
+            slider.setupWithArrayList(sliderViewItemArrayList);
+
             addHeaderView(slider);
         }
 

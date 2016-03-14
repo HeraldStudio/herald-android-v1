@@ -1,9 +1,12 @@
 package cn.seu.herald_android;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,7 +24,9 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
@@ -35,6 +40,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     //显示侧边栏欢迎信息的tv
     private TextView tv_nav_user;
     private TextView tv_nav_cardnum;
+    private SliderView sliderView;
 
     //显示推送消息的WebView
     private WebView webView;
@@ -118,14 +124,11 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         return true;
     }
 
-
-
     public void init(){
 
         //登陆校园wifi
         //
         // checkAndLoginWifi();
-
         //切换动画
         overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
 
@@ -134,9 +137,10 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
         //刷新个人信息显示的UI
         refreshWelcome();
-
         // 在线刷新时间轴及快捷方式
         loadTimelineView(true);
+        //检查版本更新，获取推送消息
+        checkVersion();
     }
 
     @Override
@@ -239,5 +243,62 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         runMeasurementDependentTask(() -> srl.setRefreshing(true));
         // 快捷方式刷新在这里
         view.loadContent(refresh);
+    }
+
+
+    private void checkVersion(){
+        //获取推送消息
+        String pushMessage = getServiceHelper().getPushMessageContent();
+        if (!pushMessage.equals("")){
+            //如果推送消息不为空的话显示推送消息
+            new AlertDialog.Builder(this)
+                    .setTitle("来自小猴的提示")
+                    .setMessage(pushMessage)
+                    .setPositiveButton("确定",(dialog, which) -> {
+                        //设置为不可用
+                        String pushMessageUrl = getServiceHelper().getPushMessageUrl();
+                        if(!pushMessageUrl.equals("")){
+                            //如果链接不为空则点击确定后打开链接
+                            try{
+                                Uri uri = Uri.parse(pushMessageUrl);
+                                Intent  intent = new  Intent(Intent.ACTION_VIEW, uri);
+                                startActivity(intent);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消", (dialog, which) -> {
+                    }).show();
+        }
+        //如果版本有更新则提示更新版本
+        int versionCode = ServiceHelper.getAppVersionCode(this);
+        int newestCode = getServiceHelper().getNewestVesionCode();
+
+        if(versionCode < newestCode){
+            //如果当前版本号小于最新版本，则提示更新
+            String tip = String.format("小猴已经发布%s版本啦,您的当前版本为%s,赶紧下载新版本吧",
+                    getServiceHelper().getNewestVesionName(),
+                   ServiceHelper.getAppVersionName(this));
+            //显示对话框
+            new AlertDialog.Builder(this)
+                    .setTitle("发现新版本")
+                    .setMessage(tip)
+                    .setPositiveButton("赶紧下载",(dialog, which) -> {
+                        try{
+                            Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
+                            Intent  intent = new  Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        }catch (Exception e){
+                            showMsg("打开下载页失败，请联系管理员~");
+                            e.printStackTrace();
+                        }
+                    })
+                    .setNegativeButton("残忍拒绝", (dialog, which) -> {
+                    }).show();
+        }
+
+        //拉取最新版本信息、轮播图url和推送消息
+        getServiceHelper().refreshVersionCache();
     }
 }
