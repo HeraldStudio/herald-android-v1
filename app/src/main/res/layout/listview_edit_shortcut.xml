@@ -4,9 +4,7 @@
     android:layout_height="40dp"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
-    android:gravity="center"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp">
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/ic_shortcut"
@@ -27,14 +25,15 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="#f0f0f0"
-        android:layout_margin="5dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
     <ImageButton
         android:id="@+id/ibtn_shortcut"
-        android:layout_width="36dp"
+        android:layout_width="54dp"
         android:layout_height="match_parent"
-        android:background="@null"
+        android:background="?android:selectableItemBackground"
         android:cropToPadding="true"
-        android:padding="7dp"
+        android:padding="14dp"
         android:scaleType="fitCenter"
         android:src="@mipmap/ic_pin" />
 </LinearLayout>
