@@ -360,6 +360,6 @@ public class TimelineView extends ListView {
                 return new SimpleDateFormat("M-d H:mm").format(dest.getTime());
             }
         }
-        return new SimpleDateFormat("yyyy-M-d H:mm").format(dest.getTime());
+        return "已结束";
     }
 }

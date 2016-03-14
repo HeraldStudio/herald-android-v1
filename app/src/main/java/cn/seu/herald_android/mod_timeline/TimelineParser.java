@@ -433,7 +433,7 @@ public class TimelineParser {
             } else {
                 // 有跑操预告信息
                 return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
-                        now, TimelineView.Item.NO_CONTENT, "小猴预测" + forecast + "(已结束)"
+                        startTime, TimelineView.Item.NO_CONTENT, "小猴预测" + forecast
                 );
             }
         } else {
