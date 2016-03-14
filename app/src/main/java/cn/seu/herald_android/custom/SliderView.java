@@ -68,7 +68,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         }else{
             //为空则避免出现参数错误，返回默认的图片
             sliderView
-                    .image(R.drawable.default_banner)
+                    .image(R.drawable.default_herald)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
         }
