@@ -71,7 +71,7 @@ public class AchievementFactory {
             }
 
             //光学迈克尔逊干涉仪实验分数高于85
-            if ((name.contains("光") || name.equals("迈克尔逊干涉仪")) && grade >= 80) {
+            if (name.equals("迈克尔逊干涉仪") && grade >= 80) {
                 Achievement achievement = new Achievement(
                         Achievement.EXPERIMENT,
                         "画个一百个红圈诅咒你！",

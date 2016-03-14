@@ -171,6 +171,26 @@ public class SettingsHelper {
     }
 
     /**
+     * 获得是否选择自动登录seu
+     * @return
+     */
+    public boolean getWifiAutoLogin(){
+        String seuauto = getCache("herald_settings_wifi_autologin");
+        if (seuauto.equals("")||seuauto.equals("1")){
+            return true;
+        }
+        return false;
+    }
+
+    public void setWifiAutoLogin(boolean flag){
+        if (flag){
+            setCache("herald_settings_wifi_autologin","1");
+        }else {
+            setCache("herald_settings_wifi_autologin","0");
+        }
+    }
+
+    /**
      * 获得应用启动次数
      */
     public int getLaunchTimes() {

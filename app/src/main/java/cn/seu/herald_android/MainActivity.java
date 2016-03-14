@@ -118,7 +118,10 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     public void init() {
 
         //登陆校园wifi
-        checkAndLoginWifi();
+        if(getSettingsHelper().getWifiAutoLogin()){
+            checkAndLoginWifi();
+        }
+
 
         //切换动画
         overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
@@ -175,7 +178,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         tv_nav_user = (TextView) headerLayout.findViewById(R.id.tv_nav_username);
 
-        tv_nav_cardnum = (TextView) headerLayout.findViewById(R.id.tv_nav_usercard);
+        //tv_nav_cardnum = (TextView) headerLayout.findViewById(R.id.tv_nav_usercard);
     }
 
     public void refreshWelcome() {
@@ -206,7 +209,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
                                 getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
                                 getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
                                 tv_nav_user.setText(getApiHelper().getAuthCache("name"));
-                                tv_nav_cardnum.setText(getApiHelper().getAuthCache("cardnum"));
+                                //tv_nav_cardnum.setText(getApiHelper().getAuthCache("cardnum"));
                             } else {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
                                 showMsg("登录信息已失效，请重新登录");
