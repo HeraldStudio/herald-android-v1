@@ -459,6 +459,7 @@ public class TimelineParser {
         long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
         if (record.contains(new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime()))) {
+            helper.setCache("herald_pc_last_message", "true");
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
                     now, TimelineView.Item.CONTENT_NOTIFY, "你今天的跑操已经到账，点我查看详情"
             );
