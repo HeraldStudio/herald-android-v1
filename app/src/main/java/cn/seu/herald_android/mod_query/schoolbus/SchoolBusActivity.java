@@ -102,13 +102,14 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                             if (json_res.getInt("code") == 200) {
                                 getCacheHelper().setCache("herald_schoolbus_cache", json_res.toString());
                                 loadListWithCace();
-                                showMsg("获取最新校车时刻表成功");
+                                showMsg("刷新成功");
+                            } else {
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
-                        } catch (JSONException e2) {
-                            e2.printStackTrace();
-                            showMsg("数据解析错误。");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showMsg("数据解析失败，请重试");
                         }
-
                     }
                 });
     }

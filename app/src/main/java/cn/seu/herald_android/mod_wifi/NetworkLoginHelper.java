@@ -20,8 +20,7 @@ import org.json.JSONObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.helper.EncryptHelper;
+import cn.seu.herald_android.helper.ApiHelper;
 import okhttp3.Call;
 
 
@@ -120,17 +119,6 @@ public class NetworkLoginHelper {
         }
     }
 
-    public void setAuth(String username, String password) {
-        try {
-            String encrypted = new EncryptHelper(username).encrypt(password);
-            CacheHelper helper = new CacheHelper(context);
-            helper.setCache("netUser", username);
-            helper.setCache("netPwd", password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void checkAndLogin() {
         Log.e("login", String.valueOf(this.hashCode()));
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -168,10 +156,9 @@ public class NetworkLoginHelper {
 
     private void loginToService() {
         //登陆网络服务
-        CacheHelper helper = new CacheHelper(context);
-        String username = helper.getCache("netUser");
-        EncryptHelper helper1 = new EncryptHelper(username);
-        String password = helper1.decrypt(helper.getCache("netPwd"));
+        ApiHelper helper = new ApiHelper(context);
+        String username = helper.getUserName();
+        String password = helper.getPassword();
 
         OkHttpUtils.post().url("http://w.seu.edu.cn/portal/login.php")
                 .addParams("username", username)

@@ -16,7 +16,6 @@ public class CacheHelper {
             "herald_srtp",
             "herald_pc_date",
             "herald_pc_forecast",
-            "herald_pc_last_message",
             "herald_curriculum",
             "herald_lecture_notices",
             "herald_sidebar"

@@ -64,8 +64,8 @@
 
     <!--图书馆-->
     <color name="colorLibraryprimary">#e53935</color>
-    <color name="colorLibraryprimaryDark">#ef5350</color>
-    <color name="colorLibraryaccent">#ffffff</color>
+    <color name="colorLibraryprimaryDark">#e53935</color>
+    <color name="colorLibraryaccent">#e57373</color>
 
 
     <!--关于我们-->
