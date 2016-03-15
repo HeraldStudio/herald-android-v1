@@ -56,8 +56,14 @@
     <color name="colorSrtpprimary">#FFEF5350</color>
     <color name="colorSrtpprimaryDark">#FFEF5350</color>
     <color name="colorSrtpaccent">#FFEF5350</color>
-    <!--关于我们-->
 
+
+    <!--图书馆-->
+    <color name="colorLibraryprimary">#e53935</color>
+    <color name="colorLibraryprimaryDark">#ef5350</color>
+    <color name="colorLibraryaccent">#ffffff</color>
+
+    <!--关于我们-->
     <color name="colorAboutusprimary">#d32f2f</color>
     <color name="colorAboutusprimaryDark">#d32f2f</color>
     <color name="colorAboutusprimaryAccent">#d32f2f</color>

@@ -21,7 +21,6 @@ public class ApiHelper {
     public static final int API_CURRICULUM = 2;
     //绩点查询(较慢)
     public static final int API_GPA = 3;
-    //微信端的接口url
     //跑操次数查询
     public static final int API_PE = 4;
     //校园网账户情况
@@ -48,6 +47,12 @@ public class ApiHelper {
     public static final int API_PEDETAIL = 15;
     //学期列表查询
     public static final int API_TERM = 16;
+    //图书馆藏书搜索
+    public static final int API_LIBRARY_SEARCH = 17;
+    //图书馆已借图书
+    public static final int API_LIBRARY_MYBOOK = 18;
+    //热门图书
+    public static final int API_LIBRARY_HOTBOOK = 19;
     /**
      * 调戏
      * 参数
@@ -57,7 +62,7 @@ public class ApiHelper {
     public static final int API_SIMSIMI = 0;
     //暂时无法使用的两个
     public static final int API_RENEW = 1;
-    public static final int API_LIBRARY = 2;
+
     /**
      * 参数
      * book:要搜索的书名
@@ -68,9 +73,11 @@ public class ApiHelper {
 
     //需用其他方式访问的
     public static String auth_url = "http://115.28.27.150/uc/auth";
+    public static String auth_update_url = "http://115.28.27.150/uc/update";
     /**
      * 微信端接口主要为讲座预告的接口，由于服务器端一些转发的问题，url为wechat2前缀
      */
+    //微信端的接口url
     public static String wechat_lecture_notice_url = "http://115.28.27.150/wechat2/lecture";
     private static String url = "http://115.28.27.150/api/";
 
@@ -92,7 +99,10 @@ public class ApiHelper {
             "user",
             "room",
             "pedetail",
-            "term"
+            "term",
+            "search",
+            "library",
+            "library_hot"
     };
     private Context context;
 
@@ -157,11 +167,36 @@ public class ApiHelper {
         return pref.getString("uuid", "");
     }
 
+    public void setAuth(String username, String password) {
+        try {
+            String encrypted = new EncryptHelper(username).encrypt(password);
+            CacheHelper helper = new CacheHelper(context);
+            helper.setCache("authUser", username);
+            helper.setCache("authPwd", password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getPassword(){
+        CacheHelper helper = new CacheHelper(context);
+        String username = getUserName();
+        EncryptHelper helper1 = new EncryptHelper(username);
+        String password = helper1.decrypt(helper.getCache("authPwd"));
+        return password;
+    }
+
+    public String getUserName(){
+        CacheHelper helper = new CacheHelper(context);
+        String username = helper.getCache("authUser");
+        return username;
+    }
+
     public String getAuthCache(String cacheName) {
         //可用
         /**
          * uuid         认证用uuid
-         * cardnuim     一卡通号
+         * cardnum     一卡通号
          * schoolnum    学号
          * name         名字
          * sex          性别

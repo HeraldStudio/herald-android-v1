@@ -92,6 +92,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="LibraryTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 图书馆风格 -->
+        <item name="colorPrimary">@color/colorLibraryprimary</item>
+        <item name="colorPrimaryDark">@color/colorLibraryprimaryDark</item>
+        <item name="colorAccent">@color/colorLibraryaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 
     <style name="AboutusTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 关于我们 -->

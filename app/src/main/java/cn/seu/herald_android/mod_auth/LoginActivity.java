@@ -104,6 +104,8 @@ public class LoginActivity extends BaseAppCompatActivity {
                         getApiHelper().setAuthCache("uuid", response);
                         NetworkLoginHelper.getInstance(LoginActivity.this)
                                 .setAuth(tv_card.getText().toString(), tv_pwd.getText().toString());
+                        //保存用户密码
+                        getApiHelper().setAuth(tv_card.getText().toString(), tv_pwd.getText().toString());
                         checkUUID();
                     }
                 });

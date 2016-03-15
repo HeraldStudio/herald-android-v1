@@ -2,9 +2,17 @@
     <string name="app_name">小猴偷米</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">settings</string>
     <string name="action_logout">注销登录</string>
+
+    <string name="action_search">搜索</string>
+    <string name="action_borrowrecord">借阅记录</string>
+
+    <string name="action_lecturerecord">听讲记录</string>
+
+    <string name="action_card_sync">刷新</string>
+    <string name="action_card_settings">设置</string>
+
 
     <string name="title_activity_login">LoginActivity</string>
 
@@ -18,10 +26,6 @@
     <!--个人信息相关-->
     <string name="user_name"></string>
     <string name="user_class"></string>
-    <string name="title_activity_sys_settings">系统设置</string>
-    <string name="title_activity_query">查询助手</string>
-    <string name="title_activity_schoolbus">校车时刻表</string>
-    <string name="title_activity_grade">成绩查询</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -131,11 +135,7 @@
 
 
     <string name="title_activity_lecture">东南大学人文讲堂</string>
-    <string name="action_lecturerecord">听讲记录</string>
 
-    <!--一卡通查询-->
-    <string name="action_card_sync">刷新</string>
-    <string name="action_card_settings">设置</string>
 
     <string name="title_activity_card">一卡通</string>
     <string name="title_activity_experiment">实验助手</string>
@@ -145,7 +145,12 @@
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>
     <string name="title_activity_srtp">课外研学</string>
-
+    <string name="title_activity_sys_settings">系统设置</string>
+    <string name="title_activity_query">查询助手</string>
+    <string name="title_activity_schoolbus">校车时刻表</string>
+    <string name="title_activity_grade">成绩查询</string>
+    <string name="title_activity_library">书香东南</string>
+    <string name="title_activity_library_search">图书馆藏书查询</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

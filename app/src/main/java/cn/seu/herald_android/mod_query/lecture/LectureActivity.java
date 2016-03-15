@@ -182,6 +182,8 @@ public class LectureActivity extends BaseAppCompatActivity {
                                     showMsg("已获取最新讲座预告");
                                 }
                                 loadNoticeCache();
+                            }else{
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -231,6 +233,8 @@ public class LectureActivity extends BaseAppCompatActivity {
                                 getCacheHelper().setCache("herald_lecture_records", json_res.toString());
                                 loadRecordCache();
                                 showMsg("获取讲座记录成功");
+                            }else{
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
