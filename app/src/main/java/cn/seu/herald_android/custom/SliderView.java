@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;
+
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+
 import java.util.ArrayList;
+
 import cn.seu.herald_android.R;
 
 
@@ -53,7 +56,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         //描述动画
         //sliderLayout.setCustomAnimation(new DescriptionAnimation());
         //切换间隔，暂时调成不切换
-        setDuration(Long.MAX_VALUE);
+        setDuration(5000);
     }
 
     private DefaultSliderView getDefultSliderViewWithUrl(String title,String imageUrl,String url){

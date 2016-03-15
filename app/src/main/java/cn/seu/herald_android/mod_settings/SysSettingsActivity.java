@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -37,12 +35,7 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
         });
 
         tv_checkupdate = (TextView)findViewById(R.id.tv_checkupdate);
-        tv_checkupdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkUpdate();
-            }
-        });
+        tv_checkupdate.setOnClickListener(v -> checkUpdate());
 
         tv_nowversion = (TextView)findViewById(R.id.tv_now_version);
         tv_nowversion.setText("当前版本： " + ServiceHelper.getAppVersionName(this));
@@ -86,10 +79,8 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
                     })
                     .setNegativeButton("残忍拒绝", (dialog, which) -> {
                     }).show();
-        }else{
-            new AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("当前版本已经是最新版本").show();
+        } else {
+            showMsg("当前版本已经是最新版本");
         }
     }
 

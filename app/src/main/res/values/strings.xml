@@ -151,6 +151,8 @@
     <string name="title_activity_grade">成绩查询</string>
     <string name="title_activity_library">书香东南</string>
     <string name="title_activity_library_search">图书馆藏书查询</string>
+    <string name="title_activity_jwc">教务通知</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

@@ -19,6 +19,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="JwcTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 教务通知风格 -->
+        <item name="colorPrimary">@color/colorJwcprimary</item>
+        <item name="colorPrimaryDark">@color/colorJwcprimary_dark</item>
+        <item name="colorAccent">@color/colorJwcaccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="LectureTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 人文讲座风格 -->
         <item name="colorPrimary">@color/colorLectureprimary</item>
@@ -74,7 +83,7 @@
     </style>
 
     <style name="CurriculumTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- 跑操查询风格 -->
+        <!-- 课表查询风格 -->
         <item name="colorPrimary">@color/colorCurriculumPrimary</item>
         <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
         <item name="colorAccent">@color/colorCurriculumAccent</item>
@@ -84,7 +93,7 @@
 
 
     <style name="SrtpTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- 跑操查询风格 -->
+        <!-- 课外研学查询风格 -->
         <item name="colorPrimary">@color/colorSrtpprimary</item>
         <item name="colorPrimaryDark">@color/colorSrtpprimaryDark</item>
         <item name="colorAccent">@color/colorSrtpaccent</item>

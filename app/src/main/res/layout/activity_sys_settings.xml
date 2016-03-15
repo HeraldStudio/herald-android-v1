@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     tools:context="cn.seu.herald_android.mod_settings.SysSettingsActivity">
+
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -19,60 +21,97 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical">
+        android:fitsSystemWindows="false"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="#fff"
-            android:textColor="@color/colorPrimary"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
             android:text="版本更新"
+            android:textColor="@color/colorPrimary"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_now_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="当前版本"
-            android:textSize="10sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_checkupdate"
-            android:background="?android:selectableItemBackground"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="检查更新" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="10dp"
-            android:background="#fff"
-            android:text="校园网设置"/>
-        <Switch
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView4"
+            android:background="?android:selectableItemBackground"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:text="检查更新"
+            android:textColor="#333" />
+
+        <TextView
+            android:id="@+id/tv_now_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_checkupdate"
+            android:layout_alignParentStart="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="当前版本"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_checkupdate"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#eee" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/view"
+            android:padding="10dp"
+            android:text="校园网设置"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+        <Switch
             android:id="@+id/switchseuauto"
-            android:textColor="@color/colorSecondaryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView5"
             android:layout_gravity="center_vertical"
-            android:text="seu自动登陆" />
+            android:background="?android:selectableItemBackground"
+            android:paddingBottom="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:text="校园网自动登录"
+            android:textColor="#333" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/switchseuauto"
+            android:layout_alignParentStart="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="在小猴启动状态自动登录seu-wlan/seu-dorm网络"
+            android:textColor="#666"
+            android:textSize="12sp" />
         <!--<Switch-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
@@ -100,5 +139,5 @@
         <!--android:layout_marginBottom="10dp"-->
         <!--android:layout_gravity="center_vertical"-->
         <!--android:text="接收推送" />-->
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

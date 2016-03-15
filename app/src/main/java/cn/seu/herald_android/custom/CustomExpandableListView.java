@@ -1,20 +1,20 @@
-package cn.seu.herald_android.mod_query.experiment;
+package cn.seu.herald_android.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ExpandableListView;
 
-public class ExperimentListView extends ExpandableListView {
-    public ExperimentListView(Context context) {
+public class CustomExpandableListView extends ExpandableListView {
+    public CustomExpandableListView(Context context) {
         super(context);
     }
 
-    public ExperimentListView(Context context, AttributeSet attrs) {
+    public CustomExpandableListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ExperimentListView(Context context, AttributeSet attrs,
-                              int defStyle) {
+    public CustomExpandableListView(Context context, AttributeSet attrs,
+                                    int defStyle) {
         super(context, attrs, defStyle);
     }
 
