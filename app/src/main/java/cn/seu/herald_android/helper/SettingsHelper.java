@@ -35,6 +35,7 @@ public class SettingsHelper {
     public static final int MODULE_PEDETAIL = 7;
     public static final int MODULE_CURRICULUM = 8;
     public static final int MODULE_SRTP = 9;
+    public static final int MODULE_JWC = 10;
 //    public static final int MODULE_EMPTYROOM = 9;
 //    public static final int MODULE_GYMORDER = 10;
 //    public static final int MODULE_QUANYI = 11;
@@ -52,6 +53,7 @@ public class SettingsHelper {
             "pedetail",
             "curriculum",
             "srtp",
+            "jwc"
 //            "emptyroom",
 //            "gymorder",
 //            "quanyi"
@@ -69,6 +71,7 @@ public class SettingsHelper {
             "跑操",
             "课程表",
             "课外研学",
+            "教务通知"
 //            "空教室",
 //            "场馆预约",
 //            "权益服务"
@@ -86,6 +89,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_PEDETAIL",
             "cn.seu.herald_android.MODULE_QUERY_CURRICULUM",
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
+            "cn.seu.herald_android.MODULE_QUERY_JWC"
 //            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
 //            "cn.seu.herald_android.WEBMODULE_GYMORDER",
 //            "cn.seu.herald_android.WEBMODULE_QUANYI",
@@ -105,6 +109,7 @@ public class SettingsHelper {
             R.mipmap.ic_pedetail,
             R.mipmap.ic_curriculum,
             R.mipmap.ic_srtp,
+            R.mipmap.ic_srtp//TODO
 //            R.mipmap.ic_emptyroom,
 //            R.mipmap.ic_gym,
 //            R.mipmap.ic_quanyi
@@ -176,10 +181,7 @@ public class SettingsHelper {
      */
     public boolean getWifiAutoLogin(){
         String seuauto = getCache("herald_settings_wifi_autologin");
-        if (seuauto.equals("")||seuauto.equals("1")){
-            return true;
-        }
-        return false;
+        return seuauto.equals("") || seuauto.equals("1");
     }
 
     public void setWifiAutoLogin(boolean flag){

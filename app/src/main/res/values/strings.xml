@@ -145,6 +145,7 @@
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>
     <string name="title_activity_srtp">课外研学</string>
+    <string name="title_activity_jwc">教务通知</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

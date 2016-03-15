@@ -6,13 +6,17 @@
     <color name="colorPrimaryGreen">#20a65c</color>
     <color name="colorPrimaryGreenDark">#b4eab3</color>
 
-
     <!--成绩页面-->
     <color name="colorGradeprimary">#4CAF50</color>
     <color name="colorGradeprimary_dark">#4CAF50</color>
     <color name="colorGradeprimary_light">#C8E6C9</color>
     <color name="colorGradeaccent">#4CAF50</color>
 
+    <!--教务信息-->
+    <color name="colorJwcprimary">#1976d2</color>
+    <color name="colorJwcprimary_dark">#1976d2</color>
+    <color name="colorJwcprimary_light">#96cbff</color>
+    <color name="colorJwcaccent">#1976d2</color>
 
     <!--人文讲座页面-->
     <color name="colorLectureprimary">#F44336</color>
@@ -56,11 +60,12 @@
     <color name="colorSrtpprimary">#FFEF5350</color>
     <color name="colorSrtpprimaryDark">#FFEF5350</color>
     <color name="colorSrtpaccent">#FFEF5350</color>
-    <!--关于我们-->
 
+    <!--关于我们-->
     <color name="colorAboutusprimary">#d32f2f</color>
     <color name="colorAboutusprimaryDark">#d32f2f</color>
     <color name="colorAboutusprimaryAccent">#d32f2f</color>
+
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
     <color name="colorCurriculumPrimaryDark">#00abd4</color>

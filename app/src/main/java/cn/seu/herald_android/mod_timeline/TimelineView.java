@@ -27,12 +27,13 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
-import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
+import cn.seu.herald_android.mod_query.jwc.JwcActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
@@ -182,6 +183,16 @@ public class TimelineView extends ListView {
                     loadContent(false);
                 });
             }
+
+            // 当教务处模块开启时
+            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_JWC)) {
+                // 直接刷新一卡通数据
+                threads.add(new Object());
+                JwcActivity.remoteRefreshCache(getContext(), () -> {
+                    if (threads.size() > 0) threads.remove(0);
+                    loadContent(false);
+                });
+            }
         }
 
         // 判断各模块是否开启并加载对应数据
@@ -208,6 +219,11 @@ public class TimelineView extends ListView {
         if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
             // 加载并解析一卡通数据
             itemList.add(TimelineParser.getCardItem(getContext()));
+        }
+
+        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+            // 加载并解析教务处数据
+            itemList.add(TimelineParser.getJwcItem(getContext()));
         }
 
         // 有消息的排在前面，没消息的排在后面

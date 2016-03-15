@@ -6,11 +6,11 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -26,6 +26,8 @@ import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumTimelineBlockLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout;
 import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
+import cn.seu.herald_android.mod_query.jwc.JwcBlockLayout;
+import cn.seu.herald_android.mod_query.jwc.JwcItem;
 import cn.seu.herald_android.mod_query.lecture.LectureBlockLayout;
 import cn.seu.herald_android.mod_query.lecture.LectureNoticeItem;
 import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
@@ -105,6 +107,10 @@ public class TimelineParser {
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                                 info, pair == null ? "获取失败" : pair.first);
+                        block.setOnClickListener(v -> {
+                            context.startActivity(new Intent(
+                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
+                        });
                         remainingClasses.add(block);
                     }
 
@@ -118,6 +124,10 @@ public class TimelineParser {
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                                 info, pair == null ? "获取失败" : pair.first);
 
+                        block.setOnClickListener(v -> {
+                            context.startActivity(new Intent(
+                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
+                        });
                         item.attachedView.add(block);
                         return item;
                     } else if (now >= startTime && now < almostEndTime) {
@@ -130,6 +140,10 @@ public class TimelineParser {
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                                 info, pair == null ? "获取失败" : pair.first);
 
+                        block.setOnClickListener(v -> {
+                            context.startActivity(new Intent(
+                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
+                        });
                         item.attachedView.add(block);
                         return item;
                     }
@@ -171,7 +185,10 @@ public class TimelineParser {
                     Pair<String, String> pair = sidebarInfo.get(info.getClassName());
                     CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                             info, pair == null ? "获取失败" : pair.first);
-                    block.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
+                    block.setOnClickListener(v -> {
+                        context.startActivity(new Intent(
+                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
+                    });
                     viewList.add(block);
                 }
             }
@@ -242,6 +259,10 @@ public class TimelineParser {
                         // 没开始的实验全部单独记录下来
                         if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                             ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                            block.setOnClickListener(v -> {
+                                context.startActivity(new Intent(
+                                        SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
+                            });
                             allExperiments.add(block);
                         }
 
@@ -257,6 +278,10 @@ public class TimelineParser {
                                 int startStamp = item.getBeginStamp();
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                                    block.setOnClickListener(v -> {
+                                        context.startActivity(new Intent(
+                                                SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
+                                    });
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineView.Item.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
                                     );
@@ -268,6 +293,10 @@ public class TimelineParser {
                                 int endStamp = startStamp + 3 * 60;
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                                    block.setOnClickListener(v -> {
+                                        context.startActivity(new Intent(
+                                                SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
+                                    });
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineView.Item.CONTENT_NOTIFY, "1个实验正在进行"
                                     );
@@ -289,6 +318,10 @@ public class TimelineParser {
 
                                 // 记录今天的实验
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                                block.setOnClickListener(v -> {
+                                    context.startActivity(new Intent(
+                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
+                                });
                                 currExperiments.add(block);
                             }
 
@@ -301,6 +334,10 @@ public class TimelineParser {
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
+                                block.setOnClickListener(v -> {
+                                    context.startActivity(new Intent(
+                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
+                                });
                                 currExperiments.add(block);
                             }
                         }
@@ -370,6 +407,10 @@ public class TimelineParser {
                                 json_item.getString("speaker"),
                                 json_item.getString("location")
                         ));
+                        block.setOnClickListener(v -> {
+                            context.startActivity(new Intent(
+                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_LECTURE]));
+                        });
                         lectures.add(block);
                     }
                 }
@@ -500,6 +541,54 @@ public class TimelineParser {
         } catch (Exception e) {
             return new TimelineView.Item(SettingsHelper.MODULE_CARDEXTRA,
                     now, TimelineView.Item.NO_CONTENT, "一卡通余额数据加载失败，请手动刷新"
+            );
+        }
+    }
+
+    /**
+     * 读取教务通知缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineView.Item getJwcItem(Context context) {
+        String cache = new CacheHelper(context).getCache("herald_jwc");
+        final long now = Calendar.getInstance().getTimeInMillis();
+        try {
+            JSONArray json_content = new JSONObject(cache)
+                    .getJSONObject("content").getJSONArray("教务信息");
+
+            ArrayList<View> allNotices = new ArrayList<>();
+
+            for (int i = 0; i < json_content.length(); i++) {
+                JSONObject json_item = json_content.getJSONObject(i);
+                JwcItem item = new JwcItem(
+                        json_item.getString("date"),
+                        json_item.getString("href"),
+                        json_item.getString("title"));
+
+                if (item.getDate().equals(new SimpleDateFormat("yyyy-MM-dd")
+                        .format(Calendar.getInstance().getTime()))) {
+                    JwcBlockLayout block = new JwcBlockLayout(context, item);
+                    allNotices.add(block);
+                }
+            }
+
+            // 无教务信息
+            if (allNotices.size() == 0) {
+                return new TimelineView.Item(SettingsHelper.MODULE_JWC,
+                        now, TimelineView.Item.NO_CONTENT, "今天没有新的重要教务通知" +
+                        "（首页仅显示重要通知，非重要通知可点我查看）");
+            }
+
+            TimelineView.Item item = new TimelineView.Item(SettingsHelper.MODULE_JWC,
+                    now, TimelineView.Item.CONTENT_NOTIFY, "今天有新的重要教务通知，有关同学请关注" +
+                    "（首页仅显示重要通知，非重要通知可点我查看）");
+            item.attachedView = allNotices;
+            return item;
+
+        } catch (Exception e) {// JSONException, NumberFormatException
+            // 清除出错的数据，使下次懒惰刷新时刷新实验
+            new CacheHelper(context).setCache("herald_jwc", "");
+            return new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
+                    now, TimelineView.Item.NO_CONTENT, "教务通知加载失败，请手动刷新"
             );
         }
     }

@@ -189,6 +189,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".mod_query.jwc.JwcActivity"
+            android:label="@string/title_activity_jwc"
+            android:theme="@style/JwcTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

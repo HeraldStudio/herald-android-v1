@@ -8,7 +8,7 @@
     tools:context="cn.seu.herald_android.mod_query.experiment.ExperimentActivity"
     tools:showIn="@layout/activity_experiment">
 
-    <cn.seu.herald_android.mod_query.experiment.ExperimentListView
+    <cn.seu.herald_android.custom.CustomExpandableListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
