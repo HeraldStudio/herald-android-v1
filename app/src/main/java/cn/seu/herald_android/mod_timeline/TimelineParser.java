@@ -450,12 +450,19 @@ public class TimelineParser {
         CacheHelper helper = new CacheHelper(context);
         String date = helper.getCache("herald_pc_date");
         String forecast = helper.getCache("herald_pc_forecast");
+        String record = helper.getCache("herald_pedetail");
         final long now = Calendar.getInstance().getTimeInMillis();
 
         Calendar nowCal = Calendar.getInstance();
         long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
         long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
         long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
+
+        if (record.contains(new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime()))) {
+            return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,
+                    now, TimelineView.Item.CONTENT_NOTIFY, "你今天的跑操已经到账，点我查看详情"
+            );
+        }
 
         if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
             return new TimelineView.Item(SettingsHelper.MODULE_PEDETAIL,

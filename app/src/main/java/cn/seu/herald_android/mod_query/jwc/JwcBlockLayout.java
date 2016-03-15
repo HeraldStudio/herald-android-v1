@@ -24,7 +24,7 @@ public class JwcBlockLayout extends LinearLayout {
         addView(contentView);
 
         float dp = context.getResources().getDisplayMetrics().density;
-        tv_name.setMaxWidth((int) (200 * dp));
+        tv_name.setMaxWidth((int) (256 * dp));
 
         setOnClickListener(v -> {
             Uri uri = Uri.parse(item.href);
