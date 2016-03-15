@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
+import android.widget.Toast;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -118,8 +118,8 @@ public class ApiHelper {
             ContextUtils.showMessage(context, "网络连接错误，请检查您的网络连接~");
         } else if (e instanceof RuntimeException && e.toString().contains("Unauthorized")) {
             // uuid过期的处理
-            ContextUtils.showMessage(context, "你的账号身份已过期，请重新登录");
-            new Handler().postDelayed(this::doLogout, 2000);
+            Toast.makeText(context, "账号身份已过期，请重新登录", Toast.LENGTH_LONG).show();
+            doLogout();
         } else {
             ContextUtils.showMessage(context, "出现未知错误，请尝试重新登录");
         }
