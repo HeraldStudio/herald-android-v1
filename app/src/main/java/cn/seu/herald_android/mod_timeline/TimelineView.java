@@ -221,7 +221,7 @@ public class TimelineView extends ListView {
             itemList.add(TimelineParser.getCardItem(getContext()));
         }
 
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_JWC)) {
             // 加载并解析教务处数据
             itemList.add(TimelineParser.getJwcItem(getContext()));
         }

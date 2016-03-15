@@ -109,7 +109,7 @@ public class SettingsHelper {
             R.mipmap.ic_pedetail,
             R.mipmap.ic_curriculum,
             R.mipmap.ic_srtp,
-            R.mipmap.ic_srtp//TODO
+            R.mipmap.ic_jwc
 //            R.mipmap.ic_emptyroom,
 //            R.mipmap.ic_gym,
 //            R.mipmap.ic_quanyi
