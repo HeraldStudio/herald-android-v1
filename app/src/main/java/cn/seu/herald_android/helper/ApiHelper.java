@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -115,8 +116,12 @@ public class ApiHelper {
             ContextUtils.showMessage(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
         } else if (e instanceof ConnectException) {
             ContextUtils.showMessage(context, "网络连接错误，请检查您的网络连接~");
+        } else if (e instanceof RuntimeException && e.toString().contains("Unauthorized")) {
+            // uuid过期的处理
+            ContextUtils.showMessage(context, "你的账号身份已过期，请重新登录");
+            new Handler().postDelayed(this::doLogout, 2000);
         } else {
-            ContextUtils.showMessage(context, "很抱歉，发生了未知的错误T.T");
+            ContextUtils.showMessage(context, "出现未知错误，请尝试重新登录");
         }
     }
 
@@ -132,7 +137,6 @@ public class ApiHelper {
         CacheHelper cacheHelper = new CacheHelper(context);
         cacheHelper.clearAllModuleCache();
         //跳转到登录页
-
 
         //如果activity为空会抛出异常
         if (context instanceof Activity) {
