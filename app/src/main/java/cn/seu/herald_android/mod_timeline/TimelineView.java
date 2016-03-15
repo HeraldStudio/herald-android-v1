@@ -118,7 +118,8 @@ public class TimelineView extends ListView {
             // 当课表模块开启时
             if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CURRICULUM)) {
                 // 仅当课表数据不存在时刷新课表
-                if (activity.getCacheHelper().getCache("herald_curriculum").equals("")) {
+                if (activity.getCacheHelper().getCache("herald_curriculum").equals("")
+                        || activity.getCacheHelper().getCache("herald_sidebar").equals("")) {
                     threads.add(new Object());
                     CurriculumActivity.remoteRefreshCache(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
