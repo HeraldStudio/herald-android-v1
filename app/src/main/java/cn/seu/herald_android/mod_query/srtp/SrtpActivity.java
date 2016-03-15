@@ -109,6 +109,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_SRTP))
                 .addParams("uuid", getApiHelper().getUUID())
+                .addParams("schoolnum", getApiHelper().getSchoolnum())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -132,10 +133,12 @@ public class SrtpActivity extends BaseAppCompatActivity {
                                     showMsg("已获取最新srtp信息");
                                 }
                                 loadCache();
+                            } else {
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            showMsg("数据解析出错");
+                            showMsg("数据解析失败，请重试");
                         }
                     }
                 });

@@ -167,9 +167,8 @@ public class TimelineView extends ListView {
                 if ((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
                         || !gotLastMessage) && now >= startTime) {
                     threads.add(new Object());
-                    PedetailActivity.refreshForecast(getContext(), () -> {
+                    PedetailActivity.remoteRefreshCache(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
-                        if (now >= endTime) helper.setCache("herald_pc_last_message", "true");
                         loadContent(false);
                     });
                 }

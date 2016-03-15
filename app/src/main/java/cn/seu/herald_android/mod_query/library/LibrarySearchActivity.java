@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,6 +15,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
@@ -114,12 +114,13 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                                 ArrayList<Book> searchResultlist =
                                         Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
                                 loadSearchResult(searchResultlist);
-                            } else if (json_res.getInt("code") == 500) {
-                                showMsg("获取的姿势不对, 换个姿势再来一次吧");
+                                showMsg("刷新成功");
+                            } else {
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
-                        } catch (JSONException e2) {
-                            e2.printStackTrace();
-                            showMsg("数据解析错误。");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showMsg("数据解析失败，请重试");
                         }
                     }
                 });

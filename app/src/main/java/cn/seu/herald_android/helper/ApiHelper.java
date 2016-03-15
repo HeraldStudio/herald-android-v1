@@ -138,6 +138,8 @@ public class ApiHelper {
 
     public void doLogout() {
         //清除授权信息
+        setAuthCache("authUser", "");
+        setAuthCache("authPwd", "");
         setAuthCache("uuid", "");
         setAuthCache("cardnum", "");
         setAuthCache("schoolnum", "");
@@ -176,7 +178,7 @@ public class ApiHelper {
             String encrypted = new EncryptHelper(username).encrypt(password);
             CacheHelper helper = new CacheHelper(context);
             helper.setCache("authUser", username);
-            helper.setCache("authPwd", password);
+            helper.setCache("authPwd", encrypted);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -186,14 +188,12 @@ public class ApiHelper {
         CacheHelper helper = new CacheHelper(context);
         String username = getUserName();
         EncryptHelper helper1 = new EncryptHelper(username);
-        String password = helper1.decrypt(helper.getCache("authPwd"));
-        return password;
+        return helper1.decrypt(helper.getCache("authPwd"));
     }
 
     public String getUserName(){
         CacheHelper helper = new CacheHelper(context);
-        String username = helper.getCache("authUser");
-        return username;
+        return helper.getCache("authUser");
     }
 
     public String getAuthCache(String cacheName) {
@@ -217,4 +217,7 @@ public class ApiHelper {
         return editor.commit();
     }
 
+    public String getSchoolnum() {
+        return getAuthCache("schoolnum");
+    }
 }

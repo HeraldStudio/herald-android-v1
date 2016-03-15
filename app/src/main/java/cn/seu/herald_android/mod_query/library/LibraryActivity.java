@@ -2,23 +2,16 @@ package cn.seu.herald_android.mod_query.library;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -104,13 +97,13 @@ public class LibraryActivity extends BaseAppCompatActivity {
                             if(json_res.getInt("code") == 200){
                                 JSONArray jsonArray = json_res.getJSONArray("content");
                                 loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
-
-                            }else{
-                                showMsg("获取最热门图书失败，也许是服务器先生罢工了，不妨稍后重新试试？");
+                                showMsg("刷新成功");
+                            } else {
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
-                            showMsg("数据解析失败，不妨刷新试试~");
+                            showMsg("数据解析失败，请重试");
                         }
                     }
                 });

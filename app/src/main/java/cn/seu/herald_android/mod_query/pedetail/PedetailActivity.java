@@ -45,7 +45,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
     // 跑操次数数字
     private TextView count, monthCount;
 
-    public static void refreshForecast(Context context, Runnable doAfter) {
+    public static void remoteRefreshCache(Context context, Runnable doAfter) {
         ApiHelper apiHelper = new ApiHelper(context);
         CacheHelper cacheHelper = new CacheHelper(context);
         OkHttpUtils
@@ -69,7 +69,29 @@ public class PedetailActivity extends BaseAppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        doAfter.run();
+                        OkHttpUtils
+                                .post()
+                                .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
+                                .addParams("uuid", apiHelper.getUUID())
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e) {
+                                        apiHelper.dealApiException(e);
+                                        doAfter.run();
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONArray array = new JSONObject(response).getJSONArray("content");
+                                            cacheHelper.setCache("herald_pedetail", array.toString());
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        doAfter.run();
+                                    }
+                                });
                     }
                 });
     }

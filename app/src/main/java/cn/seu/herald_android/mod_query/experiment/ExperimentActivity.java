@@ -184,13 +184,15 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {
-                                showMsg("刷新成功");
                                 getCacheHelper().setCache("herald_experiment", response);
+                                loadCache();
+                                showMsg("刷新成功");
+                            } else {
+                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
                             }
-                            loadCache();
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            showMsg("数据解析失败");
+                            showMsg("数据解析失败，请重试");
                         }
                     }
                 });

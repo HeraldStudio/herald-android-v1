@@ -25,16 +25,16 @@ public class SettingsHelper {
     /**
      * 查询类模块
      */
-    public static final int MODULE_SCHOOLBUS = 0;
-    public static final int MODULE_LIBRARY = 1;
-    public static final int MODULE_LECTURE = 2;
-    public static final int MODULE_GRADE = 3;
-    public static final int MODULE_EXPERIMENT = 4;
-    public static final int MODULE_CARDEXTRA = 5;
-    public static final int MODULE_SEUNET = 6;
-    public static final int MODULE_PEDETAIL = 7;
-    public static final int MODULE_CURRICULUM = 8;
-    public static final int MODULE_SRTP = 9;
+    public static final int MODULE_CARDEXTRA = 0;
+    public static final int MODULE_SEUNET = 1;
+    public static final int MODULE_PEDETAIL = 2;
+    public static final int MODULE_CURRICULUM = 3;
+    public static final int MODULE_LIBRARY = 4;
+    public static final int MODULE_EXPERIMENT = 5;
+    public static final int MODULE_GRADE = 6;
+    public static final int MODULE_SRTP = 7;
+    public static final int MODULE_SCHOOLBUS = 8;
+    public static final int MODULE_LECTURE = 9;
     public static final int MODULE_JWC = 10;
 //    public static final int MODULE_EMPTYROOM = 9;
 //    public static final int MODULE_GYMORDER = 10;
@@ -43,16 +43,16 @@ public class SettingsHelper {
 
     //模块名字
     public static final String[] moduleNames = {
-            "schoolbus",
-            "library",
-            "lecture",
-            "grade",
-            "experiment",
             "cardextra",
             "seunet",
             "pedetail",
             "curriculum",
+            "library",
+            "experiment",
+            "grade",
             "srtp",
+            "schoolbus",
+            "lecture",
             "jwc"
 //            "emptyroom",
 //            "gymorder",
@@ -61,16 +61,16 @@ public class SettingsHelper {
 
     //模块名字文字提示
     public static final String[] moduleNamesTips = {
-            "校车助手",
-            "图书馆查询",
-            "人文讲座",
-            "GPA",
-            "实验",
             "一卡通",
-            "校园网",
-            "跑操",
-            "课程表",
+            "校园网络",
+            "跑操助手",
+            "课表助手",
+            "图书馆",
+            "实验助手",
+            "绩点查询",
             "课外研学",
+            "校车助手",
+            "人文讲座",
             "教务通知"
 //            "空教室",
 //            "场馆预约",
@@ -79,16 +79,16 @@ public class SettingsHelper {
 
     //模块action
     public static final String[] moduleActions = {
-            "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
-            "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
-            "cn.seu.herald_android.MODULE_QUERY_LECTURE",
-            "cn.seu.herald_android.MODULE_QUERY_GRADE",
-            "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
             "cn.seu.herald_android.MODULE_QUERY_CARDEXTRA",
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_PEDETAIL",
             "cn.seu.herald_android.MODULE_QUERY_CURRICULUM",
+            "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
+            "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
+            "cn.seu.herald_android.MODULE_QUERY_GRADE",
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
+            "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
+            "cn.seu.herald_android.MODULE_QUERY_LECTURE",
             "cn.seu.herald_android.MODULE_QUERY_JWC"
 //            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
 //            "cn.seu.herald_android.WEBMODULE_GYMORDER",
@@ -99,16 +99,16 @@ public class SettingsHelper {
 
     //模块图标
     public static final int[] moduleIconsId = {
-            R.mipmap.ic_bus,
-            R.mipmap.ic_library,
-            R.mipmap.ic_lecture,
-            R.mipmap.ic_grade,
-            R.mipmap.ic_experiment,
             R.mipmap.ic_card,
             R.mipmap.ic_seunet,
             R.mipmap.ic_pedetail,
             R.mipmap.ic_curriculum,
+            R.mipmap.ic_library,
+            R.mipmap.ic_experiment,
+            R.mipmap.ic_grade,
             R.mipmap.ic_srtp,
+            R.mipmap.ic_bus,
+            R.mipmap.ic_lecture,
             R.mipmap.ic_jwc
 //            R.mipmap.ic_emptyroom,
 //            R.mipmap.ic_gym,
@@ -132,9 +132,7 @@ public class SettingsHelper {
 
     public void setDefaultModuleShortCut() {
         //快捷方式的默认设置
-        setModuleShortCutEnabled(MODULE_GRADE, true);
-        setModuleShortCutEnabled(MODULE_CARDEXTRA, true);
-        setModuleShortCutEnabled(MODULE_LIBRARY, false);
+        //setModuleShortCutEnabled(MODULE_GRADE, true);
     }
 
 

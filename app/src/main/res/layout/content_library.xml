@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.library.LibraryActivity"
     tools:showIn="@layout/activity_library">
@@ -17,14 +13,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorLibraryprimary"
-            android:text="图书馆最热借阅书籍排行榜" />
-        <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/list_library_hotbook">
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="15dp"
+            android:text="图书馆最热借阅书籍排行榜"
+            android:textColor="@color/colorLibraryprimary" />
+        <ListView
+            android:id="@+id/list_library_hotbook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
         </ListView>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

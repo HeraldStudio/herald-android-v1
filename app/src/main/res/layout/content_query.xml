@@ -15,5 +15,6 @@
         android:divider="#f0f0f0"
         android:dividerHeight="1dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"
+        android:scrollbarStyle="outsideOverlay" />
 </RelativeLayout>
