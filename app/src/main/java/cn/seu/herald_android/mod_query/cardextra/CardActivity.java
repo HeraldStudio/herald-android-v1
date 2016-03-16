@@ -71,7 +71,13 @@ public class CardActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
         init();
-        loadCache();
+
+        String cache = getCacheHelper().getCache("herald_card");
+        if (!cache.equals("")) {
+            loadCache();
+        } else {
+            refreshCache();
+        }
     }
 
     private void init() {
@@ -133,8 +139,6 @@ public class CardActivity extends BaseAppCompatActivity {
                 CardAdapter cardAdapter = new CardAdapter(getBaseContext(), CardItem.transfromJSONArrayToArrayList(jsonArray));
                 //设置消费记录数据适配器
                 recyclerViewCard.setAdapter(cardAdapter);
-            } else {
-                refreshCache();
             }
         } catch (JSONException e) {
             e.printStackTrace();
