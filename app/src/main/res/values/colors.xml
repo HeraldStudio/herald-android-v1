@@ -66,6 +66,13 @@
     <color name="colorAboutusprimaryDark">#d32f2f</color>
     <color name="colorAboutusprimaryAccent">#d32f2f</color>
 
+
+    <!--意见反馈-->
+    <color name="colorFeedbackprimary">#00acc1</color>
+    <color name="colorFeedbackprimaryDark">#00acc1</color>
+    <color name="colorFeedbackprimaryAccent">#00acc1</color>
+
+
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
     <color name="colorCurriculumPrimaryDark">#00abd4</color>

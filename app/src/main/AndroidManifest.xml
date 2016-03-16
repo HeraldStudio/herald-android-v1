@@ -212,6 +212,12 @@
             android:theme="@style/AboutusTheme" />
 
         <activity
+            android:name=".mod_communicate.FeedbackActivity"
+            android:label="@string/title_activity_feedback"
+            android:theme="@style/FeedbackTheme"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name=".mod_query.srtp.SrtpActivity"
             android:label="@string/title_activity_srtp"
             android:theme="@style/SrtpTheme">

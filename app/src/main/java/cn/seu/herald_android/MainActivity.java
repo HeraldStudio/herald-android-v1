@@ -26,6 +26,7 @@ import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
+import cn.seu.herald_android.mod_communicate.FeedbackActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
 import cn.seu.herald_android.mod_settings.SysSettingsActivity;
 import cn.seu.herald_android.mod_timeline.TimelineView;
@@ -104,7 +105,9 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             Intent intent = new Intent(MainActivity.this, AboutusActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_send) {
-            //打开给我们发送建议的窗口
+            //打开用户反馈
+            Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
+            startActivity(intent);
         } else if(id == R.id.nav_gymorder){
             //场馆预约
             Uri uri = Uri.parse("http://115.28.27.150/heraldapp/#/yuyue/home");

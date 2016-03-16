@@ -40,6 +40,7 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
+
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/content_aboutus" />
