@@ -85,6 +85,9 @@ public class ApiHelper {
     public static String wechat_lecture_notice_url = "http://115.28.27.150/wechat2/lecture";
     private static String url = "http://115.28.27.150/api/";
 
+    //用户反馈的url
+    public static String feedback_url = "http://115.28.27.150/service/feedback";
+
     //图书馆藏书搜索
     private static String[] apiNames = new String[]{
             "srtp",

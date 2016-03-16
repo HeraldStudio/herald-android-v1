@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Vector;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
@@ -42,7 +41,7 @@ import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 public class TimelineView extends ListView {
 
     private final Vector<Object> threads = new Vector<>();
-    private ArrayList<Item> itemList;
+    private ArrayList<TimelineItem> itemList;
 
     private BaseAppCompatActivity activity;
     private Runnable hideRefresh = null;
@@ -202,6 +201,14 @@ public class TimelineView extends ListView {
             }
         }
 
+        // 加载推送消息
+        TimelineItem item = TimelineParser.getPushMessageItem(getContext());
+        if (item != null) itemList.add(item);
+
+        // 加载版本更新消息
+        TimelineItem item1 = TimelineParser.getCheckVersionItem(getContext());
+        if (item1 != null) itemList.add(item1);
+
         // 判断各模块是否开启并加载对应数据
         if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CURRICULUM)) {
             // 加载并解析课表数据
@@ -234,7 +241,7 @@ public class TimelineView extends ListView {
         }
 
         // 有消息的排在前面，没消息的排在后面
-        Collections.sort(itemList, Item.comparator);
+        Collections.sort(itemList, TimelineItem.comparator);
 
         // 更新适配器，结束刷新
         if (adapter == null) {
@@ -300,32 +307,6 @@ public class TimelineView extends ListView {
         super.onDetachedFromWindow();
     }
 
-    public static class Item {
-        // 消息是否重要，不重要的消息总在后面
-        public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
-        public ArrayList<View> attachedView = new ArrayList<>();
-        private int module;
-        private long time;
-        private String info;
-        private int importance;
-        // 按时间先后顺序排列
-        public static Comparator<Item> comparator =
-                (item1, item2) -> {
-                    // 不重要的消息总在后面
-                    return item1.importance - item2.importance;
-                };
-
-        public Item(int module, long time, int importance, String info) {
-            this.module = module;
-            this.time = time;
-            this.importance = importance;
-            this.info = info;
-        }
-
-        public int getImportance() {
-            return importance;
-        }
-    }
 
     public class TimelineAdapter extends BaseAdapter {
 
@@ -347,7 +328,7 @@ public class TimelineView extends ListView {
         }
 
         @Override
-        public Item getItem(int position) {
+        public TimelineItem getItem(int position) {
             return itemList.get(position);
         }
 
@@ -358,7 +339,7 @@ public class TimelineView extends ListView {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Item item = getItem(position);
+            TimelineItem item = getItem(position);
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
@@ -371,34 +352,33 @@ public class TimelineView extends ListView {
             ViewGroup hsv = (ViewGroup) convertView.findViewById(R.id.hsv);
             View notifyDot = convertView.findViewById(R.id.notify_dot);
 
-            name.setText(SettingsHelper.moduleNamesTips[item.module]);
+            name.setText(item.getName());
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(item.time);
+            calendar.setTimeInMillis(item.getTime());
             String dateTime = timeInNaturalLanguage(calendar, now);
             time.setText(dateTime);
-            content.setText(item.info);
+            content.setText(item.getInfo());
 
-            notifyDot.setVisibility(item.getImportance() == Item.CONTENT_NOTIFY ? VISIBLE : GONE);
+            notifyDot.setVisibility(item.getImportance() == TimelineItem.CONTENT_NOTIFY ? VISIBLE : GONE);
 
-            avatar.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                    SettingsHelper.moduleIconsId[item.module]));
-            convertView.setOnClickListener((v1) ->
-                    activity.startActivity(new Intent(SettingsHelper.moduleActions[item.module])));
+            avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
-            convertView.setOnLongClickListener(v1 -> {
-                SettingsHelper settingsHelper = new SettingsHelper(getContext());
-                new AlertDialog.Builder(getContext())
-                        .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
-                        .setPositiveButton("确定", (dialog, which) -> {
-                            //设置为不可用
-                            settingsHelper.setModuleShortCutEnabled(item.module, false);
-                            loadContent(true);
-                        })
-                        .setNegativeButton("取消", (dialog, which) -> {
+            convertView.setOnClickListener(item.getOnClickListener());
 
-                        }).show();
-                return true;
-            });
+                convertView.setOnLongClickListener(item.moduleId == -1 ? null : v1 -> {
+                    SettingsHelper settingsHelper = new SettingsHelper(getContext());
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
+                            .setPositiveButton("确定", (dialog, which) -> {
+                                //设置为不可用
+                                settingsHelper.setModuleShortCutEnabled(item.moduleId, false);
+                                loadContent(true);
+                            })
+                            .setNegativeButton("取消", (dialog, which) -> {
+
+                            }).show();
+                    return true;
+                });
 
             hsv.setVisibility(GONE);
             attachedContainer.removeAllViews();

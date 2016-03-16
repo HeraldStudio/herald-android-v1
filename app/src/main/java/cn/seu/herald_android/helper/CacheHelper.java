@@ -17,7 +17,8 @@ public class CacheHelper {
             "herald_pc_last_message",
             "herald_curriculum",
             "herald_pedetail",
-            "herald_sidebar"
+            "herald_sidebar",
+            "herald_new_version_ignored"
     };
     private Context context;
 

@@ -120,6 +120,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="FeedbackTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 意见反馈 -->
+        <item name="colorPrimary">@color/colorFeedbackprimary</item>
+        <item name="colorPrimaryDark">@color/colorFeedbackprimaryDark</item>
+        <item name="colorAccent">@color/colorFeedbackprimaryAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
