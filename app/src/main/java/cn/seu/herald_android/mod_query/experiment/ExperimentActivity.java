@@ -205,6 +205,11 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         //设置成就数目
         tv_numofAchievement = (TextView) findViewById(R.id.tv_num);
         tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievementArrayList.size(), 20));
+        if(0 == achievementArrayList.size()){
+            //无成就时添加提示
+            Achievement achievementTip = new Achievement(Achievement.EXPERIMENT,"暂无成就","你还没有获得任何实验成就，赶紧参加实验，寻找神秘的成就碎片吧！","");
+            achievementArrayList.add(achievementTip);
+        }
         //设置适配器
         viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievementArrayList));
     }
