@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_communicate;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 
@@ -22,7 +23,7 @@ public class AboutusActivity extends BaseAppCompatActivity {
             finish();
         });
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setExpandedTitleGravity(Gravity.RIGHT);
+        //设置状态栏颜色
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
     }
 }
