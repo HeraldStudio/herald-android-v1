@@ -37,13 +37,13 @@ public class ExperimentActivity extends BaseAppCompatActivity {
             9 * 60 + 45, 13 * 60 + 45, 18 * 60 + 15
     };
     //实验类型列表
-    ExpandableListView expandableListView;
+    private ExpandableListView expandableListView;
     //成就墙展示View
-    ViewPager viewPager;
+    private ViewPager viewPager;
     //成就墙数目
-    TextView tv_numofAchievement;
+    private TextView tv_numofAchievement;
     //成就列表
-    ArrayList<Achievement> achievementArrayList = new ArrayList<>();
+    private ArrayList<Achievement> achievementArrayList = new ArrayList<>();
 
     public static void remoteRefreshCache(Context context, Runnable doAfter) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -53,6 +53,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
                 .addParams("uuid", apiHelper.getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -83,7 +84,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         loadCache();
     }
 
-    public void init() {
+    private void init() {
         //toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -122,7 +123,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadCache() {
+    private void loadCache() {
         //如果缓存不为空则加载缓存，反之刷新缓存
         String cache = getCacheHelper().getCache("herald_experiment");
         if (!cache.equals("")) {
@@ -164,23 +165,24 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         }
     }
 
-    public void refreshCache() {
-        getProgressDialog().show();
+    private void refreshCache() {
+        showProgressDialog();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
                         getApiHelper().dealApiException(e);
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {
@@ -198,7 +200,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void setupAchievementWall() {
+    private void setupAchievementWall() {
         //设置成就数目
         tv_numofAchievement = (TextView) findViewById(R.id.tv_num);
         tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievementArrayList.size(), 20));

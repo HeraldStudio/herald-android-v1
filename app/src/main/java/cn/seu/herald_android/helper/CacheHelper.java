@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class CacheHelper {
     //缓存名称列表,注销时将取消这些缓存
-    public static String[] cacheNames = new String[]{
+    private static String[] cacheNames = new String[]{
             "authUser",
             "authPwd",
             "herald_card",

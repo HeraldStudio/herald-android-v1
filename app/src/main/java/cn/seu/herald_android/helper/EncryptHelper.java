@@ -8,7 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * DES加密和解密工具,可以对字符串进行加密和解密操作  。
  */
-public class EncryptHelper {
+class EncryptHelper {
     /**
      * 加密工具
      */
@@ -45,7 +45,7 @@ public class EncryptHelper {
      * @return 转换后的字符串
      * @throws Exception 本方法不处理任何异常，所有异常全部抛出
      */
-    public static String byteArr2HexStr(byte[] arrB) throws Exception {
+    private static String byteArr2HexStr(byte[] arrB) throws Exception {
         int iLen = arrB.length;
         // 每个byte用两个字符才能表示，所以字符串的长度是数组长度的两倍
         StringBuilder sb = new StringBuilder(iLen * 2);
@@ -71,7 +71,7 @@ public class EncryptHelper {
      * @param strIn 需要转换的字符串
      * @return 转换后的byte数组
      */
-    public static byte[] hexStr2ByteArr(String strIn) throws Exception {
+    private static byte[] hexStr2ByteArr(String strIn) throws Exception {
         byte[] arrB = strIn.getBytes();
         int iLen = arrB.length;
         // 两个字符表示一个字节，所以字节数组长度是字符串长度除以2
@@ -89,7 +89,7 @@ public class EncryptHelper {
      * @param arrB 需加密的字节数组
      * @return 加密后的字节数组
      */
-    public byte[] encrypt(byte[] arrB) throws Exception {
+    private byte[] encrypt(byte[] arrB) throws Exception {
         return encryptCipher.doFinal(arrB);
     }
 
@@ -113,7 +113,7 @@ public class EncryptHelper {
      * @param arrB 需解密的字节数组
      * @return 解密后的字节数组
      */
-    public byte[] decrypt(byte[] arrB) throws Exception {
+    private byte[] decrypt(byte[] arrB) throws Exception {
         return decryptCipher.doFinal(arrB);
     }
 

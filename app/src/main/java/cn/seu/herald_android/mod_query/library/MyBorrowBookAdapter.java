@@ -2,14 +2,12 @@ package cn.seu.herald_android.mod_query.library;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import cn.seu.herald_android.custom.CalendarUtils;
 /**
  * Created by corvo on 3/12/16.
  */
-public class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook>{
+class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
     public MyBorrowBookAdapter(Context context, int resource, List<MyBorrowBook> objects) {
         super(context, resource, objects);
     }
@@ -39,9 +37,9 @@ public class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook>{
 
         tv_title.setText(myBorrowBook.getTitle());
         tv_author.setText(myBorrowBook.getAuthor());
-        tv_renderdate.setText("借阅时间:"+myBorrowBook.getRenderDate());
-        tv_duedate.setText("应还时间:"+myBorrowBook.getDueDate());
-        tv_renewtime.setText("续借次数"+myBorrowBook.getRenewTime());
+        tv_renderdate.setText("借阅时间：" + myBorrowBook.getRenderDate());
+        tv_duedate.setText("应还时间：" + myBorrowBook.getDueDate());
+        tv_renewtime.setText("续借次数：" + myBorrowBook.getRenewTime());
 
         if(isDue(myBorrowBook.getDueDate())){
             //如果已经接近归还日期则标红日期
@@ -52,7 +50,7 @@ public class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook>{
         return convertView;
     }
 
-    public boolean isDue(String due_date){
+    private boolean isDue(String due_date) {
         int due_year = Integer.parseInt(due_date.split("-")[0]);
         int due_month = Integer.parseInt(due_date.split("-")[1]);
         int due_day = Integer.parseInt(due_date.split("-")[2]);
@@ -64,9 +62,6 @@ public class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook>{
         dueday.set(Calendar.MONTH,due_month);
         dueday.set(Calendar.DAY_OF_MONTH,due_day);
 
-        if((dueday.getTimeInMillis() - today.getTimeInMillis() )<= CalendarUtils.ONE_DAY * 3){
-            return true;
-        }
-        return false;
+        return (dueday.getTimeInMillis() - today.getTimeInMillis()) <= CalendarUtils.ONE_DAY * 3;
     }
 }

@@ -24,7 +24,7 @@ import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
     private ApiHelper apiHelper;
     private CacheHelper cacheHelper;
     private SettingsHelper settingsHelper;
@@ -75,8 +75,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         //加载刷新对话框
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setTitle("最新数据获取中");
-        progressDialog.setMessage("请稍后...");
+        progressDialog.setMessage("加载中，请稍候…");
     }
 
     @Override
@@ -85,11 +84,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void showMsg(String msg) {
-        showSnackBar(msg);
-    }
-
-    public ApiHelper getApiHelper() {
+    protected ApiHelper getApiHelper() {
         return apiHelper;
     }
 
@@ -98,14 +93,25 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
 
-    public ServiceHelper getServiceHelper() {
+    protected ServiceHelper getServiceHelper() {
         return serviceHelper;
     }
-    public SettingsHelper getSettingsHelper() {
+
+    protected SettingsHelper getSettingsHelper() {
         return settingsHelper;
     }
 
+    public void showMsg(String msg) {
+        showSnackBar(msg);
+    }
 
+    protected void showProgressDialog() {
+        progressDialog.show();
+    }
+
+    protected void hideProgressDialog() {
+        progressDialog.dismiss();
+    }
 
     /**
      * 设置状态栏颜色
@@ -113,7 +119,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * @param activity 需要设置的activity
      * @param color    状态栏颜色值
      */
-    public void setStatusBarColor(Activity activity, int color) {
+    protected void setStatusBarColor(Activity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置状态栏透明
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -131,11 +137,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    public ProgressDialog getProgressDialog() {
-        return progressDialog;
-    }
-
-    protected void runMeasurementDependentTask(Runnable task) {
+    void runMeasurementDependentTask(Runnable task) {
         if (firstCreate) {
             onLoadTasks.add(task);
         } else {

@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="总绩点"
-                    android:textSize="11sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_grade_gpa"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="首修绩点"
-                    android:textSize="11sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_grade_gpawithoutrevamp"
@@ -71,7 +71,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_gravity="bottom"
                     android:text="4.0"
-                    android:textSize="11sp" />
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <TextView

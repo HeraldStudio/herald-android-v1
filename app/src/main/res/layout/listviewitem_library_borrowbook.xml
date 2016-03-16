@@ -17,26 +17,26 @@
         android:layout_height="wrap_content"
         android:text="作者"
         android:textColor="@color/colorSecondaryText"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
     <TextView
         android:id="@+id/tv_renderdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="借阅时间"
         android:textColor="@color/colorSecondaryText"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
     <TextView
         android:id="@+id/tv_duedate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="归还时间"
         android:textColor="@color/colorSecondaryText"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
     <TextView
         android:id="@+id/tv_renewtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="续借次数"
         android:textColor="@color/colorSecondaryText"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 </LinearLayout>

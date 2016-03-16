@@ -50,7 +50,7 @@ public class TimelineView extends ListView {
     private SliderView slider;
     private TimelineAdapter adapter;
     private View topPadding;
-    BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             loadContent(false);
@@ -64,7 +64,7 @@ public class TimelineView extends ListView {
 
     // 因为此函数在getView()中被调用，视图回收再分配时，时间可能发生变化，所以此函数内不能调用Calendar.getInstance()
     // 而应该用固定的now参数代表刷新时的时间
-    public static String timeInNaturalLanguage(Calendar dest, long now) {
+    private static String timeInNaturalLanguage(Calendar dest, long now) {
         long time = dest.getTimeInMillis();
         Calendar todayCal = Calendar.getInstance();
         todayCal.setTimeInMillis(now);
@@ -169,7 +169,6 @@ public class TimelineView extends ListView {
                 long now = Calendar.getInstance().getTimeInMillis();
                 long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
                 long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
-                long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
                 // 仅当今天缓存不存在或者最后消息还没到手，且已到开始时间时，允许刷新
                 if ((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
@@ -247,7 +246,7 @@ public class TimelineView extends ListView {
             hideRefresh.run();
     }
 
-    public void refreshHeaders() {
+    private void refreshHeaders() {
         // dp单位值
         float dp = getContext().getResources().getDisplayMetrics().density;
 

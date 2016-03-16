@@ -28,14 +28,14 @@ import okhttp3.Call;
 
 public class GradeActivity extends BaseAppCompatActivity {
 
-    SortableTableView<GradeItem> tableViewGrade;
-    ProgressDialog progressDialog;
+    private SortableTableView<GradeItem> tableViewGrade;
+    private ProgressDialog progressDialog;
     //展示首修GPA的TV
-    TextView tv_gpa;
+    private TextView tv_gpa;
     //展示非首修GPA的TV
-    TextView tv_gpa2;
+    private TextView tv_gpa2;
     //展示最后计算时间的TV
-    TextView tv_time;
+    private TextView tv_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +143,7 @@ public class GradeActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_GPA))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
-                .connTimeOut(20000)
-                .readTimeOut(18000)
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

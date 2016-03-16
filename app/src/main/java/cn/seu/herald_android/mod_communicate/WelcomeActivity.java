@@ -12,8 +12,8 @@ import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_auth.LoginActivity;
 
 public class WelcomeActivity extends Activity {
-    SettingsHelper settingsHelper;
-    ApiHelper apiHelper;
+    private SettingsHelper settingsHelper;
+    private ApiHelper apiHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -55,7 +55,7 @@ public class CustomSnackBar {
         return this;
     }
 
-    public Snackbar getSnackBar() {
+    private Snackbar getSnackBar() {
 
         int duration = 0;
 

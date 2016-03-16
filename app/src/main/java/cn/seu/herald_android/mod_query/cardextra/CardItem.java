@@ -5,21 +5,21 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class CardItem {
+class CardItem {
     //消费日期
-    String date;
+    private String date;
     //消费时间
-    String time;
+    private String time;
     //消费数目
-    String price;
+    private String price;
     //消费种类
-    String type;
+    private String type;
     //扣费系统（消费地点
-    String system;
+    private String system;
     //消费后余额
-    String left;
+    private String left;
 
-    public CardItem(String date, String time, String price, String type, String system, String left) {
+    private CardItem(String date, String time, String price, String type, String system, String left) {
         this.date = date;
         this.time = time;
         this.price = price;

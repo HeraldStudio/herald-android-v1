@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-public class EmptyRoomViewPagerAdapter extends FragmentPagerAdapter {
-    ArrayList<Fragment> pagerList;
-    String[] titles = new String[]{"快捷查询", "正常查询"};
-    Context context;
+class EmptyRoomViewPagerAdapter extends FragmentPagerAdapter {
+    private ArrayList<Fragment> pagerList;
+    private String[] titles = new String[]{"快捷查询", "正常查询"};
+    private Context context;
 
     public EmptyRoomViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);

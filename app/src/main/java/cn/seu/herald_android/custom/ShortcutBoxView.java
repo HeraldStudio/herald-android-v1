@@ -29,11 +29,6 @@ public class ShortcutBoxView extends GridView {
         super.onMeasure(widthMeasureSpec, expandSpec);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
     public void refresh() {
         //加载适配器
         //获取设置为快捷方式的查询模块

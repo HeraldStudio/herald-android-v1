@@ -8,15 +8,15 @@ import cn.seu.herald_android.helper.SettingsHelper;
  */
 public class SeuModule {
     //模块ID
-    int moduleId;
+    private int moduleId;
     //图片资源
-    int ic_id;
+    private int ic_id;
     //是否被选为快捷方式
-    boolean enabledShortCut;
+    private boolean enabledShortCut;
     //启动的activity的action
-    String actions;
+    private String actions;
     //名字
-    String name;
+    private String name;
 
     public SeuModule(int moduleId, boolean enabledShortCut, String actions) {
         this.moduleId = moduleId;

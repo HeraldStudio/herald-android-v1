@@ -9,7 +9,7 @@
         android:id="@+id/avatar"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp" />
@@ -29,7 +29,7 @@
         android:layout_alignBottom="@+id/avatar"
         android:layout_alignTop="@+id/avatar"
         android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@+id/avatar"
+        android:layout_toRightOf="@+id/avatar"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -37,8 +37,6 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/avatar"
-            android:layout_toEndOf="@+id/avatar"
             android:textColor="#333"
             android:textSize="15sp" />
 
@@ -46,18 +44,15 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/name"
-            android:layout_below="@+id/name"
-            android:layout_marginLeft="0dp"
             android:textColor="#666"
-            android:textSize="13sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/avatar"
         android:orientation="vertical"
         android:padding="15dp">
@@ -78,7 +73,7 @@
 
             <LinearLayout
                 android:id="@+id/attachedContainer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
 

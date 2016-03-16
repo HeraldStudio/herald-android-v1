@@ -30,9 +30,9 @@ public class CardActivity extends BaseAppCompatActivity {
 
 
     //消费记录详情列表
-    RecyclerView recyclerViewCard;
+    private RecyclerView recyclerViewCard;
     //余额
-    TextView tv_extra;
+    private TextView tv_extra;
 
     public static void remoteRefreshCache(Context context, Runnable onFinish) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -43,6 +43,7 @@ public class CardActivity extends BaseAppCompatActivity {
                 .addParams("uuid", apiHelper.getUUID())
                 .addParams("timedelta", "7")
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -70,10 +71,16 @@ public class CardActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
         init();
-        loadCache();
+
+        String cache = getCacheHelper().getCache("herald_card");
+        if (!cache.equals("")) {
+            loadCache();
+        } else {
+            refreshCache();
+        }
     }
 
-    public void init() {
+    private void init() {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -132,10 +139,6 @@ public class CardActivity extends BaseAppCompatActivity {
                 CardAdapter cardAdapter = new CardAdapter(getBaseContext(), CardItem.transfromJSONArrayToArrayList(jsonArray));
                 //设置消费记录数据适配器
                 recyclerViewCard.setAdapter(cardAdapter);
-                showMsg("刷新成功");
-
-            } else {
-                refreshCache();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -144,24 +147,25 @@ public class CardActivity extends BaseAppCompatActivity {
     }
 
     private void refreshCache() {
-        getProgressDialog().show();
+        showProgressDialog();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_CARD))
                 .addParams("uuid", getApiHelper().getUUID())
                 .addParams("timedelta", "7")
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         getApiHelper().dealApiException(e);
                         loadCache();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {

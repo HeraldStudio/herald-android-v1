@@ -33,15 +33,15 @@ import cn.seu.herald_android.R;
 public class CurriculumScheduleLayout extends FrameLayout {
 
     // 常量，我校一天的课时数
-    public static final int PERIOD_COUNT = 13;
+    private static final int PERIOD_COUNT = 13;
     // 常量，今天所在列与其他列的宽度比值
-    public static final float TODAY_WEIGHT = 1.5f;
+    private static final float TODAY_WEIGHT = 1.2f;
     // 星期在JSON中的表示值
     public static final String[] WEEK_NUMS = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
     // 星期在屏幕上的显示值
     public static final String[] WEEK_NUMS_CN = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
     // 以上的星期依次在Calendar中对应的值
-    public static final int[] WEEK_NUMS_CALENDAR = {
+    private static final int[] WEEK_NUMS_CALENDAR = {
             Calendar.MONDAY,
             Calendar.TUESDAY,
             Calendar.WEDNESDAY,
@@ -69,7 +69,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
     private float density;
     // 当前时间的指示条（仅当本页为当前周、今天非休息日或有课时才会显示）
     private View timeHand;
-    BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             refreshTimeHand();
@@ -90,7 +90,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
     }
 
     // 获取手机状态栏高度
-    public static int getStatusBarHeight(Context context) {
+    private static int getStatusBarHeight(Context context) {
         int statusBarHeight = 0;
         try {
             Class<?> c = Class.forName("com.android.internal.R$dimen");

@@ -7,10 +7,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class LectureNoticeItem {
-    String date;
-    String topic;
-    String speaker;
-    String location;
+    private String date;
+    private String topic;
+    private String speaker;
+    private String location;
 
     public LectureNoticeItem(String date, String topic, String speaker, String location) {
         this.date = date;

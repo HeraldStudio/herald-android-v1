@@ -17,7 +17,7 @@ public class GradeItem {
     private String score;
     private String type;
 
-    public GradeItem(String name, Double credit, Semester semester, String score, String type) {
+    private GradeItem(String name, Double credit, Semester semester, String score, String type) {
         this.name = name;
         this.credit = credit;
         this.semester = semester;

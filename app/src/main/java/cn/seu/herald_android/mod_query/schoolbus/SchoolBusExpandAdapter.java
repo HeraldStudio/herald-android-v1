@@ -13,10 +13,10 @@ import java.util.Calendar;
 
 import cn.seu.herald_android.R;
 
-public class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
-    String[] titles;
-    ArrayList<ArrayList<SchoolBusItem>> childViews;
-    Context context;
+class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
+    private String[] titles;
+    private ArrayList<ArrayList<SchoolBusItem>> childViews;
+    private Context context;
 
     public SchoolBusExpandAdapter(Context context, String[] titles, ArrayList<ArrayList<SchoolBusItem>> childViews) {
         this.titles = titles;

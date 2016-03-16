@@ -33,7 +33,7 @@ import okhttp3.Call;
 public class CurriculumActivity extends BaseAppCompatActivity {
 
     // 水平分页控件
-    protected ViewPager pager;
+    private ViewPager pager;
 
     public static void remoteRefreshCache(Context context, Runnable onFinish) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -43,6 +43,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
                 .addParams("uuid", apiHelper.getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -116,13 +117,14 @@ public class CurriculumActivity extends BaseAppCompatActivity {
     private void refreshCache() {
 
         // 先显示刷新控件
-        getProgressDialog().show();
+        showProgressDialog();
 
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -166,7 +168,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                             runOnUiThread(() -> {
                                 getCacheHelper().setCache("herald_curriculum", object.toString());
 
-                                getProgressDialog().hide();
+                                hideProgressDialog();
                                 readLocal();
                             });
                         } catch (JSONException e) {
@@ -235,7 +237,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
      * 实现::错误处理
      *****************************/
 
-    public void handleException(Exception e) {
+    private void handleException(Exception e) {
         runOnUiThread(() -> {
             e.printStackTrace();
 
@@ -243,12 +245,12 @@ public class CurriculumActivity extends BaseAppCompatActivity {
             showErrorMessage(e);
 
             // 隐藏刷新控件，为了美观，先延时0.5秒
-            getProgressDialog().hide();
+            hideProgressDialog();
         });
     }
 
     // 根据Exception的类型，显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
-    public void showErrorMessage(Exception e) {
+    private void showErrorMessage(Exception e) {
         String message;
         if (e instanceof NumberFormatException || e instanceof JSONException) {
             message = "暂时无法获取数据，请重试";
@@ -264,8 +266,8 @@ public class CurriculumActivity extends BaseAppCompatActivity {
     }
 
     // 显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
-    public void showErrorMessage(String message) {
+    private void showErrorMessage(String message) {
         showSnackBar(message);
-        getProgressDialog().hide();
+        hideProgressDialog();
     }
 }

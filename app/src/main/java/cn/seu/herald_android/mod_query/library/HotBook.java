@@ -9,17 +9,17 @@ import java.util.ArrayList;
 /**
  * Created by heyon on 2016/3/15.
  */
-public class HotBook {
+class HotBook {
     //书的借阅次数
-    int count;
+    private int count;
     //书所在的位置
-    String place;
+    private String place;
     //书名
-    String name;
+    private String name;
     //作者
-    String author;
+    private String author;
 
-    public HotBook(int count, String place, String name, String author) {
+    private HotBook(int count, String place, String name, String author) {
         this.count = count;
         this.place = place;
         this.name = name;

@@ -25,7 +25,7 @@ public class MyBorrowBook extends Book {
     //本书的续借次数
     private String renewTime;
 
-    public MyBorrowBook(String dueDate, String author, String barcode, String renderDate, String place, String title, String renewTime) {
+    private MyBorrowBook(String dueDate, String author, String barcode, String renderDate, String place, String title, String renewTime) {
         this.dueDate = dueDate;
         this.author = author;
         this.barcode = barcode;

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 
 public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdapter.LectureRecord> {
-    Context context;
-    ArrayList<LectureNoticeItem> list;
+    private Context context;
+    private ArrayList<LectureNoticeItem> list;
 
     public LectureNoticeAdapter(Context context, ArrayList<LectureNoticeItem> list) {
         this.context = context;

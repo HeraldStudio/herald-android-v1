@@ -27,11 +27,11 @@ import okhttp3.Call;
 
 public class SeunetActivity extends BaseAppCompatActivity {
     //显示已用流量比例的饼状图
-    PieChartView pieChartView_wlan;
+    private PieChartView pieChartView_wlan;
     //钱包余额
-    TextView tv_money_left;
+    private TextView tv_money_left;
     //已用流量
-    TextView tv_used;
+    private TextView tv_used;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
         init();
     }
 
-    public void init() {
+    private void init() {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,7 +90,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
     }
 
 
-    public void loadCache() {
+    private void loadCache() {
         //尝试加载缓存
         String cache = getCacheHelper().getCache("herald_nic");
         if (!cache.equals("")) {
@@ -119,13 +119,14 @@ public class SeunetActivity extends BaseAppCompatActivity {
         }
     }
 
-    public void refreshCache() {
-        getProgressDialog().show();
+    private void refreshCache() {
+        showProgressDialog();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_NIC))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                              @Override
                              public void onError(Call call, Exception e) {
@@ -135,7 +136,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
                              @Override
                              public void onResponse(String response) {
-                                 getProgressDialog().dismiss();
+                                 hideProgressDialog();
                                  try {
                                      JSONObject json_res = new JSONObject(response);
                                      if (json_res.getInt("code") == 200) {
@@ -154,7 +155,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 );
     }
 
-    public void setupChart(JSONObject json) {
+    private void setupChart(JSONObject json) {
         if (json == null)
             return;
         try {

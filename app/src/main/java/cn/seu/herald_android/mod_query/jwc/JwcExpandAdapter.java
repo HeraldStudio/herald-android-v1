@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
 
-public class JwcExpandAdapter extends BaseExpandableListAdapter {
-    ArrayList<String> parentViews;
-    ArrayList<ArrayList<JwcItem>> childViews;
-    Context context;
+class JwcExpandAdapter extends BaseExpandableListAdapter {
+    private ArrayList<String> parentViews;
+    private ArrayList<ArrayList<JwcItem>> childViews;
+    private Context context;
 
     public JwcExpandAdapter(Context context, ArrayList<String> parentViews, ArrayList<ArrayList<JwcItem>> childViews) {
         this.parentViews = parentViews;

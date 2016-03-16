@@ -31,15 +31,15 @@ import okhttp3.Call;
 public class LectureActivity extends BaseAppCompatActivity {
 
     //容纳讲座预告卡片布局的RecyclerView
-    RecyclerView recyclerView_notice;
+    private RecyclerView recyclerView_notice;
     //打卡记录对话框
-    AlertDialog.Builder builder;
-    AlertDialog dialog_lecture_records;
+    private AlertDialog.Builder builder;
+    private AlertDialog dialog_lecture_records;
     //打卡记录列表
-    ListView list_record;
+    private ListView list_record;
     //打卡记录次数
-    TextView tv_count;
-    ProgressDialog progressDialog;
+    private TextView tv_count;
+    private ProgressDialog progressDialog;
 
     public static void remoteRefreshCache(Context context, Runnable doAfter) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -50,6 +50,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.wechat_lecture_notice_url)
                 .addParams("uuid", apiHelper.getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -152,7 +153,7 @@ public class LectureActivity extends BaseAppCompatActivity {
 
     }
 
-    public void refreshCache() {
+    private void refreshCache() {
         progressDialog.show();
         //获取讲座预告
         OkHttpUtils
@@ -160,6 +161,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.wechat_lecture_notice_url)
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -193,7 +195,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void displayLectureRecords() {
+    private void displayLectureRecords() {
         //加载打卡记录对话框
         builder = new AlertDialog.Builder(this);
         dialog_lecture_records = builder.create();
@@ -244,7 +246,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void loadRecordCache() {
+    private void loadRecordCache() {
         String cache = getCacheHelper().getCache("herald_lecture_records");
         if (!cache.equals("")) {
             try {

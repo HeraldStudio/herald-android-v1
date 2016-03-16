@@ -84,14 +84,14 @@ public class NetworkLoginHelper {
         return instance;
     }
 
-    public static String formatTime(String time) {
+    private static String formatTime(String time) {
         int seconds = Integer.valueOf(time);
         int minutes = seconds / 60;
         seconds %= 60;
         return minutes + ":" + ((seconds < 10) ? "0" : "") + seconds;
     }
 
-    public static String unicodeToString(String str) {
+    private static String unicodeToString(String str) {
 
         Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");
         Matcher matcher = pattern.matcher(str);

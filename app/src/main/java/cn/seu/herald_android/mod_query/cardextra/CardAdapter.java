@@ -14,8 +14,8 @@ import cn.seu.herald_android.R;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
-    Context context;
-    ArrayList<CardItem> list;
+    private Context context;
+    private ArrayList<CardItem> list;
 
     public CardAdapter(Context context, ArrayList<CardItem> list) {
         this.context = context;
@@ -45,7 +45,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         } else {
             //如果为负则设置成红色
             holder.tv_price.setText(cardItem.getPrice());
-            holder.tv_price.setTextColor(ContextCompat.getColor(context, R.color.relexRed));
+            holder.tv_price.setTextColor(ContextCompat.getColor(context, R.color.relaxRed));
         }
 
         holder.tv_date.setText(cardItem.getDate());

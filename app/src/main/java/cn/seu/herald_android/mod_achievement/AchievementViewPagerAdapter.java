@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 
 public class AchievementViewPagerAdapter extends PagerAdapter {
-    ArrayList<Achievement> achievementArrayList;
-    Context context;
+    private ArrayList<Achievement> achievementArrayList;
+    private Context context;
 
     public AchievementViewPagerAdapter(Context context, ArrayList<Achievement> achievementArrayList) {
         this.achievementArrayList = achievementArrayList;
