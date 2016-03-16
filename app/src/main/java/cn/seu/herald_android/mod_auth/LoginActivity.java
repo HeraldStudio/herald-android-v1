@@ -78,7 +78,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.auth_url)
                 .addParams("user", tv_card.getText().toString())
                 .addParams("password", tv_pwd.getText().toString())
-                .addParams("appid", ApiHelper.APPID)
+                .addParams("appid", ApiHelper.getAppId())
                 .build()
                 .execute(new StringCallback() {
                     @Override

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:orientation="horizontal"
+    android:padding="8dp">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp"
             android:text="书名"
-            android:id="@+id/tv_name"/>
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="16sp" />
         <TextView
+            android:id="@+id/tv_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
             android:text="作者"
-            android:id="@+id/tv_author"/>
+            android:textSize="11sp" />
         <TextView
+            android:id="@+id/tv_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
             android:text="索引"
-            android:id="@+id/tv_place"/>
+            android:textSize="11sp" />
     </LinearLayout>
     <TextView
+        android:id="@+id/tv_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
         android:layout_gravity="center_vertical"
+        android:gravity="right"
         android:text="00"
-        android:textSize="15sp"
         android:textColor="@color/colorLibraryprimaryDark"
-        android:id="@+id/tv_count"/>
+        android:textSize="15sp" />
 </LinearLayout>

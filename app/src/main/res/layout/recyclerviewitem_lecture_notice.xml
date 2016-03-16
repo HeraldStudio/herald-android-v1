@@ -43,7 +43,7 @@
         <LinearLayout
             android:id="@+id/line_divider"
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="@dimen/divider_height"
             android:layout_marginTop="8dp"
             android:background="@color/colorDivider"
             android:orientation="horizontal" />

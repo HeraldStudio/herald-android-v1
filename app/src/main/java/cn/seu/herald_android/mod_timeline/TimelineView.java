@@ -1,8 +1,10 @@
 package cn.seu.herald_android.mod_timeline;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -48,6 +50,12 @@ public class TimelineView extends ListView {
     private SliderView slider;
     private TimelineAdapter adapter;
     private View topPadding;
+    BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadContent(false);
+        }
+    };
 
     public TimelineView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -79,11 +87,11 @@ public class TimelineView extends ListView {
                 return "明天";
             }
             if (time < tomorrow) {
-                int deltaMinute = (int) ((time - now) / 1000 / 60);
-                int deltaHour = deltaMinute / 60;
+                float deltaMinute = (time - now) / 1000 / 60f;
+                float deltaHour = deltaMinute / 60;
                 deltaMinute %= 60;
-                if (deltaHour != 0) return deltaHour + "小时后";
-                if (deltaMinute != 0) return deltaMinute + "分钟后";
+                if (deltaHour >= 1) return Math.round(deltaHour) + "小时后";
+                if (deltaMinute >= 1) return (int) Math.ceil(deltaMinute) + "分钟后";
                 return "现在";
             }
             if (time <= dayAfterTomorrow) {
@@ -276,6 +284,23 @@ public class TimelineView extends ListView {
         }
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        getContext().registerReceiver(timeChangeReceiver, filter);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        getContext().unregisterReceiver(timeChangeReceiver);
+        super.onDetachedFromWindow();
+    }
+
     public static class Item {
         // 消息是否重要，不重要的消息总在后面
         public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
@@ -401,4 +426,5 @@ public class TimelineView extends ListView {
             return convertView;
         }
     }
+
 }

@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.security.MessageDigest;
 
 import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.mod_auth.LoginActivity;
@@ -69,7 +72,6 @@ public class ApiHelper {
      * book:要搜索的书名
      */
     public static final int API_BOOK_SEARCH = 3;
-    public static String APPID = "34cc6df78cfa7cd457284e4fc377559e";
 
 
     //需用其他方式访问的
@@ -105,12 +107,14 @@ public class ApiHelper {
             "library",
             "library_hot"
     };
+    private static String packagePath;
     private Context context;
 
 
     //用到logout函数的部分应该调用此函数
     public ApiHelper(Context context) {
         this.context = context;
+        packagePath = context.getPackageResourcePath();
     }
 
 
@@ -118,7 +122,32 @@ public class ApiHelper {
         return ApiHelper.url + ApiHelper.apiNames[api];
     }
 
+    public static String getAppId() {
+        InputStream fis;
+        byte[] buffer = new byte[1024];
+        int numRead;
+        MessageDigest md5;
+        String test = "";
+        try {
+            fis = new FileInputStream(packagePath);
+            md5 = MessageDigest.getInstance("MD5");
+            while ((numRead = fis.read(buffer)) > 0) {
+                md5.update(buffer, 0, numRead);
+            }
+            fis.close();
+            test = HashHelper.toHexString(md5.digest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 发布流程：
+        // 下面第一行去掉注释，第二行加注释，
+        // 编译，打包，签名，制成发布版本，
+        // 用工具计算md5，在服务器登记appid，
+        // 联网测试，上线
 
+        //return test;
+        return "34cc6df78cfa7cd457284e4fc377559e";
+    }
 
     public void dealApiException(Exception e) {
         e.printStackTrace();
@@ -184,14 +213,14 @@ public class ApiHelper {
         }
     }
 
-    public String getPassword(){
+    public String getPassword() {
         CacheHelper helper = new CacheHelper(context);
         String username = getUserName();
         EncryptHelper helper1 = new EncryptHelper(username);
         return helper1.decrypt(helper.getCache("authPwd"));
     }
 
-    public String getUserName(){
+    public String getUserName() {
         CacheHelper helper = new CacheHelper(context);
         return helper.getCache("authUser");
     }

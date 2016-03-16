@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,10 +33,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         CardItem cardItem = list.get(position);
 //        判断日期和分割线是否显示，用来给每天的消费记录分组
         if (position == 0 || !list.get(position).getDate().equals(list.get(position - 1).getDate())) {
-            holder.divider.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
             holder.tv_date.setVisibility(View.VISIBLE);
         } else {
-            holder.divider.setVisibility(View.GONE);
             holder.tv_date.setVisibility(View.GONE);
         }
         //判断消费是否为负，如果不为负，则为正，需要设置成其他颜色
@@ -53,8 +50,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         holder.tv_date.setText(cardItem.getDate());
         holder.tv_time.setText(cardItem.getTime());
-        holder.tv_type.setText(cardItem.getType());
-        holder.tv_system.setText(cardItem.getSystem());
+
+        //没有标题的条目，把说明显示在标题上
+        if (cardItem.getSystem().equals("")) {
+            holder.tv_system.setText(cardItem.getType());
+            holder.tv_type.setText("");
+            holder.tv_type.setVisibility(View.GONE);
+        } else {
+            holder.tv_type.setText(cardItem.getType());
+            holder.tv_system.setText(cardItem.getSystem());
+            holder.tv_type.setVisibility(View.VISIBLE);
+        }
         holder.tv_left.setText(cardItem.getLeft());
     }
 
@@ -64,7 +70,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     class CardViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout divider;
         //消费时间
         TextView tv_date;
         //消费时间
@@ -80,7 +85,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         public CardViewHolder(View itemView) {
             super(itemView);
-            divider = (LinearLayout) itemView.findViewById(R.id.line_divider);
             tv_date = (TextView) itemView.findViewById(R.id.tv_date);
             tv_price = (TextView) itemView.findViewById(R.id.tv_price);
             tv_type = (TextView) itemView.findViewById(R.id.tv_type);

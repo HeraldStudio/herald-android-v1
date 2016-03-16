@@ -25,6 +25,8 @@
             android:id="@+id/list_library_hotbook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@color/colorDivider"
+            android:dividerHeight="@dimen/divider_height"
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
         </ListView>
