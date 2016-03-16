@@ -50,7 +50,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.wechat_lecture_notice_url)
                 .addParams("uuid", apiHelper.getUUID())
                 .build()
-                .readTimeOut(5000).connTimeOut(5000)
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -161,6 +161,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.wechat_lecture_notice_url)
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

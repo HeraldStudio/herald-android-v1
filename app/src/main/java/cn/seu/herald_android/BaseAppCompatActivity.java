@@ -76,7 +76,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("加载中，请稍候…");
-        progressDialog.setCancelable(false);
     }
 
     @Override

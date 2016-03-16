@@ -87,6 +87,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_SCHOOLBUS))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

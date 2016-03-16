@@ -111,6 +111,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
                 .addParams("uuid", getApiHelper().getUUID())
                 .addParams("schoolnum", getApiHelper().getSchoolnum())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

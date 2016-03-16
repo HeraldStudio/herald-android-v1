@@ -43,7 +43,7 @@ public class CardActivity extends BaseAppCompatActivity {
                 .addParams("uuid", apiHelper.getUUID())
                 .addParams("timedelta", "7")
                 .build()
-                .readTimeOut(5000).connTimeOut(5000)
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -154,6 +154,7 @@ public class CardActivity extends BaseAppCompatActivity {
                 .addParams("uuid", getApiHelper().getUUID())
                 .addParams("timedelta", "7")
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

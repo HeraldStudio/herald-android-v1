@@ -79,8 +79,9 @@ public class LibraryActivity extends BaseAppCompatActivity {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_HOTBOOK))
-                .addParams("uuid",getApiHelper().getUUID())
+                .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -121,6 +122,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_MYBOOK))
                 .addParams("uuid",getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

@@ -74,7 +74,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                                 .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
                                 .addParams("uuid", apiHelper.getUUID())
                                 .build()
-                                .readTimeOut(5000).connTimeOut(5000)
+                                .readTimeOut(10000).connTimeOut(10000)
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onError(Call call, Exception e) {

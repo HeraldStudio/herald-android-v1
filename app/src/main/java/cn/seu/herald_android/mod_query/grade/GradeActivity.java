@@ -143,8 +143,7 @@ public class GradeActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_GPA))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
-                .connTimeOut(20000)
-                .readTimeOut(18000)
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

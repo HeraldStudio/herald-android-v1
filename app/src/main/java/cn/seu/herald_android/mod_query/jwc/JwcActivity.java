@@ -36,7 +36,7 @@ public class JwcActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_JWC))
                 .addParams("uuid", apiHelper.getUUID())
                 .build()
-                .readTimeOut(5000).connTimeOut(5000)
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -147,6 +147,7 @@ public class JwcActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_JWC))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

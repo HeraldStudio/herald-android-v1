@@ -126,6 +126,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_NIC))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
+                .readTimeOut(10000).connTimeOut(10000)
                 .execute(new StringCallback() {
                              @Override
                              public void onError(Call call, Exception e) {
