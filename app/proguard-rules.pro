@@ -26,7 +26,7 @@
 #如果有引用v4包可以添加下面这行
 -keep public class * extends android.support.v4.app.Fragment
 #忽略警告
--ignorewarning
+#-ignorewarning
 #记录生成的日志数据,gradle build时在本项目根目录输出
 #apk 包内所有 class 的内部结构
 -dump class_files.txt
@@ -37,9 +37,18 @@
 #混淆前后的映射
 -printmapping mapping.txt
 #自己项目特殊处理代码
-
+-keep class android.support.**{*;}
+-keep public class * extends cn.seu.herald_android.BaseAppCompatActivity {*;}
+-keep class cn.seu.herald_android.mod_timeline.TimelineView {*;}
+-keep class cn.seu.herald_android.mod_query.lecture.LectureBlockLayout {*;}
+-keep class cn.seu.herald_android.mod_query.jwc.JwcBlockLayout {*;}
+-keep class cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout {*;}
+-keep class cn.seu.herald_android.mod_query.curriculum.CurriculumBlockLayout {*;}
+-keep class cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleBlockLayout {*;}
+-keep class cn.seu.herald_android.mod_query.curriculum.CurriculumTimelineBlockLayout {*;}
+-keep class cn.seu.herald_android.custom.* {*;}
 #如果引用了v4或者v7包
--dontwarn android.support.**
+#-dontwarn android.support.**
 #混淆保护自己项目的部分代码以及引用的第三方jar包library-end#
 -keep public class * extends android.view.View {
     public <init>(android.content.Context);
@@ -93,8 +102,20 @@
 #避免混淆泛型 如果混淆报错建议关掉
 #–keepattributes Signature
 
--keep class java.lang.invoke.*{*;}
--keep class com.squareup.okhttp.*{*;}
--keep class org.codehaus.mojo.animal_sniffer.*{*;}
--keep class java.nio.file.*{*;}
+-dontwarn org.**
+-keep class org.**{*;}
 
+-dontwarn java.**
+-keep class java.**{*;}
+
+-dontwarn lecho.**
+-keep class lecho.**{*;}
+
+-dontwarn de.**
+-keep class de.**{*;}
+
+-dontwarn com.**
+-keep class com.**{*;}
+
+-dontwarn okio.**
+-keep class okio.**{*;}
