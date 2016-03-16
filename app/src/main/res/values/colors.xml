@@ -62,9 +62,9 @@
 
 
     <!--关于我们-->
-    <color name="colorAboutusprimary">#d32f2f</color>
-    <color name="colorAboutusprimaryDark">#d32f2f</color>
-    <color name="colorAboutusprimaryAccent">#d32f2f</color>
+    <color name="colorAboutusprimary">#57b3ff</color>
+    <color name="colorAboutusprimaryDark">#57b3ff</color>
+    <color name="colorAboutusprimaryAccent">#57b3ff</color>
 
 
     <!--意见反馈-->
