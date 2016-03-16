@@ -8,7 +8,7 @@ import cn.seu.herald_android.R;
 
 public class WebModuleActivity extends AppCompatActivity {
 
-    String tag_url;
+    private String tag_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

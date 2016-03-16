@@ -22,7 +22,7 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class PagesAdapter extends PagerAdapter {
+class PagesAdapter extends PagerAdapter {
 
     private Map<Integer, List<ExerciseInfo>> multiMonths;
 
@@ -188,7 +188,7 @@ public class PagesAdapter extends PagerAdapter {
         return viewList.get(position);
     }
 
-    public String getMonthTitle(int yearMonth) {
+    private String getMonthTitle(int yearMonth) {
         return yearMonth / 12 + "年" + (yearMonth % 12 + 1) + "月";
     }
 }

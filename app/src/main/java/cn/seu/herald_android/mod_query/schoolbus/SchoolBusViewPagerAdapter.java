@@ -6,9 +6,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-public class SchoolBusViewPagerAdapter extends FragmentPagerAdapter {
-    ArrayList<Fragment> fragmentArrayList;
-    ArrayList<String> titleArrayList;
+class SchoolBusViewPagerAdapter extends FragmentPagerAdapter {
+    private ArrayList<Fragment> fragmentArrayList;
+    private ArrayList<String> titleArrayList;
 
     public SchoolBusViewPagerAdapter(FragmentManager fm) {
         super(fm);

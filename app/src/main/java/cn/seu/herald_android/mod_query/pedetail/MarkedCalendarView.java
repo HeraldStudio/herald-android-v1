@@ -26,11 +26,12 @@ import cn.seu.herald_android.R;
 public class MarkedCalendarView extends FrameLayout {
 
     // 用于保存本页每个日期控件的链表
-    public List<View> views;
+    private List<View> views;
     // 对话框中刷新按钮的点击事件
     public DialogInterface.OnClickListener refreshListener;
     // 本页和今天的时间
-    Calendar thisPage, today;
+    private Calendar thisPage;
+    private Calendar today;
     private int yearMonth;
 
     // Constructor
@@ -39,7 +40,7 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 获取特定年月的天数，注意输入的month是从0开始的，与Calendar类的month表示方法一致
-    public static int getDayCountForMonth(int year, int month) {
+    private static int getDayCountForMonth(int year, int month) {
         return new int[]{31, (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) ? 29 : 28,
                 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}[month];
     }
@@ -122,7 +123,7 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 为特定跑操记录添加标记，同时指定其弹出对话框中显示的数据
-    public void setMarked(ExerciseInfo info) {
+    private void setMarked(ExerciseInfo info) {
         View v = views.get(info.getDateTime().get(Calendar.DATE) - 1);
         TextView tv = (TextView) v.findViewById(R.id.textView);
         tv.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.pedetail_grid_selector_highlight));

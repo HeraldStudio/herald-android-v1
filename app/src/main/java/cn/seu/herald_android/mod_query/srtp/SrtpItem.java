@@ -6,23 +6,23 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SrtpItem {
+class SrtpItem {
     //从该srtp项目中获得的学分
-    String credit;
+    private String credit;
     //改srtp项目中工作所占比例
-    String proportion;
+    private String proportion;
     //项目名字
-    String project;
+    private String project;
     //项目所属单位
-    String department;
+    private String department;
     //完成时间
-    String date;
+    private String date;
     //项目类型
-    String type;
+    private String type;
     //项目总学分
-    String totalCredit;
+    private String totalCredit;
 
-    public SrtpItem(String credit, String proportion, String project, String department, String date, String type, String totalCredit) {
+    private SrtpItem(String credit, String proportion, String project, String department, String date, String type, String totalCredit) {
         this.credit = credit;
         this.proportion = proportion;
         this.project = project;

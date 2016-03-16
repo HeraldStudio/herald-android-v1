@@ -10,7 +10,7 @@ import java.util.Comparator;
 /**
  * 表示单个早操数据的类
  */
-public class ExerciseInfo {
+class ExerciseInfo {
 
     // 打卡时间（年、月、日、时、分）
     private Calendar dateTime;

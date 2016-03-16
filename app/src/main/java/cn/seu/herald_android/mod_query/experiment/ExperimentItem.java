@@ -15,7 +15,7 @@ public class ExperimentItem {
     String teacher;
     String address;
     String grade;
-    int beginStamp;
+    private int beginStamp;
 
     public ExperimentItem(String name, String date, String time, String teacher, String address, String grade) {
         this.name = name;

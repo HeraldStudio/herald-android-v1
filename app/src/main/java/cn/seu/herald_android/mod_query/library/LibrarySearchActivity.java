@@ -83,8 +83,7 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     @Override
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
-        getProgressDialog().setCancelable(false);
-        getProgressDialog().show();
+        showProgressDialog();
         OkHttpUtils.post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_SEARCH))
                 .addParams("uuid", getApiHelper().getUUID())
@@ -94,14 +93,14 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                     @Override
                     public void onError(Call call, Exception e) {
                         showMsg("请求超时");
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         //关闭搜索栏
                         searchView.setIconified(true);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         //关闭搜索栏
                         searchView.setIconified(true);
                         try {
@@ -133,7 +132,7 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     }
 
     //根据搜索结果加载展示结果的列表
-    public void loadSearchResult(ArrayList<Book> list){
+    private void loadSearchResult(ArrayList<Book> list) {
         BookAdapter bookAdapter = new BookAdapter(list);
         recyclerView_search_result.setAdapter(bookAdapter);
     }

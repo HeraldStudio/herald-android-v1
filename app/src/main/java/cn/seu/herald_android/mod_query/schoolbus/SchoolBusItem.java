@@ -5,11 +5,11 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class SchoolBusItem {
+class SchoolBusItem {
     private String period;
     private String time;
 
-    SchoolBusItem(String period, String time) {
+    private SchoolBusItem(String period, String time) {
         this.period = period;
         this.time = time;
     }

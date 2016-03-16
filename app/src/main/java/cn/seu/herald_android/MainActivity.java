@@ -122,8 +122,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
 
-
-    public void init() {
+    private void init() {
 
         //登陆校园wifi
         if(getSettingsHelper().getWifiAutoLogin()){
@@ -153,11 +152,11 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         loadTimelineView(false);
     }
 
-    public void checkAndLoginWifi() {
+    private void checkAndLoginWifi() {
         NetworkLoginHelper.getInstance(this).checkAndLogin();
     }
 
-    public void setupDrawer() {
+    private void setupDrawer() {
         //toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -178,7 +177,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
         //tv_nav_cardnum = (TextView) headerLayout.findViewById(R.id.tv_nav_usercard);
     }
 
-    public void refreshWelcome() {
+    private void refreshWelcome() {
         //如果缓存存在的话先设置欢迎信息和侧边栏信息
         tv_nav_user.setText(getApiHelper().getAuthCache("name"));
         OkHttpUtils

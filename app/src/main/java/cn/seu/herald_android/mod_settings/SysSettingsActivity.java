@@ -15,9 +15,9 @@ import cn.seu.herald_android.helper.ServiceHelper;
 
 public class SysSettingsActivity extends BaseAppCompatActivity {
 
-    TextView tv_checkupdate;
-    TextView tv_nowversion;
-    Switch swith_seu;
+    private TextView tv_checkupdate;
+    private TextView tv_nowversion;
+    private Switch swith_seu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +25,7 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
         init();
     }
 
-    public void init(){
+    private void init() {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
@@ -53,7 +53,7 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
 
     }
 
-    public void checkUpdate(){
+    private void checkUpdate() {
         //如果版本有更新则提示更新版本
         int versionCode = ServiceHelper.getAppVersionCode(this);
         int newestCode = getServiceHelper().getNewestVesionCode();

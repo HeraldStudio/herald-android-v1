@@ -68,11 +68,6 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-    }
-
-    @Override
     public void onClick(View v) {
         // 课程信息
         final AlertDialog dialog = new AlertDialog.Builder(getContext()).setTitle("课程信息")

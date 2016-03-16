@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 
 public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
-    Context context;
-    ArrayList<SrtpItem> list;
+    private Context context;
+    private ArrayList<SrtpItem> list;
 
     public SrtpAdapter(Context context, ArrayList<SrtpItem> list) {
         this.context = context;

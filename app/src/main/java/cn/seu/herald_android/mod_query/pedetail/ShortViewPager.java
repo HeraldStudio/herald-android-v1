@@ -59,7 +59,7 @@ public class ShortViewPager extends ViewPager {
         super.onPageScrolled(position, offset, offsetPixels);
     }
 
-    public int getChildHeight(int position) {
+    private int getChildHeight(int position) {
 
         if (getAdapter() == null || !(getAdapter() instanceof PagesAdapter))
             return 0;

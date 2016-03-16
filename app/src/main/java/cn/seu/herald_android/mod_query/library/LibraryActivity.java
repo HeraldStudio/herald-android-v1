@@ -29,7 +29,7 @@ import okhttp3.Call;
 
 public class LibraryActivity extends BaseAppCompatActivity {
 
-    ListView listView_hotbook;
+    private ListView listView_hotbook;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +37,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
         init();
     }
 
-    public void init(){
+    private void init() {
         //设置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,10 +73,9 @@ public class LibraryActivity extends BaseAppCompatActivity {
     }
 
 
-    public void refreshRemoteHotBook(){
+    private void refreshRemoteHotBook() {
         //加载校内最热门图书列表
-        getProgressDialog().show();
-        getProgressDialog().setCancelable(false);
+        showProgressDialog();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_HOTBOOK))
@@ -85,12 +84,12 @@ public class LibraryActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         getApiHelper().dealApiException(e);
                     }
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try{
                             JSONObject json_res = new JSONObject((response));
                             if(json_res.getInt("code") == 200){
@@ -114,10 +113,9 @@ public class LibraryActivity extends BaseAppCompatActivity {
         HotBookAdapter.setHeightWithContent(listView_hotbook);
     }
 
-    public void refreshRemoteBorrowRocord(){
+    private void refreshRemoteBorrowRocord() {
         //获取最新的已借书记录
-        getProgressDialog().show();
-        getProgressDialog().setCancelable(false);
+        showProgressDialog();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_MYBOOK))
@@ -126,13 +124,13 @@ public class LibraryActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         getApiHelper().dealApiException(e);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try{
                             JSONObject json_res = new JSONObject((response));
                             if(json_res.getInt("code") == 200){
@@ -158,7 +156,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void displayBorrowRecordDialog(ArrayList<MyBorrowBook> list){
+    private void displayBorrowRecordDialog(ArrayList<MyBorrowBook> list) {
         //显示已借书记录的对话框,加载list里的项
         //加载借阅记录对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -176,7 +174,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
 
     }
 
-    public void displayLibraryAuthDialog(){
+    private void displayLibraryAuthDialog() {
         //显示图书馆账号需要绑定的对话框
         final EditText et_pwd = new EditText(this);
         et_pwd.setHint("图书馆密码(默认为一卡通)");
@@ -199,9 +197,9 @@ public class LibraryActivity extends BaseAppCompatActivity {
     /**
      * @param password  图书馆密码
      */
-    public void updateAuthInfo(String password) {
+    private void updateAuthInfo(String password) {
         //用于更新图书馆的账号和密码
-        getProgressDialog().show();
+        showProgressDialog();
         OkHttpUtils.post()
                 .url(ApiHelper.auth_update_url)
                 .addParams("cardnum",getApiHelper().getUserName())
@@ -212,13 +210,13 @@ public class LibraryActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         getApiHelper().dealApiException(e);
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         if(response.equals("OK")){
                             //返回OK说明认证成功
                             refreshRemoteBorrowRocord();

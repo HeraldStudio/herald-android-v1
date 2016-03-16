@@ -21,7 +21,7 @@ import cn.seu.herald_android.R;
 
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
-    ArrayList<SliderViewItem> sliderViewItemArrayList;
+    private ArrayList<SliderViewItem> sliderViewItemArrayList;
     public SliderView(Context context, AttributeSet attrs) {
         super(context, attrs);
 

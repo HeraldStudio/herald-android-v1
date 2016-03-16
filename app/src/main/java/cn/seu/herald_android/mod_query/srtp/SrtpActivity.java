@@ -26,8 +26,8 @@ import okhttp3.Call;
 
 public class SrtpActivity extends BaseAppCompatActivity {
 
-    RecyclerView recyclerView_srtp;
-    TextView tv_total_credit;
+    private RecyclerView recyclerView_srtp;
+    private TextView tv_total_credit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
         loadCache();
     }
 
-    public void init() {
+    private void init() {
         setupToolBar();
         //回收列表
         recyclerView_srtp = (RecyclerView) findViewById(R.id.recyclerview_srtp);
@@ -45,7 +45,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
         tv_total_credit = (TextView) findViewById(R.id.tv_totalcredit);
     }
 
-    public void setupToolBar() {
+    private void setupToolBar() {
         //设置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,7 +63,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSrtpprimary));
     }
 
-    public void loadCache() {
+    private void loadCache() {
         String cache = getCacheHelper().getCache("herald_srtp");
         if (!cache.equals("")) {
             try {
@@ -102,8 +102,8 @@ public class SrtpActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshCache() {
-        getProgressDialog().show();
+    private void refreshCache() {
+        showProgressDialog();
         //获取srtp记录
         OkHttpUtils
                 .post()
@@ -115,14 +115,14 @@ public class SrtpActivity extends BaseAppCompatActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         getApiHelper().dealApiException(e);
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         showMsg("由于网络错误获取课外研学记录失败，已加载缓存。");
                         loadCache();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {

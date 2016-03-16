@@ -26,7 +26,7 @@ import okhttp3.Call;
 public class JwcActivity extends BaseAppCompatActivity {
 
     //教务通知类型列表
-    ExpandableListView expandableListView;
+    private ExpandableListView expandableListView;
 
     public static void remoteRefreshCache(Context context, Runnable doAfter) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -36,6 +36,7 @@ public class JwcActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.getApiUrl(ApiHelper.API_JWC))
                 .addParams("uuid", apiHelper.getUUID())
                 .build()
+                .readTimeOut(5000).connTimeOut(5000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
@@ -66,7 +67,7 @@ public class JwcActivity extends BaseAppCompatActivity {
         loadCache();
     }
 
-    public void init() {
+    private void init() {
         //toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -98,7 +99,7 @@ public class JwcActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadCache() {
+    private void loadCache() {
         //如果缓存不为空则加载缓存，反之刷新缓存
         String cache = getCacheHelper().getCache("herald_jwc");
         if (!cache.equals("")) {
@@ -139,8 +140,8 @@ public class JwcActivity extends BaseAppCompatActivity {
         }
     }
 
-    public void refreshCache() {
-        getProgressDialog().show();
+    private void refreshCache() {
+        showProgressDialog();
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_JWC))
@@ -150,12 +151,12 @@ public class JwcActivity extends BaseAppCompatActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         getApiHelper().dealApiException(e);
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {

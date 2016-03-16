@@ -23,10 +23,10 @@ import cn.seu.herald_android.helper.ApiHelper;
 import okhttp3.Call;
 
 public class LoginActivity extends BaseAppCompatActivity {
-    TextView tv_card;
-    TextView tv_pwd;
-    Button btn_login;
-    ProgressDialog progressDialog;
+    private TextView tv_card;
+    private TextView tv_pwd;
+    private Button btn_login;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     }
 
 
-    public void init() {
+    private void init() {
         //空间初始化
         tv_card = (TextView) findViewById(R.id.tv_login_cardnum);
         tv_pwd = (TextView) findViewById(R.id.tv_login_pwd);
@@ -109,7 +109,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     }
 
 
-    public void checkUUID() {
+    private void checkUUID() {
         OkHttpUtils
                 .post()
                 .url(ApiHelper.getApiUrl(ApiHelper.API_USER))

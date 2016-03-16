@@ -14,7 +14,7 @@ import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 
 public class FastQueryFragment extends Fragment {
     //查询今天的按钮
-    Button btnQueryForToday;
+    private Button btnQueryForToday;
 
     public FastQueryFragment() {
         // Required empty public constructor

@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 水平滑动分页的适配器，修改时很容易出错，请慎重操作
  */
-public class PagesAdapter extends PagerAdapter {
+class PagesAdapter extends PagerAdapter {
 
     private List<View> viewList;
 

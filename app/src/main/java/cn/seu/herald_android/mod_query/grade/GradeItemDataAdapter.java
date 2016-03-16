@@ -13,7 +13,7 @@ import cn.seu.herald_android.R;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.colorizers.TableDataRowColorizer;
 
-public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
+class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
     public GradeItemDataAdapter(Context context, List<GradeItem> data) {
         super(context, data);
     }
@@ -49,7 +49,7 @@ public class GradeItemDataAdapter extends TableDataAdapter<GradeItem> {
     }
 
 
-    public View renderSimpleTextView(String text) {
+    private View renderSimpleTextView(String text) {
         //为子项加载布局
 //        View view = LayoutInflater.from(getContext()).inflate(R.layout.tableviewitem_grade, null);
 //        TextView tv_cell =(TextView)view.findViewById(R.id.tv_gradetableitem);

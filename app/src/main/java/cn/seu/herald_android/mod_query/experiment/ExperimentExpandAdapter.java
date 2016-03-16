@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
 
-public class ExperimentExpandAdapter extends BaseExpandableListAdapter {
-    ArrayList<String> parentViews;
-    ArrayList<ArrayList<ExperimentItem>> childViews;
-    Context context;
+class ExperimentExpandAdapter extends BaseExpandableListAdapter {
+    private ArrayList<String> parentViews;
+    private ArrayList<ArrayList<ExperimentItem>> childViews;
+    private Context context;
 
     public ExperimentExpandAdapter(Context context, ArrayList<String> parentViews, ArrayList<ArrayList<ExperimentItem>> childViews) {
         this.parentViews = parentViews;

@@ -28,7 +28,7 @@ public class ClassInfo {
         endTime = Integer.valueOf(timeStrs[3]);
     }
 
-    public static String time60ToHourMinute(int time) {
+    private static String time60ToHourMinute(int time) {
         int minute = time % 60;
         int hour = time / 60;
         return hour + (minute < 10 ? ":0" : ":") + minute;

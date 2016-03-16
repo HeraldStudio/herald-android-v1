@@ -29,13 +29,13 @@ import okhttp3.Call;
  */
 public class SchoolBusActivity extends BaseAppCompatActivity {
     //工作日和双休日切换的TabLayout
-    TabLayout tabLayout;
+    private TabLayout tabLayout;
     //工作日和双休日切换ViewPager
-    ViewPager viewPager;
+    private ViewPager viewPager;
     //工作日显示的Fragment
-    SchoolBusFragment weekdayFragment;
+    private SchoolBusFragment weekdayFragment;
     //周末显示的Fragment
-    SchoolBusFragment weekendFragment;
+    private SchoolBusFragment weekendFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
         loadListWithCace();
     }
 
-    public void init() {
+    private void init() {
         //沉浸式布局
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSchoolBusprimary));
         //Toolbar初始化
@@ -79,8 +79,8 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refreshCache() {
-        getProgressDialog().show();
+    private void refreshCache() {
+        showProgressDialog();
         //通过联网刷新数据
         OkHttpUtils
                 .post()
@@ -91,12 +91,12 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         getApiHelper().dealApiException(e);
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        getProgressDialog().dismiss();
+                        hideProgressDialog();
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {
@@ -114,7 +114,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                 });
     }
 
-    public void loadListWithCace() {
+    private void loadListWithCace() {
         //尝试加载缓存
         String cache = getCacheHelper().getCache("herald_schoolbus_cache");
         if (!cache.equals("")) {

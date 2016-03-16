@@ -11,9 +11,9 @@ import cn.seu.herald_android.R;
 public class EmptyRoomActivity extends AppCompatActivity {
 
     //用于选择快捷查询和完整查询的页面
-    TabLayout tabLayout;
+    private TabLayout tabLayout;
     //用于切换的ViewPager
-    ViewPager viewPager;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

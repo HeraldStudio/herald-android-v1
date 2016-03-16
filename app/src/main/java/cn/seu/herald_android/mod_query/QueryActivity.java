@@ -24,7 +24,7 @@ public class QueryActivity extends BaseAppCompatActivity {
         init();
     }
 
-    public void init() {
+    private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
@@ -41,7 +41,7 @@ public class QueryActivity extends BaseAppCompatActivity {
     }
 
 
-    public class ShortCutBoxEditListItemClickListener implements android.widget.AdapterView.OnItemClickListener {
+    private class ShortCutBoxEditListItemClickListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(android.widget.AdapterView<?> parent, View view, int position, long id) {
             SeuModule seuModule = (SeuModule) parent.getItemAtPosition(position);

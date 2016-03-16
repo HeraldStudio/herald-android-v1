@@ -5,20 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import cn.seu.herald_android.R;
 
 /**
  * Created by heyon on 2016/3/15.
  */
-public class HotBookAdapter extends ArrayAdapter<HotBook> {
+class HotBookAdapter extends ArrayAdapter<HotBook> {
     public HotBookAdapter(Context context, int resource, List<HotBook> objects) {
         super(context, resource, objects);
     }

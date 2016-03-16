@@ -20,7 +20,7 @@ import cn.seu.herald_android.helper.SettingsHelper;
  */
 public class ShortCutBoxEditAdapter extends ArrayAdapter<SeuModule> {
     //设置为显示的快捷方式列表
-    SettingsHelper settingsHelper;
+    private SettingsHelper settingsHelper;
 
     public ShortCutBoxEditAdapter(Context context, int resource, List<SeuModule> objects) {
         super(context, resource, objects);

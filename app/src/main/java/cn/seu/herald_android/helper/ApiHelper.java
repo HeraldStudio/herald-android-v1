@@ -9,6 +9,7 @@ import android.widget.Toast;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 
@@ -153,7 +154,7 @@ public class ApiHelper {
         e.printStackTrace();
         if (e instanceof SocketTimeoutException) {
             ContextUtils.showMessage(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
-        } else if (e instanceof ConnectException) {
+        } else if (e instanceof ConnectException || e instanceof SocketException) {
             ContextUtils.showMessage(context, "网络连接错误，请检查您的网络连接~");
         } else if (e instanceof RuntimeException && e.toString().contains("Unauthorized")) {
             // uuid过期的处理

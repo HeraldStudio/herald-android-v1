@@ -14,10 +14,10 @@ import cn.seu.herald_android.R;
 
 public class SchoolBusFragment extends Fragment {
     //展示校车方向的折叠列表
-    ExpandableListView expandableListView;
+    private ExpandableListView expandableListView;
     //
-    String[] titles;
-    ArrayList<ArrayList<SchoolBusItem>> childViews;
+    private String[] titles;
+    private ArrayList<ArrayList<SchoolBusItem>> childViews;
 
     public SchoolBusFragment() {
 

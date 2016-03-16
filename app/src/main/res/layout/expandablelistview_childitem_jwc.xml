@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:padding="10dp">
 
     <LinearLayout
@@ -10,19 +11,19 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发布日期"
-            android:textSize="11sp" />
-
-        <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="通知名称"
             android:textColor="@color/colorJwcprimary_dark"
             android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发布日期"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

@@ -23,5 +23,5 @@
         android:gravity="right"
         android:text="地点"
         android:textColor="@color/colorSecondaryText"
-        android:textSize="9sp" />
+        android:textSize="12sp" />
 </LinearLayout>

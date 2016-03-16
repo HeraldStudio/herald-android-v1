@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by corvo on 2/14/16.
  * 代表搜索图书馆藏书，所得到的图书对象
  */
-public class Book {
+class Book {
     //书所在位置索引
     private String index;
     //书的总数
@@ -31,7 +31,7 @@ public class Book {
         return index;
     }
 
-    public void setIndex(String index) {
+    private void setIndex(String index) {
         this.index = index;
     }
 
@@ -39,7 +39,7 @@ public class Book {
         return all;
     }
 
-    public void setAll(int all) {
+    private void setAll(int all) {
         this.all = all;
     }
 
@@ -47,7 +47,7 @@ public class Book {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -55,7 +55,7 @@ public class Book {
         return author;
     }
 
-    public void setAuthor(String author) {
+    private void setAuthor(String author) {
         this.author = author;
     }
 
@@ -63,7 +63,7 @@ public class Book {
         return publish;
     }
 
-    public void setPublish(String publish) {
+    private void setPublish(String publish) {
         this.publish = publish;
     }
 
@@ -71,7 +71,7 @@ public class Book {
         return type;
     }
 
-    public void setType(String type) {
+    private void setType(String type) {
         this.type = type;
     }
 
@@ -79,7 +79,7 @@ public class Book {
         return left;
     }
 
-    public void setLeft(int left) {
+    private void setLeft(int left) {
         this.left = left;
     }
 

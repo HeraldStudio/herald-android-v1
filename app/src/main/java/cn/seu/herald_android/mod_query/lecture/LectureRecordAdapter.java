@@ -11,8 +11,8 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 
-public class LectureRecordAdapter extends ArrayAdapter<LectureRecordItem> {
-    int resource;
+class LectureRecordAdapter extends ArrayAdapter<LectureRecordItem> {
+    private int resource;
 
     public LectureRecordAdapter(Context context, int resource, List<LectureRecordItem> objects) {
         super(context, resource, objects);

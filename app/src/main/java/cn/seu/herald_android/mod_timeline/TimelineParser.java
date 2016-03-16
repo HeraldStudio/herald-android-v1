@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +34,7 @@ import cn.seu.herald_android.mod_query.lecture.LectureBlockLayout;
 import cn.seu.herald_android.mod_query.lecture.LectureNoticeItem;
 import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
-public class TimelineParser {
+class TimelineParser {
 
     /**
      * 读取课表缓存，转换成对应的时间轴条目
@@ -107,10 +109,8 @@ public class TimelineParser {
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                                 info, pair == null ? "获取失败" : pair.first);
-                        block.setOnClickListener(v -> {
-                            context.startActivity(new Intent(
-                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
-                        });
+                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         remainingClasses.add(block);
                     }
 
@@ -124,10 +124,8 @@ public class TimelineParser {
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                                 info, pair == null ? "获取失败" : pair.first);
 
-                        block.setOnClickListener(v -> {
-                            context.startActivity(new Intent(
-                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
-                        });
+                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         item.attachedView.add(block);
                         return item;
                     } else if (now >= startTime && now < almostEndTime) {
@@ -140,10 +138,8 @@ public class TimelineParser {
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                                 info, pair == null ? "获取失败" : pair.first);
 
-                        block.setOnClickListener(v -> {
-                            context.startActivity(new Intent(
-                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
-                        });
+                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         item.attachedView.add(block);
                         return item;
                     }
@@ -185,10 +181,8 @@ public class TimelineParser {
                     Pair<String, String> pair = sidebarInfo.get(info.getClassName());
                     CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
                             info, pair == null ? "获取失败" : pair.first);
-                    block.setOnClickListener(v -> {
-                        context.startActivity(new Intent(
-                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM]));
-                    });
+                    block.setOnClickListener(v -> context.startActivity(new Intent(
+                            SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                     viewList.add(block);
                 }
             }
@@ -259,10 +253,8 @@ public class TimelineParser {
                         // 没开始的实验全部单独记录下来
                         if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                             ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                            block.setOnClickListener(v -> {
-                                context.startActivity(new Intent(
-                                        SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
-                            });
+                            block.setOnClickListener(v -> context.startActivity(new Intent(
+                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                             allExperiments.add(block);
                         }
 
@@ -278,10 +270,8 @@ public class TimelineParser {
                                 int startStamp = item.getBeginStamp();
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                    block.setOnClickListener(v -> {
-                                        context.startActivity(new Intent(
-                                                SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
-                                    });
+                                    block.setOnClickListener(v -> context.startActivity(new Intent(
+                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineView.Item.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
                                     );
@@ -293,10 +283,8 @@ public class TimelineParser {
                                 int endStamp = startStamp + 3 * 60;
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                    block.setOnClickListener(v -> {
-                                        context.startActivity(new Intent(
-                                                SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
-                                    });
+                                    block.setOnClickListener(v -> context.startActivity(new Intent(
+                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                     TimelineView.Item item1 = new TimelineView.Item(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineView.Item.CONTENT_NOTIFY, "1个实验正在进行"
                                     );
@@ -318,10 +306,8 @@ public class TimelineParser {
 
                                 // 记录今天的实验
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                block.setOnClickListener(v -> {
-                                    context.startActivity(new Intent(
-                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
-                                });
+                                block.setOnClickListener(v -> context.startActivity(new Intent(
+                                        SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                 currExperiments.add(block);
                             }
 
@@ -334,10 +320,8 @@ public class TimelineParser {
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                block.setOnClickListener(v -> {
-                                    context.startActivity(new Intent(
-                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT]));
-                                });
+                                block.setOnClickListener(v -> context.startActivity(new Intent(
+                                        SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                 currExperiments.add(block);
                             }
                         }
@@ -407,10 +391,8 @@ public class TimelineParser {
                                 json_item.getString("speaker"),
                                 json_item.getString("location")
                         ));
-                        block.setOnClickListener(v -> {
-                            context.startActivity(new Intent(
-                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_LECTURE]));
-                        });
+                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                                SettingsHelper.moduleActions[SettingsHelper.MODULE_LECTURE])));
                         lectures.add(block);
                     }
                 }
@@ -523,8 +505,10 @@ public class TimelineParser {
                 );
                 CustomButton button = new CustomButton(context);
                 button.setText("在线充值");
+                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
                 button.setOnClickListener((v) -> {
+                    Toast.makeText(context, "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
                     Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     context.startActivity(intent);
@@ -539,6 +523,7 @@ public class TimelineParser {
                 button.setText("在线充值");
                 button.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
                 button.setOnClickListener((v) -> {
+                    Toast.makeText(context, "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
                     Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     context.startActivity(intent);

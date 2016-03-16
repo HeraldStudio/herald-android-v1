@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import cn.seu.herald_android.custom.SliderView;
 import okhttp3.Call;
@@ -22,12 +21,12 @@ import okhttp3.Call;
  * Created by heyon on 2016/3/14.
  */
 public class ServiceHelper {
-    Context context;
-    ApiHelper apiHelper;
+    private Context context;
+    private ApiHelper apiHelper;
     //安卓服务端的接口
-    public static String android_service_url = "http://android.heraldstudio.com/";
+    private static String android_service_url = "http://android.heraldstudio.com/";
     //public static String android_service_url = "http://192.168.1.109:3000/";
-    public static final int SERVICE_VERSION = 0;
+    private static final int SERVICE_VERSION = 0;
     public static final int SERVICE_DOWNLOAD = 1;
     private static String[] serviceNames = new String[]{
             "checkversion",
@@ -187,8 +186,7 @@ public class ServiceHelper {
          */
         //获得存储的某项信息
         SharedPreferences pref = context.getSharedPreferences("herald_service", Context.MODE_PRIVATE);
-        String authCache = pref.getString(cacheName,"");
-        return authCache;
+        return pref.getString(cacheName, "");
     }
 
     private boolean setServiceCache(String cacheName,String cacheValue){

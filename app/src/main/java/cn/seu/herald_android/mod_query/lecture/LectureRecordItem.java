@@ -9,11 +9,11 @@ import java.util.ArrayList;
  * 讲座记录的类
  * Created by heyon on 2016/3/1.
  */
-public class LectureRecordItem {
+class LectureRecordItem {
     String time;
     String place;
 
-    public LectureRecordItem(String time, String place) {
+    private LectureRecordItem(String time, String place) {
         this.time = time;
         this.place = place;
     }

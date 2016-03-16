@@ -20,13 +20,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="作者"
-            android:textSize="11sp" />
+            android:textSize="12sp" />
         <TextView
             android:id="@+id/tv_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="索引"
-            android:textSize="11sp" />
+            android:textSize="12sp" />
     </LinearLayout>
     <TextView
         android:id="@+id/tv_count"

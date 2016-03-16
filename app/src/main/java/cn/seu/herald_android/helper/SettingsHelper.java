@@ -42,7 +42,7 @@ public class SettingsHelper {
 
 
     //模块名字
-    public static final String[] moduleNames = {
+    private static final String[] moduleNames = {
             "cardextra",
             "seunet",
             "pedetail",
@@ -126,13 +126,7 @@ public class SettingsHelper {
     }
 
     public void setDefaultConfig() {
-        //恢复默认设置
-        setDefaultModuleShortCut();
-    }
 
-    public void setDefaultModuleShortCut() {
-        //快捷方式的默认设置
-        //setModuleShortCutEnabled(MODULE_GRADE, true);
     }
 
 
@@ -175,7 +169,6 @@ public class SettingsHelper {
 
     /**
      * 获得是否选择自动登录seu
-     * @return
      */
     public boolean getWifiAutoLogin(){
         String seuauto = getCache("herald_settings_wifi_autologin");
