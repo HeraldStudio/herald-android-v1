@@ -56,15 +56,15 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
     private void checkUpdate() {
         //如果版本有更新则提示更新版本
         int versionCode = ServiceHelper.getAppVersionCode(this);
-        int newestCode = getServiceHelper().getNewestVesionCode();
+        int newestCode = getServiceHelper().getNewestVersionCode();
 
         if(versionCode < newestCode){
             getCacheHelper().setCache("herald_new_version_ignored", "");
 
             //如果当前版本号小于最新版本，则提示更新
-            String tip = String.format("小猴已经发布%s版本啦,您的当前版本为%s,赶紧下载新版本吧",
-                    getServiceHelper().getNewestVesionName(),
-                    ServiceHelper.getAppVersionName(this));
+            String tip = "小猴偷米" + getServiceHelper().getNewestVersionName() + "更新说明\n"
+                    + getServiceHelper().getNewestVersionDesc().replaceAll("\\\\n", "\n");
+
             //显示对话框
             new AlertDialog.Builder(this)
                     .setTitle("发现新版本")

@@ -341,9 +341,8 @@ public class TimelineView extends ListView {
         public View getView(int position, View convertView, ViewGroup parent) {
             TimelineItem item = getItem(position);
 
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
-            }
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
+
             TextView name = (TextView) convertView.findViewById(R.id.name);
             TextView time = (TextView) convertView.findViewById(R.id.time);
             TextView content = (TextView) convertView.findViewById(R.id.content);
@@ -382,6 +381,13 @@ public class TimelineView extends ListView {
 
             hsv.setVisibility(GONE);
             attachedContainer.removeAllViews();
+
+            if (item.getImportance() == TimelineItem.NO_CONTENT) {
+                time.setText(item.getInfo());
+                content.setVisibility(GONE);
+            } else {
+                content.setVisibility(VISIBLE);
+            }
 
             if (item.attachedView.size() != 0) {
                 hsv.setVisibility(VISIBLE);
