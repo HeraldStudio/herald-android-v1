@@ -51,6 +51,8 @@ class TimelineParser {
                 Uri uri = Uri.parse(pushMessageUrl);
                 item.addButton(context, "查看详情", (v) ->
                         v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
+                item.setOnClickListener((v) ->
+                        v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
             }
             return item;
         }
