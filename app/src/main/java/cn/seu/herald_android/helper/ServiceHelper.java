@@ -98,7 +98,7 @@ public class ServiceHelper {
         return messageUrl;
     }
 
-    public String getNewestVesionName(){
+    public String getNewestVersionName() {
         //获得最新版本名字
         String cache = getServiceCache("versioncheck_cache");
         String name = getAppVersionName(this.context);
@@ -111,7 +111,20 @@ public class ServiceHelper {
         return name;
     }
 
-    public int getNewestVesionCode(){
+    public String getNewestVersionDesc() {
+        //获得最新版本更新说明
+        String cache = getServiceCache("versioncheck_cache");
+        String desc = getAppVersionName(this.context);
+        try {
+            JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("version");
+            desc = jsonObject.getString("des");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return desc;
+    }
+
+    public int getNewestVersionCode() {
         //获得最新版本号
         String cache = getServiceCache("versioncheck_cache");
         int code = getAppVersionCode(this.context);

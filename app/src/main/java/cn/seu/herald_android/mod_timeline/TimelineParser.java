@@ -66,13 +66,13 @@ class TimelineParser {
         final long now = Calendar.getInstance().getTimeInMillis();
         //如果版本有更新则提示更新版本
         int versionCode = ServiceHelper.getAppVersionCode(context);
-        int newestCode = serviceHelper.getNewestVesionCode();
+        int newestCode = serviceHelper.getNewestVersionCode();
 
         if (versionCode < newestCode
                 && !cacheHelper.getCache("herald_new_version_ignored").equals(String.valueOf(newestCode))) {
             //如果当前版本号小于最新版本，且用户没有忽略此版本，则提示更新
-            String tip = String.format("小猴已经发布%s版本啦,您的当前版本为%s,赶紧下载新版本吧",
-                    serviceHelper.getNewestVesionName(), ServiceHelper.getAppVersionName(context));
+            String tip = "小猴偷米" + serviceHelper.getNewestVersionName() + "更新说明\n"
+                    + serviceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n");
             TimelineItem item = new TimelineItem("版本升级", tip,
                     now, TimelineItem.CONTENT_NOTIFY, R.mipmap.ic_update);
 
@@ -525,9 +525,9 @@ class TimelineParser {
                         now, TimelineItem.NO_CONTENT, "今天没有跑操预告信息"
                 );
             } else {
-                // 有跑操预告信息
+                // 有跑操预告信息但时间已过
                 return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        startTime, TimelineItem.NO_CONTENT, "小猴预测" + forecast
+                        startTime, TimelineItem.NO_CONTENT, forecast + "（已结束）"
                 );
             }
         } else {
@@ -618,13 +618,11 @@ class TimelineParser {
             // 无教务信息
             if (allNotices.size() == 0) {
                 return new TimelineItem(SettingsHelper.MODULE_JWC,
-                        now, TimelineItem.NO_CONTENT, "今天没有新的重要教务通知" +
-                        "（首页仅显示重要通知，非重要通知可点我查看）");
+                        now, TimelineItem.NO_CONTENT, "今天没有新的重要教务通知");
             }
 
             TimelineItem item = new TimelineItem(SettingsHelper.MODULE_JWC,
-                    now, TimelineItem.CONTENT_NOTIFY, "今天有新的重要教务通知，有关同学请关注" +
-                    "（首页仅显示重要通知，非重要通知可点我查看）");
+                    now, TimelineItem.CONTENT_NOTIFY, "今天有新的重要教务通知，有关同学请关注");
             item.attachedView = allNotices;
             return item;
 
