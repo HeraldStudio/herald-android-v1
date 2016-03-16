@@ -1,6 +1,5 @@
 package cn.seu.herald_android;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import org.json.JSONObject;
 
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_communicate.FeedbackActivity;
 import cn.seu.herald_android.mod_query.QueryActivity;
@@ -108,15 +106,15 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             //打开用户反馈
             Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
             startActivity(intent);
-        } else if(id == R.id.nav_gymorder){
+        } else if (id == R.id.nav_gymorder) {
             //场馆预约
             Uri uri = Uri.parse("http://115.28.27.150/heraldapp/#/yuyue/home");
-            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
-        } else if(id == R.id.nav_quanyi){
+        } else if (id == R.id.nav_quanyi) {
             //权益部门
             Uri uri = Uri.parse("https://jinshuju.net/f/By3aTK");
-            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -128,7 +126,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     private void init() {
 
         //登陆校园wifi
-        if(getSettingsHelper().getWifiAutoLogin()){
+        if (getSettingsHelper().getWifiAutoLogin()) {
             checkAndLoginWifi();
         }
 
@@ -224,7 +222,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
 
     // 刷新时间轴和快捷方式
     // refresh 是否联网刷新
-    private void loadTimelineView(boolean refresh) {
+    public void loadTimelineView(boolean refresh) {
         SwipeRefreshLayout srl = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         srl.setColorSchemeResources(R.color.colorPrimary);
         TimelineView view = (TimelineView) findViewById(R.id.timeline);
@@ -238,57 +236,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
     }
 
 
-    private void checkVersionAndPushMessage(){
-        //获取推送消息
-        String pushMessage = getServiceHelper().getPushMessageContent();
-        if (!pushMessage.equals("")){
-            //如果推送消息不为空的话显示推送消息
-            new AlertDialog.Builder(this)
-                    .setTitle("来自小猴的提示")
-                    .setMessage(pushMessage)
-                    .setPositiveButton("确定",(dialog, which) -> {
-                        //设置为不可用
-                        String pushMessageUrl = getServiceHelper().getPushMessageUrl();
-                        if(!pushMessageUrl.equals("")){
-                            //如果链接不为空则点击确定后打开链接
-                            try{
-                                Uri uri = Uri.parse(pushMessageUrl);
-                                Intent  intent = new  Intent(Intent.ACTION_VIEW, uri);
-                                startActivity(intent);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    })
-                    .setNegativeButton("取消", (dialog, which) -> {
-                    }).show();
-        }
-        //如果版本有更新则提示更新版本
-        int versionCode = ServiceHelper.getAppVersionCode(this);
-        int newestCode = getServiceHelper().getNewestVesionCode();
-
-        if(versionCode < newestCode){
-            //如果当前版本号小于最新版本，则提示更新
-            String tip = String.format("小猴已经发布%s版本啦,您的当前版本为%s,赶紧下载新版本吧",
-                    getServiceHelper().getNewestVesionName(),
-                   ServiceHelper.getAppVersionName(this));
-            //显示对话框
-            new AlertDialog.Builder(this)
-                    .setTitle("发现新版本")
-                    .setMessage(tip)
-                    .setPositiveButton("赶紧下载",(dialog, which) -> {
-                        try{
-                            Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
-                            Intent  intent = new  Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
-                        }catch (Exception e){
-                            showMsg("打开下载页失败，请联系管理员~");
-                            e.printStackTrace();
-                        }
-                    })
-                    .setNegativeButton("残忍拒绝", (dialog, which) -> {
-                    }).show();
-        }
+    private void checkVersionAndPushMessage() {
         //拉取最新版本信息、轮播图url和推送消息
         getServiceHelper().refreshVersionCache();
     }

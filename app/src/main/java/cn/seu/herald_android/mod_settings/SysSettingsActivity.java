@@ -59,6 +59,8 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
         int newestCode = getServiceHelper().getNewestVesionCode();
 
         if(versionCode < newestCode){
+            getCacheHelper().setCache("herald_new_version_ignored", "");
+
             //如果当前版本号小于最新版本，则提示更新
             String tip = String.format("小猴已经发布%s版本啦,您的当前版本为%s,赶紧下载新版本吧",
                     getServiceHelper().getNewestVesionName(),

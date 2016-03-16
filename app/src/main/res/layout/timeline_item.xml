@@ -5,7 +5,7 @@
     android:background="@drawable/timeline_item_bg_selector"
     android:orientation="vertical">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
         android:layout_width="36dp"
         android:layout_height="36dp"
