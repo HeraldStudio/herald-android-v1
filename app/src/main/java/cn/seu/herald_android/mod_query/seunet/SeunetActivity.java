@@ -114,6 +114,8 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 e.printStackTrace();
                 showMsg("缓存解析错误，请重新刷新后再试");
             }
+        } else {
+            refreshCache();
         }
     }
 

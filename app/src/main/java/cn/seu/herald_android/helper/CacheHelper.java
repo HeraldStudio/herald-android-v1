@@ -6,19 +6,17 @@ import android.content.SharedPreferences;
 public class CacheHelper {
     //缓存名称列表,注销时将取消这些缓存
     public static String[] cacheNames = new String[]{
+            "authUser",
+            "authPwd",
             "herald_card",
             "herald_grade_gpa",
             "herald_lecture_records",
-            "herald_schoolbus_cache",
-            "herald_lecture_notices",
             "herald_experiment",
             "herald_nic",
             "herald_srtp",
-            "herald_pc_date",
-            "herald_pc_forecast",
             "herald_pc_last_message",
             "herald_curriculum",
-            "herald_lecture_notices",
+            "herald_pedetail",
             "herald_sidebar"
     };
     private Context context;
