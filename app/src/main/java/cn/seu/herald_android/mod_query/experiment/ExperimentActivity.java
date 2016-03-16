@@ -144,6 +144,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         parentArray.add(json_content.names().getString(i));
                         childArray.add(item_list);
                         //根据数据列表获得成就列表并且加入到成就列表中
+                        achievementArrayList.clear();
                         achievementArrayList.addAll(AchievementFactory.getExperimentAchievement(item_list));
                     }
                 }
