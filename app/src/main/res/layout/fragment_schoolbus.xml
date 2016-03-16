@@ -8,7 +8,8 @@
         android:id="@id/expandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:childDivider="#e5e5e5"
+        android:divider="@color/colorDivider"
+        android:dividerHeight="@dimen/divider_height"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:scrollbarStyle="outsideOverlay" />

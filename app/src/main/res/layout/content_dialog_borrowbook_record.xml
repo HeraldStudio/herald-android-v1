@@ -26,6 +26,11 @@
         <ListView
             android:id="@+id/list_borrowbook_record"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="250dp"
+            android:divider="@color/colorDivider"
+            android:dividerHeight="@dimen/divider_height"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:scrollbarStyle="outsideOverlay" />
     </LinearLayout>
 </LinearLayout>
