@@ -37,9 +37,9 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
 
         tv_title.setText(myBorrowBook.getTitle());
         tv_author.setText(myBorrowBook.getAuthor());
-        tv_renderdate.setText("借阅时间:"+myBorrowBook.getRenderDate());
-        tv_duedate.setText("应还时间:"+myBorrowBook.getDueDate());
-        tv_renewtime.setText("续借次数"+myBorrowBook.getRenewTime());
+        tv_renderdate.setText("借阅时间：" + myBorrowBook.getRenderDate());
+        tv_duedate.setText("应还时间：" + myBorrowBook.getDueDate());
+        tv_renewtime.setText("续借次数：" + myBorrowBook.getRenewTime());
 
         if(isDue(myBorrowBook.getDueDate())){
             //如果已经接近归还日期则标红日期
