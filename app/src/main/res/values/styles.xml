@@ -9,7 +9,6 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-
     <style name="QueryGradeTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 成绩查询页风格 -->
         <item name="colorPrimary">@color/colorGradeprimary</item>

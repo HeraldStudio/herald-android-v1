@@ -1,5 +1,6 @@
 package cn.seu.herald_android.mod_query.seunet;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -115,6 +116,15 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 showMsg("缓存解析错误，请重新刷新后再试");
             }
         } else {
+            List<SliceValue> values = new ArrayList<>();
+            //暂时用一个完整的饼代替默认图
+            SliceValue sliceValue = new SliceValue(1f);
+            sliceValue.setColor(Color.rgb(220, 220, 220));
+            values.add(sliceValue);
+            PieChartData pieChartData = new PieChartData(values);
+            //为控件设置数据
+            pieChartView_wlan.setPieChartData(pieChartData);
+
             refreshCache();
         }
     }
@@ -165,7 +175,8 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 //设置饼状图总的值为1，即不分块，因为未开通
                 SliceValue sliceValue = new SliceValue(1f);
                 sliceValue.setLabel("未开通");
-                values.add(new SliceValue(1f));
+                sliceValue.setColor(Color.rgb(220, 220, 220));
+                values.add(sliceValue);
                 PieChartData pieChartData = new PieChartData(values);
                 //为控件设置数据
                 pieChartView_wlan.setPieChartData(pieChartData);
@@ -186,6 +197,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
         String unit = used_str.split(" ")[1];
         if (unit.equals("B")) used = 0f;
         float used_per = 0;
+        //TODO 总流量不要写死
         if (unit.equals("KB")) used_per = used / (1024f * 5f * 1024f);
         if (unit.equals("MB")) used_per = used / (1024f * 5f);
         if (unit.equals("GB")) {
@@ -196,10 +208,10 @@ public class SeunetActivity extends BaseAppCompatActivity {
         SliceValue sliceValue_used = new SliceValue(used_per);
         SliceValue sliceValue_left = new SliceValue(1f - used_per);
         //设置已用的流量部分的颜色
-        sliceValue_used.setLabel(used_per * 100 + "%");
+        sliceValue_used.setLabel((int) (used_per * 100) + "%");
         sliceValue_used.setColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
         //设置未使用的流量部分的颜色
-        sliceValue_left.setLabel((1f - used_per) * 100 + "%");
+        sliceValue_left.setLabel((int) ((1f - used_per) * 100) + "%");
         sliceValue_left.setTarget(used_per * 100);
         sliceValue_left.setColor(ContextCompat.getColor(this, R.color.colorSeuNetaccent));
         values.add(sliceValue_used);

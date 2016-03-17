@@ -6,7 +6,7 @@
     <string name="action_logout">注销登录</string>
 
     <string name="action_search">搜索</string>
-    <string name="action_borrowrecord">借阅记录</string>
+    <string name="action_borrowrecord">已借图书</string>
 
     <string name="action_lecturerecord">听讲记录</string>
 

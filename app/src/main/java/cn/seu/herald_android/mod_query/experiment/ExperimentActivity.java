@@ -43,7 +43,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
     //成就墙数目
     private TextView tv_numofAchievement;
     //成就列表
-    private ArrayList<Achievement> achievementArrayList = new ArrayList<>();
+    private ArrayList<Achievement> achievementArrayList;
 
     public static void remoteRefreshCache(Context context, Runnable doAfter) {
         ApiHelper apiHelper = new ApiHelper(context);
@@ -129,6 +129,8 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         if (!cache.equals("")) {
             try {
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
+                //清空成就列表
+                achievementArrayList = new ArrayList<>();
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
                 ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();

@@ -18,7 +18,6 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
     public AchievementViewPagerAdapter(Context context, ArrayList<Achievement> achievementArrayList) {
         this.achievementArrayList = achievementArrayList;
         this.context = context;
-
     }
 
     @Override

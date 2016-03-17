@@ -173,7 +173,7 @@ public class CardActivity extends BaseAppCompatActivity {
                                 loadCache();
                                 showMsg("刷新成功");
                             } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
+                                showMsg("一卡通中心也许出了问题，可以到充值页面进行查询");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
