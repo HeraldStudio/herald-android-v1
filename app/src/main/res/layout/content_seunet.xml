@@ -55,7 +55,7 @@
                 android:layout_weight="1"
                 android:paddingTop="10dp"
                 android:text="已使用"
-                android:textColor="@color/colorSeuNetprimary"
+                android:textColor="@color/colorSeuNetaccent"
                 android:textSize="12sp" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:layout_weight="1"
                 android:paddingTop="10dp"
                 android:text="未使用"
-                android:textColor="@color/colorSeuNetaccent"
+                android:textColor="@color/colorSeuNetprimary"
                 android:textSize="12sp" />
         </LinearLayout>
 

@@ -39,7 +39,7 @@
     <!--校园网-->
     <color name="colorSeuNetprimary">#7cb342</color>
     <color name="colorSeuNetprimary_dark">#7cb342</color>
-    <color name="colorSeuNetaccent">#469edc</color>
+    <color name="colorSeuNetaccent">#e57373</color>
 
     <!--跑操-->
     <color name="colorPedetailprimary">#26a69a</color>

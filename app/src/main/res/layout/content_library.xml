@@ -21,6 +21,29 @@
             android:paddingTop="15dp"
             android:text="图书馆最热借阅书籍排行榜"
             android:textColor="@color/colorLibraryprimary" />
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingRight="23dp"
+            android:paddingLeft="23dp">
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="书名"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="13sp" />
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="借阅量"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="13sp" />
+        </LinearLayout>
         <ListView
             android:id="@+id/list_library_hotbook"
             android:layout_width="match_parent"

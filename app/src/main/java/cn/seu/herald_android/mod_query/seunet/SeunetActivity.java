@@ -15,12 +15,14 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
+import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -193,27 +195,33 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void setUsedPercentage(String used_str, PieChartView pieChartView) {
         //根据获取的已用流量加载下面的饼状图，展示已用百分比
-        float used = Float.parseFloat(used_str.split(" ")[0]);
+        double used = Double.parseDouble(used_str.split(" ")[0]);
         String unit = used_str.split(" ")[1];
-        if (unit.equals("B")) used = 0f;
-        float used_per = 0;
+        if (unit.equals("B")) used = 0d;
+        double used_per = 0;
         //TODO 总流量不要写死
-        if (unit.equals("KB")) used_per = used / (1024f * 5f * 1024f);
-        if (unit.equals("MB")) used_per = used / (1024f * 5f);
+        if (unit.equals("KB")) used_per = used / (1024d * 5d * 1024d);
+        if (unit.equals("MB")) used_per = used / (1024d * 5d);
         if (unit.equals("GB")) {
-            used_per = used / 5f;
+            double total = 5d;
+            used_per = used / total;
+            while (used_per > 1d){
+                total += 5d;
+                used_per = used / total;
+            }
         }
-        if (used_per < 0.1f) used_per = 0.01f;
+        if (used_per < 0.1d) used_per = 0.01d;
         List<SliceValue> values = new ArrayList<>();
-        SliceValue sliceValue_used = new SliceValue(used_per);
-        SliceValue sliceValue_left = new SliceValue(1f - used_per);
+        SliceValue sliceValue_used = new SliceValue((float)used_per);
+        SliceValue sliceValue_left = new SliceValue((float)(1d - used_per));
+        DecimalFormat df = new DecimalFormat( "#.## ");
         //设置已用的流量部分的颜色
-        sliceValue_used.setLabel((int) (used_per * 100) + "%");
-        sliceValue_used.setColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
+        sliceValue_used.setLabel(df.format(used_per * 100) + "%");
+        sliceValue_used.setColor(ContextCompat.getColor(this, R.color.colorSeuNetaccent));
         //设置未使用的流量部分的颜色
-        sliceValue_left.setLabel((int) ((1f - used_per) * 100) + "%");
-        sliceValue_left.setTarget(used_per * 100);
-        sliceValue_left.setColor(ContextCompat.getColor(this, R.color.colorSeuNetaccent));
+        sliceValue_left.setLabel(df.format((1f - used_per) * 100) + "%");
+        sliceValue_left.setTarget((float)used_per * 100);
+        sliceValue_left.setColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
         values.add(sliceValue_used);
         values.add(sliceValue_left);
         PieChartData pieChartData = new PieChartData(values);

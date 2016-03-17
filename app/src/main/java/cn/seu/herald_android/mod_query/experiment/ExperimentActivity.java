@@ -129,8 +129,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         if (!cache.equals("")) {
             try {
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
-                //清空成就列表
-                achievementArrayList = new ArrayList<>();
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
                 ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();
@@ -145,8 +143,8 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         //加入到list中
                         parentArray.add(json_content.names().getString(i));
                         childArray.add(item_list);
-                        //根据数据列表获得成就列表并且加入到成就列表中
-                        achievementArrayList.clear();
+                        //清空成就列表并且加入到成就列表中
+                        achievementArrayList = new ArrayList<>();
                         achievementArrayList.addAll(AchievementFactory.getExperimentAchievement(item_list));
                     }
                 }
