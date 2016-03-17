@@ -149,8 +149,8 @@ public class ApiHelper {
         // 用工具计算md5，在服务器登记appid，
         // 联网测试，上线
 
-        //return test;
-        return "34cc6df78cfa7cd457284e4fc377559e";
+        return test;
+        //return "34cc6df78cfa7cd457284e4fc377559e";
     }
 
     public void dealApiException(Exception e) {
