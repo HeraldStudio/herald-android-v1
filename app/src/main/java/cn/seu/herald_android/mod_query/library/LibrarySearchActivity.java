@@ -70,7 +70,7 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                 //设置提示信息
                 searchView.setQueryHint("图书馆藏书查询");
                 //设置默认展开
-                searchView.setIconified(false);
+                searchView.setIconifiedByDefault(false);
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
                 searchView.setOnQueryTextListener(LibrarySearchActivity.this);
             }
@@ -94,15 +94,11 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                     public void onError(Call call, Exception e) {
                         showMsg("请求超时");
                         hideProgressDialog();
-                        //关闭搜索栏
-                        searchView.setIconified(true);
                     }
 
                     @Override
                     public void onResponse(String response) {
                         hideProgressDialog();
-                        //关闭搜索栏
-                        searchView.setIconified(true);
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {
@@ -123,7 +119,11 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                         }
                     }
                 });
-        return true;
+        //保留输入框内容
+        searchView.setQuery(query, false);
+        //取消焦点，收起软键盘
+        searchView.clearFocus();
+        return false;
     }
 
     @Override
