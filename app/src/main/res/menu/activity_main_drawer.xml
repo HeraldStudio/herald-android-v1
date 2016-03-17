@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_assistant"
             android:icon="@drawable/ic_layers_24dp"
-            android:title="查询助手" />
+            android:title="模块管理" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"

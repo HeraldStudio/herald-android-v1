@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -18,6 +17,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.CustomSnackBar;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
@@ -168,16 +168,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
 
-        // 获取该主题下的主色调
-        TypedValue typedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
 
         // 获取根视图
         View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
         // 使用改色调构建SnackBar
         new CustomSnackBar().view(rootView)
-                .backgroundColor(ContextCompat.getColor(this, typedValue.resourceId))
+                .backgroundColor(ContextCompat.getColor(this, ContextUtils.getColorPrimary(this)))
                 .text(message, null)
                 .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
                 .duration(CustomSnackBar.SnackBarDuration.LONG).show();

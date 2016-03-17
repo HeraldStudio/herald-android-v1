@@ -88,7 +88,7 @@ public class MainActivity extends BaseAppCompatActivity implements NavigationVie
             //注销登录
             getApiHelper().doLogout();
         } else if (id == R.id.nav_assistant) {
-            //打开查询助手
+            //打开模块管理
             Intent intent = new Intent(MainActivity.this, QueryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {

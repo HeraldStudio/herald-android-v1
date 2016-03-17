@@ -1,11 +1,12 @@
 package cn.seu.herald_android.mod_query;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
+
+import com.kyleduo.switchbutton.SwitchButton;
 
 import java.util.ArrayList;
 
@@ -44,12 +45,8 @@ public class QueryActivity extends BaseAppCompatActivity {
     private class ShortCutBoxEditListItemClickListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(android.widget.AdapterView<?> parent, View view, int position, long id) {
-            SeuModule seuModule = (SeuModule) parent.getItemAtPosition(position);
-            //打开对应的模块
-            Intent intent = new Intent();
-            intent.setAction(seuModule.getActions());
-            startActivity(intent);
-
+            SwitchButton switch1 = (SwitchButton) view.findViewById(R.id.switch1);
+            switch1.toggle();
         }
     }
 }

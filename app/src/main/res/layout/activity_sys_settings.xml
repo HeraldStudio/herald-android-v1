@@ -86,32 +86,49 @@
             android:textColor="@color/colorPrimary"
             android:textSize="16sp" />
 
-        <Switch
-            android:id="@+id/switchseuauto"
+        <LinearLayout
+            android:id="@+id/switch_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textView5"
-            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:orientation="horizontal"
             android:background="?android:selectableItemBackground"
-            android:paddingBottom="30dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:text="校园网自动登录"
-            android:textColor="#333" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/switchseuauto"
+            android:layout_below="@+id/textView5"
             android:layout_alignParentLeft="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="在小猴启动状态自动登录seu-wlan/seu-dorm网络"
-            android:textColor="#666"
-            android:textSize="12sp" />
+            android:layout_alignParentStart="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="校园网自动登录"
+                    android:textColor="#333" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="在小猴启动状态自动登录seu-wlan/seu-dorm网络"
+                    android:textColor="#666"
+                    android:textSize="12sp"
+                    android:paddingTop="5dp" />
+
+            </LinearLayout>
+
+            <cn.seu.herald_android.custom.CustomSwitchButton
+                android:id="@+id/switchseuauto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
+
+        </LinearLayout>
         <!--<Switch-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->

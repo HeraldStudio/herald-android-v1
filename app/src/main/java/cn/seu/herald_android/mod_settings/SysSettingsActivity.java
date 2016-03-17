@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.Switch;
 import android.widget.TextView;
+
+import com.kyleduo.switchbutton.SwitchButton;
 
 import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
@@ -17,7 +18,7 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
 
     private TextView tv_checkupdate;
     private TextView tv_nowversion;
-    private Switch swith_seu;
+    private SwitchButton swith_seu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +41,8 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
         tv_nowversion = (TextView)findViewById(R.id.tv_now_version);
         tv_nowversion.setText("当前版本： " + ServiceHelper.getAppVersionName(this));
 
-        swith_seu = (Switch)findViewById(R.id.switchseuauto);
-        swith_seu.setChecked(getSettingsHelper().getWifiAutoLogin());
+        swith_seu = (SwitchButton) findViewById(R.id.switchseuauto);
+        swith_seu.setCheckedImmediately(getSettingsHelper().getWifiAutoLogin());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) -> {
             getSettingsHelper().setWifiAutoLogin(isChecked);
             if(isChecked){
@@ -51,6 +52,9 @@ public class SysSettingsActivity extends BaseAppCompatActivity {
             }
         });
 
+        findViewById(R.id.switch_container).setOnClickListener((v) -> {
+            swith_seu.toggle();
+        });
     }
 
     private void checkUpdate() {

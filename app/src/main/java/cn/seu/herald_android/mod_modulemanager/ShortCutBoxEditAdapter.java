@@ -5,9 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.kyleduo.switchbutton.SwitchButton;
 
 import java.util.List;
 
@@ -37,30 +38,23 @@ public class ShortCutBoxEditAdapter extends ArrayAdapter<SeuModule> {
         //快捷方式图标
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);
         imageView.setImageResource(seuModule.getIc_id());
+        //文字标题
+        TextView tv_title = (TextView) convertView.findViewById(R.id.tv_shortcut);
+        tv_title.setText(seuModule.getName());
         //文字说明
-        TextView textView = (TextView) convertView.findViewById(R.id.tv_shortcut);
-        textView.setText(seuModule.getName());
+        TextView tv_desc = (TextView) convertView.findViewById(R.id.tv_desc);
+        tv_desc.setText(seuModule.getDescription());
         //显示或者不显示的大头针，蓝色代表快捷方式启用，灰色代表不启动
-        ImageButton imageViewBtn = (ImageButton) convertView.findViewById(R.id.ibtn_shortcut);
-        if (settingsHelper.getModuleShortCutEnabled(seuModule.getModuleId())) {
-            imageViewBtn.setImageResource(R.mipmap.ic_pin);
-        } else {
-            imageViewBtn.setImageResource(R.mipmap.ic_pin_gray);
-        }
-        imageViewBtn.setOnClickListener(v -> {
+        SwitchButton switch1 = (SwitchButton) convertView.findViewById(R.id.switch1);
+        switch1.setCheckedImmediately(settingsHelper.getModuleShortCutEnabled(seuModule.getModuleId()));
+
+        switch1.setOnCheckedChangeListener((v, checked) -> {
             //点击时修改快捷方式是否显示
             int moduleId = seuModule.getModuleId();
-            //如果是启用，点击后则禁用，反之亦然
-            boolean enabeled = !settingsHelper.getModuleShortCutEnabled(moduleId);
             //应用设置
-            settingsHelper.setModuleShortCutEnabled(moduleId, enabeled);
-            //根据设置结果重新设置图标
-            if (enabeled) {
-                imageViewBtn.setImageResource(R.mipmap.ic_pin);
-            } else {
-                imageViewBtn.setImageResource(R.mipmap.ic_pin_gray);
-            }
+            settingsHelper.setModuleShortCutEnabled(moduleId, checked);
         });
+
         return convertView;
     }
 

@@ -98,4 +98,5 @@
     <color name="colorSecondaryText">#727272</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
+    <color name="colorSwitchOff">#ffffff</color>
 </resources>

@@ -52,7 +52,7 @@
     <string name="title_activity_aboutus">关于我们</string>
     <string name="title_activity_srtp">课外研学</string>
     <string name="title_activity_sys_settings">系统设置</string>
-    <string name="title_activity_query">模块列表</string>
+    <string name="title_activity_query">模块管理</string>
     <string name="title_activity_schoolbus">校车助手</string>
     <string name="title_activity_grade">绩点查询</string>
     <string name="title_activity_library">图书馆</string>

@@ -17,6 +17,8 @@ public class SeuModule {
     private String actions;
     //名字
     private String name;
+    //描述
+    private String description;
 
     public SeuModule(int moduleId, boolean enabledShortCut, String actions) {
         this.moduleId = moduleId;
@@ -24,6 +26,7 @@ public class SeuModule {
         this.actions = actions;
         this.ic_id = SettingsHelper.moduleIconsId[moduleId];
         this.name = SettingsHelper.moduleNamesTips[moduleId];
+        this.description = SettingsHelper.moduleDescriptions[moduleId];
     }
 
     public int getModuleId() {
@@ -44,5 +47,9 @@ public class SeuModule {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
