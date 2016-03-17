@@ -21,7 +21,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_communicate.FeedbackActivity;
@@ -34,8 +33,6 @@ import okhttp3.Call;
 public class MainActivity extends BaseAppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //显示侧边栏欢迎信息的tv
     private TextView tv_nav_user;
-    private TextView tv_nav_cardnum;
-    private SliderView sliderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

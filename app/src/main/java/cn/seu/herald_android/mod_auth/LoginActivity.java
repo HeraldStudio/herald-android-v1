@@ -2,10 +2,11 @@ package cn.seu.herald_android.mod_auth;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -20,6 +21,7 @@ import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ServiceHelper;
 import okhttp3.Call;
 
 public class LoginActivity extends BaseAppCompatActivity {
@@ -32,8 +34,6 @@ public class LoginActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.notoolbar);
-        setSupportActionBar(toolbar);
         init();
     }
 
@@ -51,11 +51,10 @@ public class LoginActivity extends BaseAppCompatActivity {
         //绑定登录按钮点击函数
         btn_login = (Button) findViewById(R.id.btn_login_login);
         btn_login.setOnClickListener(v -> {
-            //运行请求前先清除旧的uuid
-            doLogin();
+            if (tv_card.getText().toString().trim().length() > 0 && tv_pwd.getText().toString().length() > 0) {
+                doLogin();
+            }
         });
-
-
     }
 
     @Override
@@ -83,6 +82,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
+                        e.printStackTrace();
                         progressDialog.dismiss();
                         btn_login.setEnabled(true);
                         //处理Api错误
@@ -90,10 +90,15 @@ public class LoginActivity extends BaseAppCompatActivity {
                             showMsg("抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
                         } else if (e instanceof ConnectException) {
                             showMsg("网络连接错误，请检查您的网络连接");
-                        } else {
-                            showMsg("一卡通和统一查询密码不匹配，请核对后再试");
-                        }
+                        } else if (e.toString().contains("Bad Request")) {
+                            Toast.makeText(LoginActivity.this, "当前客户端版本已过期，请下载最新版本", Toast.LENGTH_LONG).show();
 
+                            Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        } else {
+                            showMsg("一卡通和统一身份认证密码不匹配，请核对后再试");
+                        }
                     }
 
                     @Override

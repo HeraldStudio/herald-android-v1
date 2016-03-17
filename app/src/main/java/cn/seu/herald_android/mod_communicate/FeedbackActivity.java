@@ -1,12 +1,10 @@
 package cn.seu.herald_android.mod_communicate;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -48,9 +46,6 @@ public class FeedbackActivity extends BaseAppCompatActivity {
         if (id == R.id.action_send) {
             EditText et = (EditText) findViewById(R.id.editText);
             String content = et.getText().toString();
-
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(et.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
             showProgressDialog();
             OkHttpUtils
