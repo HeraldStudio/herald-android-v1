@@ -78,7 +78,7 @@
     <color name="colorCurriculumPrimaryDark">#00abd4</color>
     <color name="colorCurriculumAccent">#00abd4</color>
     <color name="curriculumstripeColor">#d8d8d8</color>
-    <color name="curriculumtimeHandColor">#c000abd4</color>
+    <color name="curriculumtimeHandColor">#c031d7ff</color>
     <color name="curriculumcolorSubtitle">#333</color>
     <color name="curriculumbackgroundSubtitle">#fff</color>
     <color name="curriculumcolor1">#f5629a</color>
