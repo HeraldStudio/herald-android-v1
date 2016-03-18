@@ -36,13 +36,13 @@ public class SettingsHelper {
     public static final int MODULE_SCHOOLBUS = 8;
     public static final int MODULE_LECTURE = 9;
     public static final int MODULE_JWC = 10;
+    public static final int MODULE_GYMORDER = 11;
+    public static final int MODULE_QUANYI = 12;
 //    public static final int MODULE_EMPTYROOM = 9;
-//    public static final int MODULE_GYMORDER = 10;
-//    public static final int MODULE_QUANYI = 11;
 
 
     //模块名字
-    private static final String[] moduleNames = {
+    public static final String[] moduleNames = {
             "cardextra",
             "seunet",
             "pedetail",
@@ -53,10 +53,10 @@ public class SettingsHelper {
             "srtp",
             "schoolbus",
             "lecture",
-            "jwc"
+            "jwc",
+            "gymorder",
+            "quanyi"
 //            "emptyroom",
-//            "gymorder",
-//            "quanyi"
     };
 
     //模块名字文字提示
@@ -71,10 +71,10 @@ public class SettingsHelper {
             "课外研学",
             "校车助手",
             "人文讲座",
-            "教务通知"
+            "教务通知",
+            "场馆预约",
+            "权益服务"
 //            "空教室",
-//            "场馆预约",
-//            "权益服务"
     };
 
     //模块说明，显示在快捷方式编辑界面
@@ -89,10 +89,10 @@ public class SettingsHelper {
             "提供SRTP学分及得分详情查询服务",
             "提供可实时更新的校车班车时间表",
             "查看人文讲座听课记录，并提供人文讲座预告信息",
-            "显示教务处最新通知，提供重要教务通知提醒服务"
+            "显示教务处最新通知，提供重要教务通知提醒服务",
+            "提供体育场馆在线预约和查询服务",
+            "向东大校会权益部反馈投诉信息"
 //            "空教室",
-//            "场馆预约",
-//            "权益服务"
     };
 
     //模块action
@@ -107,10 +107,10 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
             "cn.seu.herald_android.MODULE_QUERY_LECTURE",
-            "cn.seu.herald_android.MODULE_QUERY_JWC"
+            "cn.seu.herald_android.MODULE_QUERY_JWC",
+            "cn.seu.herald_android.WEBMODULE_GYMORDER",
+            "cn.seu.herald_android.WEBMODULE_QUANYI",
 //            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
-//            "cn.seu.herald_android.WEBMODULE_GYMORDER",
-//            "cn.seu.herald_android.WEBMODULE_QUANYI",
 
     };
 
@@ -127,10 +127,26 @@ public class SettingsHelper {
             R.mipmap.ic_srtp,
             R.mipmap.ic_bus,
             R.mipmap.ic_lecture,
-            R.mipmap.ic_jwc
+            R.mipmap.ic_jwc,
+            R.mipmap.ic_gym,
+            R.mipmap.ic_quanyi
 //            R.mipmap.ic_emptyroom,
-//            R.mipmap.ic_gym,
-//            R.mipmap.ic_quanyi
+    };
+
+    public static final boolean[] moduleHasCard = {
+            true,
+            false,
+            true,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+            true,
+            false,
+            false
     };
 
     //模块类型
@@ -144,10 +160,16 @@ public class SettingsHelper {
     }
 
     public void setDefaultConfig() {
-
+        setDefaultShortcutEnabled();
     }
 
-
+    private void setDefaultShortcutEnabled() {
+        //默认快捷栏只显示无卡片的模块
+        for (int i = 0; i < moduleNames.length; i++) {
+            setModuleShortCutEnabled(i, !moduleHasCard[i]);
+        }
+    }
+    
     /**
      * 用于设置某个模块是否在快捷方式盒子中显示
      *
@@ -174,13 +196,39 @@ public class SettingsHelper {
     }
 
     /**
+     * 用于设置某个模块是否在首页卡片中显示
+     *
+     * @param moduleID 模块ID
+     * @param flag     true为启用，false为禁用
+     */
+    public void setModuleCardEnabled(int moduleID, boolean flag) {
+        if (!moduleHasCard[moduleID]) return;
+        //flag为true则设置为选中，否则设置为不选中
+        if (flag) {
+            setCache("herald_settings_module_cardenabled_" + moduleNames[moduleID], "1");
+        } else {
+            setCache("herald_settings_module_cardenabled_" + moduleNames[moduleID], "0");
+        }
+    }
+
+    /**
+     * 获得某个模块在首页卡片中的显示情况
+     *
+     * @param moduleID 模块ID
+     */
+    public boolean getModuleCardEnabled(int moduleID) {
+        //获得某项模块的快捷图标是否显示
+        return !getCache("herald_settings_module_cardenabled_" + moduleNames[moduleID]).equals("0");
+    }
+
+    /**
      * 获得所有模块的快捷方式设置情况对象
      */
     public ArrayList<SeuModule> getSeuModuleList() {
         //获得所有模块快捷方式设置列表
         ArrayList<SeuModule> list = new ArrayList<>();
         for (int i = 0; i < moduleNames.length; i++) {
-            list.add(new SeuModule(i, getModuleShortCutEnabled(i), moduleActions[i]));
+            list.add(new SeuModule(i, getModuleShortCutEnabled(i), getModuleCardEnabled(i), moduleActions[i]));
         }
         return list;
     }

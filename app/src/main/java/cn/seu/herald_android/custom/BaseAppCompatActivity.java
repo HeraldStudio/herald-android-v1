@@ -1,4 +1,4 @@
-package cn.seu.herald_android;
+package cn.seu.herald_android.custom;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,8 +17,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.seu.herald_android.custom.ContextUtils;
-import cn.seu.herald_android.custom.CustomSnackBar;
+import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
@@ -139,7 +138,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    void runMeasurementDependentTask(Runnable task) {
+    public void runMeasurementDependentTask(Runnable task) {
         if (firstCreate) {
             onLoadTasks.add(task);
         } else {

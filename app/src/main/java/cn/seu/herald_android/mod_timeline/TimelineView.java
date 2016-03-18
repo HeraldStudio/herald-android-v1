@@ -23,8 +23,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Vector;
 
-import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
@@ -43,7 +43,6 @@ public class TimelineView extends ListView {
     private final Vector<Object> threads = new Vector<>();
     private ArrayList<TimelineItem> itemList;
 
-    private BaseAppCompatActivity activity;
     private Runnable hideRefresh = null;
     private ShortcutBoxView shortcutBox;
     private SliderView slider;
@@ -103,10 +102,6 @@ public class TimelineView extends ListView {
         return "已结束";
     }
 
-    public void setActivity(BaseAppCompatActivity activity) {
-        this.activity = activity;
-    }
-
     public void setHideRefresh(Runnable hideRefresh) {
         this.hideRefresh = hideRefresh;
     }
@@ -118,15 +113,15 @@ public class TimelineView extends ListView {
 
         itemList = new ArrayList<>();
         SettingsHelper settingsHelper = new SettingsHelper(getContext());
+        CacheHelper cacheHelper = new CacheHelper(getContext());
 
         if (refresh) {
             // 懒惰刷新
-
             // 当课表模块开启时
-            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CURRICULUM)) {
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
                 // 仅当课表数据不存在时刷新课表
-                if (activity.getCacheHelper().getCache("herald_curriculum").equals("")
-                        || activity.getCacheHelper().getCache("herald_sidebar").equals("")) {
+                if (cacheHelper.getCache("herald_curriculum").equals("")
+                        || cacheHelper.getCache("herald_sidebar").equals("")) {
                     threads.add(new Object());
                     CurriculumActivity.remoteRefreshCache(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
@@ -136,9 +131,9 @@ public class TimelineView extends ListView {
             }
 
             // 当实验模块开启时
-            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
                 // 仅当实验数据不存在时刷新实验
-                if (activity.getCacheHelper().getCache("herald_experiment").equals("")) {
+                if (cacheHelper.getCache("herald_experiment").equals("")) {
                     threads.add(new Object());
                     ExperimentActivity.remoteRefreshCache(getContext(), () -> {
                         if (threads.size() > 0) threads.remove(0);
@@ -148,7 +143,7 @@ public class TimelineView extends ListView {
             }
 
             // 当人文讲座模块开启时
-            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_LECTURE)) {
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
                 // 直接刷新人文讲座预告
                 threads.add(new Object());
                 LectureActivity.remoteRefreshCache(getContext(), () -> {
@@ -158,7 +153,7 @@ public class TimelineView extends ListView {
             }
 
             // 当跑操模块开启时
-            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_PEDETAIL)) {
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
                 CacheHelper helper = new CacheHelper(getContext());
                 String date = helper.getCache("herald_pc_date");
                 // 服务器端的跑操预告消息可能会出现中途更改的情况，因此只要没有得到跑操结束时的最后消息，就允许重复刷新
@@ -181,7 +176,7 @@ public class TimelineView extends ListView {
             }
 
             // 当一卡通模块开启时
-            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
                 // 直接刷新一卡通数据
                 threads.add(new Object());
                 CardActivity.remoteRefreshCache(getContext(), () -> {
@@ -191,7 +186,7 @@ public class TimelineView extends ListView {
             }
 
             // 当教务处模块开启时
-            if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_JWC)) {
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
                 // 直接刷新一卡通数据
                 threads.add(new Object());
                 JwcActivity.remoteRefreshCache(getContext(), () -> {
@@ -202,42 +197,42 @@ public class TimelineView extends ListView {
         }
 
         // 加载推送消息
-        TimelineItem item = TimelineParser.getPushMessageItem(getContext());
+        TimelineItem item = TimelineParser.getPushMessageItem(this);
         if (item != null) itemList.add(item);
 
         // 加载版本更新消息
-        TimelineItem item1 = TimelineParser.getCheckVersionItem(getContext());
+        TimelineItem item1 = TimelineParser.getCheckVersionItem(this);
         if (item1 != null) itemList.add(item1);
 
         // 判断各模块是否开启并加载对应数据
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CURRICULUM)) {
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
             // 加载并解析课表数据
-            itemList.add(TimelineParser.getCurriculumItem(getContext()));
+            itemList.add(TimelineParser.getCurriculumItem(this));
         }
 
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
             // 加载并解析实验数据
-            itemList.add(TimelineParser.getExperimentItem(getContext()));
+            itemList.add(TimelineParser.getExperimentItem(this));
         }
 
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_LECTURE)) {
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
             // 加载并解析人文讲座预告数据
-            itemList.add(TimelineParser.getLectureItem(getContext()));
+            itemList.add(TimelineParser.getLectureItem(this));
         }
 
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_PEDETAIL)) {
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
             // 加载并解析跑操预报数据
-            itemList.add(TimelineParser.getPeForecastItem(getContext()));
+            itemList.add(TimelineParser.getPeForecastItem(this));
         }
 
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
             // 加载并解析一卡通数据
-            itemList.add(TimelineParser.getCardItem(getContext()));
+            itemList.add(TimelineParser.getCardItem(this));
         }
 
-        if (settingsHelper.getModuleShortCutEnabled(SettingsHelper.MODULE_JWC)) {
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
             // 加载并解析教务处数据
-            itemList.add(TimelineParser.getJwcItem(getContext()));
+            itemList.add(TimelineParser.getJwcItem(this));
         }
 
         // 有消息的排在前面，没消息的排在后面
@@ -277,7 +272,7 @@ public class TimelineView extends ListView {
         if (topPadding == null) {
             // 顶部增加一个padding
             topPadding = new View(getContext());
-            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (8 * dp)));
+            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (7 * dp)));
             addHeaderView(topPadding);
         }
 
@@ -364,20 +359,20 @@ public class TimelineView extends ListView {
 
             convertView.setOnClickListener(item.getOnClickListener());
 
-                convertView.setOnLongClickListener(item.moduleId == -1 ? null : v1 -> {
-                    SettingsHelper settingsHelper = new SettingsHelper(getContext());
-                    new AlertDialog.Builder(getContext())
-                            .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
+            if(item.moduleId != -1){
+                convertView.setOnLongClickListener(v -> {
+                    new AlertDialog.Builder(getContext()).setMessage("确定要隐藏该卡片吗？")
                             .setPositiveButton("确定", (dialog, which) -> {
-                                //设置为不可用
-                                settingsHelper.setModuleShortCutEnabled(item.moduleId, false);
-                                loadContent(true);
+                                new SettingsHelper(getContext()).setModuleCardEnabled(item.moduleId, false);
+                                if(getContext() instanceof MainActivity){
+                                    ((MainActivity)getContext()).syncModuleSettings();
+                                }
                             })
-                            .setNegativeButton("取消", (dialog, which) -> {
-
-                            }).show();
+                            .setNegativeButton("取消", null)
+                            .show();
                     return true;
                 });
+            }
 
             hsv.setVisibility(GONE);
             attachedContainer.removeAllViews();

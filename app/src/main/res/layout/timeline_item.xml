@@ -8,9 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/avatar"
         android:orientation="vertical"
         android:padding="15dp">
         <!--可能出现在卡片最底端的元素都不要加marginBottom，要换用paddingBottom，否则在Android4.3会出错-->

@@ -1,13 +1,11 @@
 package cn.seu.herald_android.mod_communicate;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 
-import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.BaseAppCompatActivity;
 
 public class AboutusActivity extends BaseAppCompatActivity {
 

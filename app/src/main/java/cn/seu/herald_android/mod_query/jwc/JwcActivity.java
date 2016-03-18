@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import okhttp3.Call;

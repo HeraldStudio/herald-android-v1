@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".app_main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -36,20 +36,9 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".mod_settings.SysSettingsActivity"
-            android:label="@string/title_activity_sys_settings"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity
-            android:name=".mod_query.QueryActivity"
+            android:name=".mod_modulemanager.ModuleManageActivity"
             android:label="@string/title_activity_query"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -199,6 +188,7 @@
 
         <activity
             android:name=".mod_webmodule.WebModuleActivity"
+            android:theme="@style/AppTheme.Invisible"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.WEBMODULE_GYMORDER" />
@@ -211,18 +201,21 @@
         <activity
             android:name=".mod_communicate.AboutusActivity"
             android:label="@string/title_activity_aboutus"
-            android:theme="@style/AboutusTheme" />
+            android:theme="@style/AboutusTheme"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".mod_communicate.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:theme="@style/FeedbackTheme"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".mod_query.srtp.SrtpActivity"
             android:label="@string/title_activity_srtp"
-            android:theme="@style/SrtpTheme">
+            android:theme="@style/SrtpTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SRTP" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -231,7 +224,8 @@
         <activity
             android:name=".mod_query.jwc.JwcActivity"
             android:label="@string/title_activity_jwc"
-            android:theme="@style/JwcTheme">
+            android:theme="@style/JwcTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
                 <category android:name="android.intent.category.DEFAULT" />

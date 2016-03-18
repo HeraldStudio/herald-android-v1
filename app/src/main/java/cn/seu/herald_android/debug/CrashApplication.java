@@ -1,4 +1,4 @@
-package cn.seu.herald_android;
+package cn.seu.herald_android.debug;
 
 import android.app.Application;
 

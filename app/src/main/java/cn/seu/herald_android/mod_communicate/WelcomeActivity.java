@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_auth.LoginActivity;

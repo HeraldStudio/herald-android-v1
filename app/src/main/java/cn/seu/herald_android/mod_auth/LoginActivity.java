@@ -17,9 +17,9 @@ import org.json.JSONObject;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import cn.seu.herald_android.BaseAppCompatActivity;
-import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
+import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import okhttp3.Call;

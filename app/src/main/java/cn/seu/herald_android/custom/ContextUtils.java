@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
 
 public class ContextUtils {

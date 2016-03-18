@@ -19,8 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.seu.herald_android.BaseAppCompatActivity;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;

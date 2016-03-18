@@ -9,8 +9,8 @@ android {
         applicationId "cn.seu.herald_android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
-        versionName "V1.1.2"
+        versionCode 5
+        versionName "V1.2.0"
     }
     buildTypes {
         release {
@@ -47,6 +47,7 @@ dependencies {
     compile 'de.codecrafters.tableview:tableview:1.0.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.kyleduo.switchbutton:library:1.3.4'
+    compile 'sunger.net.org.library:library:1.0.0'
     //轮播库
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'

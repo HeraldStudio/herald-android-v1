@@ -9,6 +9,16 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="TabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="MyTabLayoutTextAppearanceInverse" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@android:color/holo_red_light</item>
+    </style>
+
     <style name="QueryGradeTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 成绩查询页风格 -->
         <item name="colorPrimary">@color/colorGradeprimary</item>

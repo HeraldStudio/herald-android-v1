@@ -32,8 +32,10 @@ public class ShortCutBoxEditAdapter extends ArrayAdapter<SeuModule> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         SeuModule seuModule = getItem(position);
+        int moduleId = seuModule.getModuleId();
+
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_edit_shortcut, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_edit_shortcut, null);
         }
         //快捷方式图标
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);
@@ -41,19 +43,24 @@ public class ShortCutBoxEditAdapter extends ArrayAdapter<SeuModule> {
         //文字标题
         TextView tv_title = (TextView) convertView.findViewById(R.id.tv_shortcut);
         tv_title.setText(seuModule.getName());
-        //文字说明
-        TextView tv_desc = (TextView) convertView.findViewById(R.id.tv_desc);
-        tv_desc.setText(seuModule.getDescription());
-        //显示或者不显示的大头针，蓝色代表快捷方式启用，灰色代表不启动
-        SwitchButton switch1 = (SwitchButton) convertView.findViewById(R.id.switch1);
-        switch1.setCheckedImmediately(settingsHelper.getModuleShortCutEnabled(seuModule.getModuleId()));
 
-        switch1.setOnCheckedChangeListener((v, checked) -> {
+        //表示卡片是否显示在主页的开关
+        SwitchButton switchCard = (SwitchButton) convertView.findViewById(R.id.switch_card);
+        switchCard.setVisibility(SettingsHelper.moduleHasCard[moduleId] ? View.VISIBLE : View.GONE);
+        switchCard.setOnCheckedChangeListener((v, checked) -> {
             //点击时修改快捷方式是否显示
-            int moduleId = seuModule.getModuleId();
+            //应用设置
+            settingsHelper.setModuleCardEnabled(moduleId, checked);
+        });
+        switchCard.setCheckedImmediately(settingsHelper.getModuleCardEnabled(moduleId));
+
+        //表示快捷方式是否显示在主页的开关
+        SwitchButton switchShortcut = (SwitchButton) convertView.findViewById(R.id.switch_shortcut);
+        switchShortcut.setOnCheckedChangeListener((v, checked) -> {
             //应用设置
             settingsHelper.setModuleShortCutEnabled(moduleId, checked);
         });
+        switchShortcut.setCheckedImmediately(settingsHelper.getModuleShortCutEnabled(moduleId));
 
         return convertView;
     }

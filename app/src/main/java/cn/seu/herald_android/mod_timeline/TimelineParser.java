@@ -1,6 +1,5 @@
 package cn.seu.herald_android.mod_timeline;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Pair;
@@ -16,7 +15,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.seu.herald_android.MainActivity;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ContextUtils;
@@ -36,8 +34,8 @@ import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
 class TimelineParser {
 
-    public static TimelineItem getPushMessageItem(Context context) {
-        ServiceHelper helper = new ServiceHelper(context);
+    public static TimelineItem getPushMessageItem(TimelineView host) {
+        ServiceHelper helper = new ServiceHelper(host.getContext());
         final long now = Calendar.getInstance().getTimeInMillis();
 
         //获取推送消息
@@ -49,7 +47,7 @@ class TimelineParser {
             String pushMessageUrl = helper.getPushMessageUrl();
             if (!pushMessageUrl.equals("") && !pushMessageUrl.equals("null")) {
                 Uri uri = Uri.parse(pushMessageUrl);
-                item.addButton(context, "查看详情", (v) ->
+                item.addButton(host.getContext(), "查看详情", (v) ->
                         v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
                 item.setOnClickListener((v) ->
                         v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
@@ -60,12 +58,12 @@ class TimelineParser {
         return null;
     }
 
-    public static TimelineItem getCheckVersionItem(Context context) {
-        ServiceHelper serviceHelper = new ServiceHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
+    public static TimelineItem getCheckVersionItem(TimelineView host) {
+        ServiceHelper serviceHelper = new ServiceHelper(host.getContext());
+        CacheHelper cacheHelper = new CacheHelper(host.getContext());
         final long now = Calendar.getInstance().getTimeInMillis();
         //如果版本有更新则提示更新版本
-        int versionCode = ServiceHelper.getAppVersionCode(context);
+        int versionCode = ServiceHelper.getAppVersionCode(host.getContext());
         int newestCode = serviceHelper.getNewestVersionCode();
 
         if (versionCode < newestCode
@@ -76,17 +74,15 @@ class TimelineParser {
             TimelineItem item = new TimelineItem("版本升级", tip,
                     now, TimelineItem.CONTENT_NOTIFY, R.mipmap.ic_update);
 
-            item.addButton(context, "下载", (v) -> {
+            item.addButton(host.getContext(), "下载", (v) -> {
                 Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
-                context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                host.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
             });
 
-            item.addButton(context, "忽略此版本", (v) -> {
-                ContextUtils.showMessage(context, "已忽略此版本，你仍可在系统设置中找到此更新");
+            item.addButton(host.getContext(), "忽略此版本", (v) -> {
+                ContextUtils.showMessage(host.getContext(), "已忽略此版本，你仍可在系统设置中找到此更新");
                 cacheHelper.setCache("herald_new_version_ignored", String.valueOf(newestCode));
-                if (context instanceof MainActivity) {
-                    ((MainActivity) context).loadTimelineView(false);
-                }
+                host.loadContent(false);
             });
 
             return item;
@@ -98,13 +94,13 @@ class TimelineParser {
     /**
      * 读取课表缓存，转换成对应的时间轴条目
      **/
-    public static TimelineItem getCurriculumItem(Context context) {
-        String cache = new CacheHelper(context).getCache("herald_curriculum");
+    public static TimelineItem getCurriculumItem(TimelineView host) {
+        String cache = new CacheHelper(host.getContext()).getCache("herald_curriculum");
         final long now = Calendar.getInstance().getTimeInMillis();
-        try {
+        if(!cache.equals("")) try {
             JSONObject jsonObject = new JSONObject(cache);
             // 读取侧栏信息
-            String sidebar = new CacheHelper(context).getCache("herald_sidebar");
+            String sidebar = new CacheHelper(host.getContext()).getCache("herald_sidebar");
             Map<String, Pair<String, String>> sidebarInfo = new HashMap<>();
 
             // 将课程的授课教师和学分信息放入键值对
@@ -166,9 +162,9 @@ class TimelineParser {
                         }
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                                 info, pair == null ? "获取失败" : pair.first);
-                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                 SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         remainingClasses.add(block);
                     }
@@ -180,10 +176,10 @@ class TimelineParser {
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                                 info, pair == null ? "获取失败" : pair.first);
 
-                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                 SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         item.attachedView.add(block);
                         return item;
@@ -194,10 +190,10 @@ class TimelineParser {
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                                 info, pair == null ? "获取失败" : pair.first);
 
-                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                 SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         item.attachedView.add(block);
                         return item;
@@ -222,7 +218,7 @@ class TimelineParser {
 
             // 若今天没课，或者课上完了，显示明天课程
             // 枚举明天的课程
-            dayDelta = (int) (today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24 + 1;
+            dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24) + 1;
             week = dayDelta / 7 + 1;
             dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
             array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
@@ -238,9 +234,9 @@ class TimelineParser {
                     info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
 
                     Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                    CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(context,
+                    CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                             info, pair == null ? "获取失败" : pair.first);
-                    block.setOnClickListener(v -> context.startActivity(new Intent(
+                    block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                             SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                     viewList.add(block);
                 }
@@ -262,19 +258,19 @@ class TimelineParser {
         } catch (Exception e) {
             e.printStackTrace();
             // 清除出错的数据，使下次懒惰刷新时刷新课表
-            new CacheHelper(context).setCache("herald_curriculum", "");
-            return new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                    now, TimelineItem.NO_CONTENT, "课表数据加载失败，请手动刷新"
-            );
+            new CacheHelper(host.getContext()).setCache("herald_curriculum", "");
         }
+        return new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
+                now, TimelineItem.NO_CONTENT, "课表数据加载失败，请手动刷新"
+        );
     }
 
 
     /**
      * 读取实验缓存，转换成对应的时间轴条目
      **/
-    public static TimelineItem getExperimentItem(Context context) {
-        String cache = new CacheHelper(context).getCache("herald_experiment");
+    public static TimelineItem getExperimentItem(TimelineView host) {
+        String cache = new CacheHelper(host.getContext()).getCache("herald_experiment");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONObject json_content = new JSONObject(cache).getJSONObject("content");
@@ -312,8 +308,8 @@ class TimelineParser {
 
                         // 没开始的实验全部单独记录下来
                         if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
-                            ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                            block.setOnClickListener(v -> context.startActivity(new Intent(
+                            ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
+                            block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                     SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                             allExperiments.add(block);
                         }
@@ -329,8 +325,8 @@ class TimelineParser {
                                 int nowStamp = nowCal.get(Calendar.HOUR_OF_DAY) * 60 + nowCal.get(Calendar.MINUTE);
                                 int startStamp = item.getBeginStamp();
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
-                                    ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                    block.setOnClickListener(v -> context.startActivity(new Intent(
+                                    ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
+                                    block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                             SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                     TimelineItem item1 = new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineItem.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
@@ -342,8 +338,8 @@ class TimelineParser {
                                 // 如果是已经开始还未结束的实验，放弃之前所有操作，直接返回这个实验的提醒
                                 int endStamp = startStamp + 3 * 60;
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
-                                    ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                    block.setOnClickListener(v -> context.startActivity(new Intent(
+                                    ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
+                                    block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                             SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                     TimelineItem item1 = new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineItem.CONTENT_NOTIFY, "1个实验正在进行"
@@ -365,8 +361,8 @@ class TimelineParser {
                                 }
 
                                 // 记录今天的实验
-                                ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                block.setOnClickListener(v -> context.startActivity(new Intent(
+                                ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
+                                block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                         SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                 currExperiments.add(block);
                             }
@@ -379,8 +375,8 @@ class TimelineParser {
 
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
-                                ExperimentBlockLayout block = new ExperimentBlockLayout(context, item);
-                                block.setOnClickListener(v -> context.startActivity(new Intent(
+                                ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
+                                block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                         SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                 currExperiments.add(block);
                             }
@@ -414,7 +410,7 @@ class TimelineParser {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新实验
-            new CacheHelper(context).setCache("herald_experiment", "");
+            new CacheHelper(host.getContext()).setCache("herald_experiment", "");
             return new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
                     now, TimelineItem.NO_CONTENT, "实验数据加载失败，手动刷新"
             );
@@ -424,8 +420,8 @@ class TimelineParser {
     /**
      * 读取人文讲座预告缓存，转换成对应的时间轴条目
      **/
-    public static TimelineItem getLectureItem(Context context) {
-        String cache = new CacheHelper(context).getCache("herald_lecture_notices");
+    public static TimelineItem getLectureItem(TimelineView host) {
+        String cache = new CacheHelper(host.getContext()).getCache("herald_lecture_notices");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
@@ -445,13 +441,13 @@ class TimelineParser {
                 if (time.get(Calendar.MONTH) + 1 == md[0] && time.get(Calendar.DAY_OF_MONTH) == md[1]) {
                     if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 18 * 60 + 30) {
 
-                        LectureBlockLayout block = new LectureBlockLayout(context, new LectureNoticeItem(
+                        LectureBlockLayout block = new LectureBlockLayout(host.getContext(), new LectureNoticeItem(
                                 json_item.getString("date"),
                                 json_item.getString("topic"),
                                 json_item.getString("speaker"),
                                 json_item.getString("location")
                         ));
-                        block.setOnClickListener(v -> context.startActivity(new Intent(
+                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
                                 SettingsHelper.moduleActions[SettingsHelper.MODULE_LECTURE])));
                         lectures.add(block);
                     }
@@ -488,8 +484,8 @@ class TimelineParser {
     /**
      * 读取跑操预报缓存，转换成对应的时间轴条目
      **/
-    public static TimelineItem getPeForecastItem(Context context) {
-        CacheHelper helper = new CacheHelper(context);
+    public static TimelineItem getPeForecastItem(TimelineView host) {
+        CacheHelper helper = new CacheHelper(host.getContext());
         String date = helper.getCache("herald_pc_date");
         String forecast = helper.getCache("herald_pc_forecast");
         String record = helper.getCache("herald_pedetail");
@@ -549,8 +545,8 @@ class TimelineParser {
     /**
      * 读取一卡通缓存，转换成对应的时间轴条目
      **/
-    public static TimelineItem getCardItem(Context context) {
-        CacheHelper helper = new CacheHelper(context);
+    public static TimelineItem getCardItem(TimelineView host) {
+        CacheHelper helper = new CacheHelper(host.getContext());
         String cache = helper.getCache("herald_card");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
@@ -563,22 +559,22 @@ class TimelineParser {
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
                 );
-                item.addButton(context, "在线充值", (v) -> {
-                    Toast.makeText(context, "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
+                item.addButton(host.getContext(), "在线充值", (v) -> {
+                    Toast.makeText(host.getContext(), "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
                     Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    context.startActivity(intent);
+                    host.getContext().startActivity(intent);
                 });
                 return item;
             } else {
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"
                 );
-                item.addButton(context, "在线充值", (v) -> {
-                    Toast.makeText(context, "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
+                item.addButton(host.getContext(), "在线充值", (v) -> {
+                    Toast.makeText(host.getContext(), "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
                     Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    context.startActivity(intent);
+                    host.getContext().startActivity(intent);
                 });
 
                 return item;
@@ -593,8 +589,8 @@ class TimelineParser {
     /**
      * 读取教务通知缓存，转换成对应的时间轴条目
      **/
-    public static TimelineItem getJwcItem(Context context) {
-        String cache = new CacheHelper(context).getCache("herald_jwc");
+    public static TimelineItem getJwcItem(TimelineView host) {
+        String cache = new CacheHelper(host.getContext()).getCache("herald_jwc");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             JSONArray json_content = new JSONObject(cache)
@@ -611,7 +607,7 @@ class TimelineParser {
 
                 if (item.getDate().equals(new SimpleDateFormat("yyyy-MM-dd")
                         .format(Calendar.getInstance().getTime()))) {
-                    JwcBlockLayout block = new JwcBlockLayout(context, item);
+                    JwcBlockLayout block = new JwcBlockLayout(host.getContext(), item);
                     allNotices.add(block);
                 }
             }
@@ -629,7 +625,7 @@ class TimelineParser {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新实验
-            new CacheHelper(context).setCache("herald_jwc", "");
+            new CacheHelper(host.getContext()).setCache("herald_jwc", "");
             return new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
                     now, TimelineItem.NO_CONTENT, "教务通知加载失败，请手动刷新"
             );

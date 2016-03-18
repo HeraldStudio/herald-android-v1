@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.view.ViewParent;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.SeuModule;
 import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
-import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class ShortcutBoxView extends GridView {
     public ShortcutBoxView(Context c, AttributeSet a) {
@@ -62,17 +60,11 @@ public class ShortcutBoxView extends GridView {
 
             SettingsHelper settingsHelper = new SettingsHelper(getContext());
             new AlertDialog.Builder(getContext())
-                    .setMessage("确定移除此模块的快捷方式和卡片吗？\n(可在侧边栏→查询助手中找回)")
+                    .setMessage("确定移除此模块的快捷方式吗？")
                     .setPositiveButton("确定", (dialog, which) -> {
                         //设置为不可用
                         settingsHelper.setModuleShortCutEnabled(moduleId, false);
-                        //刷新整个列表
-                        for (ViewParent v = getParent(); v != null; v = v.getParent()) {
-                            if (v instanceof TimelineView) {
-                                ((TimelineView) v).loadContent(true);
-                                return;
-                            }
-                        }
+                        refresh();
                     })
                     .setNegativeButton("取消", (dialog1, which1) -> {
 

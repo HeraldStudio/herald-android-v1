@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.MainActivity">
+    tools:context=".mod_modulemanager.ModuleManageActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
@@ -17,11 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:title="@string/index_title_name"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_module_manage" />
 
 </android.support.design.widget.CoordinatorLayout>

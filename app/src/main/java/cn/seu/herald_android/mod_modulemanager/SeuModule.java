@@ -13,6 +13,8 @@ public class SeuModule {
     private int ic_id;
     //是否被选为快捷方式
     private boolean enabledShortCut;
+    //是否提供并显示卡片
+    private boolean enabledCard;
     //启动的activity的action
     private String actions;
     //名字
@@ -20,13 +22,14 @@ public class SeuModule {
     //描述
     private String description;
 
-    public SeuModule(int moduleId, boolean enabledShortCut, String actions) {
+    public SeuModule(int moduleId, boolean enabledShortCut, boolean enabledCard, String actions) {
         this.moduleId = moduleId;
         this.enabledShortCut = enabledShortCut;
         this.actions = actions;
         this.ic_id = SettingsHelper.moduleIconsId[moduleId];
         this.name = SettingsHelper.moduleNamesTips[moduleId];
         this.description = SettingsHelper.moduleDescriptions[moduleId];
+        this.enabledCard = SettingsHelper.moduleHasCard[moduleId] && enabledCard;
     }
 
     public int getModuleId() {
@@ -35,6 +38,10 @@ public class SeuModule {
 
     public boolean isEnabledShortCut() {
         return enabledShortCut;
+    }
+
+    public boolean isEnabledCard() {
+        return enabledCard;
     }
 
     public String getActions() {
