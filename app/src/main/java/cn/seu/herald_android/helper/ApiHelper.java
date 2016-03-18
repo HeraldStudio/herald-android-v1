@@ -179,6 +179,7 @@ public class ApiHelper {
         setAuthCache("name", "");
         setAuthCache("sex", "");
         //清除模块缓存
+        //注意此处的clearAllmoduleCache里的authUser和authPwd与上面清除的是不同的
         CacheHelper cacheHelper = new CacheHelper(context);
         cacheHelper.clearAllModuleCache();
         //跳转到登录页
@@ -216,6 +217,8 @@ public class ApiHelper {
             e.printStackTrace();
         }
     }
+
+
 
     public String getPassword() {
         CacheHelper helper = new CacheHelper(context);
