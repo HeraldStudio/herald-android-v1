@@ -132,6 +132,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
                 ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();
+                achievementArrayList = new ArrayList<>();
                 //根据每种集合加载不同的子view
                 for (int i = 0; i < json_content.length(); i++) {
                     String jsonArray_str = json_content.getString(json_content.names().getString(i));
@@ -143,8 +144,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         //加入到list中
                         parentArray.add(json_content.names().getString(i));
                         childArray.add(item_list);
-                        //清空成就列表并且加入到成就列表中
-                        achievementArrayList = new ArrayList<>();
+                        //加入到成就列表中
                         achievementArrayList.addAll(AchievementFactory.getExperimentAchievement(item_list));
                     }
                 }
