@@ -145,12 +145,13 @@ public class ApiHelper {
         }
         // 发布流程：
         // 下面第一行去掉注释，第二行加注释，
+        // 在build.gradle中改版本号
         // 编译，打包，签名，制成发布版本，
         // 用工具计算md5，在服务器登记appid，
         // 联网测试，上线
 
-        return test;
-        //return "34cc6df78cfa7cd457284e4fc377559e";
+        //return test;
+        return "34cc6df78cfa7cd457284e4fc377559e";
     }
 
     public void dealApiException(Exception e) {

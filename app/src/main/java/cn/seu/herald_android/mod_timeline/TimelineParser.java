@@ -132,7 +132,7 @@ class TimelineParser {
             today = CalendarUtils.toSharpDay(today);
 
             // 枚举今天的课程
-            int dayDelta = (int) (today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24;
+            int dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24);
             int week = dayDelta / 7 + 1;
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
             JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
@@ -260,6 +260,7 @@ class TimelineParser {
 
             return item;
         } catch (Exception e) {
+            e.printStackTrace();
             // 清除出错的数据，使下次懒惰刷新时刷新课表
             new CacheHelper(context).setCache("herald_curriculum", "");
             return new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
