@@ -26,6 +26,7 @@ import java.util.Vector;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.CacheHelper;
@@ -107,16 +108,55 @@ public class TimelineView extends ListView {
     }
 
     public void loadContent(boolean refresh) {
+        /**
+         * 刷新列表
+         *
+         * 为了方便理解，说明如下：
+         *
+         * 1、若refresh为true，为联网刷新操作。
+         * 此时将用Vector的方式管理线程，每个线程开始前添加一个对象，结束时先删除一个对象，然后递归调用本函数。
+         * 被递归调用的子函数中，refresh参数强制为false，它们首先会进行本地重载（每个线程结束都重载一次），
+         * 然后判断Vector中的对象数是否为零，如果为零则执行刷新结束的操作。
+         *
+         * 2、若refresh为false，为本地重载操作，本地重载不涉及上述的线程管理和递归问题。
+         **/
 
-        // 刷新快捷方式和轮播图
+        // 重载快捷方式栏和轮播图
         refreshHeaders();
 
+        // 清空卡片列表，等待载入
         itemList = new ArrayList<>();
         SettingsHelper settingsHelper = new SettingsHelper(getContext());
         CacheHelper cacheHelper = new CacheHelper(getContext());
 
+        /**
+         * 联网部分
+         *
+         * 只有refresh为true时，主函数才执行此部分。因此被递归调用的子函数不执行此部分。
+         *
+         * 1、此处为懒惰刷新，即当某模块需要刷新时才刷新，不需要时不刷新，
+         * 各个模块是否刷新的判断条件可以按不同模块的需求来写。
+         *
+         * 2、此处使用各个模块类的remoteRefreshCache()函数进行各个模块的刷新。
+         * 因为多数模块类都是Activity，为了不构造这些实例就调用它们，这些函数被设置为静态的。
+         *
+         * 3、因为需要多个模块联网，所以这里需要一个延迟显示错误信息的机制，防止连续显示好几个错误信息。
+         * 又因为第2点提到的这些静态函数已经从对应的动态函数中分离出来，专门用于这里的联网刷新，
+         * 所以我索性把这种有特殊需求的错误处理机制也放在了那些静态函数中，
+         * 那些静态函数在联网出错时不会调用ApiHelper.dealApiException()直接显示错误信息，
+         * 而是调用ApiHelper.dealApiExceptionSilently()函数，
+         * 该函数会把生成的错误信息先交给ContextUtils暂存起来，
+         * 然后在本函数最末尾刷新完成的时候将让ContextUtils吐出最后一条错误消息。
+         **/
         if (refresh) {
-            // 懒惰刷新
+
+            // 刷新版本信息和推送消息
+            threads.add(new Object());
+            ServiceHelper.refreshVersionCache(getContext(), () -> {
+                if (threads.size() > 0) threads.remove(0);
+                loadContent(false);
+            });
+
             // 当课表模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
                 // 仅当课表数据不存在时刷新课表
@@ -196,6 +236,13 @@ public class TimelineView extends ListView {
             }
         }
 
+        /**
+         * 本地重载部分
+         *
+         * 主函数和被递归调用的子函数都执行这一部分
+         * 这样每刷出来一个模块都会本地重载一次列表，以便于在有些模块没刷出来的时候第一时间看到已经刷出来的模块
+         **/
+
         // 加载推送消息
         TimelineItem item = TimelineParser.getPushMessageItem(this);
         if (item != null) itemList.add(item);
@@ -244,8 +291,17 @@ public class TimelineView extends ListView {
         } else {
             adapter.notifyDataSetChanged();
         }
-        if (hideRefresh != null && threads.size() == 0)
+
+        /**
+         * 结束刷新部分
+         *
+         * 只有最后结束的线程在结束时调用的递归子函数能执行到这一部分
+         * 它负责隐藏刷新控件，也可以在这里加入其它后续处理工作
+         **/
+        if (hideRefresh != null && threads.size() == 0) {
             hideRefresh.run();
+            ContextUtils.flushMessage(getContext());
+        }
     }
 
     private void refreshHeaders() {

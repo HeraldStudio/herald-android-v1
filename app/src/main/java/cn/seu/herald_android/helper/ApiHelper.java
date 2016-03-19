@@ -131,7 +131,7 @@ public class ApiHelper {
         byte[] buffer = new byte[1024];
         int numRead;
         MessageDigest md5;
-        String test = "";
+        String appid = "";
         try {
             fis = new FileInputStream(packagePath);
             md5 = MessageDigest.getInstance("MD5");
@@ -139,7 +139,7 @@ public class ApiHelper {
                 md5.update(buffer, 0, numRead);
             }
             fis.close();
-            test = HashHelper.toHexString(md5.digest());
+            appid = HashHelper.toHexString(md5.digest());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,7 +150,7 @@ public class ApiHelper {
         // 用工具计算md5，在服务器登记appid，
         // 联网测试，上线
 
-        //return test;
+        //return appid;
         return "34cc6df78cfa7cd457284e4fc377559e";
     }
 
@@ -166,6 +166,24 @@ public class ApiHelper {
             doLogout();
         } else {
             ContextUtils.showMessage(context, "出现未知错误，请尝试重新登录");
+        }
+    }
+
+    /**
+     * 暂时吞掉生成的错误信息，此机制参见{@link ContextUtils}
+     **/
+    public void dealApiExceptionSilently(Exception e) {
+        e.printStackTrace();
+        if (e instanceof SocketTimeoutException) {
+            ContextUtils.showMessage(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
+        } else if (e instanceof ConnectException || e instanceof SocketException) {
+            ContextUtils.showMessage(context, "网络连接错误，请检查您的网络连接~");
+        } else if (e instanceof RuntimeException && e.toString().contains("Unauthorized")) {
+            // uuid过期的处理
+            Toast.makeText(context, "账号身份已过期，请重新登录", Toast.LENGTH_LONG).show();
+            doLogout();
+        } else {
+            ContextUtils.eatMessage("出现未知错误，请尝试重新登录");
         }
     }
 

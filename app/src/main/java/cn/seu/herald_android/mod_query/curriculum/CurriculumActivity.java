@@ -67,7 +67,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                                 .execute(new StringCallback() {
                                     @Override
                                     public void onError(Call call, Exception e) {
-                                        apiHelper.dealApiException(e);
+                                        apiHelper.dealApiExceptionSilently(e);
                                         onFinish.run();
                                     }
 

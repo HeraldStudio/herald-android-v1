@@ -64,9 +64,6 @@ public class MainActivity extends BaseAppCompatActivity {
             //刷新模块视图
             moduleListFragment.loadModuleList();
         });
-
-        //检查版本更新，获取推送消息
-        checkVersionAndPushMessage();
     }
 
 
@@ -137,11 +134,6 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
-    }
-
-    private void checkVersionAndPushMessage() {
-        //拉取最新版本信息、轮播图url和推送消息
-        getServiceHelper().refreshVersionCache();
     }
 
     public void syncModuleSettings() {

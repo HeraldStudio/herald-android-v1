@@ -58,7 +58,10 @@ public class MyInfoFragment extends Fragment {
         });
 
         getView().findViewById(R.id.tv_logout).setOnClickListener((v) -> {
-            new ApiHelper(getContext()).doLogout();
+            new AlertDialog.Builder(getContext()).setMessage("退出后将自动清除模块缓存，确定退出吗？")
+                    .setPositiveButton("退出", (d, w) -> new ApiHelper(getContext()).doLogout())
+                    .setNegativeButton("取消", null)
+                    .show();
         });
 
         swith_seu = (SwitchButton) getView().findViewById(R.id.switchseuauto);

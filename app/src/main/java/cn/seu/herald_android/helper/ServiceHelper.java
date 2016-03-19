@@ -33,65 +33,69 @@ public class ServiceHelper {
             "download"
     };
 
-    public static String getServiceUrl(int service){
-        return ServiceHelper.android_service_url+ServiceHelper.serviceNames[service];
+    public static String getServiceUrl(int service) {
+        return ServiceHelper.android_service_url + ServiceHelper.serviceNames[service];
     }
 
-    public ServiceHelper(Context context){
+    public ServiceHelper(Context context) {
         this.context = context;
         this.apiHelper = new ApiHelper(context);
     }
 
-    public void refreshVersionCache(){
+    public static void refreshVersionCache(Context context, Runnable doAfter) {
+        ApiHelper apiHelper = new ApiHelper(context);
+        ServiceHelper serviceHelper = new ServiceHelper(context);
         //拉取最新版本信息
         OkHttpUtils
                 .post()
                 .url(getServiceUrl(SERVICE_VERSION))
-                .addParams("schoolnum",apiHelper.getAuthCache("schoolnum"))
-                .addParams("uuid",apiHelper.getUUID())
-                .addParams("versioncode",getAppVersionCode(context)+"")
+                .addParams("schoolnum", apiHelper.getAuthCache("schoolnum"))
+                .addParams("uuid", apiHelper.getUUID())
+                .addParams("versioncode", getAppVersionCode(context) + "")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
                         e.printStackTrace();
+                        doAfter.run();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        try{
+                        try {
                             JSONObject object = new JSONObject(response);
-                            if (object.getInt("code")==200){
-                                setServiceCache("versioncheck_cache",object.toString());
+                            if (object.getInt("code") == 200) {
+                                serviceHelper.setServiceCache("versioncheck_cache", object.toString());
                             }
-                        }catch (JSONException jsone){
+                        } catch (JSONException jsone) {
                             jsone.printStackTrace();
                         }
+                        doAfter.run();
                     }
                 });
     }
 
-    public String getPushMessageContent(){
+    public String getPushMessageContent() {
         //获得服务器端的推送消息
         String cache = getServiceCache("versioncheck_cache");
         String message = "";
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("message");
             message = jsonObject.getString("content");
-        }catch (JSONException e){
+        } catch (JSONException e) {
             message = "";
         }
         return message;
     }
 
-    public String getPushMessageUrl(){
+    public String getPushMessageUrl() {
         //获得服务器端的推送消息链接
         String cache = getServiceCache("versioncheck_cache");
         String messageUrl = "";
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("message");
             messageUrl = jsonObject.getString("url");
-        }catch (JSONException e){
+        } catch (JSONException e) {
             //如果异常则指调为空
             messageUrl = "";
         }
@@ -102,10 +106,10 @@ public class ServiceHelper {
         //获得最新版本名字
         String cache = getServiceCache("versioncheck_cache");
         String name = getAppVersionName(this.context);
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("version");
             name = jsonObject.getString("name");
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return name;
@@ -128,22 +132,22 @@ public class ServiceHelper {
         //获得最新版本号
         String cache = getServiceCache("versioncheck_cache");
         int code = getAppVersionCode(this.context);
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("version");
             code = jsonObject.getInt("code");
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return code;
     }
 
-    public ArrayList<SliderView.SliderViewItem> getSliderViewItemArray(){
+    public ArrayList<SliderView.SliderViewItem> getSliderViewItemArray() {
         //获得服务器端的推送内容，这里是获得轮播栏各项设置并且返回数组
         String cache = getServiceCache("versioncheck_cache");
         ArrayList<SliderView.SliderViewItem> list = new ArrayList<>();
-        try{
+        try {
             JSONArray slideViewArray = new JSONObject(cache).getJSONObject("content").getJSONArray("sliderviews");
-            for(int i =0 ;i < slideViewArray.length() ; i++){
+            for (int i = 0; i < slideViewArray.length(); i++) {
                 JSONObject jsonItem = slideViewArray.getJSONObject(i);
                 list.add(new SliderView.SliderViewItem(
                         jsonItem.getString("title"),
@@ -151,13 +155,11 @@ public class ServiceHelper {
                         jsonItem.getString("url")
                 ));
             }
-        }catch (JSONException e){
+        } catch (JSONException e) {
             list = null;
         }
         return list;
     }
-
-
 
 
     public static String getAppVersionName(Context context) {
@@ -188,7 +190,7 @@ public class ServiceHelper {
         return versionCode;
     }
 
-    private String getServiceCache(String cacheName){
+    private String getServiceCache(String cacheName) {
         //可用
         /**
          * uuid         认证用uuid
@@ -202,9 +204,9 @@ public class ServiceHelper {
         return pref.getString(cacheName, "");
     }
 
-    private boolean setServiceCache(String cacheName,String cacheValue){
+    private boolean setServiceCache(String cacheName, String cacheValue) {
         //用于更新存储的某项信息
-        SharedPreferences.Editor editor= context.getSharedPreferences("herald_service",Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences("herald_service", Context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         return editor.commit();
     }
