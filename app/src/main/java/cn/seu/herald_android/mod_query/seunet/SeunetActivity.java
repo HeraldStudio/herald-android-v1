@@ -203,7 +203,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
         if (unit.equals("KB")) used_per = used / (1024d * 5d * 1024d);
         if (unit.equals("MB")) used_per = used / (1024d * 5d);
         if (unit.equals("GB")) {
-            double total = 5d;
+            double total = 10d;
             used_per = used / total;
             while (used_per > 1d){
                 total += 5d;
