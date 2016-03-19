@@ -1,5 +1,6 @@
 package cn.seu.herald_android.mod_timeline;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Pair;
@@ -555,17 +556,60 @@ class TimelineParser {
             //获取余额并且设置
             String left = json_cache.getString("left");
             float extra = Float.valueOf(left);
+
+            //若检测到超过上次忽略时的余额，认为已经充值过了，取消忽略充值提醒
+            boolean isNumber = true;
+            try {
+                if (extra > Float.valueOf(helper.getCache("herald_card_charged"))) {
+                    helper.setCache("herald_card_charged", "");
+                    isNumber = false;
+                }
+            } catch (NumberFormatException e) {
+                isNumber = false;
+            }
+
             if (extra < 20) {
-                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
-                        now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
-                );
-                item.addButton(host.getContext(), "在线充值", (v) -> {
-                    Toast.makeText(host.getContext(), "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
-                    Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    host.getContext().startActivity(intent);
-                });
-                return item;
+                // 若没有被忽略的充值提醒，或者超过上次忽略提醒时的余额，认为余额不足需要提醒
+                if (!isNumber || extra > Float.valueOf(helper.getCache("herald_card_charged"))) {
+
+                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
+                            now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
+                    );
+                    item.addButton(host.getContext(), "在线充值", (v) -> {
+                        Toast.makeText(host.getContext(), "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
+                        Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        host.getContext().startActivity(intent);
+
+                        new AlertDialog.Builder(host.getContext()).setMessage("充值成功了吗？\n" +
+                                "选择充值成功可以自动忽略本次充值提醒。")
+                                .setPositiveButton("充值成功了", (d, w) -> {
+                                    helper.setCache("herald_card_charged", String.valueOf(extra));
+                                    ContextUtils.showMessage(host.getContext(), "已忽略本次充值提醒，为了让小猴下次" +
+                                            "还能正常提醒你充值，本次到账后记得让小猴知道哦~");
+                                    host.loadContent(false);
+                                })
+                                .setNegativeButton("还没有", null)
+                                .show();
+                    });
+                    item.addButton(host.getContext(), "充值过了", (v) -> {
+                        helper.setCache("herald_card_charged", String.valueOf(extra));
+                        ContextUtils.showMessage(host.getContext(), "已忽略本次充值提醒，为了让小猴下次" +
+                                "还能正常提醒你充值，本次到账后记得让小猴知道哦~");
+                        host.loadContent(false);
+                    });
+                    return item;
+                } else {
+                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
+                            now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元，但小猴记得你似乎已经充值过了~"
+                    );
+                    item.addButton(host.getContext(), "我还没充值", (v) -> {
+                        helper.setCache("herald_card_charged", "");
+                        ContextUtils.showMessage(host.getContext(), "已取消忽略充值提醒");
+                        host.loadContent(false);
+                    });
+                    return item;
+                }
             } else {
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"

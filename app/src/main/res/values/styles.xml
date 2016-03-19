@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
@@ -14,133 +16,102 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="MyTabLayoutTextAppearanceInverse" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@android:color/holo_red_light</item>
+    <style name="SubActivityTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="QueryGradeTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="QueryGradeTheme" parent="SubActivityTheme">
         <!-- 成绩查询页风格 -->
         <item name="colorPrimary">@color/colorGradeprimary</item>
         <item name="colorPrimaryDark">@color/colorGradeprimary_dark</item>
         <item name="colorAccent">@color/colorGradeaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="JwcTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="JwcTheme" parent="SubActivityTheme">
         <!-- 教务通知风格 -->
         <item name="colorPrimary">@color/colorJwcprimary</item>
         <item name="colorPrimaryDark">@color/colorJwcprimary_dark</item>
         <item name="colorAccent">@color/colorJwcaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LectureTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="LectureTheme" parent="SubActivityTheme">
         <!-- 人文讲座风格 -->
         <item name="colorPrimary">@color/colorLectureprimary</item>
         <item name="colorPrimaryDark">@color/colorLectureprimary_dark</item>
         <item name="colorAccent">@color/colorLectureaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="QuerySchoolBusTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="QuerySchoolBusTheme" parent="SubActivityTheme">
         <!-- 校车时刻表风格 -->
         <item name="colorPrimary">@color/colorSchoolBusprimary</item>
         <item name="colorPrimaryDark">@color/colorSchoolBusprimary_dark</item>
         <item name="colorAccent">@color/colorSchoolBusaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="ExperimentTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ExperimentTheme" parent="SubActivityTheme">
         <!-- 实验查询风格 -->
         <item name="colorPrimary">@color/colorExperimentprimary</item>
         <item name="colorPrimaryDark">@color/colorExperimentprimary_dark</item>
         <item name="colorAccent">@color/colorExperimentaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="CardTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CardTheme" parent="SubActivityTheme">
         <!-- 一卡通查询风格 -->
         <item name="colorPrimary">@color/colorCardprimary</item>
         <item name="colorPrimaryDark">@color/colorCardprimary_dark</item>
         <item name="colorAccent">@color/colorCardaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="SeunetTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SeunetTheme" parent="SubActivityTheme">
         <!-- 校园网查询风格 -->
         <item name="colorPrimary">@color/colorSeuNetprimary</item>
         <item name="colorPrimaryDark">@color/colorSeuNetprimary_dark</item>
         <item name="colorAccent">@color/colorSeuNetaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="PedetailTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="PedetailTheme" parent="SubActivityTheme">
         <!-- 跑操查询风格 -->
         <item name="colorPrimary">@color/colorPedetailprimary</item>
         <item name="colorPrimaryDark">@color/colorPedetailprimaryDark</item>
         <item name="colorAccent">@color/colorPedetailaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="CurriculumTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CurriculumTheme" parent="SubActivityTheme">
         <!-- 课表查询风格 -->
         <item name="colorPrimary">@color/colorCurriculumPrimary</item>
         <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
         <item name="colorAccent">@color/colorCurriculumAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
 
-    <style name="SrtpTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SrtpTheme" parent="SubActivityTheme">
         <!-- 课外研学查询风格 -->
         <item name="colorPrimary">@color/colorSrtpprimary</item>
         <item name="colorPrimaryDark">@color/colorSrtpprimaryDark</item>
         <item name="colorAccent">@color/colorSrtpaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LibraryTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="LibraryTheme" parent="SubActivityTheme">
         <!-- 图书馆风格 -->
         <item name="colorPrimary">@color/colorLibraryprimary</item>
         <item name="colorPrimaryDark">@color/colorLibraryprimaryDark</item>
         <item name="colorAccent">@color/colorLibraryaccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
 
-    <style name="AboutusTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->
         <item name="colorPrimary">@color/colorAboutusprimary</item>
         <item name="colorPrimaryDark">@color/colorAboutusprimaryDark</item>
         <item name="colorAccent">@color/colorAboutusprimaryAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="FeedbackTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="FeedbackTheme" parent="SubActivityTheme">
         <!-- 意见反馈 -->
         <item name="colorPrimary">@color/colorFeedbackprimary</item>
         <item name="colorPrimaryDark">@color/colorFeedbackprimaryDark</item>
         <item name="colorAccent">@color/colorFeedbackprimaryAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.Invisible" parent="AppTheme.NoActionBar">
@@ -152,6 +123,5 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 
 </resources>

@@ -118,6 +118,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
         collapsingToolbarLayout.setTitleEnabled(false);
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPedetailprimary));
+        enableSwipeBack();
 
         pager = (ViewPager) findViewById(R.id.calendarPager);
 

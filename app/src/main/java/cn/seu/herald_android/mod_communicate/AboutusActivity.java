@@ -23,5 +23,6 @@ public class AboutusActivity extends BaseAppCompatActivity {
 
         //设置状态栏颜色
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+        enableSwipeBack();
     }
 }

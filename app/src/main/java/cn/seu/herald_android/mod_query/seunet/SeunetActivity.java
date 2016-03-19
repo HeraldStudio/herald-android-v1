@@ -57,6 +57,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
         collapsingToolbarLayout.setTitleEnabled(false);
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSeuNetprimary));
+        enableSwipeBack();
         //初始化流量显示饼状图
         pieChartView_wlan = (PieChartView) findViewById(R.id.chartwlan);
         //设置饼图不旋转

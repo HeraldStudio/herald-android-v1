@@ -92,6 +92,7 @@ public class CardActivity extends BaseAppCompatActivity {
 
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorCardprimary));
+        enableSwipeBack();
         //禁用collapsingToolbarLayout的伸缩标题
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);

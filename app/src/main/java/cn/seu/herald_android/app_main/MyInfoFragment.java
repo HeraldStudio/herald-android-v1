@@ -68,7 +68,6 @@ public class MyInfoFragment extends Fragment {
         swith_seu.setCheckedImmediately(new SettingsHelper(getContext()).getWifiAutoLogin());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) -> {
             new SettingsHelper(getContext()).setWifiAutoLogin(isChecked);
-            ContextUtils.showMessage(getContext(), "更改将在下次启动时生效");
         });
 
         getView().findViewById(R.id.switch_container).setOnClickListener((v) -> {

@@ -17,6 +17,7 @@ public class ModuleManageActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_manage);
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+        enableSwipeBack();
         init();
     }
 

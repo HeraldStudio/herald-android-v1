@@ -61,6 +61,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
         collapsingToolbarLayout.setTitleEnabled(false);
         //适配4.4的沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSrtpprimary));
+        enableSwipeBack();
     }
 
     private void loadCache() {

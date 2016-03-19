@@ -1,14 +1,9 @@
 package cn.seu.herald_android.mod_wifi;
 
 import android.content.Context;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.widget.Toast;
+import android.os.Vibrator;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -19,68 +14,20 @@ import org.json.JSONObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import okhttp3.Call;
 
 
 public class NetworkLoginHelper {
 
-    private static NetworkLoginHelper instance;
-
     private Context context;
 
-    private boolean registered = false;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            String ssid = wifiInfo.getSSID().replaceAll("\"", "");
-            Bundle data = msg.getData();
-            if (data.getString("result").equals("success")) {
-                try {
-                    if (data.getString("login").equals("null")) {
-                        // 未登录状态，开始登录
-                        loginToService();
-                    } else if (data.getString("login").equals("new")) {
+    private Vibrator vibrator;
 
-                        // 登陆成功状态
-                        JSONObject info = new JSONObject(data.getString("response"));
-                        String[] infoStr = {
-                                info.getString("login_username"),
-                                info.getString("login_index"),
-                                info.getString("login_ip"),
-                                unicodeToString(info.getString("login_location")),
-                                info.getString("login_expire"),
-                                info.getString("login_remain"),
-                                formatTime(info.getString("login_time"))
-                        };
-                        Toast.makeText(context, "登陆" + ssid + "无线网络成功\n" +
-                                "账户名：" + infoStr[0] + " (已登录" + infoStr[1] + "个设备)\n" +
-                                "登录IP：" + infoStr[2] + "\n" +
-                                "登录位置：" + infoStr[3] + "\n" +
-                                "到期时间：" + infoStr[4] + " (剩余" + infoStr[5] + "天)", Toast.LENGTH_LONG).show();
-
-                    }
-                } catch (JSONException e) {
-                    try {
-                        String error = new JSONObject(data.getString("response")).getString("error");
-                        Toast.makeText(context, "尝试登陆" + ssid + "无线网络失败\n" + error
-                                , Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e2) {
-                        e2.printStackTrace();
-                    }
-                }
-            }
-        }
-    };
-
-    public static NetworkLoginHelper getInstance(Context context) {
-        if (instance == null) {
-            instance = new NetworkLoginHelper();
-            instance.context = context;
-        }
-        return instance;
+    public NetworkLoginHelper(Context context) {
+        this.context = context;
+        vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     private static String formatTime(String time) {
@@ -102,28 +49,15 @@ public class NetworkLoginHelper {
         return str;
     }
 
-    public void registerReceiver() {
-        if (!registered) {
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-            context.registerReceiver(NetworkChangeReceiver.getInstance(), filter);
-            registered = true;
-        }
-    }
-
-    public void unregisterReceiver() {
-        if (registered) {
-            context.unregisterReceiver(NetworkChangeReceiver.getInstance());
-            registered = false;
-        }
-    }
-
     public void checkAndLogin() {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         String ssid = wifiInfo.getSSID().replaceAll("\"", "");
         if (ssid.equals("seu-wlan") || ssid.equals("seu-dorm")) {
             checkOnlineStatus();
+        } else {
+            vibrator.vibrate(50);
+            showTrickyMessage("你需要手动连接到seu网络才能摇一摇登录~");
         }
     }
 
@@ -132,22 +66,19 @@ public class NetworkLoginHelper {
                 .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString("result", "fail");
-                msg.setData(bundle);
-                handler.sendMessage(msg);
+                vibrator.vibrate(50);
+                ContextUtils.showMessage(context, "似乎信号有点差，不妨换个姿势试试？");
             }
 
             @Override
             public void onResponse(String response) {
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString("result", "success");
-                bundle.putString("login", response.contains("notlogin") ? "null" : "old");
-                bundle.putString("response", response);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
+                if (response.contains("notlogin")) {
+                    // 未登录状态，开始登录
+                    loginToService();
+                } else {
+                    vibrator.vibrate(50);
+                    showTrickyMessage("你已经登录校园网，不用再摇了~");
+                }
             }
         });
     }
@@ -164,23 +95,58 @@ public class NetworkLoginHelper {
                 .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString("result", "fail");
-                msg.setData(bundle);
-                handler.sendMessage(msg);
+                vibrator.vibrate(50);
+                ContextUtils.showMessage(context, "似乎信号有点差，不妨换个姿势试试？");
             }
 
             @Override
             public void onResponse(String response) {
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString("result", "success");
-                bundle.putString("login", "new");
-                bundle.putString("response", response);
-                msg.setData(bundle);
-                handler.sendMessage(msg);
+                try {
+                    // 登陆成功状态
+                    JSONObject info = new JSONObject(response);
+                    String[] infoStr = {
+                            info.getString("login_username"),
+                            info.getString("login_index"),
+                            info.getString("login_ip"),
+                            unicodeToString(info.getString("login_location")),
+                            info.getString("login_expire"),
+                            info.getString("login_remain"),
+                            formatTime(info.getString("login_time"))
+                    };
+                    vibrator.vibrate(new long[]{0, 50, 100, 50}, -1);
+                    ContextUtils.showMessage(context, "小猴已经成功帮你登陆seu网络啦，开始使用吧");
+                } catch (JSONException e) {
+                    try {
+                        String error = new JSONObject(response).getString("error");
+                        vibrator.vibrate(50);
+                        ContextUtils.showMessage(context, "登陆失败，" + error);
+                    } catch (JSONException e2) {
+                        e2.printStackTrace();
+                    }
+                }
             }
         });
+    }
+
+    private static String lastMessage = "";
+
+    private static final String[] trickyMessages = new String[]{
+            "喂喂，小猴要被你摇晕啦~",
+            "停一下，停一下，不要再摇啦X_X~",
+            "主人你再这样摇下去的话，小猴要被摇坏了呜呜",
+            "好了好了，你再摇一次我就要罢工了~！"
+    };
+
+    private static int trickyCount = 0;
+
+    private void showTrickyMessage(String message) {
+        if (message.equals(lastMessage)) {
+            message = trickyMessages[trickyCount];// TODO 此处故意留出数组越界，摇多了直接任性闪退
+            trickyCount++;
+        } else {
+            lastMessage = message;
+            trickyCount = 0;
+        }
+        ContextUtils.showMessage(context, message);
     }
 }

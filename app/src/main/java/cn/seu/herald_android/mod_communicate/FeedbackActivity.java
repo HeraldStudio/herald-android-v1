@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_communicate;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,8 @@ public class FeedbackActivity extends BaseAppCompatActivity {
             onBackPressed();
             finish();
         });
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorFeedbackprimary));
+        enableSwipeBack();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 

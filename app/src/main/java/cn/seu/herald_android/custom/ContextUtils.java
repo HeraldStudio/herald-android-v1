@@ -28,9 +28,11 @@ public class ContextUtils {
         eatenMessage = message;
     }
 
-    public static void flushMessage(Context context) {
+    public static void flushMessage(Context context, String message) {
         if (eatenMessage != null) {
-            showMessage(context, eatenMessage);
+            if(message == null)
+                showMessage(context, eatenMessage);
+            else showMessage(context, message);
             eatenMessage = null;
         }
     }

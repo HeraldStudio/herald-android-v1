@@ -1,12 +1,17 @@
 package cn.seu.herald_android.app_main;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 
+import com.squareup.seismic.ShakeDetector;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -37,16 +42,37 @@ public class MainActivity extends BaseAppCompatActivity {
         init();
     }
 
+    private boolean preventShake = false;
+
+    private ShakeDetector shakeDetector = new ShakeDetector(() -> {
+        if (getSettingsHelper().getWifiAutoLogin() && !preventShake) {
+            preventShake = true;
+            new NetworkLoginHelper(this).checkAndLogin();
+            new Handler().postDelayed(() -> preventShake = false, 3000);
+        }
+    });
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        shakeDetector.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        shakeDetector.setSensitivity(20);
+        shakeDetector.start(sensorManager);
+    }
+
     private void init() {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
         setTitle(" " + getTitle().toString().trim());
-
-        //登陆校园wifi
-        if (getSettingsHelper().getWifiAutoLogin()) {
-            checkAndLoginWifi();
-        }
 
         //切换动画
         overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
@@ -64,11 +90,6 @@ public class MainActivity extends BaseAppCompatActivity {
             //刷新模块视图
             moduleListFragment.loadModuleList();
         });
-    }
-
-
-    private void checkAndLoginWifi() {
-        NetworkLoginHelper.getInstance(this).checkAndLogin();
     }
 
     private void checkAuth() {
@@ -134,6 +155,16 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
+        for (int i = 0; i < adapter.getCount(); i++) {
+            int drawable = new int[]{
+                    R.drawable.ic_home_24dp,
+                    R.drawable.ic_view_module_24dp,
+                    R.drawable.ic_person_24dp
+            }[i];
+            ImageView imageView = new ImageView(this);
+            imageView.setImageDrawable(ContextCompat.getDrawable(this, drawable));
+            tabLayout.getTabAt(i).setCustomView(imageView);
+        }
     }
 
     public void syncModuleSettings() {

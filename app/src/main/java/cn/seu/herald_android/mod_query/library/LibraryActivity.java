@@ -47,6 +47,8 @@ public class LibraryActivity extends BaseAppCompatActivity {
             onBackPressed();
             finish();
         });
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
+        enableSwipeBack();
 
 
 

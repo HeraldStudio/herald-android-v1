@@ -100,6 +100,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorExperimentprimary));
+        enableSwipeBack();
 
         //实验类型列表加载
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);

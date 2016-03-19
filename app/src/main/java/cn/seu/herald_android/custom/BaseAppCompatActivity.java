@@ -14,6 +14,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,6 @@ import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
@@ -61,7 +63,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return statusView;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,18 +72,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         this.settingsHelper = new SettingsHelper(getBaseContext());
         this.serviceHelper = new ServiceHelper(this);
 
-        NetworkLoginHelper.getInstance(this).registerReceiver();
-
         //加载刷新对话框
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("加载中，请稍候…");
-    }
-
-    @Override
-    protected void onDestroy() {
-        NetworkLoginHelper.getInstance(this).unregisterReceiver();
-        super.onDestroy();
     }
 
     protected ApiHelper getApiHelper() {
@@ -136,6 +129,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             rootView.setFitsSystemWindows(true);
             rootView.setClipToPadding(true);
         }
+    }
+
+    protected void enableSwipeBack() {
+        // 设置根布局的参数
+        View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+        rootView.setBackgroundColor(Color.WHITE);
+        Slidr.attach(this, new SlidrConfig.Builder().edge(true).edgeSize(.05f).build());
     }
 
     public void runMeasurementDependentTask(Runnable task) {
