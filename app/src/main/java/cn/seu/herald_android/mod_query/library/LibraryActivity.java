@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
@@ -46,6 +47,8 @@ public class LibraryActivity extends BaseAppCompatActivity {
             onBackPressed();
             finish();
         });
+
+
 
         //加载最热门图书，初始化列表控件
         listView_hotbook = (ListView)findViewById(R.id.list_library_hotbook);
