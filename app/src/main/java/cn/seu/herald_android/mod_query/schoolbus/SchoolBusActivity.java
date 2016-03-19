@@ -50,6 +50,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
     private void init() {
         //沉浸式布局
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSchoolBusprimary));
+        enableSwipeBack();
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

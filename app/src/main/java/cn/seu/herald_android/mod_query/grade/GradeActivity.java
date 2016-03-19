@@ -59,6 +59,7 @@ public class GradeActivity extends BaseAppCompatActivity {
         });
         //沉浸式状态栏颜色
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGradeprimary));
+        enableSwipeBack();
 
         //设置collapsingToolbarLayout标题禁用
 //        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);

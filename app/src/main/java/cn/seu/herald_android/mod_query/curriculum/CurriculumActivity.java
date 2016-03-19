@@ -104,6 +104,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
 
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorCurriculumPrimary));
+        enableSwipeBack();
 
         pager = (ViewPager) findViewById(R.id.pager);
 

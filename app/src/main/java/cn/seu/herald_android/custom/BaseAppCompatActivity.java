@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
+import com.r0adkll.slidr.Slidr;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,6 +138,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             rootView.setFitsSystemWindows(true);
             rootView.setClipToPadding(true);
         }
+    }
+
+    protected void enableSwipeBack() {
+        // 设置根布局的参数
+        View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+        rootView.setBackgroundColor(Color.WHITE);
+        Slidr.attach(this);
     }
 
     public void runMeasurementDependentTask(Runnable task) {

@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_query.library;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -48,6 +49,8 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
             onBackPressed();
             finish();
         });
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
+        enableSwipeBack();
 
         //设置展示搜索结果的列表
         recyclerView_search_result = (RecyclerView)findViewById(R.id.recyclerview_library_searchres);

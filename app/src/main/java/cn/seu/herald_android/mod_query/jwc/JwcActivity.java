@@ -79,6 +79,7 @@ public class JwcActivity extends BaseAppCompatActivity {
 
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorJwcprimary));
+        enableSwipeBack();
 
         //教务通知类型列表加载
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
