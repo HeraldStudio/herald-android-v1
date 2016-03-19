@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +145,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         // 设置根布局的参数
         View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         rootView.setBackgroundColor(Color.WHITE);
-        Slidr.attach(this);
+        Slidr.attach(this, new SlidrConfig.Builder().edge(true).edgeSize(.05f).build());
     }
 
     public void runMeasurementDependentTask(Runnable task) {
