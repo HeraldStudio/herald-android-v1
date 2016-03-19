@@ -60,14 +60,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="校园网自动登录"
+                android:text="摇一摇登陆校园网"
                 android:textColor="#333" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
-                android:text="在小猴启动状态自动登录seu-wlan/seu-dorm网络"
+                android:text="在小猴主界面摇一摇自动登录seu-wlan/dorm"
                 android:textColor="#666"
                 android:textSize="12sp" />
 

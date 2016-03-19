@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="3dp">
+    android:padding="1dp">
 
     <TextView
         android:id="@+id/className"
@@ -23,15 +23,4 @@
         android:padding="1dp"
         android:textColor="#fff"
         android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/classTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="1dp"
-        android:textColor="#fff"
-        android:textSize="12sp"
-        android:visibility="gone" />
-
 </LinearLayout>

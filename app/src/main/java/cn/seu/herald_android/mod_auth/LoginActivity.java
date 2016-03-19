@@ -102,8 +102,10 @@ public class LoginActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        btn_login.setEnabled(true);
+                        //以下两句是登陆时对话框提前消失的罪魁祸首
+                        //progressDialog.dismiss();
+                        //btn_login.setEnabled(true);
+
                         //showMsg("dologin"+response);
                         getApiHelper().setAuthCache("uuid", response);
                         //保存用户密码
@@ -123,6 +125,8 @@ public class LoginActivity extends BaseAppCompatActivity {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
+                        progressDialog.dismiss();
+                        btn_login.setEnabled(true);
                         //错误检测
                         e.printStackTrace();
                         //showMsg("checkuuid+"+e.toString());
@@ -138,6 +142,8 @@ public class LoginActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        btn_login.setEnabled(true);
                         try {
                             JSONObject json_res = new JSONObject(response);
                             if (json_res.getInt("code") == 200) {

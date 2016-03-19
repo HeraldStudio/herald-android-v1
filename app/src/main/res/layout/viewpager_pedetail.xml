@@ -21,7 +21,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:background="@drawable/pedetail_week_title_bg"
             android:gravity="center"
             android:orientation="vertical"
@@ -30,9 +30,8 @@
             <LinearLayout
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:gravity="left|center"
+                android:gravity="center"
                 android:paddingBottom="10dp"
-                android:paddingLeft="0dp"
                 android:paddingTop="10dp">
 
                 <TextView
@@ -40,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/pedetail_chart_tag_bg"
-                    android:gravity="left|center"
+                    android:gravity="center"
                     android:paddingBottom="2dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -52,7 +51,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="320dp"
+                android:layout_width="290dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 

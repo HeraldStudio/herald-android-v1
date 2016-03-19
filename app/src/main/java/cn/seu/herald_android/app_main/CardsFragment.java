@@ -14,6 +14,10 @@ import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class CardsFragment extends Fragment {
 
+    private SwipeRefreshLayout srl;
+
+    private TimelineView view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -21,21 +25,23 @@ public class CardsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        srl = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_container);
+        srl.setColorSchemeResources(R.color.colorPrimary);
+        view = (TimelineView) getView().findViewById(R.id.timeline);
+        srl.setOnRefreshListener(() -> view.loadContent(true));
+
+        // 此处有魔法！放在下一句之后或者放在生命周期中其他的位置都有可能导致刷新控件提前隐藏
         loadTimelineView(false);
+
+        view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
     }
 
     // 刷新时间轴和快捷方式
     // refresh 是否联网刷新
     public void loadTimelineView(boolean refresh) {
-        SwipeRefreshLayout srl = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_container);
-        srl.setColorSchemeResources(R.color.colorPrimary);
-        TimelineView view = (TimelineView) getView().findViewById(R.id.timeline);
-        srl.setOnRefreshListener(() -> view.loadContent(true));
-        view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
         if (refresh) srl.setRefreshing(true);
-        // 快捷方式刷新在这里
         view.loadContent(refresh);
     }
 }

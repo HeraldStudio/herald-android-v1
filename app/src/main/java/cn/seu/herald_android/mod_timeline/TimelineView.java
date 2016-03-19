@@ -298,9 +298,9 @@ public class TimelineView extends ListView {
          * 只有最后结束的线程在结束时调用的递归子函数能执行到这一部分
          * 它负责隐藏刷新控件，也可以在这里加入其它后续处理工作
          **/
-        if (hideRefresh != null && threads.size() == 0) {
+        if (hideRefresh != null && threads.size() == 0 && !refresh) {
             hideRefresh.run();
-            ContextUtils.flushMessage(getContext());
+            ContextUtils.flushMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
         }
     }
 
