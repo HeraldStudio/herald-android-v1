@@ -10,6 +10,7 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.SeuModule;
 import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
@@ -64,7 +65,9 @@ public class ShortcutBoxView extends GridView {
                     .setPositiveButton("确定", (dialog, which) -> {
                         //设置为不可用
                         settingsHelper.setModuleShortCutEnabled(moduleId, false);
-                        refresh();
+                        if (getContext() instanceof MainActivity) {
+                            ((MainActivity) getContext()).syncModuleSettings();
+                        }
                     })
                     .setNegativeButton("取消", (dialog1, which1) -> {
 

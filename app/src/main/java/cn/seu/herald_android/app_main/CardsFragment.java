@@ -31,10 +31,12 @@ public class CardsFragment extends Fragment {
         srl.setColorSchemeResources(R.color.colorPrimary);
         view = (TimelineView) getView().findViewById(R.id.timeline);
         srl.setOnRefreshListener(() -> view.loadContent(true));
+    }
 
-        // 此处有魔法！放在下一句之后或者放在生命周期中其他的位置都有可能导致刷新控件提前隐藏
+    @Override
+    public void onResume() {
+        super.onResume();
         loadTimelineView(false);
-
         view.setHideRefresh(() -> new Handler().postDelayed(() -> srl.setRefreshing(false), 1000));
     }
 

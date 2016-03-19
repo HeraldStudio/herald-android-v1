@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -26,17 +29,19 @@ public class ModuleListFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
         super.onStart();
         loadModuleList();
     }
 
     private View editButton;
+    private ArrayList<SeuModule> seuModuleArrayList = new ArrayList<>();
 
     public void loadModuleList() {
 
         //获得所有模块列表
-        ArrayList<SeuModule> seuModuleArrayList = new SettingsHelper(getContext()).getSeuModuleList();
+        seuModuleArrayList.clear();
+        seuModuleArrayList.addAll(new SettingsHelper(getContext()).getSeuModuleList());
         Collections.sort(seuModuleArrayList, (module1, module2) -> {
             boolean isVisible1 = module1.isEnabledShortCut() || module1.isEnabledCard();
             boolean isVisible2 = module2.isEnabledShortCut() || module2.isEnabledCard();
@@ -55,7 +60,17 @@ public class ModuleListFragment extends Fragment {
             listView.addHeaderView(editButton);
         }
 
-        listView.setAdapter(new ModuleListAdapter(getContext(),
-                R.layout.listviewitem_modules, seuModuleArrayList));
+        ListAdapter adapter;
+        if ((adapter = listView.getAdapter()) == null) {
+            listView.setAdapter(new ModuleListAdapter(getContext(),
+                    R.layout.listviewitem_modules, seuModuleArrayList));
+        } else {
+            while (adapter instanceof HeaderViewListAdapter) {
+                adapter = ((HeaderViewListAdapter) adapter).getWrappedAdapter();
+            }
+            if (adapter instanceof ArrayAdapter) {
+                ((ArrayAdapter) adapter).notifyDataSetChanged();
+            }
+        }
     }
 }

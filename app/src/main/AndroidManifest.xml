@@ -131,19 +131,6 @@
         </activity>
 
         <activity
-            android:name=".mod_query.emptyroom.EmptyRoomActivity"
-            android:label="@string/title_activity_empty_room"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_EMPTYROOM" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".mod_query.seunet.SeunetActivity"
             android:label="@string/title_activity_seunet"
             android:launchMode="singleTask"
