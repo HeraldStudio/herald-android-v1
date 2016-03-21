@@ -16,16 +16,16 @@ public class SeuModule {
     //是否提供并显示卡片
     private boolean enabledCard;
     //启动的activity的action
-    private String actions;
+    private String action;
     //名字
     private String name;
     //描述
     private String description;
 
-    public SeuModule(int moduleId, boolean enabledShortCut, boolean enabledCard, String actions) {
+    public SeuModule(int moduleId, boolean enabledShortCut, boolean enabledCard, String action) {
         this.moduleId = moduleId;
         this.enabledShortCut = enabledShortCut;
-        this.actions = actions;
+        this.action = action;
         this.ic_id = SettingsHelper.moduleIconsId[moduleId];
         this.name = SettingsHelper.moduleNamesTips[moduleId];
         this.description = SettingsHelper.moduleDescriptions[moduleId];
@@ -44,8 +44,8 @@ public class SeuModule {
         return enabledCard;
     }
 
-    public String getActions() {
-        return actions;
+    public String getAction() {
+        return action;
     }
 
     public int getIc_id() {

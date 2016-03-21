@@ -21,8 +21,9 @@ public class WelcomeActivity extends Activity {
         setContentView(R.layout.activity_welcome);
         settingsHelper = new SettingsHelper(this);
         apiHelper = new ApiHelper(this);
+
         Handler handler = new Handler();
-        handler.postDelayed(() -> {
+        handler.post(() -> {
             //欢迎页：如果已登录则跳转到MainActivity
             //判断是否是首次启动
             int launchtimes = settingsHelper.getLaunchTimes();
@@ -41,6 +42,6 @@ public class WelcomeActivity extends Activity {
                 startActivity(intent);
                 finish();
             }
-        }, 0);
+        });
     }
 }

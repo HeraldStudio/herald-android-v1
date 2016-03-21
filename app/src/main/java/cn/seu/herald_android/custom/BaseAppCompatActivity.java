@@ -3,6 +3,7 @@ package cn.seu.herald_android.custom;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -177,5 +178,21 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 .text(message, null)
                 .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
                 .duration(CustomSnackBar.SnackBarDuration.LONG).show();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+
+        //切换动画
+        overridePendingTransition(R.anim.activity_right_in, R.anim.activity_out_left);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+        //切换动画
+        overridePendingTransition(R.anim.activity_left_in, R.anim.activity_out_right);
     }
 }

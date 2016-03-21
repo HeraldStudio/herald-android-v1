@@ -1,6 +1,8 @@
 package cn.seu.herald_android.mod_auth;
 
 import android.app.ProgressDialog;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,6 +71,18 @@ public class LoginActivity extends BaseAppCompatActivity {
 
 
     private void doLogin() {
+        String appid = ApiHelper.getAppId();
+        String godModePrefix = "IAmTheGodOfHerald|OverrideAppidWith:";
+
+        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
+            boolean GODMODE = manager.getPrimaryClip().getItemAt(0).getText().toString().startsWith(godModePrefix);
+            if (GODMODE) {
+                appid = manager.getPrimaryClip().getItemAt(0).getText().toString().replace(godModePrefix, "");
+                showMsg("进入上帝登陆模式");
+            }
+        }
+
         //登录函数
         progressDialog.show();
         btn_login.setEnabled(false);
@@ -77,7 +91,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                 .url(ApiHelper.auth_url)
                 .addParams("user", tv_card.getText().toString())
                 .addParams("password", tv_pwd.getText().toString())
-                .addParams("appid", ApiHelper.getAppId())
+                .addParams("appid", appid)
                 .build()
                 .execute(new StringCallback() {
                     @Override

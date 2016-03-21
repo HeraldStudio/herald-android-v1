@@ -48,7 +48,7 @@ public class MainActivity extends BaseAppCompatActivity {
         if (getSettingsHelper().getWifiAutoLogin() && !preventShake) {
             preventShake = true;
             new NetworkLoginHelper(this).checkAndLogin();
-            new Handler().postDelayed(() -> preventShake = false, 3000);
+            new Handler().postDelayed(() -> preventShake = false, 2000);
         }
     });
 
@@ -73,9 +73,6 @@ public class MainActivity extends BaseAppCompatActivity {
         setSupportActionBar(toolbar);
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
         setTitle(" " + getTitle().toString().trim());
-
-        //切换动画
-        overridePendingTransition(R.anim.design_fab_in, R.anim.design_fab_out);
 
         //检查个人信息
         checkAuth();

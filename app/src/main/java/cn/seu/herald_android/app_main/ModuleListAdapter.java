@@ -57,7 +57,7 @@ public class ModuleListAdapter extends ArrayAdapter<SeuModule> {
         tv_desc.setText(seuModule.getDescription());
 
         convertView.setOnClickListener((v) -> {
-            getContext().startActivity(new Intent(seuModule.getActions()));
+            getContext().startActivity(new Intent(seuModule.getAction()));
         });
         return convertView;
     }

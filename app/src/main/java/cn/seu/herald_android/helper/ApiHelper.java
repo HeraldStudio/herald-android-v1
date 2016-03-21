@@ -143,15 +143,12 @@ public class ApiHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // 发布流程：
-        // 下面第一行去掉注释，第二行加注释，
-        // 在build.gradle中改版本号
-        // 编译，打包，签名，制成发布版本，
-        // 用工具计算md5，在服务器登记appid，
-        // 联网测试，上线
 
-        //return appid;
-        return "34cc6df78cfa7cd457284e4fc377559e";
+        return appid;
+        //以后不再通过修改此处return语句的方法来使用测试appid，而是在剪贴板中事先复制好如下字符串：
+        //IAmTheGodOfHerald|OverrideAppidWith:34cc6df78cfa7cd457284e4fc377559e
+        //其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
+        //该后门实现见LoginActivity.java
     }
 
     public void dealApiException(Exception e) {

@@ -3,6 +3,7 @@ package cn.seu.herald_android.debug;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -29,18 +30,26 @@ public class CrashHandler implements UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
         //2 提示Crash信息
-        showCrashTipToast(Utils.saveCrashInfoToSDCard(mContext, throwable));
-        try {
-            Thread.sleep(3000);
-        } catch (Exception e) {
+        boolean caught = showCrashTipToast(Utils.saveCrashInfoToSDCard(mContext, throwable));
+        if (caught) {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+            }
+        } else {
+            Log.e("HeraldApp", "Stack Trace", throwable);
         }
         //3 退出应用
         System.exit(0);
     }
 
-    private void showCrashTipToast(String info) {
+    private boolean showCrashTipToast(String info) {
         ClipboardManager manager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-        boolean GODMODE = manager.getText().toString().equals("IAmTheGodOfHerald");
+        boolean GODMODE = false;
+
+        if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
+            GODMODE = manager.getPrimaryClip().getItemAt(0).getText().toString().equals("IAmTheGodOfHerald");
+        }
 
         // 如果当前剪贴板中的文字是IAmTheGodOfHerald，开启上帝模式，输出调试信息到剪贴板
         if (GODMODE) {
@@ -60,6 +69,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 Toast.makeText(mContext, briefInfo, Toast.LENGTH_LONG).show();
                 Looper.loop();
             }).start();
+            return true;
         }
 
         // 如果不是上帝模式，只有彩蛋的结尾会输出信息，其它错误吃掉
@@ -80,6 +90,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 Toast.makeText(mContext, briefInfo, Toast.LENGTH_LONG).show();
                 Looper.loop();
             }).start();
+            return true;
         }
+
+        return false;
     }
 }

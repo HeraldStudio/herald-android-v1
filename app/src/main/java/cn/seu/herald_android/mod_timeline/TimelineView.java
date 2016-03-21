@@ -243,13 +243,13 @@ public class TimelineView extends ListView {
          * 这样每刷出来一个模块都会本地重载一次列表，以便于在有些模块没刷出来的时候第一时间看到已经刷出来的模块
          **/
 
-        // 加载推送消息
-        TimelineItem item = TimelineParser.getPushMessageItem(this);
-        if (item != null) itemList.add(item);
-
         // 加载版本更新消息
         TimelineItem item1 = TimelineParser.getCheckVersionItem(this);
         if (item1 != null) itemList.add(item1);
+
+        // 加载推送消息
+        TimelineItem item = TimelineParser.getPushMessageItem(this);
+        if (item != null) itemList.add(item);
 
         // 判断各模块是否开启并加载对应数据
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {

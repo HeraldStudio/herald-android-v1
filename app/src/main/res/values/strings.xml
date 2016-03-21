@@ -36,7 +36,29 @@
         "如果你对客户端有更好的建议,请联系:\n"
         "何同学   187-9588-9958\n"
         "简历投递邮箱：\n"
-        "1948448114@qq.com"
+        "heraldseu@outlook.com"
+    </string>
+    <string name="law_declaration_text">
+        "本软件在其许可范围内使用了如下开源框架：\n"
+        "HelloCharts for Android\n"
+        "(github.com/lecho/hellocharts-android)\n"
+        "OkHttp\n"
+        "(github.com/square/okhttp)\n"
+        "okhttp-utils\n"
+        "(github.com/hongyangAndroid/okhttp-utils)\n"
+        "SortableTableView\n"
+        "(github.com/ISchwarz23/SortableTableView)\n"
+        "SwitchButton\n"
+        "(github.com/kyleduo/SwitchButton)\n"
+        "Slidr\n"
+        "(github.com/r0adkll/Slidr)\n"
+        "seismic\n"
+        "(github.com/square/seismic)\n"
+        "AndroidImageSlider\n"
+        "(github.com/daimajia/AndroidImageSlider)\n"
+        "小猴偷米工作室对以上框架的作者致以诚挚的感谢。\n"
+        "\n"
+        "本软件所有数据来自学校网站或其他第三方，受学校网站或其他第三方数据的不确定性影响，本软件显示的数据可能会出现某些不正常情况，包含但不限于无法连接、信息错误、显示延迟或自相矛盾等。小猴偷米工作室不对以上问题导致的任何后果负责。"
     </string>
 
 

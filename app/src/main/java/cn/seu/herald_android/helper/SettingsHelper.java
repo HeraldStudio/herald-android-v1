@@ -38,7 +38,7 @@ public class SettingsHelper {
     public static final int MODULE_JWC = 10;
     public static final int MODULE_GYMORDER = 11;
     public static final int MODULE_QUANYI = 12;
-//    public static final int MODULE_EMPTYROOM = 9;
+    public static final int MODULE_EMPTYROOM = 13;
 
 
     //模块名字
@@ -55,8 +55,8 @@ public class SettingsHelper {
             "lecture",
             "jwc",
             "gymorder",
-            "quanyi"
-//            "emptyroom",
+            "quanyi",
+            "emptyroom"
     };
 
     //模块名字文字提示
@@ -73,8 +73,8 @@ public class SettingsHelper {
             "人文讲座",
             "教务通知",
             "场馆预约",
-            "权益服务"
-//            "空教室",
+            "权益服务",
+            "空教室"
     };
 
     //模块说明，显示在快捷方式编辑界面
@@ -91,8 +91,8 @@ public class SettingsHelper {
             "查看人文讲座听课记录，并提供人文讲座预告信息",
             "显示教务处最新通知，提供重要教务通知提醒服务",
             "提供体育场馆在线预约和查询服务",
-            "向东大校会权益部反馈投诉信息"
-//            "空教室",
+            "向东大校会权益部反馈投诉信息",
+            "提供指定时间内的空教室信息查询服务"
     };
 
     //模块action
@@ -110,8 +110,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_JWC",
             "cn.seu.herald_android.WEBMODULE_GYMORDER",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
-//            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
-
+            "cn.seu.herald_android.WEBMODULE_EMPTYROOM"
     };
 
 
@@ -129,8 +128,8 @@ public class SettingsHelper {
             R.mipmap.ic_lecture,
             R.mipmap.ic_jwc,
             R.mipmap.ic_gym,
-            R.mipmap.ic_quanyi
-//            R.mipmap.ic_emptyroom,
+            R.mipmap.ic_quanyi,
+            R.mipmap.ic_emptyroom
     };
 
     public static final boolean[] moduleHasCard = {
@@ -145,6 +144,7 @@ public class SettingsHelper {
             false,
             true,
             true,
+            false,
             false,
             false
     };
