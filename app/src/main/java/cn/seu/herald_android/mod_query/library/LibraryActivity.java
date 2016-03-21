@@ -50,6 +50,8 @@ public class LibraryActivity extends BaseAppCompatActivity {
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
         enableSwipeBack();
 
+
+
         //加载最热门图书，初始化列表控件
         listView_hotbook = (ListView)findViewById(R.id.list_library_hotbook);
 

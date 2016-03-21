@@ -49,8 +49,10 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
             onBackPressed();
             finish();
         });
+
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
         enableSwipeBack();
+
 
         //设置展示搜索结果的列表
         recyclerView_search_result = (RecyclerView)findViewById(R.id.recyclerview_library_searchres);
