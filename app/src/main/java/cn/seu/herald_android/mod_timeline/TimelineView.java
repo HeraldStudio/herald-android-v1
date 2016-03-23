@@ -26,6 +26,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ContextUtils;
+import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
@@ -44,7 +45,7 @@ public class TimelineView extends ListView {
     private final Vector<Object> threads = new Vector<>();
     private ArrayList<TimelineItem> itemList;
 
-    private Runnable hideRefresh = null;
+    private CustomSwipeRefreshLayout srl;
     private ShortcutBoxView shortcutBox;
     private SliderView slider;
     private FadeOutHeaderContainer fadeContainer;
@@ -104,8 +105,8 @@ public class TimelineView extends ListView {
         return "已结束";
     }
 
-    public void setHideRefresh(Runnable hideRefresh) {
-        this.hideRefresh = hideRefresh;
+    public void setSrl(CustomSwipeRefreshLayout srl) {
+        this.srl = srl;
     }
 
     public void loadContent(boolean refresh) {
@@ -302,8 +303,8 @@ public class TimelineView extends ListView {
          * 只有最后结束的线程在结束时调用的递归子函数能执行到这一部分
          * 它负责隐藏刷新控件，也可以在这里加入其它后续处理工作
          **/
-        if (hideRefresh != null && threads.size() == 0 && !refresh) {
-            hideRefresh.run();
+        if (srl != null && threads.size() == 0 && !refresh) {
+            srl.setRefreshing(false);
             ContextUtils.flushMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
         }
     }
@@ -335,6 +336,8 @@ public class TimelineView extends ListView {
     private void refreshSliders() {
         if (slider == null) {
             slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+
+            // 轮播图居中变色动效的调用
             fadeContainer = new FadeOutHeaderContainer<SliderView>(getContext())
                     .maskColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
                     .append(slider);
@@ -356,6 +359,8 @@ public class TimelineView extends ListView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
+
+        // 轮播图居中变色动效的实现
         fadeContainer.syncFadeState();
         fadeContainer.syncScrollState();
     }
