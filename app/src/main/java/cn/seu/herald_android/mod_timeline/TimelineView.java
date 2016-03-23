@@ -121,9 +121,6 @@ public class TimelineView extends ListView {
          * 2、若refresh为false，为本地重载操作，本地重载不涉及上述的线程管理和递归问题。
          **/
 
-        // 重载快捷方式栏和轮播图
-        refreshHeaders();
-
         // 清空卡片列表，等待载入
         itemList = new ArrayList<>();
         SettingsHelper settingsHelper = new SettingsHelper(getContext());
@@ -150,10 +147,16 @@ public class TimelineView extends ListView {
          **/
         if (refresh) {
 
+            // 重载快捷方式栏和轮播图
+            refreshHeaders();
+
             // 刷新版本信息和推送消息
             threads.add(new Object());
             ServiceHelper.refreshVersionCache(getContext(), () -> {
                 if (threads.size() > 0) threads.remove(0);
+
+                // 单独重载轮播图
+                refreshSliders();
                 loadContent(false);
             });
 
@@ -308,22 +311,8 @@ public class TimelineView extends ListView {
         // dp单位值
         float dp = getContext().getResources().getDisplayMetrics().density;
 
-        if (slider == null) {
-            slider = (SliderView)
-                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
-
-            // 设置高度。在其他地方设置没用。
-            float resolution = 5 / 2f;
-            int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
-            slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
-
-            // 为轮播栏设置内容
-            ServiceHelper serviceHelper = new ServiceHelper(getContext());
-            ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = serviceHelper.getSliderViewItemArray();
-            slider.setupWithArrayList(sliderViewItemArrayList);
-
-            addHeaderView(slider);
-        }
+        // 刷新轮播图
+        refreshSliders();
 
         if (topPadding == null) {
             // 顶部增加一个padding
@@ -339,6 +328,25 @@ public class TimelineView extends ListView {
         } else {
             shortcutBox.refresh();
         }
+    }
+
+    private void refreshSliders() {
+        if (slider == null) {
+            slider = (SliderView)
+                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+
+            // 设置高度。在其他地方设置没用。
+            float resolution = 5 / 2f;
+            int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
+            slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
+
+            addHeaderView(slider);
+        }
+
+        // 为轮播栏设置内容
+        ServiceHelper serviceHelper = new ServiceHelper(getContext());
+        ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = serviceHelper.getSliderViewItemArray();
+        slider.setupWithArrayList(sliderViewItemArrayList);
     }
 
     @Override
@@ -415,13 +423,13 @@ public class TimelineView extends ListView {
 
             convertView.setOnClickListener(item.getOnClickListener());
 
-            if(item.moduleId != -1){
+            if (item.moduleId != -1) {
                 convertView.setOnLongClickListener(v -> {
                     new AlertDialog.Builder(getContext()).setMessage("确定要隐藏该卡片吗？")
                             .setPositiveButton("确定", (dialog, which) -> {
                                 new SettingsHelper(getContext()).setModuleCardEnabled(item.moduleId, false);
-                                if(getContext() instanceof MainActivity){
-                                    ((MainActivity)getContext()).syncModuleSettings();
+                                if (getContext() instanceof MainActivity) {
+                                    ((MainActivity) getContext()).syncModuleSettings();
                                 }
                             })
                             .setNegativeButton("取消", null)

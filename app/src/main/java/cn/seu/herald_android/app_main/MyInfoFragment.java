@@ -21,6 +21,7 @@ import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_communicate.AboutusActivity;
 import cn.seu.herald_android.mod_communicate.FeedbackActivity;
+import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 public class MyInfoFragment extends Fragment {
 
@@ -68,6 +69,15 @@ public class MyInfoFragment extends Fragment {
         swith_seu.setCheckedImmediately(new SettingsHelper(getContext()).getWifiAutoLogin());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) -> {
             new SettingsHelper(getContext()).setWifiAutoLogin(isChecked);
+        });
+        getView().findViewById(R.id.switch_container).setOnLongClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                    .setMessage("长按摇一摇设置项代替摇一摇登录，属于测试功能，" +
+                            "该功能未来可能保留，也可能取消，请不要过分依赖此功能。")
+                    .setPositiveButton("使用此功能", (d, w) -> {
+                        new NetworkLoginHelper(getContext(), false).checkAndLogin();
+                    }).show();
+            return true;
         });
 
         getView().findViewById(R.id.switch_container).setOnClickListener((v) -> {

@@ -47,7 +47,7 @@ public class MainActivity extends BaseAppCompatActivity {
     private ShakeDetector shakeDetector = new ShakeDetector(() -> {
         if (getSettingsHelper().getWifiAutoLogin() && !preventShake) {
             preventShake = true;
-            new NetworkLoginHelper(this).checkAndLogin();
+            new NetworkLoginHelper(this, true).checkAndLogin();
             new Handler().postDelayed(() -> preventShake = false, 2000);
         }
     });

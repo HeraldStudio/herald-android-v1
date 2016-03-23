@@ -31,6 +31,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         //利用arraylist进行初始化
         this.sliderViewItemArrayList = sliderViewItemArrayList;
         try{
+            removeAllSliders();
             for(SliderViewItem sliderViewItem :sliderViewItemArrayList){
                 addSlider(getDefultSliderViewWithUrl(
                         sliderViewItem.getTitle(),

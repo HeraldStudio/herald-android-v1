@@ -25,9 +25,12 @@ public class NetworkLoginHelper {
 
     private Vibrator vibrator;
 
-    public NetworkLoginHelper(Context context) {
+    private boolean shake;
+
+    public NetworkLoginHelper(Context context, boolean shake) {
         this.context = context;
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        this.shake = shake;
     }
 
     private static String formatTime(String time) {
@@ -57,7 +60,11 @@ public class NetworkLoginHelper {
             checkOnlineStatus();
         } else {
             vibrator.vibrate(50);
-            showTrickyMessage("你需要手动连接到seu网络才能摇一摇登录~");
+            if (shake) {
+                showTrickyMessage("你需要手动连接到seu网络才能摇一摇登录~");
+            } else {
+                ContextUtils.showMessage(context, "你需要手动连接到seu网络才能摇一摇登录~");
+            }
         }
     }
 
@@ -77,7 +84,11 @@ public class NetworkLoginHelper {
                     loginToService();
                 } else {
                     vibrator.vibrate(50);
-                    showTrickyMessage("你已经登录校园网，不用再摇了~");
+                    if (shake) {
+                        showTrickyMessage("你已经登录校园网，不用再摇了~");
+                    } else {
+                        ContextUtils.showMessage(context, "你已经登录校园网，不用再摇了~");
+                    }
                 }
             }
         });

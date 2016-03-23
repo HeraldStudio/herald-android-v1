@@ -186,6 +186,7 @@ public class ApiHelper {
 
 
     public void doLogout() {
+        System.out.println(1 / 0);
         //清除授权信息
         setAuthCache("authUser", "");
         setAuthCache("authPwd", "");
