@@ -48,7 +48,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         boolean GODMODE = false;
 
         if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
-            GODMODE = manager.getPrimaryClip().getItemAt(0).getText().toString().equals("IAmTheGodOfHerald");
+            GODMODE = manager.getPrimaryClip().getItemAt(0).getText().toString().startsWith("IAmTheGodOfHerald");
         }
 
         // 如果当前剪贴板中的文字是IAmTheGodOfHerald，开启上帝模式，输出调试信息到剪贴板
