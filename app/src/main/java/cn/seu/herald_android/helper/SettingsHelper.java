@@ -36,7 +36,7 @@ public class SettingsHelper {
     public static final int MODULE_SCHOOLBUS = 8;
     public static final int MODULE_LECTURE = 9;
     public static final int MODULE_JWC = 10;
-    public static final int WEBMODULE_SCHEDULE = 11;
+    public static final int MODULE_SCHEDULE = 11;
     public static final int WEBMODULE_GYMORDER = 12;
     public static final int WEBMODULE_QUANYI = 13;
     public static final int WEBMODULE_EMPTYROOM = 14;

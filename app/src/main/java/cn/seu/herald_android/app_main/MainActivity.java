@@ -149,6 +149,7 @@ public class MainActivity extends BaseAppCompatActivity {
 
     private void attachFragments() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
+        viewPager.setOffscreenPageLimit(adapter.getCount() - 1);//三个页面都不回收，提高流畅性
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);

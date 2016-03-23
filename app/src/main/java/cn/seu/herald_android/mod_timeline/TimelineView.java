@@ -145,10 +145,10 @@ public class TimelineView extends ListView {
          * 该函数会把生成的错误信息先交给ContextUtils暂存起来，
          * 然后在本函数最末尾刷新完成的时候将让ContextUtils吐出最后一条错误消息。
          **/
-        if (refresh) {
+        // 没有头部的时候加载头部，否则就不重载头部，防止轮播图连续多次刷新
+        refreshShortcutBox();
 
-            // 重载快捷方式栏和轮播图
-            refreshHeaders();
+        if (refresh) {
 
             // 刷新版本信息和推送消息
             threads.add(new Object());
@@ -307,12 +307,9 @@ public class TimelineView extends ListView {
         }
     }
 
-    private void refreshHeaders() {
+    private void refreshShortcutBox() {
         // dp单位值
         float dp = getContext().getResources().getDisplayMetrics().density;
-
-        // 刷新轮播图
-        refreshSliders();
 
         if (topPadding == null) {
             // 顶部增加一个padding
@@ -330,6 +327,11 @@ public class TimelineView extends ListView {
         }
     }
 
+    /**
+     * 刷新轮播图
+     * 注意：因为轮播图刷新的时候会有明显的界面变化，所以不能跟上面的快捷栏放在一起刷新
+     * 又因为
+     **/
     private void refreshSliders() {
         if (slider == null) {
             slider = (SliderView)
@@ -358,6 +360,8 @@ public class TimelineView extends ListView {
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         getContext().registerReceiver(timeChangeReceiver, filter);
+
+        refreshSliders();
     }
 
     @Override
