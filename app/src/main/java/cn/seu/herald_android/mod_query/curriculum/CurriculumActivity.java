@@ -7,7 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -107,6 +109,15 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         enableSwipeBack();
 
         pager = (ViewPager) findViewById(R.id.pager);
+
+        //异步加载背景图
+        final ImageView iv = (ImageView) findViewById(R.id.curriculum_bg);
+        runMeasurementDependentTask(() -> {
+            Picasso.with(this)
+                    .load(R.drawable.curriculum_bg)
+                    .resize(iv.getWidth(), iv.getHeight())
+                    .centerCrop().into(iv);
+        });
 
         readLocal();
     }
