@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +26,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ContextUtils;
+import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.helper.CacheHelper;
@@ -47,6 +47,7 @@ public class TimelineView extends ListView {
     private Runnable hideRefresh = null;
     private ShortcutBoxView shortcutBox;
     private SliderView slider;
+    private FadeOutHeaderContainer fadeContainer;
     private TimelineAdapter adapter;
     private View topPadding;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
@@ -311,13 +312,6 @@ public class TimelineView extends ListView {
         // dp单位值
         float dp = getContext().getResources().getDisplayMetrics().density;
 
-        if (topPadding == null) {
-            // 顶部增加一个padding
-            topPadding = new View(getContext());
-            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (7 * dp)));
-            addHeaderView(topPadding);
-        }
-
         if (shortcutBox == null) {
             shortcutBox = (ShortcutBoxView)
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
@@ -325,6 +319,13 @@ public class TimelineView extends ListView {
         } else {
             shortcutBox.refresh();
         }
+
+       /* if (topPadding == null) {
+            // 顶部增加一个padding
+            topPadding = new View(getContext());
+            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (9 * dp)));
+            addHeaderView(topPadding);
+        }*/
     }
 
     /**
@@ -333,21 +334,30 @@ public class TimelineView extends ListView {
      **/
     private void refreshSliders() {
         if (slider == null) {
-            slider = (SliderView)
-                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+            slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+            fadeContainer = new FadeOutHeaderContainer<SliderView>(getContext())
+                    .maskColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                    .append(slider);
 
             // 设置高度。在其他地方设置没用。
             float resolution = 5 / 2f;
             int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
-            slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
+            slider.setLayoutParams(new FadeOutHeaderContainer.LayoutParams(-1, height));
 
-            addHeaderView(slider);
+            addHeaderView(fadeContainer);
         }
 
         // 为轮播栏设置内容
         ServiceHelper serviceHelper = new ServiceHelper(getContext());
         ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = serviceHelper.getSliderViewItemArray();
         slider.setupWithArrayList(sliderViewItemArrayList);
+    }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        fadeContainer.syncFadeState();
+        fadeContainer.syncScrollState();
     }
 
     @Override
