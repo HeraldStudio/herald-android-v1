@@ -61,6 +61,12 @@
     <color name="colorLibraryaccent">#e57373</color>
 
 
+    <!--校历-->
+    <color name="colorScheduleprimary">#8620bc</color>
+    <color name="colorScheduleprimaryDark">#8620bc</color>
+    <color name="colorScheduleaccent">#8620bc</color>
+
+
     <!--关于我们-->
     <color name="colorAboutusprimary">#57b3ff</color>
     <color name="colorAboutusprimaryDark">#57b3ff</color>

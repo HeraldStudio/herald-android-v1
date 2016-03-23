@@ -86,6 +86,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".mod_query.schedule.SchoolScheduleActivity"
+            android:label="@string/title_activity_schedule"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ScheduleTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHEDULE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".mod_query.library.LibrarySearchActivity"

@@ -36,9 +36,10 @@ public class SettingsHelper {
     public static final int MODULE_SCHOOLBUS = 8;
     public static final int MODULE_LECTURE = 9;
     public static final int MODULE_JWC = 10;
-    public static final int MODULE_GYMORDER = 11;
-    public static final int MODULE_QUANYI = 12;
-    public static final int MODULE_EMPTYROOM = 13;
+    public static final int WEBMODULE_SCHEDULE = 11;
+    public static final int WEBMODULE_GYMORDER = 12;
+    public static final int WEBMODULE_QUANYI = 13;
+    public static final int WEBMODULE_EMPTYROOM = 14;
 
 
     //模块名字
@@ -54,6 +55,7 @@ public class SettingsHelper {
             "schoolbus",
             "lecture",
             "jwc",
+            "schedule",
             "gymorder",
             "quanyi",
             "emptyroom"
@@ -72,6 +74,7 @@ public class SettingsHelper {
             "校车助手",
             "人文讲座",
             "教务通知",
+            "校历查询",
             "场馆预约",
             "权益服务",
             "空教室"
@@ -90,6 +93,7 @@ public class SettingsHelper {
             "提供可实时更新的校车班车时间表",
             "查看人文讲座听课记录，并提供人文讲座预告信息",
             "显示教务处最新通知，提供重要教务通知提醒服务",
+            "显示当前年度各学期的学校校历安排",
             "提供体育场馆在线预约和查询服务",
             "向东大校会权益部反馈投诉信息",
             "提供指定时间内的空教室信息查询服务"
@@ -108,6 +112,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
             "cn.seu.herald_android.MODULE_QUERY_LECTURE",
             "cn.seu.herald_android.MODULE_QUERY_JWC",
+            "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
             "cn.seu.herald_android.WEBMODULE_GYMORDER",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
             "cn.seu.herald_android.WEBMODULE_EMPTYROOM"
@@ -127,6 +132,7 @@ public class SettingsHelper {
             R.mipmap.ic_bus,
             R.mipmap.ic_lecture,
             R.mipmap.ic_jwc,
+            R.mipmap.ic_schedule,
             R.mipmap.ic_gym,
             R.mipmap.ic_quanyi,
             R.mipmap.ic_emptyroom
@@ -144,6 +150,7 @@ public class SettingsHelper {
             false,
             true,
             true,
+            false,
             false,
             false,
             false

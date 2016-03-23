@@ -109,6 +109,12 @@
         <item name="colorAccent">@color/colorLibraryaccent</item>
     </style>
 
+    <style name="ScheduleTheme" parent="SubActivityTheme">
+        <!-- 校历风格 -->
+        <item name="colorPrimary">@color/colorScheduleprimary</item>
+        <item name="colorPrimaryDark">@color/colorScheduleprimaryDark</item>
+        <item name="colorAccent">@color/colorScheduleaccent</item>
+    </style>
 
     <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->
