@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.ViewParent;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -83,15 +81,6 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         sliderView.getBundle()
                 .putString("url",url);
         return  sliderView;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        for (ViewParent v = getParent(); v != null; v = v.getParent()) {
-            if (v instanceof CustomSwipeRefreshLayout)
-                ((CustomSwipeRefreshLayout) v).noScroll = ev.getAction() == MotionEvent.ACTION_MOVE;
-        }
-        return super.dispatchTouchEvent(ev);
     }
 
     @Override

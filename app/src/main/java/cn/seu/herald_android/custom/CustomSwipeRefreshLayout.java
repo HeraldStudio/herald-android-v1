@@ -8,8 +8,6 @@ import android.util.AttributeSet;
 import com.baoyz.widget.PullRefreshLayout;
 
 public class CustomSwipeRefreshLayout extends PullRefreshLayout {
-    public boolean noScroll = false;
-
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setRefreshStyle(PullRefreshLayout.STYLE_SMARTISAN);

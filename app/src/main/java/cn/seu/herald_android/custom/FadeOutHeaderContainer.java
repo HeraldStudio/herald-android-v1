@@ -39,7 +39,9 @@ public class FadeOutHeaderContainer<T extends View> extends FrameLayout {
 
     public void syncFadeState() {
         if (getHeight() == 0) return;
-        mask.setAlpha(getScrollTop() / (float) getHeight());
+        float base = 1 - getScrollTop() / (float) getHeight();
+        float alpha = 1 - base * base;
+        mask.setAlpha(alpha);
     }
 
     public void syncScrollState() {
