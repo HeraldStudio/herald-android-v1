@@ -114,6 +114,7 @@ public class MainActivity extends BaseAppCompatActivity {
                                 getApiHelper().setAuthCache("sex", json_content.getString("sex"));
                                 getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
                                 getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
+                                myInfoFragment.refreshUsername();
                             } else {
                                 //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
                                 showMsg("登录信息已失效，请重新登录");

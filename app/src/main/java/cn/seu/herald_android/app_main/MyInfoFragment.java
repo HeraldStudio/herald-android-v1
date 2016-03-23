@@ -40,9 +40,6 @@ public class MyInfoFragment extends Fragment {
     public void onStart() {
         super.onStart();
         serviceHelper = new ServiceHelper(getContext());
-        //如果缓存存在的话先设置欢迎信息和侧边栏信息
-        TextView tv_username = (TextView) getView().findViewById(R.id.tv_username);
-        tv_username.setText(new ApiHelper(getContext()).getAuthCache("name"));
 
         tv_checkupdate = (TextView) getView().findViewById(R.id.tv_checkupdate);
         tv_checkupdate.setOnClickListener(v -> checkUpdate());
@@ -84,6 +81,12 @@ public class MyInfoFragment extends Fragment {
             swith_seu.toggle();
         });
 
+    }
+
+    public void refreshUsername() {
+        //刷新用户名显示
+        TextView tv_username = (TextView) getView().findViewById(R.id.tv_username);
+        tv_username.setText(new ApiHelper(getContext()).getAuthCache("name"));
     }
 
     private void checkUpdate() {
