@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_checkupdate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/selectable_item_background"
+    android:drawableLeft="@drawable/ic_menu_manage"
+    android:gravity="center"
+    android:paddingBottom="20dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="30dp"
+    android:paddingTop="20dp"
+    android:text="模块管理"
+    android:textColor="#333"
+    android:textSize="14sp" />

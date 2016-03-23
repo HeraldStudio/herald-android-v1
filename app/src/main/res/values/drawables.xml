@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="bg_actionbar">@color/theme_color</drawable>
-    <drawable name="bg_tabbar">#0090d1</drawable>
+    <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
+    <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
 </resources>

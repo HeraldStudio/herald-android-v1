@@ -1,12 +1,85 @@
 <resources>
-    <string name="app_name">我的东大</string>
+    <string name="app_name">小猴偷米</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">settings</string>
+    <string name="action_logout">注销登录</string>
 
-    <string name="title_section1">首页</string>
-    <string name="title_section2">课内游</string>
-    <string name="title_section3">课外玩</string>
+    <string name="action_search">搜索</string>
+    <string name="action_borrowrecord">已借图书</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="action_lecturerecord">听讲记录</string>
 
-    <string name="action_settings">我的</string>
-    <string name="title_activity_login">登录</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <!--首页-->
+    <string name="index_title_name">首页</string>
+
+
+    <!--侧边栏导航-->
+
+
+    <!--个人信息相关-->
+    <string name="about_us_text">
+        "       东南大学小猴偷米工作室，成立于2016年3月，前身为2001年6月成立的东南大学先声网，代表产品有小猴偷米校园服务微信公众号、东南大学最有影响力毕业生投票网站、东南大学机甲帝国智能体平台等等。\n\n"
+
+        "       作为东大的一份子，我们致力于为东大学子们提供更好的信息平台，涵盖学习、生活、娱乐的服务。\n"
+        "       作为爱好技术的一群人，我们对新的知识，新的世界，始终保持高涨的热情。\n\n"
+
+        "       我们为学生社团、组织和各类积极向上、基于学生的活动提供宣传平台，也为有梦想的你，提供成长的平台。\n\n"
+
+        "       不论你是热爱技术、擅长设计、精于文编，还是菜鸟小白，只要有兴趣，我们都欢迎你的加入！\n\n"
+    </string>
+    <string name="contact_us_text">
+        " 如果你需要这样的宣传或是加入我们，请联系：\n"
+        "梁同学   156-5191-8580\n"
+        "如果你对客户端有更好的建议,请联系:\n"
+        "何同学   187-9588-9958\n"
+        "简历投递邮箱：\n"
+        "heraldseu@outlook.com"
+    </string>
+    <string name="law_declaration_text">
+        "本软件在其许可范围内使用了如下开源框架：\n"
+        "HelloCharts for Android\n"
+        "(github.com/lecho/hellocharts-android)\n"
+        "OkHttp\n"
+        "(github.com/square/okhttp)\n"
+        "okhttp-utils\n"
+        "(github.com/hongyangAndroid/okhttp-utils)\n"
+        "SortableTableView\n"
+        "(github.com/ISchwarz23/SortableTableView)\n"
+        "SwitchButton\n"
+        "(github.com/kyleduo/SwitchButton)\n"
+        "Slidr\n"
+        "(github.com/r0adkll/Slidr)\n"
+        "seismic\n"
+        "(github.com/square/seismic)\n"
+        "AndroidImageSlider\n"
+        "(github.com/daimajia/AndroidImageSlider)\n"
+        "小猴偷米工作室对以上框架的作者致以诚挚的感谢。\n"
+        "\n"
+        "本软件所有数据来自学校网站或其他第三方，受学校网站或其他第三方数据的不确定性影响，本软件显示的数据可能会出现某些不正常情况，包含但不限于无法连接、信息错误、显示延迟或自相矛盾等。小猴偷米工作室不对以上问题导致的任何后果负责。"
+    </string>
+
+
+    <string name="title_activity_lecture">东南大学人文讲堂</string>
+
+
+    <string name="title_activity_card">一卡通</string>
+    <string name="title_activity_experiment">实验助手</string>
+    <string name="title_activity_empty_room">空教室</string>
+    <string name="title_activity_seunet">校园网络</string>
+    <string name="title_activity_pedetail">跑操助手</string>
+    <string name="title_activity_curriculum">课表助手</string>
+    <string name="title_activity_aboutus">关于我们</string>
+    <string name="title_activity_srtp">课外研学</string>
+    <string name="title_activity_sys_settings">系统设置</string>
+    <string name="title_activity_query">模块管理</string>
+    <string name="title_activity_schoolbus">校车助手</string>
+    <string name="title_activity_grade">绩点查询</string>
+    <string name="title_activity_library">图书馆</string>
+    <string name="title_activity_library_search">藏书搜索</string>
+    <string name="title_activity_jwc">教务通知</string>
+    <string name="title_activity_feedback">用户反馈</string>
+
 </resources>

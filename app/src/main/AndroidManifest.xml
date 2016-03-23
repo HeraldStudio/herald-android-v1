@@ -1,24 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.edu.seu.herald.myseu" >
+    package="cn.seu.herald_android">
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".debug.CrashApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+        <!--启动页-->
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".mod_communicate.WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Invisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:name=".app_main.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".mod_auth.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".mod_modulemanager.ModuleManageActivity"
+            android:label="@string/title_activity_query"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/SubActivityTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.schoolbus.SchoolBusActivity"
+            android:label="@string/title_activity_schoolbus"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/QuerySchoolBusTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.grade.GradeActivity"
+            android:label="@string/title_activity_grade"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/QueryGradeTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_GRADE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".mod_query.library.LibraryActivity"
+            android:label="@string/title_activity_library"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/LibraryTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_LIBRARY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.library.LibrarySearchActivity"
+            android:label="@string/title_activity_library_search"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/LibraryTheme">
+        </activity>
+
+        <activity
+            android:name=".mod_query.lecture.LectureActivity"
+            android:label="@string/title_activity_lecture"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/LectureTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_LECTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.cardextra.CardActivity"
+            android:label="@string/title_activity_card"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/CardTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_CARDEXTRA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.experiment.ExperimentActivity"
+            android:label="@string/title_activity_experiment"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExperimentTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_EXPERIMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.seunet.SeunetActivity"
+            android:label="@string/title_activity_seunet"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/SeunetTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_SEUNET" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.pedetail.PedetailActivity"
+            android:label="@string/title_activity_pedetail"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/PedetailTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_PEDETAIL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.curriculum.CurriculumActivity"
+            android:label="@string/title_activity_curriculum"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/CurriculumTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_CURRICULUM" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".mod_webmodule.WebModuleActivity"
+            android:theme="@style/AppTheme.Invisible"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.WEBMODULE_GYMORDER" />
+                <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
+                <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_communicate.AboutusActivity"
+            android:label="@string/title_activity_aboutus"
+            android:theme="@style/AboutusTheme"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mod_communicate.FeedbackActivity"
+            android:label="@string/title_activity_feedback"
+            android:theme="@style/FeedbackTheme"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".mod_query.srtp.SrtpActivity"
+            android:label="@string/title_activity_srtp"
+            android:theme="@style/SrtpTheme"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_SRTP" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".mod_query.jwc.JwcActivity"
+            android:label="@string/title_activity_jwc"
+            android:theme="@style/JwcTheme"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 
