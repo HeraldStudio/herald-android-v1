@@ -330,7 +330,6 @@ public class TimelineView extends ListView {
     /**
      * 刷新轮播图
      * 注意：因为轮播图刷新的时候会有明显的界面变化，所以不能跟上面的快捷栏放在一起刷新
-     * 又因为
      **/
     private void refreshSliders() {
         if (slider == null) {
