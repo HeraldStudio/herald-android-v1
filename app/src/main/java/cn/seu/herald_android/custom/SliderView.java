@@ -16,28 +16,25 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 
 
-
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
-    private ArrayList<SliderViewItem> sliderViewItemArrayList;
     public SliderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
     }
 
-    public void setupWithArrayList(ArrayList<SliderViewItem> sliderViewItemArrayList){
+    public void setupWithArrayList(ArrayList<SliderViewItem> sliderViewItemArrayList) {
         //利用arraylist进行初始化
-        this.sliderViewItemArrayList = sliderViewItemArrayList;
-        try{
+        ArrayList<SliderViewItem> sliderViewItemArrayList1 = sliderViewItemArrayList;
+        try {
             removeAllSliders();
-            for(SliderViewItem sliderViewItem :sliderViewItemArrayList){
+            for (SliderViewItem sliderViewItem : sliderViewItemArrayList) {
                 addSlider(getDefultSliderViewWithUrl(
                         sliderViewItem.getTitle(),
                         sliderViewItem.getImageUrl(),
                         sliderViewItem.getUrl()));
             }
             //加载图片
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             DefaultSliderView sliderView = new DefaultSliderView(getContext());
             // initialize a SliderLayout
@@ -54,20 +51,20 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
         //描述动画
         //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-        //切换间隔，暂时调成不切换
+        //切换间隔
         setDuration(5000);
     }
 
-    private DefaultSliderView getDefultSliderViewWithUrl(String title,String imageUrl,String url){
+    private DefaultSliderView getDefultSliderViewWithUrl(String title, String imageUrl, String url) {
         DefaultSliderView sliderView = new DefaultSliderView(getContext());
         // initialize a SliderLayout
-        if(!imageUrl.equals("")){
+        if (!imageUrl.equals("")) {
             //如果图片url不为空的操作
             sliderView
                     .image(imageUrl)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
-        }else{
+        } else {
             //为空则避免出现参数错误，返回默认的图片
             sliderView
                     .image(R.drawable.default_herald)
@@ -79,8 +76,8 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         sliderView.getBundle()
                 .putString("extra", title);
         sliderView.getBundle()
-                .putString("url",url);
-        return  sliderView;
+                .putString("url", url);
+        return sliderView;
     }
 
     @Override
@@ -101,19 +98,20 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
     public void onSliderClick(BaseSliderView slider) {
         //点击时如果url不为空则打开图片所代表的网页
         String url = slider.getBundle().getString("url");
-        try{
+        try {
             Uri uri = Uri.parse(url);
-            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             getContext().startActivity(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static class SliderViewItem{
+    public static class SliderViewItem {
         String title;
         String imageUrl;
         String url;
+
         public SliderViewItem(String title, String imageUrl, String url) {
             this.title = title;
             this.imageUrl = imageUrl;

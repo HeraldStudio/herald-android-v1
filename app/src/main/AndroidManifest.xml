@@ -157,6 +157,30 @@
         </activity>
 
         <activity
+            android:name=".mod_query.gymreserve.GymReserveActivity"
+            android:label="@string/title_activity_gymreserve"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_local.todo.TodoActivity"
+            android:label="@string/title_activity_todo"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TodoTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_LOCAL_TODO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".mod_query.pedetail.PedetailActivity"
             android:label="@string/title_activity_pedetail"
             android:launchMode="singleTask"

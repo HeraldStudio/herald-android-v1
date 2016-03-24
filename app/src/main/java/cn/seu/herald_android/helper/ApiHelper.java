@@ -58,6 +58,8 @@ public class ApiHelper {
     public static final int API_LIBRARY_MYBOOK = 18;
     //热门图书
     public static final int API_LIBRARY_HOTBOOK = 19;
+    //场馆预约
+    public static final int API_GYMRESERVE = 20;
     /**
      * 调戏
      * 参数
@@ -109,7 +111,8 @@ public class ApiHelper {
             "term",
             "search",
             "library",
-            "library_hot"
+            "library_hot",
+            "yuyue"
     };
     private static String packagePath;
     private Context context;
@@ -145,10 +148,12 @@ public class ApiHelper {
         }
 
         return appid;
-        //以后不再通过修改此处return语句的方法来使用测试appid，而是在剪贴板中事先复制好如下字符串：
-        //IAmTheGodOfHerald|OverrideAppidWith:34cc6df78cfa7cd457284e4fc377559e
-        //其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
-        //该后门实现见LoginActivity.java
+        /**
+         * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
+         * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+         * 其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
+         * 该后门实现见LoginActivity.java
+         **/
     }
 
     public void dealApiException(Exception e) {
@@ -186,7 +191,6 @@ public class ApiHelper {
 
 
     public void doLogout() {
-        System.out.println(1 / 0);
         //清除授权信息
         setAuthCache("authUser", "");
         setAuthCache("authPwd", "");
@@ -209,7 +213,6 @@ public class ApiHelper {
             activity.finish();
         }
     }
-
 
     public boolean isLogin() {
         //判断是否已登录

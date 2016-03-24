@@ -31,15 +31,16 @@ public class SettingsHelper {
     public static final int MODULE_EXPERIMENT = 3;
     public static final int MODULE_LECTURE = 4;
     public static final int MODULE_JWC = 5;
-    public static final int MODULE_SEUNET = 6;
-    public static final int MODULE_LIBRARY = 7;
-    public static final int MODULE_GRADE = 8;
-    public static final int MODULE_SRTP = 9;
-    public static final int MODULE_SCHOOLBUS = 10;
-    public static final int MODULE_SCHEDULE = 11;
-    public static final int WEBMODULE_GYMORDER = 12;
-    public static final int WEBMODULE_QUANYI = 13;
-    public static final int WEBMODULE_EMPTYROOM = 14;
+    public static final int MODULE_TODO = 6;
+    public static final int MODULE_SEUNET = 7;
+    public static final int MODULE_LIBRARY = 8;
+    public static final int MODULE_GRADE = 9;
+    public static final int MODULE_SRTP = 10;
+    public static final int MODULE_SCHOOLBUS = 11;
+    public static final int MODULE_SCHEDULE = 12;
+    public static final int MODULE_GYMRESERVE = 13;
+    public static final int WEBMODULE_QUANYI = 14;
+    public static final int WEBMODULE_EMPTYROOM = 15;
 
 
     //模块名字
@@ -50,13 +51,14 @@ public class SettingsHelper {
             "experiment",
             "lecture",
             "jwc",
+            "todo",
             "seunet",
             "library",
             "grade",
             "srtp",
             "schoolbus",
             "schedule",
-            "gymorder",
+            "gymreserve",
             "quanyi",
             "emptyroom"
     };
@@ -69,6 +71,7 @@ public class SettingsHelper {
             "实验助手",
             "人文讲座",
             "教务通知",
+            "日程提醒",
             "校园网络",
             "图书馆",
             "绩点查询",
@@ -88,6 +91,7 @@ public class SettingsHelper {
             "浏览当前学期的实验信息，并提供实验提醒服务",
             "查看人文讲座听课记录，并提供人文讲座预告信息",
             "显示教务处最新通知，提供重要教务通知提醒服务",
+            "提供日程安排提醒、倒计日、正计日等个性化提醒功能",
             "显示校园网使用情况及校园网账户余额信息",
             "查看图书馆实时借阅排行、已借书籍和馆藏图书搜索",
             "查询历史学期的科目成绩、学分以及绩点详情",
@@ -107,13 +111,14 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
             "cn.seu.herald_android.MODULE_QUERY_LECTURE",
             "cn.seu.herald_android.MODULE_QUERY_JWC",
+            "cn.seu.herald_android.MODULE_LOCAL_TODO",
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
             "cn.seu.herald_android.MODULE_QUERY_GRADE",
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
             "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
-            "cn.seu.herald_android.WEBMODULE_GYMORDER",
+            "cn.seu.herald_android.MODULE_QUERY_GYMRESERVE",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
             "cn.seu.herald_android.WEBMODULE_EMPTYROOM"
     };
@@ -127,18 +132,20 @@ public class SettingsHelper {
             R.mipmap.ic_experiment,
             R.mipmap.ic_lecture,
             R.mipmap.ic_jwc,
+            R.mipmap.ic_todo,
             R.mipmap.ic_seunet,
             R.mipmap.ic_library,
             R.mipmap.ic_grade,
             R.mipmap.ic_srtp,
             R.mipmap.ic_bus,
             R.mipmap.ic_schedule,
-            R.mipmap.ic_gym,
+            R.mipmap.ic_gymreserve,
             R.mipmap.ic_quanyi,
             R.mipmap.ic_emptyroom
     };
 
     public static final boolean[] moduleHasCard = {
+            true,
             true,
             true,
             true,

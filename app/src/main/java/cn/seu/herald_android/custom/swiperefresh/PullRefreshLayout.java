@@ -278,7 +278,7 @@ public class PullRefreshLayout extends ViewGroup {
                     setRefreshing(true, true);
                 } else {
                     mRefreshing = false;
-                    animateOffsetToStartPosition();
+                    animateOffsetToStartPosition(false);
                 }
                 mActivePointerId = INVALID_POINTER;
                 return false;
@@ -288,22 +288,29 @@ public class PullRefreshLayout extends ViewGroup {
         return true;
     }
 
-    private void animateOffsetToStartPosition() {
+    public void setDurations(int durationToStartPosition, int durationToCorrectPosition) {
+        mDurationToStartPosition = durationToStartPosition;
+        mDurationToCorrectPosition = durationToCorrectPosition;
+    }
+
+    private void animateOffsetToStartPosition(boolean delayed) {
         mFrom = mCurrentOffsetTop;
         mAnimateToStartPosition.reset();
         mAnimateToStartPosition.setDuration(mDurationToStartPosition);
         mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
         mAnimateToStartPosition.setAnimationListener(mToStartListener);
+        mAnimateToStartPosition.setStartOffset(delayed ? 200 : 0);
         mRefreshView.clearAnimation();
         mRefreshView.startAnimation(mAnimateToStartPosition);
     }
 
-    private void animateOffsetToCorrectPosition() {
+    private void animateOffsetToCorrectPosition(boolean delayed) {
         mFrom = mCurrentOffsetTop;
         mAnimateToCorrectPosition.reset();
         mAnimateToCorrectPosition.setDuration(mDurationToCorrectPosition);
         mAnimateToCorrectPosition.setInterpolator(mDecelerateInterpolator);
         mAnimateToCorrectPosition.setAnimationListener(mRefreshListener);
+        mAnimateToCorrectPosition.setStartOffset(delayed ? 200 : 0);
         mRefreshView.clearAnimation();
         mRefreshView.startAnimation(mAnimateToCorrectPosition);
     }
@@ -349,9 +356,9 @@ public class PullRefreshLayout extends ViewGroup {
             mRefreshing = refreshing;
             if (mRefreshing) {
                 mRefreshDrawable.setPercent(1f);
-                animateOffsetToCorrectPosition();
+                animateOffsetToCorrectPosition(true);
             } else {
-                animateOffsetToStartPosition();
+                animateOffsetToStartPosition(true);
             }
         }
     }
@@ -379,7 +386,7 @@ public class PullRefreshLayout extends ViewGroup {
             } else {
                 mRefreshDrawable.stop();
                 mRefreshView.setVisibility(View.GONE);
-                animateOffsetToStartPosition();
+                animateOffsetToStartPosition(true);
             }
             mCurrentOffsetTop = mTarget.getTop();
         }

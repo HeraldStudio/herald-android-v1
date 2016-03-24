@@ -69,6 +69,8 @@
     <string name="title_activity_experiment">实验助手</string>
     <string name="title_activity_empty_room">空教室</string>
     <string name="title_activity_seunet">校园网络</string>
+    <string name="title_activity_gymreserve">场馆预约</string>
+    <string name="title_activity_todo">日程提醒</string>
     <string name="title_activity_pedetail">跑操助手</string>
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>

@@ -80,6 +80,20 @@
         <item name="colorAccent">@color/colorSeuNetaccent</item>
     </style>
 
+    <style name="GymReserveTheme" parent="SubActivityTheme">
+        <!-- 场馆预约风格 -->
+        <item name="colorPrimary">@color/colorGymReserveprimary</item>
+        <item name="colorPrimaryDark">@color/colorGymReserveprimary_dark</item>
+        <item name="colorAccent">@color/colorGymReserveaccent</item>
+    </style>
+
+    <style name="TodoTheme" parent="SubActivityTheme">
+        <!-- 日程提醒风格 -->
+        <item name="colorPrimary">@color/colorTodoprimary</item>
+        <item name="colorPrimaryDark">@color/colorTodoprimary_dark</item>
+        <item name="colorAccent">@color/colorTodoaccent</item>
+    </style>
+
     <style name="PedetailTheme" parent="SubActivityTheme">
         <!-- 跑操查询风格 -->
         <item name="colorPrimary">@color/colorPedetailprimary</item>

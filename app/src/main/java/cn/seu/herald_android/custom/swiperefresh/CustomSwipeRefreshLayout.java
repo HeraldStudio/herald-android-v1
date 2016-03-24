@@ -10,6 +10,7 @@ public class CustomSwipeRefreshLayout extends PullRefreshLayout {
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setColor(ContextCompat.getColor(context, R.color.colorSwipeRefreshIcon));
+        setDurations(500, 500);
         setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwipeRefreshHeaderShadow));
     }
 }

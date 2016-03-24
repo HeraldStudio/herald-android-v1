@@ -41,6 +41,16 @@
     <color name="colorSeuNetprimary_dark">#7cb342</color>
     <color name="colorSeuNetaccent">#e57373</color>
 
+    <!--场馆预约-->
+    <color name="colorGymReserveprimary">#00abf1</color>
+    <color name="colorGymReserveprimary_dark">#00abf1</color>
+    <color name="colorGymReserveaccent">#00abf1</color>
+
+    <!--日程提醒-->
+    <color name="colorTodoprimary">#f57f17</color>
+    <color name="colorTodoprimary_dark">#f57f17</color>
+    <color name="colorTodoaccent">#f57f17</color>
+
     <!--跑操-->
     <color name="colorPedetailprimary">#26a69a</color>
     <color name="colorPedetailprimaryDark">#26a69a</color>
