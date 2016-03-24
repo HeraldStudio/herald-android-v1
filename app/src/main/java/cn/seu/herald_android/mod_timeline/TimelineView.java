@@ -26,10 +26,10 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ContextUtils;
-import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
+import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
@@ -50,7 +50,6 @@ public class TimelineView extends ListView {
     private SliderView slider;
     private FadeOutHeaderContainer fadeContainer;
     private TimelineAdapter adapter;
-    private View topPadding;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -310,9 +309,6 @@ public class TimelineView extends ListView {
     }
 
     private void refreshShortcutBox() {
-        // dp单位值
-        float dp = getContext().getResources().getDisplayMetrics().density;
-
         if (shortcutBox == null) {
             shortcutBox = (ShortcutBoxView)
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
@@ -320,13 +316,6 @@ public class TimelineView extends ListView {
         } else {
             shortcutBox.refresh();
         }
-
-       /* if (topPadding == null) {
-            // 顶部增加一个padding
-            topPadding = new View(getContext());
-            topPadding.setLayoutParams(new AbsListView.LayoutParams(-1, (int) (9 * dp)));
-            addHeaderView(topPadding);
-        }*/
     }
 
     /**
@@ -334,6 +323,7 @@ public class TimelineView extends ListView {
      * 注意：因为轮播图刷新的时候会有明显的界面变化，所以不能跟上面的快捷栏放在一起刷新
      **/
     private void refreshSliders() {
+
         if (slider == null) {
             slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
 

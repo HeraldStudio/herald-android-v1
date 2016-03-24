@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
+import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class CardsFragment extends Fragment {
