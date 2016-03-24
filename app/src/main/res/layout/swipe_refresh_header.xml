@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/swipe_image"
-            android:layout_width="60dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:padding="10dp"
             android:gravity="center"
             android:text="下拉刷新"
-            android:textColor="@color/colorSwipeRefresh"
+            android:textColor="@color/colorSwipeRefreshText"
             android:textSize="13sp" />
 
     </LinearLayout>

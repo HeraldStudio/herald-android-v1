@@ -9,7 +9,7 @@ import cn.seu.herald_android.R;
 public class CustomSwipeRefreshLayout extends PullRefreshLayout {
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setColor(ContextCompat.getColor(context, R.color.colorSwipeRefresh));
+        setColor(ContextCompat.getColor(context, R.color.colorSwipeRefreshIcon));
         setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwipeRefreshHeaderShadow));
     }
 }
