@@ -136,7 +136,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
         showProgressDialog();
         new ApiRequest(this).api(ApiHelper.API_PHYLAB).uuid()
                 .toCache("herald_experiment", o -> o)
-                .onFinish((success, response) -> {
+                .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
                         loadCache();

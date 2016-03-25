@@ -115,7 +115,7 @@ public class CardActivity extends BaseAppCompatActivity {
         showProgressDialog();
         new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
                 .post("timedelta", "31").toCache("herald_card", o -> o)
-                .onFinish((success, response) -> {
+                .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
                         loadCache();

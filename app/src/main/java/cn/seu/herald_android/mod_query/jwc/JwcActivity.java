@@ -109,7 +109,7 @@ public class JwcActivity extends BaseAppCompatActivity {
     private void refreshCache() {
         showProgressDialog();
         new ApiRequest(this).api(ApiHelper.API_JWC).uuid().toCache("herald_jwc", o -> o)
-                .onFinish((success, response) -> {
+                .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
                         loadCache();

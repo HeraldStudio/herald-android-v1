@@ -7,9 +7,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.CalendarUtils;
 
 public class ExperimentBlockLayout extends LinearLayout {
+
+    private long time = 0;
+
     public ExperimentBlockLayout(Context context, ExperimentItem item) {
         super(context);
         View contentView = LayoutInflater.from(context).inflate(R.layout.expandablelistview_childitem_experiment, null);
@@ -28,5 +34,21 @@ public class ExperimentBlockLayout extends LinearLayout {
         contentView.setLayoutParams(new LayoutParams(-1, -2));
         contentView.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
         addView(contentView);
+
+        String[] ymdStr = item.date.replace("年", "-").replace("月", "-").replace("日", "-").split("-");
+        int year = Integer.valueOf(ymdStr[0]);
+        int month = Integer.valueOf(ymdStr[1]);
+        int date = Integer.valueOf(ymdStr[2]);
+        int hour = Integer.valueOf(item.time.split(":")[0]);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month - 1, date);
+        cal = CalendarUtils.toSharpDay(cal);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        time = cal.getTimeInMillis();
+    }
+
+    public long getTime() {
+        return time;
     }
 }

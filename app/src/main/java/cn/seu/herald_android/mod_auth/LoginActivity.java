@@ -151,7 +151,6 @@ public class LoginActivity extends BaseAppCompatActivity {
                         } else {
                             showMsg("一卡通和统一查询密码不匹配，请核对后再试");
                         }
-
                     }
 
                     @Override

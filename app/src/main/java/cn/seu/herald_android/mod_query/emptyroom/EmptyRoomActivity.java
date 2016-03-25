@@ -35,5 +35,4 @@ public class EmptyRoomActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabsFromPagerAdapter(pagerAdapter);
     }
-
 }

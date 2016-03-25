@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.lecture;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,9 +14,6 @@ import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +22,6 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
-import okhttp3.Call;
-
 public class LectureActivity extends BaseAppCompatActivity {
 
     //容纳讲座预告卡片布局的RecyclerView
@@ -39,7 +33,6 @@ public class LectureActivity extends BaseAppCompatActivity {
     private ListView list_record;
     //打卡记录次数
     private TextView tv_count;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +66,6 @@ public class LectureActivity extends BaseAppCompatActivity {
         //RecyclerView加载
         recyclerView_notice = (RecyclerView) findViewById(R.id.recyclerview_lecture_notice);
         recyclerView_notice.setLayoutManager(new LinearLayoutManager(this));
-
-        //加载对话框
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setTitle("最新讲座消息获取中");
-        progressDialog.setMessage("请稍后...");
-
     }
 
     @Override
@@ -123,7 +109,7 @@ public class LectureActivity extends BaseAppCompatActivity {
     }
 
     private void refreshCache() {
-        progressDialog.show();
+        showProgressDialog();
 
         //获取讲座预告
         new ApiRequest(this).url(ApiHelper.wechat_lecture_notice_url).uuid()
@@ -135,7 +121,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                     }
                     return o;
                 })
-                .onFinish((success, response) -> {
+                .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     loadNoticeCache();
                 }).run();
@@ -162,39 +148,17 @@ public class LectureActivity extends BaseAppCompatActivity {
         tv_count = (TextView) window.findViewById(R.id.tv_recordcount);
 
         //加载讲座记录时显示刷新框
-        progressDialog.show();
+        showProgressDialog();
         //获取已听讲座
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_LECTURE))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        progressDialog.dismiss();
-                        showMsg("由于网络错误，获取最新讲座记录失败");
+        new ApiRequest(this).api(ApiHelper.API_LECTURE).uuid()
+                .toCache("herald_lecture_records", o -> o)
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        loadRecordCache();
+                        showMsg("获取讲座记录成功");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_lecture_records", json_res.toString());
-                                loadRecordCache();
-                                showMsg("获取讲座记录成功");
-                            }else{
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析出错");
-                        }
-                    }
-                });
+                }).run();
     }
 
     private void loadRecordCache() {

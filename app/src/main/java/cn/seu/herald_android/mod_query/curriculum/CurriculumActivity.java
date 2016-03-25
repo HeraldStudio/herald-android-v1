@@ -11,12 +11,6 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.net.ConnectException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -74,7 +68,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
         showProgressDialog();
         new ApiRequest(this).api(ApiHelper.API_SIDEBAR).uuid()
                 .toCache("herald_sidebar", o -> o.getJSONArray("content"))
-                .onFinish((success, response) -> {
+                .onFinish((success, code, response) -> {
                     if (success) {
                         refreshCacheStep2();
                     } else {
@@ -86,7 +80,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
     private void refreshCacheStep2() {
         new ApiRequest(this).api(ApiHelper.API_CURRICULUM).uuid()
                 .toCache("herald_curriculum", o -> o.getJSONObject("content"))
-                .onFinish((success, response) -> {
+                .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) readLocal();
                 }).run();
@@ -154,43 +148,5 @@ public class CurriculumActivity extends BaseAppCompatActivity {
             refreshCache();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /*****************************
-     * 实现::错误处理
-     *****************************/
-
-    private void handleException(Exception e) {
-        runOnUiThread(() -> {
-            e.printStackTrace();
-
-            // 显示对应的错误信息，并要求重新登录
-            showErrorMessage(e);
-
-            // 隐藏刷新控件，为了美观，先延时0.5秒
-            hideProgressDialog();
-        });
-    }
-
-    // 根据Exception的类型，显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
-    private void showErrorMessage(Exception e) {
-        String message;
-        if (e instanceof NumberFormatException || e instanceof JSONException) {
-            message = "暂时无法获取数据，请重试";
-        } else if (e instanceof ConnectException || e instanceof SocketException) {
-            message = "暂时无法连接网络，请重试";
-        } else if (e instanceof SocketTimeoutException) {
-            // 服务器端出错
-            message = "学校网络设施出现故障，暂时无法刷新";
-        } else {
-            message = "出现未知错误，请重试";
-        }
-        showErrorMessage(message);
-    }
-
-    // 显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
-    private void showErrorMessage(String message) {
-        showSnackBar(message);
-        hideProgressDialog();
     }
 }

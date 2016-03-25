@@ -20,7 +20,7 @@ public class ApiThreadManager {
     public ApiThreadManager add(ApiRequest request) {
         // 吃掉该线程的消息显示
         request.exceptionPool(exceptionPool);
-        request.onFinish((success, response) -> {
+        request.onFinish((success, code, response) -> {
             requests.remove(request);
             onResponse.run();
             if (requests.size() == 0)

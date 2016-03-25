@@ -11,9 +11,6 @@ import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +31,6 @@ import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
 
 public class PedetailActivity extends BaseAppCompatActivity {
 
@@ -45,19 +41,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
     private ViewPager pager;
     // 跑操次数数字
     private TextView count, monthCount;
-
-    public static ApiRequest[] remoteRefreshCache(Context context) {
-        return new ApiRequest[]{
-                new ApiRequest(context).api(ApiHelper.API_PC).uuid()
-                        .toCache("herald_pc_forecast", o -> {
-                            long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-                            new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
-                            return o.getString("content");
-                        }),
-                new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
-                        .toCache("herald_pedetail", o -> o.getJSONArray("content"))
-        };
-    }
 
     /********************************
      * 初始化
@@ -100,40 +83,28 @@ public class PedetailActivity extends BaseAppCompatActivity {
      *************************/
 
     private void refreshCache() {
-
-        // 先显示刷新控件
         showProgressDialog();
-
-        // 读取uuid
-        String uuid = getApiHelper().getUUID();
-        if (uuid == null) return;
-
-
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        handleException(e);
+        new ApiRequest(this).api(ApiHelper.API_PEDETAIL).uuid()
+                .toCache("herald_pedetail", o -> o.getJSONArray("content"))
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        readLocal();
                     }
+                }).run();
+    }
 
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                            getCacheHelper().setCache("herald_pedetail", array.toString());
-                            // 下一环节
-                            readLocal();
-                            // 隐藏刷新控件，为了美观，先延时0.5秒
-                            hideProgressDialog();
-                        } catch (JSONException e) {
-                            handleException(e);
-                        }
-                    }
-                });
+    public static ApiRequest[] remoteRefreshCache(Context context) {
+        return new ApiRequest[]{
+                new ApiRequest(context).api(ApiHelper.API_PC).uuid()
+                        .toCache("herald_pc_forecast", o -> {
+                            long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
+                            new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
+                            return o.getString("content");
+                        }),
+                new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
+                        .toCache("herald_pedetail", o -> o.getJSONArray("content"))
+        };
     }
 
     /*************************

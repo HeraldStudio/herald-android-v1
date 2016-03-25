@@ -12,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
 import com.squareup.seismic.ShakeDetector;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,8 +22,8 @@ import java.util.List;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
-import okhttp3.Call;
 
 public class MainActivity extends BaseAppCompatActivity {
 
@@ -90,41 +88,28 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     private void checkAuth() {
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_USER))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        //错误检测
-                        getApiHelper().dealApiException(e);
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
-                                //更新首页欢迎信息和侧边栏信息
-                                JSONObject json_content = json_res.getJSONObject("content");
-                                getApiHelper().setAuthCache("name", json_content.getString("name"));
-                                getApiHelper().setAuthCache("sex", json_content.getString("sex"));
-                                getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
-                                getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
-                                myInfoFragment.refreshUsername();
-                            } else {
-                                //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
-                                showMsg("登录信息已失效，请重新登录");
-                                getApiHelper().doLogout();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+        new ApiRequest(this).api(ApiHelper.API_USER).uuid().onFinish((success, code, response) -> {
+            if (success) {
+                if (code == 200) try {
+                    JSONObject json_res = new JSONObject(response);
+                    //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
+                    //更新首页欢迎信息和侧边栏信息
+                    JSONObject json_content = json_res.getJSONObject("content");
+                    getApiHelper().setAuthCache("name", json_content.getString("name"));
+                    getApiHelper().setAuthCache("sex", json_content.getString("sex"));
+                    getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
+                    getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
+                    myInfoFragment.refreshUsername();
+                } catch (JSONException e) {
+                    getApiHelper().dealApiException(e);
+                }
+                else {
+                    //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
+                    showMsg("登录信息已失效，请重新登录");
+                    getApiHelper().doLogout();
+                }
+            }
+        }).run();
     }
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {

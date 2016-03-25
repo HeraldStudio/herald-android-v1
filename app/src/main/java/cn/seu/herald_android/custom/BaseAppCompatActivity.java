@@ -87,7 +87,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return cacheHelper;
     }
 
-
     protected ServiceHelper getServiceHelper() {
         return serviceHelper;
     }

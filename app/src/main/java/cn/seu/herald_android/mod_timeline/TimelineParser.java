@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -277,9 +279,9 @@ class TimelineParser {
             JSONObject json_content = new JSONObject(cache).getJSONObject("content");
             boolean todayHasExperiments = false;
             // 时间未到的所有实验
-            ArrayList<View> allExperiments = new ArrayList<>();
+            ArrayList<ExperimentBlockLayout> allExperiments = new ArrayList<>();
             // 今天的实验或当前周的实验。若今天无实验，则为当前周的实验
-            ArrayList<View> currExperiments = new ArrayList<>();
+            ArrayList<ExperimentBlockLayout> currExperiments = new ArrayList<>();
 
             for (int i = 0; i < json_content.length(); i++) {
                 String jsonArray_str = json_content.getString(json_content.names().getString(i));
@@ -390,6 +392,12 @@ class TimelineParser {
             int N = currExperiments.size();
             int M = allExperiments.size();
 
+            Comparator<ExperimentBlockLayout> experimentsViewComparator =
+                    (lhs, rhs) -> (int) ((lhs.getTime() - rhs.getTime()) / 1000 / 60 / 60);
+
+            Collections.sort(currExperiments, experimentsViewComparator);
+            Collections.sort(allExperiments, experimentsViewComparator);
+
             // 今天和本周均无实验
             if (N == 0) {
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
@@ -397,7 +405,8 @@ class TimelineParser {
                         (M == 0 ? "你没有未完成的实验，" : ("本学期你还有" + M + "个实验，"))
                                 + "实验助手可以智能提醒你参加即将开始的实验"
                 );
-                item.attachedView = allExperiments;
+                item.attachedView = new ArrayList<>();
+                item.attachedView.addAll(allExperiments);
                 return item;
             }
 
@@ -406,14 +415,15 @@ class TimelineParser {
                     now, TimelineItem.CONTENT_NO_NOTIFY,
                     (todayHasExperiments ? "今天有" : "本周有") + N + "个实验，请注意准时参加"
             );
-            item.attachedView = currExperiments;
+            item.attachedView = new ArrayList<>();
+            item.attachedView.addAll(currExperiments);
             return item;
 
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新实验
             new CacheHelper(host.getContext()).setCache("herald_experiment", "");
             return new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
-                    now, TimelineItem.NO_CONTENT, "实验数据加载失败，手动刷新"
+                    now, TimelineItem.NO_CONTENT, "实验数据加载失败，请手动刷新"
             );
         }
     }

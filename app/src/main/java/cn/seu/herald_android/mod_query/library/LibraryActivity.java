@@ -14,9 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +23,12 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 public class LibraryActivity extends BaseAppCompatActivity {
 
     private ListView listView_hotbook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +49,11 @@ public class LibraryActivity extends BaseAppCompatActivity {
         enableSwipeBack();
 
 
-
         //加载最热门图书，初始化列表控件
-        listView_hotbook = (ListView)findViewById(R.id.list_library_hotbook);
+        listView_hotbook = (ListView) findViewById(R.id.list_library_hotbook);
 
         //获取最热图书信息
-        refreshRemoteHotBook();
+        refreshHotBook();
     }
 
     @Override
@@ -68,99 +65,65 @@ public class LibraryActivity extends BaseAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_library_search){
-            startActivity(new Intent(this,LibrarySearchActivity.class));
-        }else if(id ==  R.id.action_library_mybook){
+        if (id == R.id.action_library_search) {
+            startActivity(new Intent(this, LibrarySearchActivity.class));
+        } else if (id == R.id.action_library_mybook) {
             //显示已借书的对话框
-            refreshRemoteBorrowRocord();
+            refreshBorrowRocord();
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    private void refreshRemoteHotBook() {
+    private void refreshHotBook() {
         //加载校内最热门图书列表
         showProgressDialog();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_HOTBOOK))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        hideProgressDialog();
-                        getApiHelper().dealApiException(e);
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).uuid()
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) try {
+                        JSONObject json_res = new JSONObject(response);
+                        JSONArray jsonArray = json_res.getJSONArray("content");
+                        loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
+                        showMsg("刷新成功");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        showMsg("数据解析失败，请重试");
                     }
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try{
-                            JSONObject json_res = new JSONObject((response));
-                            if(json_res.getInt("code") == 200){
-                                JSONArray jsonArray = json_res.getJSONArray("content");
-                                loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+                }).run();
     }
 
-    private void loadHotBookList(ArrayList<HotBook> list){
+    private void loadHotBookList(ArrayList<HotBook> list) {
         listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.listviewitem_library_hotbook, list));
         //设置高度自适应
         HotBookAdapter.setHeightWithContent(listView_hotbook);
     }
 
-    private void refreshRemoteBorrowRocord() {
+    private void refreshBorrowRocord() {
         //获取最新的已借书记录
         showProgressDialog();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_MYBOOK))
-                .addParams("uuid",getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        hideProgressDialog();
-                        getApiHelper().dealApiException(e);
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try{
-                            JSONObject json_res = new JSONObject((response));
-                            if(json_res.getInt("code") == 200){
-                                //状态码为200说明获取成功开始加载列表
-                                JSONArray jsonArray = json_res.getJSONArray("content");
-                                if(jsonArray.length()==0){
-                                    //如果列表为空则说明没有借过书
-                                    showMsg("目前尚无在借图书");
-                                } else {
-                                    //反之打开借书记录对话框
-                                    displayBorrowRecordDialog(MyBorrowBook.transfromJSONArrayToArrayList(jsonArray));
-                                }
-
-                            }else if(json_res.getInt("code") == 401){
-                                //如果为401说明未绑定图书馆账号或者已经失效
-                                displayLibraryAuthDialog();
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                            showMsg("数据解析失败，不妨刷新试试~");
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).uuid()
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) try {
+                        JSONObject json_res = new JSONObject(response);
+                        JSONArray jsonArray = json_res.getJSONArray("content");
+                        if (jsonArray.length() == 0) {
+                            //如果列表为空则说明没有借过书
+                            showMsg("目前尚无在借图书");
+                        } else {
+                            //反之打开借书记录对话框
+                            displayBorrowRecordDialog(MyBorrowBook.transfromJSONArrayToArrayList(jsonArray));
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        showMsg("数据解析失败，请重试");
                     }
-                });
+                    else {
+                        //如果为401说明未绑定图书馆账号或者已经失效
+                        if (code == 401) displayLibraryAuthDialog();
+                    }
+                }).run();
     }
 
     private void displayBorrowRecordDialog(ArrayList<MyBorrowBook> list) {
@@ -177,7 +140,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
         //获取对话窗口中的ListView
         ListView list_record = (ListView) window.findViewById(R.id.list_borrowbook_record);
         //设置适配器
-        list_record.setAdapter(new MyBorrowBookAdapter(this,R.layout.listviewitem_library_borrowbook,list));
+        list_record.setAdapter(new MyBorrowBookAdapter(this, R.layout.listviewitem_library_borrowbook, list));
 
     }
 
@@ -202,35 +165,22 @@ public class LibraryActivity extends BaseAppCompatActivity {
 
 
     /**
-     * @param password  图书馆密码
+     * @param password 图书馆密码
      */
     private void updateAuthInfo(String password) {
         //用于更新图书馆的账号和密码
         showProgressDialog();
-        OkHttpUtils.post()
-                .url(ApiHelper.auth_update_url)
-                .addParams("cardnum",getApiHelper().getUserName())
-                .addParams("password",getApiHelper().getPassword())
-                .addParams("lib_username", getApiHelper().getUserName())
-                .addParams("lib_password",password)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        hideProgressDialog();
-                        getApiHelper().dealApiException(e);
+        new ApiRequest(this).url(ApiHelper.auth_update_url)
+                .post("cardnum", getApiHelper().getUserName(), "password", getApiHelper().getPassword())
+                .post("lib_username", getApiHelper().getUserName(), "lib_password", password)
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (response.equals("OK")) {
+                        //返回OK说明认证成功
+                        refreshBorrowRocord();
+                    } else {
+                        showMsg("信息绑定失败，请重新再试。如多次失败请尝试注销登录,或者联系管理员");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        if(response.equals("OK")){
-                            //返回OK说明认证成功
-                            refreshRemoteBorrowRocord();
-                        }else{
-                            showMsg("信息绑定失败，请重新再试。如多次失败请尝试注销登录,或者联系管理员");
-                        }
-                    }
-                });
+                }).run();
     }
 }

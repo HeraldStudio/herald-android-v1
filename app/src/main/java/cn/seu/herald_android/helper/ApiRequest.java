@@ -94,7 +94,7 @@ public class ApiRequest {
                 new ApiHelper(context).dealApiException(e);
             }
             for (OnFinishListener onFinishListener : onFinishListeners) {
-                onFinishListener.onFinish(false, e.toString());
+                onFinishListener.onFinish(false, 0, e.toString());
             }
         }
 
@@ -102,10 +102,8 @@ public class ApiRequest {
         public void onResponse(String response) {
             try {
                 JSONObject json_res = new JSONObject(response);
-                if (json_res.getInt("code") == 200) {
-                    for (OnFinishListener onFinishListener : onFinishListeners) {
-                        onFinishListener.onFinish(true, response);
-                    }
+                for (OnFinishListener onFinishListener : onFinishListeners) {
+                    onFinishListener.onFinish(json_res.getInt("code") == 200, json_res.getInt("code"), response);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -115,7 +113,7 @@ public class ApiRequest {
                     new ApiHelper(context).dealApiException(e);
                 }
                 for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, e.toString());
+                    onFinishListener.onFinish(false, -1, e.toString());
                 }
             }
         }
@@ -130,7 +128,7 @@ public class ApiRequest {
      **/
 
     public interface OnFinishListener {
-        void onFinish(boolean success, String response);
+        void onFinish(boolean success, int code, String response);
     }
 
     private ArrayList<OnFinishListener> onFinishListeners = new ArrayList<>();
@@ -162,14 +160,14 @@ public class ApiRequest {
         return this;
     }
 
-    private OnFinishListener toCache = (success, response) -> {
+    private OnFinishListener toCache = (success, code, response) -> {
         if (asCache != null && success) {
             try {
                 String cache = asCache.second.parse(new JSONObject(response)).toString();
                 new CacheHelper(context).setCache(asCache.first, cache);
             } catch (JSONException e) {
                 for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, e.toString());
+                    onFinishListener.onFinish(false, -1, e.toString());
                 }
             }
         }
@@ -183,14 +181,14 @@ public class ApiRequest {
         return this;
     }
 
-    private OnFinishListener toServiceCache = (success, response) -> {
+    private OnFinishListener toServiceCache = (success, code, response) -> {
         if (asServiceCache != null && success) {
             try {
                 String cache = asServiceCache.second.parse(new JSONObject(response)).toString();
                 new ServiceHelper(context).setServiceCache(asServiceCache.first, cache);
             } catch (JSONException e) {
                 for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, e.toString());
+                    onFinishListener.onFinish(false, -1, e.toString());
                 }
             }
         }
