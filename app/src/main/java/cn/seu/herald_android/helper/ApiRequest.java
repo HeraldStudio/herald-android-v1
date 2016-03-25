@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import okhttp3.Call;
 
@@ -22,12 +23,12 @@ public class ApiRequest {
     /**
      * 构造部分
      * context  当前上下文
-     * silent   是否吞掉错误消息
+     * exceptionPool   是否吞掉错误消息
      * url      请求的目标url
      **/
     private Context context;
 
-    private boolean silent = false;
+    private Vector<Exception> exceptionPool = null;
 
     private String url;
 
@@ -35,11 +36,12 @@ public class ApiRequest {
     public ApiRequest(Context context) {
         this.context = context;
         onFinishListeners.add(toCache);
+        onFinishListeners.add(toServiceCache);
     }
 
     // 外部可调用
-    public ApiRequest silent() {
-        silent = true;
+    public ApiRequest exceptionPool(Vector<Exception> pool) {
+        exceptionPool = pool;
         return this;
     }
 
@@ -61,6 +63,12 @@ public class ApiRequest {
     private Map<String, String> map = new HashMap<>();
 
     // 外部可调用
+    public ApiRequest uuid() {
+        map.put("uuid", new ApiHelper(context).getUUID());
+        return this;
+    }
+
+    // 外部可调用
     public ApiRequest post(String... map) {
         for (int i = 0; i < map.length / 2; i++) {
             String key = map[2 * i];
@@ -80,8 +88,8 @@ public class ApiRequest {
     private StringCallback callback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e) {
-            if (silent) {
-                new ApiHelper(context).dealApiExceptionSilently(e);
+            if (exceptionPool != null) {
+                exceptionPool.add(e);
             } else {
                 new ApiHelper(context).dealApiException(e);
             }
@@ -101,6 +109,11 @@ public class ApiRequest {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                if (exceptionPool != null) {
+                    exceptionPool.add(e);
+                } else {
+                    new ApiHelper(context).dealApiException(e);
+                }
                 for (OnFinishListener onFinishListener : onFinishListeners) {
                     onFinishListener.onFinish(false, e.toString());
                 }
@@ -154,6 +167,27 @@ public class ApiRequest {
             try {
                 String cache = asCache.second.parse(new JSONObject(response)).toString();
                 new CacheHelper(context).setCache(asCache.first, cache);
+            } catch (JSONException e) {
+                for (OnFinishListener onFinishListener : onFinishListeners) {
+                    onFinishListener.onFinish(false, e.toString());
+                }
+            }
+        }
+    };
+
+    private Pair<String, JSONParser> asServiceCache;
+
+    // 外部可调用
+    public ApiRequest toServiceCache(String key, JSONParser parser) {
+        asServiceCache = new Pair<>(key, parser);
+        return this;
+    }
+
+    private OnFinishListener toServiceCache = (success, response) -> {
+        if (asServiceCache != null && success) {
+            try {
+                String cache = asServiceCache.second.parse(new JSONObject(response)).toString();
+                new ServiceHelper(context).setServiceCache(asServiceCache.first, cache);
             } catch (JSONException e) {
                 for (OnFinishListener onFinishListener : onFinishListeners) {
                     onFinishListener.onFinish(false, e.toString());

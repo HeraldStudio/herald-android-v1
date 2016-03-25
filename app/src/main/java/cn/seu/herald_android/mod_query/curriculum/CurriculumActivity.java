@@ -10,12 +10,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -24,8 +20,7 @@ import java.net.SocketTimeoutException;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 /******************************************************************************
  * CurriculumActivity | 主程序
@@ -36,57 +31,6 @@ public class CurriculumActivity extends BaseAppCompatActivity {
 
     // 水平分页控件
     private ViewPager pager;
-
-    public static void remoteRefreshCache(Context context, Runnable onFinish) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiException(e);
-                        onFinish.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                            cacheHelper.setCache("herald_sidebar", array.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        OkHttpUtils
-                                .post()
-                                .url(ApiHelper.getApiUrl(ApiHelper.API_CURRICULUM))
-                                .addParams("uuid", apiHelper.getUUID())
-                                .build()
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onError(Call call, Exception e) {
-                                        apiHelper.dealApiExceptionSilently(e);
-                                        onFinish.run();
-                                    }
-
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try {
-                                            JSONObject object = new JSONObject(response).getJSONObject("content");
-                                            cacheHelper.setCache("herald_curriculum", object.toString());
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        onFinish.run();
-                                    }
-                                });
-                    }
-                });
-    }
 
     /********************************
      * 初始化
@@ -127,68 +71,35 @@ public class CurriculumActivity extends BaseAppCompatActivity {
      *************************/
 
     private void refreshCache() {
-
-        // 先显示刷新控件
         showProgressDialog();
-
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_SIDEBAR))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        handleException(e);
+        new ApiRequest(this).api(ApiHelper.API_SIDEBAR).uuid()
+                .toCache("herald_sidebar", o -> o.getJSONArray("content"))
+                .onFinish((success, response) -> {
+                    if (success) {
+                        refreshCacheStep2();
+                    } else {
+                        hideProgressDialog();
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-
-                            runOnUiThread(() -> {
-                                getCacheHelper().setCache("herald_sidebar", array.toString());
-                                refreshCacheStep2();
-                            });
-                        } catch (JSONException e) {
-                            handleException(e);
-                        }
-                    }
-                });
+                }).run();
     }
 
     private void refreshCacheStep2() {
+        new ApiRequest(this).api(ApiHelper.API_CURRICULUM).uuid()
+                .toCache("herald_curriculum", o -> o.getJSONObject("content"))
+                .onFinish((success, response) -> {
+                    hideProgressDialog();
+                    if (success) readLocal();
+                }).run();
+    }
 
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_CURRICULUM))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        handleException(e);
-                    }
+    public static ApiRequest[] remoteRefreshCache(Context context) {
+        return new ApiRequest[]{
+                new ApiRequest(context).api(ApiHelper.API_SIDEBAR).uuid()
+                        .toCache("herald_sidebar", o -> o.getJSONArray("content")),
 
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject object = new JSONObject(response).getJSONObject("content");
-
-                            runOnUiThread(() -> {
-                                getCacheHelper().setCache("herald_curriculum", object.toString());
-
-                                hideProgressDialog();
-                                readLocal();
-                            });
-                        } catch (JSONException e) {
-                            handleException(e);
-                        }
-
-                    }
-                });
+                new ApiRequest(context).api(ApiHelper.API_CURRICULUM).uuid()
+                        .toCache("herald_curriculum", o -> o.getJSONObject("content"))
+        };
     }
 
     /*****************************

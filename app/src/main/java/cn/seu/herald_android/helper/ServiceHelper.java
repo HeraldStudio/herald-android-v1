@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +12,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.custom.SliderView;
-import okhttp3.Call;
 
 /**
  * Created by heyon on 2016/3/14.
@@ -42,37 +38,11 @@ public class ServiceHelper {
         this.apiHelper = new ApiHelper(context);
     }
 
-    public static void refreshVersionCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        ServiceHelper serviceHelper = new ServiceHelper(context);
-        //拉取最新版本信息
-        OkHttpUtils
-                .post()
-                .url(getServiceUrl(SERVICE_VERSION))
-                .addParams("schoolnum", apiHelper.getAuthCache("schoolnum"))
-                .addParams("uuid", apiHelper.getUUID())
-                .addParams("versioncode", getAppVersionCode(context) + "")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        e.printStackTrace();
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            if (object.getInt("code") == 200) {
-                                serviceHelper.setServiceCache("versioncheck_cache", object.toString());
-                            }
-                        } catch (JSONException jsone) {
-                            jsone.printStackTrace();
-                        }
-                        doAfter.run();
-                    }
-                });
+    public static ApiRequest refreshVersionCache(Context context) {
+        return new ApiRequest(context).url(getServiceUrl(SERVICE_VERSION)).uuid()
+                .post("schoolnum", new ApiHelper(context).getAuthCache("schoolnum"),
+                        "versioncode", String.valueOf(getAppVersionCode(context)))
+                .toServiceCache("versioncheck_cache", o -> o);
     }
 
     public String getPushMessageContent() {
@@ -204,7 +174,7 @@ public class ServiceHelper {
         return pref.getString(cacheName, "");
     }
 
-    private boolean setServiceCache(String cacheName, String cacheValue) {
+    public boolean setServiceCache(String cacheName, String cacheValue) {
         //用于更新存储的某项信息
         SharedPreferences.Editor editor = context.getSharedPreferences("herald_service", Context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);

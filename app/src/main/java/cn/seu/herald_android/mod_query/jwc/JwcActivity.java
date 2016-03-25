@@ -8,9 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,44 +17,12 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 public class JwcActivity extends BaseAppCompatActivity {
 
     //教务通知类型列表
     private ExpandableListView expandableListView;
-
-    public static void remoteRefreshCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_JWC))
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiExceptionSilently(e);
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                cacheHelper.setCache("herald_jwc", response);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        doAfter.run();
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,37 +108,19 @@ public class JwcActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_JWC))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        hideProgressDialog();
+        new ApiRequest(this).api(ApiHelper.API_JWC).uuid().toCache("herald_jwc", o -> o)
+                .onFinish((success, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        loadCache();
+                        showMsg("刷新成功");
                     }
+                }).run();
+    }
 
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_jwc", response);
-                                loadCache();
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+    public static ApiRequest remoteRefreshCache(Context context) {
+        return new ApiRequest(context).api(ApiHelper.API_JWC).uuid()
+                .toCache("herald_jwc", o -> o);
     }
 }
 

@@ -1,16 +1,28 @@
 package cn.seu.herald_android.helper;
 
+import android.content.Context;
+
 import java.util.Vector;
 
+import cn.seu.herald_android.custom.ContextUtils;
+
 public class ApiThreadManager {
-    private Vector<ApiRequest> requests;
+    private Vector<ApiRequest> requests = new Vector<>();
 
     private Runnable onFinish = () -> {
     };
 
+    private Runnable onResponse = () -> {
+    };
+
+    private Vector<Exception> exceptionPool = new Vector<>();
+
     public ApiThreadManager add(ApiRequest request) {
+        // 吃掉该线程的消息显示
+        request.exceptionPool(exceptionPool);
         request.onFinish((success, response) -> {
             requests.remove(request);
+            onResponse.run();
             if (requests.size() == 0)
                 onFinish.run();
         });
@@ -18,9 +30,25 @@ public class ApiThreadManager {
         return this;
     }
 
+    public ApiThreadManager addAll(ApiRequest[] requests) {
+        for (ApiRequest request : requests) {
+            add(request);
+        }
+        return this;
+    }
+
+    public ApiThreadManager onResponse(Runnable runnable) {
+        onResponse = runnable;
+        return this;
+    }
+
     public ApiThreadManager onFinish(Runnable runnable) {
         onFinish = runnable;
         return this;
+    }
+
+    public void flushExceptions(Context context, String message) {
+        if (exceptionPool.size() != 0) ContextUtils.showMessage(context, message);
     }
 
     public void run() {

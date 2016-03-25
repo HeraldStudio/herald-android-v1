@@ -32,6 +32,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import okhttp3.Call;
 
@@ -45,56 +46,17 @@ public class PedetailActivity extends BaseAppCompatActivity {
     // 跑操次数数字
     private TextView count, monthCount;
 
-    public static void remoteRefreshCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_PC))
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiException(e);
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
+    public static ApiRequest[] remoteRefreshCache(Context context) {
+        return new ApiRequest[]{
+                new ApiRequest(context).api(ApiHelper.API_PC).uuid()
+                        .toCache("herald_pc_forecast", o -> {
                             long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-                            cacheHelper.setCache("herald_pc_date", String.valueOf(today));
-                            cacheHelper.setCache("herald_pc_forecast", new JSONObject(response).getString("content"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        OkHttpUtils
-                                .post()
-                                .url(ApiHelper.getApiUrl(ApiHelper.API_PEDETAIL))
-                                .addParams("uuid", apiHelper.getUUID())
-                                .build()
-                                .readTimeOut(10000).connTimeOut(10000)
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onError(Call call, Exception e) {
-                                        apiHelper.dealApiExceptionSilently(e);
-                                        doAfter.run();
-                                    }
-
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try {
-                                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                                            cacheHelper.setCache("herald_pedetail", array.toString());
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        doAfter.run();
-                                    }
-                                });
-                    }
-                });
+                            new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
+                            return o.getString("content");
+                        }),
+                new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
+                        .toCache("herald_pedetail", o -> o.getJSONArray("content"))
+        };
     }
 
     /********************************

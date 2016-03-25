@@ -25,18 +25,17 @@ import java.util.Vector;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
-import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
+import cn.seu.herald_android.helper.ApiThreadManager;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
-import cn.seu.herald_android.mod_query.jwc.JwcActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
 import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
@@ -108,69 +107,107 @@ public class TimelineView extends ListView {
         this.srl = srl;
     }
 
-    public void loadContent(boolean refresh) {
-        /**
-         * 刷新列表
-         *
-         * 为了方便理解，说明如下：
-         *
-         * 1、若refresh为true，为联网刷新操作。
-         * 此时将用Vector的方式管理线程，每个线程开始前添加一个对象，结束时先删除一个对象，然后递归调用本函数。
-         * 被递归调用的子函数中，refresh参数强制为false，它们首先会进行本地重载（每个线程结束都重载一次），
-         * 然后判断Vector中的对象数是否为零，如果为零则执行刷新结束的操作。
-         *
-         * 2、若refresh为false，为本地重载操作，本地重载不涉及上述的线程管理和递归问题。
-         **/
 
-        // 清空卡片列表，等待载入
-        itemList = new ArrayList<>();
+    /**
+     * 刷新卡片列表
+     **/
+    public void loadContent(boolean refresh) {
+
         SettingsHelper settingsHelper = new SettingsHelper(getContext());
         CacheHelper cacheHelper = new CacheHelper(getContext());
 
         /**
+         * 本地重载部分
+         **/
+
+        // 单独刷新快捷栏，不刷新轮播图。轮播图在轮播图数据下载完成后单独刷新。
+        refreshShortcutBox();
+
+        // 清空卡片列表，等待载入
+        itemList = new ArrayList<>();
+
+        // 加载版本更新缓存
+        TimelineItem item1 = TimelineParser.getCheckVersionItem(this);
+        if (item1 != null) itemList.add(item1);
+
+        // 加载推送缓存
+        TimelineItem item = TimelineParser.getPushMessageItem(this);
+        if (item != null) itemList.add(item);
+
+        // 判断各模块是否开启并加载对应数据
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
+            // 加载并解析课表缓存
+            itemList.add(TimelineParser.getCurriculumItem(this));
+        }
+
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
+            // 加载并解析实验缓存
+            itemList.add(TimelineParser.getExperimentItem(this));
+        }
+
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
+            // 加载并解析人文讲座预告缓存
+            itemList.add(TimelineParser.getLectureItem(this));
+        }
+
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
+            // 加载并解析跑操预报缓存
+            itemList.add(TimelineParser.getPeForecastItem(this));
+        }
+
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
+            // 加载并解析一卡通缓存
+            itemList.add(TimelineParser.getCardItem(this));
+        }
+
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
+            // 加载并解析教务处缓存
+            itemList.add(TimelineParser.getJwcItem(this));
+        }
+
+        // 有消息的排在前面，没消息的排在后面
+        Collections.sort(itemList, TimelineItem.comparator);
+
+        // 更新适配器，结束刷新
+        if (adapter == null) {
+            setAdapter(adapter = new TimelineAdapter());
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+        /**
          * 联网部分
-         *
-         * 只有refresh为true时，主函数才执行此部分。因此被递归调用的子函数不执行此部分。
          *
          * 1、此处为懒惰刷新，即当某模块需要刷新时才刷新，不需要时不刷新，
          * 各个模块是否刷新的判断条件可以按不同模块的需求来写。
          *
-         * 2、此处使用各个模块类的remoteRefreshCache()函数进行各个模块的刷新。
-         * 因为多数模块类都是Activity，为了不构造这些实例就调用它们，这些函数被设置为静态的。
+         * 2、此处改为用 {@link ApiThreadManager} 方式管理线程。
+         * 该管理器可以自定义在每个线程结束时、在所有线程结束时执行不同的操作。
          *
-         * 3、因为需要多个模块联网，所以这里需要一个延迟显示错误信息的机制，防止连续显示好几个错误信息。
-         * 又因为第2点提到的这些静态函数已经从对应的动态函数中分离出来，专门用于这里的联网刷新，
-         * 所以我索性把这种有特殊需求的错误处理机制也放在了那些静态函数中，
-         * 那些静态函数在联网出错时不会调用ApiHelper.dealApiException()直接显示错误信息，
-         * 而是调用ApiHelper.dealApiExceptionSilently()函数，
-         * 该函数会把生成的错误信息先交给ContextUtils暂存起来，
-         * 然后在本函数最末尾刷新完成的时候将让ContextUtils吐出最后一条错误消息。
+         * 3、这部分利用 {@link ApiThreadManager} 的错误处理机制，当管理器添加线程时，
+         * 会将每个线程的错误处理改为自动将错误放到管理器的错误池中。当管理器报告运行结束时，
+         * 我们可以手动让管理器显示一个错误信息来代替这些线程的多个错误信息。
          **/
-        // 没有头部的时候加载头部，否则就不重载头部，防止轮播图连续多次刷新
-        refreshShortcutBox();
 
         if (refresh) {
 
-            // 刷新版本信息和推送消息
-            threads.add(new Object());
-            ServiceHelper.refreshVersionCache(getContext(), () -> {
-                if (threads.size() > 0) threads.remove(0);
-
-                // 单独重载轮播图
-                refreshSliders();
+            // 线程管理器
+            ApiThreadManager manager = new ApiThreadManager().onResponse(() -> {
                 loadContent(false);
             });
+
+            // 刷新版本信息和推送消息
+            manager.add(ServiceHelper.refreshVersionCache(getContext()).onFinish((success, response) -> {
+                // 刷新好后单独重载轮播图
+                refreshSliders();
+            }));
 
             // 当课表模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
                 // 仅当课表数据不存在时刷新课表
                 if (cacheHelper.getCache("herald_curriculum").equals("")
                         || cacheHelper.getCache("herald_sidebar").equals("")) {
-                    threads.add(new Object());
-                    CurriculumActivity.remoteRefreshCache(getContext(), () -> {
-                        if (threads.size() > 0) threads.remove(0);
-                        loadContent(false);
-                    });
+                    manager.addAll(CurriculumActivity.remoteRefreshCache(getContext()));
                 }
             }
 
@@ -178,22 +215,14 @@ public class TimelineView extends ListView {
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
                 // 仅当实验数据不存在时刷新实验
                 if (cacheHelper.getCache("herald_experiment").equals("")) {
-                    threads.add(new Object());
-                    ExperimentActivity.remoteRefreshCache(getContext(), () -> {
-                        if (threads.size() > 0) threads.remove(0);
-                        loadContent(false);
-                    });
+                    manager.add(ExperimentActivity.remoteRefreshCache(getContext()));
                 }
             }
 
             // 当人文讲座模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
                 // 直接刷新人文讲座预告
-                threads.add(new Object());
-                LectureActivity.remoteRefreshCache(getContext(), () -> {
-                    if (threads.size() > 0) threads.remove(0);
-                    loadContent(false);
-                });
+                manager.add(LectureActivity.remoteRefreshCache(getContext()));
             }
 
             // 当跑操模块开启时
@@ -211,101 +240,32 @@ public class TimelineView extends ListView {
                 // 仅当今天缓存不存在或者最后消息还没到手，且已到开始时间时，允许刷新
                 if ((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
                         || !gotLastMessage) && now >= startTime) {
-                    threads.add(new Object());
-                    PedetailActivity.remoteRefreshCache(getContext(), () -> {
-                        if (threads.size() > 0) threads.remove(0);
-                        loadContent(false);
-                    });
+                    manager.addAll(PedetailActivity.remoteRefreshCache(getContext()));
                 }
             }
 
             // 当一卡通模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
                 // 直接刷新一卡通数据
-                threads.add(new Object());
-                CardActivity.remoteRefreshCache(getContext(), () -> {
-                    if (threads.size() > 0) threads.remove(0);
-                    loadContent(false);
-                });
+                manager.add(CardActivity.remoteRefreshCache(getContext()));
             }
 
             // 当教务处模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
                 // 直接刷新一卡通数据
-                threads.add(new Object());
-                JwcActivity.remoteRefreshCache(getContext(), () -> {
-                    if (threads.size() > 0) threads.remove(0);
-                    loadContent(false);
-                });
+                manager.add(CardActivity.remoteRefreshCache(getContext()));
             }
+
+            /**
+             * 结束刷新部分
+             * 当最后一个线程结束时调用这一部分，刷新结束
+             **/
+            manager.onFinish(() -> {
+                if (srl != null) srl.setRefreshing(false);
+                manager.flushExceptions(getContext(), "刷新过程中出现了一些问题，请重试~");
+            }).run();
         }
 
-        /**
-         * 本地重载部分
-         *
-         * 主函数和被递归调用的子函数都执行这一部分
-         * 这样每刷出来一个模块都会本地重载一次列表，以便于在有些模块没刷出来的时候第一时间看到已经刷出来的模块
-         **/
-
-        // 加载版本更新消息
-        TimelineItem item1 = TimelineParser.getCheckVersionItem(this);
-        if (item1 != null) itemList.add(item1);
-
-        // 加载推送消息
-        TimelineItem item = TimelineParser.getPushMessageItem(this);
-        if (item != null) itemList.add(item);
-
-        // 判断各模块是否开启并加载对应数据
-        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
-            // 加载并解析课表数据
-            itemList.add(TimelineParser.getCurriculumItem(this));
-        }
-
-        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
-            // 加载并解析实验数据
-            itemList.add(TimelineParser.getExperimentItem(this));
-        }
-
-        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
-            // 加载并解析人文讲座预告数据
-            itemList.add(TimelineParser.getLectureItem(this));
-        }
-
-        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
-            // 加载并解析跑操预报数据
-            itemList.add(TimelineParser.getPeForecastItem(this));
-        }
-
-        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
-            // 加载并解析一卡通数据
-            itemList.add(TimelineParser.getCardItem(this));
-        }
-
-        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
-            // 加载并解析教务处数据
-            itemList.add(TimelineParser.getJwcItem(this));
-        }
-
-        // 有消息的排在前面，没消息的排在后面
-        Collections.sort(itemList, TimelineItem.comparator);
-
-        // 更新适配器，结束刷新
-        if (adapter == null) {
-            setAdapter(adapter = new TimelineAdapter());
-        } else {
-            adapter.notifyDataSetChanged();
-        }
-
-        /**
-         * 结束刷新部分
-         *
-         * 只有最后结束的线程在结束时调用的递归子函数能执行到这一部分
-         * 它负责隐藏刷新控件，也可以在这里加入其它后续处理工作
-         **/
-        if (srl != null && threads.size() == 0 && !refresh) {
-            srl.setRefreshing(false);
-            ContextUtils.flushMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
-        }
     }
 
     private void refreshShortcutBox() {

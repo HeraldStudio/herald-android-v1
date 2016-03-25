@@ -20,24 +20,6 @@ public class ContextUtils {
     }
 
     /**
-     * 实现有多个联网请求连续出错时，前面的消息都吃掉，吐的时候只把最后一个吐出来
-     **/
-    public static String eatenMessage = null;
-
-    public static void eatMessage(String message) {
-        eatenMessage = message;
-    }
-
-    public static void flushMessage(Context context, String message) {
-        if (eatenMessage != null) {
-            if(message == null)
-                showMessage(context, eatenMessage);
-            else showMessage(context, message);
-            eatenMessage = null;
-        }
-    }
-
-    /**
      * 获取该场景下主题的主色调，返回对应的颜色资源id
      **/
     public static int getColorPrimary(Context context) {

@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import okhttp3.Call;
 
 public class LectureActivity extends BaseAppCompatActivity {
@@ -40,38 +40,6 @@ public class LectureActivity extends BaseAppCompatActivity {
     //打卡记录次数
     private TextView tv_count;
     private ProgressDialog progressDialog;
-
-    public static void remoteRefreshCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        //获取讲座预告
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.wechat_lecture_notice_url)
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiExceptionSilently(e);
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                cacheHelper.setCache("herald_lecture_notices", json_res.toString());
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        doAfter.run();
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,44 +124,26 @@ public class LectureActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         progressDialog.show();
-        //获取讲座预告
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.wechat_lecture_notice_url)
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        progressDialog.dismiss();
-                        showMsg("由于网络错误获取最新讲座预告失败，已加载缓存。");
-                        loadNoticeCache();
-                    }
 
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_lecture_notices", json_res.toString());
-                                if (json_res.getJSONArray("content").length() == 0) {
-                                    showMsg("最近暂无讲座预告信息");
-                                } else {
-                                    showMsg("已获取最新讲座预告");
-                                }
-                                loadNoticeCache();
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
+        //获取讲座预告
+        new ApiRequest(this).url(ApiHelper.wechat_lecture_notice_url).uuid()
+                .toCache("herald_lecture_notices", o -> {
+                    if (o.getJSONArray("content").length() == 0) {
+                        showMsg("最近暂无讲座预告信息");
+                    } else {
+                        showMsg("已获取最新讲座预告");
                     }
-                });
+                    return o;
+                })
+                .onFinish((success, response) -> {
+                    hideProgressDialog();
+                    loadNoticeCache();
+                }).run();
+    }
+
+    public static ApiRequest remoteRefreshCache(Context context) {
+        return new ApiRequest(context).url(ApiHelper.wechat_lecture_notice_url).uuid()
+                .toCache("herald_lecture_notices", o -> o);
     }
 
     private void displayLectureRecords() {

@@ -11,9 +11,6 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,11 +20,10 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.mod_achievement.Achievement;
 import cn.seu.herald_android.mod_achievement.AchievementFactory;
 import cn.seu.herald_android.mod_achievement.AchievementViewPagerAdapter;
-import okhttp3.Call;
 
 public class ExperimentActivity extends BaseAppCompatActivity {
 
@@ -44,37 +40,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
     private TextView tv_numofAchievement;
     //成就列表
     private ArrayList<Achievement> achievementArrayList;
-
-    public static void remoteRefreshCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiExceptionSilently(e);
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                cacheHelper.setCache("herald_experiment", response);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        doAfter.run();
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,37 +134,20 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_PHYLAB))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        hideProgressDialog();
+        new ApiRequest(this).api(ApiHelper.API_PHYLAB).uuid()
+                .toCache("herald_experiment", o -> o)
+                .onFinish((success, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        loadCache();
+                        showMsg("刷新成功");
                     }
+                }).run();
+    }
 
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_experiment", response);
-                                loadCache();
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+    public static ApiRequest remoteRefreshCache(Context context) {
+        return new ApiRequest(context).api(ApiHelper.API_PHYLAB).uuid()
+                .toCache("herald_experiment", o -> o);
     }
 
     private void setupAchievementWall() {

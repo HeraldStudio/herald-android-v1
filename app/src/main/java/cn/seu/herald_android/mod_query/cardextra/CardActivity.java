@@ -13,9 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,8 +20,7 @@ import org.json.JSONObject;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 public class CardActivity extends BaseAppCompatActivity {
 
@@ -33,38 +29,6 @@ public class CardActivity extends BaseAppCompatActivity {
     private RecyclerView recyclerViewCard;
     //余额
     private TextView tv_extra;
-
-    public static void remoteRefreshCache(Context context, Runnable onFinish) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_CARD))
-                .addParams("uuid", apiHelper.getUUID())
-                .addParams("timedelta", "7")
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiExceptionSilently(e);
-                        onFinish.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                cacheHelper.setCache("herald_card", response);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        onFinish.run();
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,38 +113,20 @@ public class CardActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_CARD))
-                .addParams("uuid", getApiHelper().getUUID())
-                .addParams("timedelta", "7")
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        hideProgressDialog();
-                        getApiHelper().dealApiException(e);
+        new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
+                .post("timedelta", "31").toCache("herald_card", o -> o)
+                .onFinish((success, response) -> {
+                    hideProgressDialog();
+                    if (success) {
                         loadCache();
+                        showMsg("刷新成功");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_card", response);
-                                loadCache();
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("一卡通中心也许出了问题，可以到充值页面进行查询");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+                }).run();
     }
+
+    public static ApiRequest remoteRefreshCache(Context context) {
+        return new ApiRequest(context).api(ApiHelper.API_CARD).uuid()
+                .post("timedelta", "31").toCache("herald_card", o -> o);
+    }
+
 }
