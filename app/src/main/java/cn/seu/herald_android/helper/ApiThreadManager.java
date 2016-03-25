@@ -1,6 +1,7 @@
 package cn.seu.herald_android.helper;
 
 import android.content.Context;
+import android.os.Handler;
 
 import java.util.Vector;
 
@@ -48,7 +49,9 @@ public class ApiThreadManager {
     }
 
     public void flushExceptions(Context context, String message) {
-        if (exceptionPool.size() != 0) ContextUtils.showMessage(context, message);
+        if (exceptionPool.size() != 0) {
+            new Handler().postDelayed(() -> ContextUtils.showMessage(context, message), 500);
+        }
     }
 
     public void run() {

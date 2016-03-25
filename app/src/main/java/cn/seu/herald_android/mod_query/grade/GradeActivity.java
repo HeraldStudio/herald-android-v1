@@ -139,7 +139,7 @@ public class GradeActivity extends BaseAppCompatActivity {
         new ApiRequest(this).api(ApiHelper.API_GPA).uuid()
                 .toCache("herald_grade_gpa", o -> o)
                 .onFinish((success, code, response) -> {
-                    hideProgressDialog();
+                    progressDialog.hide();
                     if (success) {
                         loadCache();
                         showMsg("刷新成功");
