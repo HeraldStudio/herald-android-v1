@@ -128,42 +128,42 @@ public class TimelineView extends ListView {
         itemList = new ArrayList<>();
 
         // 加载版本更新缓存
-        TimelineItem item1 = TimelineParser.getCheckVersionItem(this);
+        TimelineItem item1 = ServiceHelper.getCheckVersionItem(this);
         if (item1 != null) itemList.add(item1);
 
         // 加载推送缓存
-        TimelineItem item = TimelineParser.getPushMessageItem(this);
+        TimelineItem item = ServiceHelper.getPushMessageItem(this);
         if (item != null) itemList.add(item);
 
         // 判断各模块是否开启并加载对应数据
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CURRICULUM)) {
             // 加载并解析课表缓存
-            itemList.add(TimelineParser.getCurriculumItem(this));
+            itemList.add(CurriculumActivity.getCurriculumItem(this));
         }
 
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXPERIMENT)) {
             // 加载并解析实验缓存
-            itemList.add(TimelineParser.getExperimentItem(this));
+            itemList.add(ExperimentActivity.getExperimentItem(this));
         }
 
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
             // 加载并解析人文讲座预告缓存
-            itemList.add(TimelineParser.getLectureItem(this));
+            itemList.add(LectureActivity.getLectureItem(this));
         }
 
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
             // 加载并解析跑操预报缓存
-            itemList.add(TimelineParser.getPeForecastItem(this));
+            itemList.add(PedetailActivity.getPeForecastItem(this));
         }
 
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_CARDEXTRA)) {
             // 加载并解析一卡通缓存
-            itemList.add(TimelineParser.getCardItem(this));
+            itemList.add(CardActivity.getCardItem(this));
         }
 
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
             // 加载并解析教务处缓存
-            itemList.add(TimelineParser.getJwcItem(this));
+            itemList.add(JwcActivity.getJwcItem(this));
         }
 
         // 有消息的排在前面，没消息的排在后面
@@ -233,15 +233,13 @@ public class TimelineView extends ListView {
                 String date = helper.getCache("herald_pc_date");
                 // 服务器端的跑操预告消息可能会出现中途更改的情况，因此只要没有得到跑操结束时的最后消息，就允许重复刷新
                 // 这个缓存用来记录当天的最后消息是否已经到手
-                boolean gotLastMessage = helper.getCache("herald_pc_last_message").equals("true");
                 Calendar nowCal = Calendar.getInstance();
                 long now = Calendar.getInstance().getTimeInMillis();
                 long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
                 long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
 
-                // 仅当今天缓存不存在或者最后消息还没到手，且已到开始时间时，允许刷新
-                if ((!date.equals(String.valueOf(CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis()))
-                        || !gotLastMessage) && now >= startTime) {
+                // 仅当已到开始时间时，允许刷新
+                if (now >= startTime) {
                     manager.addAll(PedetailActivity.remoteRefreshCache(getContext()));
                 }
             }
@@ -265,9 +263,9 @@ public class TimelineView extends ListView {
             manager.onFinish(() -> {
                 if (srl != null) srl.setRefreshing(false);
                 manager.flushExceptions(getContext(), "刷新过程中出现了一些问题，请重试~");
+                slider.startAutoCycle();
             }).run();
         }
-
     }
 
     private void refreshShortcutBox() {
@@ -376,7 +374,11 @@ public class TimelineView extends ListView {
             TextView time = (TextView) convertView.findViewById(R.id.time);
             TextView content = (TextView) convertView.findViewById(R.id.content);
             ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
-            ViewGroup attachedContainer = (ViewGroup) convertView.findViewById(R.id.attachedContainer);
+            LinearLayout attachedContainer = (LinearLayout) convertView.findViewById(R.id.attachedContainer);
+            if (item.vertical) {
+                attachedContainer = (LinearLayout) convertView.findViewById(R.id.attachedContainerVertical);
+            }
+
             ViewGroup hsv = (ViewGroup) convertView.findViewById(R.id.hsv);
             View notifyDot = convertView.findViewById(R.id.notify_dot);
 
@@ -408,7 +410,7 @@ public class TimelineView extends ListView {
                 });
             }
 
-            hsv.setVisibility(GONE);
+            (item.vertical ? attachedContainer : hsv).setVisibility(GONE);
             attachedContainer.removeAllViews();
 
             if (item.getImportance() == TimelineItem.NO_CONTENT) {
@@ -419,18 +421,21 @@ public class TimelineView extends ListView {
             }
 
             if (item.attachedView.size() != 0) {
-                hsv.setVisibility(VISIBLE);
+                (item.vertical ? attachedContainer : hsv).setVisibility(VISIBLE);
                 boolean firstChild = true;
                 float dp = getContext().getResources().getDisplayMetrics().density;
                 for (View k : item.attachedView) {
                     if (!firstChild) {
                         View padding = new View(getContext());
-                        padding.setLayoutParams(new LinearLayout.LayoutParams((int) (12 * dp), 1));
+                        padding.setLayoutParams(new LinearLayout.LayoutParams((int) (12 * dp), (int) (12 * dp)));
                         attachedContainer.addView(padding);
                     }
 
                     if (k.getParent() != null) {
                         ((ViewGroup) k.getParent()).removeView(k);
+                    }
+                    if (item.vertical) {
+                        k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
                     }
                     attachedContainer.addView(k);
                     firstChild = false;

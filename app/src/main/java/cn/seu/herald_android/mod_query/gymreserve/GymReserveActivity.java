@@ -6,19 +6,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Vector;
+import java.util.Hashtable;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.ApiThreadManager;
 
 public class GymReserveActivity extends BaseAppCompatActivity {
 
@@ -67,94 +65,46 @@ public class GymReserveActivity extends BaseAppCompatActivity {
 
 
     private void refreshCache() {
-
-        // 先显示刷新控件
         showProgressDialog();
 
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_GYMRESERVE))
-                .addParams("uuid", getApiHelper().getUUID())
-                .addParams("method", "getDate")
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
+        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).uuid().post("method", "getDate")
+                .toCache("herald_gymreserve_timelist", o -> o.getJSONObject("content").getJSONArray("timeList"))
+                .onFinish((success, code, response) -> {
+                    if (success) {
+                        refreshCacheStep2();
+                    } else {
                         hideProgressDialog();
-                        getApiHelper().dealApiException(e);
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                JSONArray array = json_res.getJSONObject("content").getJSONArray("timeList");
-
-                                getCacheHelper().setCache("herald_gymreserve_timelist", array.toString());
-                                refreshCacheStep2();
-                            } else {
-                                hideProgressDialog();
-                                showMsg("数据解析失败，请重试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            hideProgressDialog();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+                }).run();
     }
 
     private void refreshCacheStep2() {
         try {
             JSONArray array = new JSONArray(getCacheHelper().getCache("herald_gymreserve_timelist"));
-            Vector<Object> threads = new Vector<>();
+            ApiThreadManager manager = new ApiThreadManager();
 
             // 枚举所有可预约日期
             for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
+                JSONObject timeListObject = array.getJSONObject(i);
+                Hashtable<Integer, JSONArray> listOfSports = new Hashtable<>();
 
                 // 枚举所有运动项目
                 for (int j = 7; j <= 14; j++) {
-                    threads.add(new Object());
-                    OkHttpUtils
-                            .post()
-                            .url(ApiHelper.getApiUrl(ApiHelper.API_GYMRESERVE))
-                            .addParams("uuid", getApiHelper().getUUID())
-                            .addParams("method", "getOrder")
-                            .addParams("itemId", String.valueOf(j))
-                            .addParams("dayInfo", object.getString("dayInfo"))
-                            .build()
-                            .readTimeOut(10000).connTimeOut(10000)
-                            .execute(new StringCallback() {
-                                @Override
-                                public void onError(Call call, Exception e) {
-                                    hideProgressDialog();
-                                    getApiHelper().dealApiException(e);
-                                }
-
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject json_res = new JSONObject(response);
-                                        if (json_res.getInt("code") == 200) {
-                                            JSONArray array = json_res.getJSONObject("content").getJSONArray("timeList");
-
-                                            getCacheHelper().setCache("herald_gymreserve_timelist", array.toString());
-                                            refreshCacheStep2();
-                                        } else {
-                                            hideProgressDialog();
-                                            showMsg("数据解析失败，请重试");
+                    final int sportNum = j;
+                    manager.add(
+                            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).uuid().post("method", "getOrder")
+                                    .post("itemId", String.valueOf(j), "dayInfo", timeListObject.getString("dayInfo"))
+                                    .onFinish((success, code, response) -> {
+                                        if (success) try {
+                                            JSONArray orderIndexs = new JSONObject(response)
+                                                    .getJSONObject("content").getJSONArray("orderIndexs");
+                                            listOfSports.put(sportNum, orderIndexs);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                            new ApiHelper(this).dealApiException(e);
                                         }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        hideProgressDialog();
-                                        showMsg("数据解析失败，请重试");
-                                    }
-                                }
-                            });
+                                    })
+                    );
                 }
             }
         } catch (JSONException e) {

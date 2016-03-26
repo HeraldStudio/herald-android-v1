@@ -1,7 +1,6 @@
 package cn.seu.herald_android.helper;
 
 import android.content.Context;
-import android.util.Pair;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -35,8 +34,6 @@ public class ApiRequest {
     // 外部可调用
     public ApiRequest(Context context) {
         this.context = context;
-        onFinishListeners.add(toCache);
-        onFinishListeners.add(toServiceCache);
     }
 
     // 外部可调用
@@ -152,47 +149,39 @@ public class ApiRequest {
         Object parse(JSONObject src) throws JSONException;
     }
 
-    private Pair<String, JSONParser> asCache;
-
     // 外部可调用
     public ApiRequest toCache(String key, JSONParser parser) {
-        asCache = new Pair<>(key, parser);
-        return this;
-    }
-
-    private OnFinishListener toCache = (success, code, response) -> {
-        if (asCache != null && success) {
-            try {
-                String cache = asCache.second.parse(new JSONObject(response)).toString();
-                new CacheHelper(context).setCache(asCache.first, cache);
-            } catch (JSONException e) {
-                for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, -1, e.toString());
+        onFinish((success, code, response) -> {
+            if (success) {
+                try {
+                    String cache = parser.parse(new JSONObject(response)).toString();
+                    new CacheHelper(context).setCache(key, cache);
+                } catch (JSONException e) {
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(false, -1, e.toString());
+                    }
                 }
             }
-        }
-    };
-
-    private Pair<String, JSONParser> asServiceCache;
+        });
+        return this;
+    }
 
     // 外部可调用
     public ApiRequest toServiceCache(String key, JSONParser parser) {
-        asServiceCache = new Pair<>(key, parser);
-        return this;
-    }
-
-    private OnFinishListener toServiceCache = (success, code, response) -> {
-        if (asServiceCache != null && success) {
-            try {
-                String cache = asServiceCache.second.parse(new JSONObject(response)).toString();
-                new ServiceHelper(context).setServiceCache(asServiceCache.first, cache);
-            } catch (JSONException e) {
-                for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, -1, e.toString());
+        onFinish((success, code, response) -> {
+            if (success) {
+                try {
+                    String cache = parser.parse(new JSONObject(response)).toString();
+                    new ServiceHelper(context).setServiceCache(key, cache);
+                } catch (JSONException e) {
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(false, -1, e.toString());
+                    }
                 }
             }
-        }
-    };
+        });
+        return this;
+    }
 
     /**
      * 执行部分

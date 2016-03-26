@@ -12,12 +12,9 @@ import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.ConnectException;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,6 +28,9 @@ import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_timeline.TimelineItem;
+import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class PedetailActivity extends BaseAppCompatActivity {
 
@@ -42,9 +42,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
     // 跑操次数数字
     private TextView count, monthCount;
 
-    /********************************
-     * 初始化
-     *********************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,10 +75,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
         if (isRefreshNeeded()) refreshCache();
     }
 
-    /*************************
-     * 实现::联网环节::获取学期
-     *************************/
-
     private void refreshCache() {
         showProgressDialog();
         new ApiRequest(this).api(ApiHelper.API_PEDETAIL).uuid()
@@ -103,13 +96,12 @@ public class PedetailActivity extends BaseAppCompatActivity {
                             return o.getString("content");
                         }),
                 new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
-                        .toCache("herald_pedetail", o -> o.getJSONArray("content"))
+                        .toCache("herald_pedetail", o -> o.getJSONArray("content")),
+                new ApiRequest(context).api(ApiHelper.API_PE).uuid()
+                        .toCache("herald_pe_count", o -> o.getString("content"))
+                        .toCache("herald_pe_remain", o -> o.getString("remain"))
         };
     }
-
-    /*************************
-     * 实现::联网环节::工具函数
-     *************************/
 
     private boolean isRefreshNeeded() {
         return (pager.getAdapter() == null) || (pager.getAdapter().getCount() == 0);
@@ -135,10 +127,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /*****************************
-     * 实现::本地读取
-     *****************************/
 
     private void readLocal() {
         try {
@@ -228,55 +216,160 @@ public class PedetailActivity extends BaseAppCompatActivity {
             });
 
             if (infoList.size() == 0) {
-                showErrorMessage("本学期暂时没有跑操记录");
+                showMsg("本学期暂时没有跑操记录");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /*****************************
-     * 实现::跑操计数
-     *****************************/
-
     private void showCount(int countNum) {
         count.setText(String.valueOf(countNum));
     }
 
-    /*****************************
-     * 实现::错误处理
-     *****************************/
+    /**
+     * 读取跑操预报缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineItem getPeForecastItem(TimelineView host) {
+        CacheHelper helper = new CacheHelper(host.getContext());
+        String date = helper.getCache("herald_pc_date");
+        String ignoredDate = helper.getCache("herald_pc_ignored_date");
+        String forecast = helper.getCache("herald_pc_forecast");
+        String record = helper.getCache("herald_pedetail");
+        final long now = Calendar.getInstance().getTimeInMillis();
 
-    private void handleException(Exception e) {
-        runOnUiThread(() -> {
-            e.printStackTrace();
+        try {
+            int count = Integer.valueOf(helper.getCache("herald_pe_count"));
+            int remain = Integer.valueOf(helper.getCache("herald_pe_remain"));
 
-            // 显示对应的错误信息，并要求重新登录
-            showErrorMessage(e);
+            Calendar nowCal = Calendar.getInstance();
+            long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
+            long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
+            long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
-            hideProgressDialog();
-        });
-    }
+            String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime());
 
-    // 根据Exception的类型，显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
-    private void showErrorMessage(Exception e) {
-        String message;
-        if (e instanceof NumberFormatException || e instanceof JSONException) {
-            message = "暂时无法获取数据，请重试";
-        } else if (e instanceof ConnectException || e instanceof SocketException) {
-            message = "暂时无法连接网络，请重试";
-        } else if (e instanceof SocketTimeoutException) {
-            // 服务器端出错
-            message = "学校网络设施出现故障，暂时无法刷新";
-        } else {
-            message = "出现未知错误，请重试";
+            if (record.contains(todayStamp)) {
+                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                        now, ignoredDate.equals(todayStamp) ?
+                        TimelineItem.CONTENT_NO_NOTIFY : TimelineItem.CONTENT_NOTIFY,
+                        "你今天的跑操已经到账。" + getRemainNotice(count, remain, false)
+                );
+
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
+                if (count < 45) {
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
+                }
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+
+                return item;
+            }
+
+            if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
+                return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                        now, TimelineItem.NO_CONTENT, "跑操预告加载失败，请手动刷新"
+                );
+            }
+            if (now < startTime) {
+                // 跑操时间没到
+                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                        now, TimelineItem.CONTENT_NO_NOTIFY, "小猴会在早上跑操时间实时显示跑操预告\n"
+                        + getRemainNotice(count, remain, false)
+                );
+
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
+                if (count < 45) {
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
+                }
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+
+                return item;
+            } else if (now >= endTime) {
+                // 跑操时间已过
+
+                if (!forecast.contains("跑操")) {
+                    // 没有跑操预告信息
+                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                            now, TimelineItem.CONTENT_NO_NOTIFY, "今天没有跑操预告信息\n"
+                            + getRemainNotice(count, remain, false)
+                    );
+
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
+                    if (count < 45) {
+                        item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
+                    }
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+
+                    return item;
+                } else {
+                    // 有跑操预告信息但时间已过
+                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                            startTime, TimelineItem.CONTENT_NO_NOTIFY, forecast + "(已结束)\n"
+                            + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
+                    );
+
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
+                    if (count < 45) {
+                        item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
+                    }
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+
+                    return item;
+                }
+            } else {
+                // 还没有跑操预告信息
+                if (!forecast.contains("跑操")) {
+                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                            now, TimelineItem.CONTENT_NO_NOTIFY, "目前暂无跑操预报信息，过一会再来看吧~\n"
+                            + getRemainNotice(count, remain, false)
+                    );
+
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
+                    if (count < 45) {
+                        item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
+                    }
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+
+                    return item;
+                }
+
+                // 有跑操预告信息
+                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                        now, TimelineItem.CONTENT_NOTIFY, "小猴预测" + forecast + "\n"
+                        + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
+                );
+
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
+                if (count < 45) {
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
+                }
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+
+                return item;
+            }
+        } catch (Exception e) {
+            return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
+                    now, TimelineItem.NO_CONTENT, "跑操预告加载失败，请手动刷新"
+            );
         }
-        showErrorMessage(message);
     }
 
-    // 显示一个错误信息。将根据课表显示状态自动选择SnackBar或对话框形式
-    private void showErrorMessage(String message) {
-        showSnackBar(message);
-        hideProgressDialog();
+    private static String getRemainNotice(int count, int remain, boolean todayAvailable) {
+
+        if (count == 0) return "你这学期还没有跑操，如果是需要跑操的同学要加油咯~";
+        if (count >= 45) {
+            return "已经跑够次数啦，" + (remain > 0 && remain >= 50 - count ?
+                    "你还可以再继续加餐，多多益善哟~" : "小猴给你个满分~");
+        }
+        float ratio = ((float) remain) / (45 - count);
+        if (ratio >= 1.5f) {
+            return "时间似乎比较充裕，但还是要加油哟~";
+        } else if (ratio >= 1.2f) {
+            return "时间比较紧迫了，" + (todayAvailable ? "赶紧加油出门跑操吧~" : "还需要继续锻炼哟~");
+        } else if (ratio >= 1f) {
+            return "时间紧任务重，" + (todayAvailable ? "没时间解释了，赶紧出门补齐跑操吧~" : "赶紧找机会补齐跑操吧~");
+        } else {
+            return "似乎没什么希望了，小猴为你感到难过，不如参加一些加跑操的活动试试？";
+        }
     }
 }

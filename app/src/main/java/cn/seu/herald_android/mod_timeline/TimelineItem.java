@@ -17,6 +17,7 @@ public class TimelineItem {
     // 消息是否重要，不重要的消息总在后面
     public static final int CONTENT_NOTIFY = 0, CONTENT_NO_NOTIFY = 1, NO_CONTENT = 2;
     public ArrayList<View> attachedView = new ArrayList<>();
+    public boolean vertical = false;
     private String name;
     private String info;
     private long time;

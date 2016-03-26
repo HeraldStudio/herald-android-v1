@@ -55,6 +55,12 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         setDuration(5000);
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        stopAutoCycle();
+    }
+
     private DefaultSliderView getDefultSliderViewWithUrl(String title, String imageUrl, String url) {
         DefaultSliderView sliderView = new DefaultSliderView(getContext());
         // initialize a SliderLayout
