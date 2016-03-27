@@ -90,10 +90,16 @@ public class PedetailActivity extends BaseAppCompatActivity {
     public static ApiRequest[] remoteRefreshCache(Context context) {
         return new ApiRequest[]{
                 new ApiRequest(context).api(ApiHelper.API_PC).uuid()
-                        .toCache("herald_pc_forecast", o -> {
+                        .toCache("herald_pc_forecast", o -> o.getString("content"))
+                        .onFinish((success, code, response) -> {
                             long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-                            new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
-                            return o.getString("content");
+                            if (success) {
+                                new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
+                            } else if (code == 201) { // 今天还没有预告
+                                new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
+                                // 覆盖旧的预告信息
+                                new CacheHelper(context).setCache("herald_pc_forecast", "refreshing");
+                            }
                         }),
                 new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
                         .toCache("herald_pedetail", o -> o.getJSONArray("content")),
@@ -270,6 +276,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                         now, TimelineItem.NO_CONTENT, "跑操预告加载失败，请手动刷新"
                 );
             }
+
             if (now < startTime) {
                 // 跑操时间没到
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
