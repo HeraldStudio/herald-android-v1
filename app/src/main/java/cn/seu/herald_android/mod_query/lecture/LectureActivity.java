@@ -214,7 +214,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                 };
                 Calendar time = Calendar.getInstance();
                 if (time.get(Calendar.MONTH) + 1 == md[0] && time.get(Calendar.DAY_OF_MONTH) == md[1]) {
-                    if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 18 * 60 + 30) {
+                    if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 19 * 60) {
 
                         LectureBlockLayout block = new LectureBlockLayout(host.getContext(), new LectureNoticeItem(
                                 json_item.getString("date"),
@@ -247,7 +247,7 @@ public class LectureActivity extends BaseAppCompatActivity {
             // 今天无人文讲座
             return new TimelineItem(SettingsHelper.MODULE_LECTURE,
                     now, TimelineItem.NO_CONTENT, jsonArray.length() == 0 ? "暂无人文讲座预告信息"
-                    : "今天暂无人文讲座，点我查看以后的预告"
+                    : "暂无新的人文讲座，点我查看以后的预告"
             );
 
         } catch (Exception e) {// JSONException, NumberFormatException

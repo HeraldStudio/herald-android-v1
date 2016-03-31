@@ -16,7 +16,7 @@ public class JwcBlockLayout extends LinearLayout {
 
     public JwcBlockLayout(Context context, JwcItem item) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.expandablelistview_childitem_jwc, null);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_jwc, null);
         TextView tv_name = (TextView) contentView.findViewById(R.id.tv_name);
         TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
         importance = item.title.contains("!") || item.title.contains("重要") || item.title.contains("提醒") ? 1 : 0;

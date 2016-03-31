@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Vector;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
@@ -42,7 +41,6 @@ import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 
 public class TimelineView extends ListView {
 
-    private final Vector<Object> threads = new Vector<>();
     private ArrayList<TimelineItem> itemList;
 
     private CustomSwipeRefreshLayout srl;

@@ -6,6 +6,5 @@
     android:gravity="center_horizontal"
     android:numColumns="auto_fit"
     android:stretchMode="columnWidth"
-    android:background="#e0e0e0"
-    android:horizontalSpacing="@dimen/divider_height"
-    android:verticalSpacing="@dimen/divider_height" />
+    android:horizontalSpacing="0.75dp"
+    android:verticalSpacing="0.75dp" />

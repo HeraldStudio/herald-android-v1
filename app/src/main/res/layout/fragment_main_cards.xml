@@ -21,7 +21,8 @@
             android:divider="#00000000"
             android:listSelector="@drawable/null_selector"
             android:headerDividersEnabled="false">
-
         </cn.seu.herald_android.mod_timeline.TimelineView>
+
     </cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout>
+
 </LinearLayout>

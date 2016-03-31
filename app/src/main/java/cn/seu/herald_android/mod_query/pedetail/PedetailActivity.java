@@ -267,6 +267,14 @@ public class PedetailActivity extends BaseAppCompatActivity {
                     item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
                 }
                 item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+                if (!ignoredDate.equals(todayStamp)) {
+                    PedetailTimelineBlockLayout block = new PedetailTimelineBlockLayout(host.getContext(), "我知道了", "get");
+                    block.setOnClickListener(v -> {
+                        helper.setCache("herald_pc_ignored_date", todayStamp);
+                        host.loadContent(false);
+                    });
+                    item.attachedView.add(block);
+                }
 
                 return item;
             }
