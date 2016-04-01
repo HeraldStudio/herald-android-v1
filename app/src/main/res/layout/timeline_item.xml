@@ -2,16 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/timeline_item_bg_selector"
     android:orientation="vertical">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/timeline_divider_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shortcut_item_background"
         android:orientation="vertical"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
@@ -88,6 +84,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:scrollbarSize="2dp"
+            android:scrollbarThumbHorizontal="@color/colorDivider"
             android:visibility="gone">
 
             <LinearLayout

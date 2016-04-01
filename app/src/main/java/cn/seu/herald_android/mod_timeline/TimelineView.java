@@ -268,9 +268,10 @@ public class TimelineView extends ListView {
 
     private void refreshShortcutBox() {
         if (shortcutBox == null) {
-            shortcutBox = (ShortcutBoxView)
+            ViewGroup vg = (ViewGroup)
                     LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
-            addHeaderView(shortcutBox);
+            shortcutBox = (ShortcutBoxView) vg.getChildAt(0);
+            addHeaderView(vg);
         } else {
             shortcutBox.refresh();
         }

@@ -18,13 +18,26 @@ import cn.seu.herald_android.R;
 
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
+    private ArrayList<SliderViewItem> itemList = null;
+
     public SliderView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     public void setupWithArrayList(ArrayList<SliderViewItem> sliderViewItemArrayList) {
+
+        if (itemList != null && itemList.size() == sliderViewItemArrayList.size()) {
+            boolean equal = true;
+
+            for (int i = 0; i < itemList.size(); i++) {
+                if (!itemList.get(i).equals(sliderViewItemArrayList.get(i))) equal = false;
+            }
+
+            if (equal) return;
+        }
+        itemList = sliderViewItemArrayList;
+
         //利用arraylist进行初始化
-        ArrayList<SliderViewItem> sliderViewItemArrayList1 = sliderViewItemArrayList;
         try {
             removeAllSliders();
             for (SliderViewItem sliderViewItem : sliderViewItemArrayList) {
@@ -88,7 +101,6 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
@@ -134,6 +146,13 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
 
         public String getUrl() {
             return url;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof SliderViewItem)) return false;
+            SliderViewItem item = (SliderViewItem) o;
+            return imageUrl.equals(item.imageUrl) && title.equals(item.title) && url.equals(item.url);
         }
     }
 }
