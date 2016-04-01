@@ -137,6 +137,7 @@ public class MainActivity extends BaseAppCompatActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
         viewPager.setOffscreenPageLimit(adapter.getCount() - 1);//三个页面都不回收，提高流畅性
         viewPager.setAdapter(adapter);
+        viewPager.setPageMargin((int) (3 * getResources().getDisplayMetrics().density));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < adapter.getCount(); i++) {

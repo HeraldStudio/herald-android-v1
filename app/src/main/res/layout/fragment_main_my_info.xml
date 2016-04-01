@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorMainPagesBg"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -28,10 +29,10 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_height"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="#eee" />
+        android:background="@color/colorDivider" />
 
     <TextView
         android:id="@+id/textView5"
@@ -85,10 +86,10 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_height"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="#eee" />
+        android:background="@color/colorDivider" />
 
     <TextView
         android:layout_width="match_parent"

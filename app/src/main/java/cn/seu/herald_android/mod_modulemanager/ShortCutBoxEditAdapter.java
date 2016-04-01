@@ -62,6 +62,16 @@ public class ShortCutBoxEditAdapter extends ArrayAdapter<SeuModule> {
         });
         switchShortcut.setCheckedImmediately(settingsHelper.getModuleShortCutEnabled(moduleId));
 
+        // 只有一个开关的条目设置点击事件
+        if (switchCard.getVisibility() != View.VISIBLE) {
+            convertView.setOnClickListener(v -> {
+                boolean oldState = switchShortcut.isChecked();
+                switchShortcut.setChecked(!oldState);
+            });
+        } else {
+            convertView.setOnClickListener(null);
+        }
+
         return convertView;
     }
 

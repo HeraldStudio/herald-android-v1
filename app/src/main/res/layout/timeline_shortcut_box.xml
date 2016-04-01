@@ -4,21 +4,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="7dp" />
+
     <cn.seu.herald_android.custom.ShortcutBoxView
+        android:id="@+id/shorcut_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:background="#ffffff"
-        android:numColumns="5"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:horizontalSpacing="0.75dp"
-        android:verticalSpacing="0.75dp"
+        android:background="@drawable/timeline_item_bg"
+        android:numColumns="auto_fit"
+        android:columnWidth="60dp"
         android:stretchMode="columnWidth" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@drawable/timeline_list_divider" />
 
 </LinearLayout>

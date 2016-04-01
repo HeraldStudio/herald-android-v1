@@ -114,6 +114,8 @@
     <color name="colorSecondaryText">#727272</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
+    <color name="colorMainPagesBg">#fff</color>
+    <color name="colorMainPagesDivider">#eaeaea</color>
     <color name="colorSwitchOff">#ffffff</color>
     <color name="colorSwipeRefreshIcon">#ccc</color>
     <color name="colorSwipeRefreshText">#999</color>

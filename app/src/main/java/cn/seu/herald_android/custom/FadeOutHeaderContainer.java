@@ -33,7 +33,7 @@ public class FadeOutHeaderContainer<T extends View> extends FrameLayout {
         return this;
     }
 
-    protected int getScrollTop() {
+    public int getScrollTop() {
         return Math.min(-getTop(), getHeight());
     }
 
