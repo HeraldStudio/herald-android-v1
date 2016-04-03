@@ -60,8 +60,12 @@ public class ApiHelper {
     public static final int API_LIBRARY_MYBOOK = 18;
     //热门图书
     public static final int API_LIBRARY_HOTBOOK = 19;
+    //图书续借
+    public static final int API_RENEW = 20;
     //场馆预约
-    public static final int API_GYMRESERVE = 20;
+    public static final int API_GYMRESERVE = 21;
+    //考试助手
+    public static final int API_EXAM = 22;
     /**
      * 调戏
      * 参数
@@ -69,8 +73,6 @@ public class ApiHelper {
      * msg：对话内容
      */
     public static final int API_SIMSIMI = 0;
-    //暂时无法使用的两个
-    public static final int API_RENEW = 1;
 
     /**
      * 参数
@@ -114,7 +116,9 @@ public class ApiHelper {
             "search",
             "library",
             "library_hot",
-            "yuyue"
+            "renew",
+            "yuyue",
+            "exam"
     };
     private static String packagePath;
     private Context context;

@@ -31,7 +31,7 @@ public class SettingsHelper {
     public static final int MODULE_EXPERIMENT = 3;
     public static final int MODULE_LECTURE = 4;
     public static final int MODULE_JWC = 5;
-    public static final int MODULE_TODO = 6;
+    public static final int MODULE_EXAM = 6;
     public static final int MODULE_SEUNET = 7;
     public static final int MODULE_LIBRARY = 8;
     public static final int MODULE_GRADE = 9;
@@ -51,7 +51,7 @@ public class SettingsHelper {
             "experiment",
             "lecture",
             "jwc",
-            "todo",
+            "exam",
             "seunet",
             "library",
             "grade",
@@ -71,7 +71,7 @@ public class SettingsHelper {
             "实验助手",
             "人文讲座",
             "教务通知",
-            "日程提醒",
+            "考试助手",
             "校园网络",
             "图书馆",
             "绩点查询",
@@ -91,7 +91,7 @@ public class SettingsHelper {
             "浏览当前学期的实验信息，并提供实验提醒服务",
             "查看人文讲座听课记录，并提供人文讲座预告信息",
             "显示教务处最新通知，提供重要教务通知提醒服务",
-            "提供日程安排提醒、倒计日、正计日等个性化提醒功能",
+            "查询个人考试安排，提供考试倒计时提醒服务",
             "显示校园网使用情况及校园网账户余额信息",
             "查看图书馆实时借阅排行、已借书籍和馆藏图书搜索",
             "查询历史学期的科目成绩、学分以及绩点详情",
@@ -111,7 +111,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
             "cn.seu.herald_android.MODULE_QUERY_LECTURE",
             "cn.seu.herald_android.MODULE_QUERY_JWC",
-            "cn.seu.herald_android.MODULE_LOCAL_TODO",
+            "cn.seu.herald_android.MODULE_QUERY_EXAM",
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
             "cn.seu.herald_android.MODULE_QUERY_GRADE",
@@ -132,7 +132,7 @@ public class SettingsHelper {
             R.mipmap.ic_experiment,
             R.mipmap.ic_lecture,
             R.mipmap.ic_jwc,
-            R.mipmap.ic_todo,
+            R.mipmap.ic_exam,
             R.mipmap.ic_seunet,
             R.mipmap.ic_library,
             R.mipmap.ic_grade,

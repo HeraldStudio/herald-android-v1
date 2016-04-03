@@ -87,11 +87,11 @@
         <item name="colorAccent">@color/colorGymReserveaccent</item>
     </style>
 
-    <style name="TodoTheme" parent="SubActivityTheme">
-        <!-- 日程提醒风格 -->
-        <item name="colorPrimary">@color/colorTodoprimary</item>
-        <item name="colorPrimaryDark">@color/colorTodoprimary_dark</item>
-        <item name="colorAccent">@color/colorTodoaccent</item>
+    <style name="ExamTheme" parent="SubActivityTheme">
+        <!-- 考试助手风格 -->
+        <item name="colorPrimary">@color/colorExamprimary</item>
+        <item name="colorPrimaryDark">@color/colorExamprimary_dark</item>
+        <item name="colorAccent">@color/colorExamaccent</item>
     </style>
 
     <style name="PedetailTheme" parent="SubActivityTheme">

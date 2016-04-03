@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.mod_timeline.TimelineItem;
 import cn.seu.herald_android.mod_timeline.TimelineView;
@@ -215,14 +214,12 @@ public class ServiceHelper {
 
     public static TimelineItem getCheckVersionItem(TimelineView host) {
         ServiceHelper serviceHelper = new ServiceHelper(host.getContext());
-        CacheHelper cacheHelper = new CacheHelper(host.getContext());
         final long now = Calendar.getInstance().getTimeInMillis();
         //如果版本有更新则提示更新版本
         int versionCode = ServiceHelper.getAppVersionCode(host.getContext());
         int newestCode = serviceHelper.getNewestVersionCode();
 
-        if (versionCode < newestCode
-                && !cacheHelper.getCache("herald_new_version_ignored").equals(String.valueOf(newestCode))) {
+        if (versionCode < newestCode) {
             //如果当前版本号小于最新版本，且用户没有忽略此版本，则提示更新
             String tip = "小猴偷米" + serviceHelper.getNewestVersionName() + "更新说明\n"
                     + serviceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n");
@@ -232,12 +229,6 @@ public class ServiceHelper {
             item.addButton(host.getContext(), "下载", (v) -> {
                 Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
                 host.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
-            });
-
-            item.addButton(host.getContext(), "忽略此版本", (v) -> {
-                ContextUtils.showMessage(host.getContext(), "已忽略此版本，你仍可在系统设置中找到此更新");
-                cacheHelper.setCache("herald_new_version_ignored", String.valueOf(newestCode));
-                host.loadContent(false);
             });
 
             return item;

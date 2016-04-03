@@ -169,13 +169,13 @@
         </activity>
 
         <activity
-            android:name=".mod_local.todo.TodoActivity"
-            android:label="@string/title_activity_todo"
+            android:name=".mod_query.exam.ExamActivity"
+            android:label="@string/title_activity_exam"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/TodoTheme">
+            android:theme="@style/ExamTheme">
             <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_LOCAL_TODO" />
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_EXAM" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

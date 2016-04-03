@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.mod_local.todo.TodoActivity">
+    tools:context="cn.seu.herald_android.mod_query.exam.ExamActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
@@ -22,6 +22,6 @@
 
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
-    <include layout="@layout/content_todo" />
+    <include layout="@layout/content_exam" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -9,10 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:padding="15dp">
         <!--可能出现在卡片最底端的元素都不要加marginBottom，要换用paddingBottom，否则在Android4.3会出错-->
 
         <RelativeLayout

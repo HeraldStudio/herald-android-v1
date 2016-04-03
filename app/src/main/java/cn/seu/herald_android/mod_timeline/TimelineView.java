@@ -34,6 +34,7 @@ import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
+import cn.seu.herald_android.mod_query.exam.ExamActivity;
 import cn.seu.herald_android.mod_query.experiment.ExperimentActivity;
 import cn.seu.herald_android.mod_query.jwc.JwcActivity;
 import cn.seu.herald_android.mod_query.lecture.LectureActivity;
@@ -144,6 +145,11 @@ public class TimelineView extends ListView {
             itemList.add(ExperimentActivity.getExperimentItem(this));
         }
 
+        if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXAM)) {
+            // 加载并解析考试缓存
+            itemList.add(ExamActivity.getExamItem(this));
+        }
+
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
             // 加载并解析人文讲座预告缓存
             itemList.add(LectureActivity.getLectureItem(this));
@@ -216,6 +222,14 @@ public class TimelineView extends ListView {
                 // 仅当实验数据不存在时刷新实验
                 if (cacheHelper.getCache("herald_experiment").equals("")) {
                     manager.add(ExperimentActivity.remoteRefreshCache(getContext()));
+                }
+            }
+
+            // 当考试模块开启时
+            if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXAM)) {
+                // 仅当实验数据不存在时刷新实验
+                if (cacheHelper.getCache("herald_exam").equals("")) {
+                    manager.add(ExamActivity.remoteRefreshCache(getContext()));
                 }
             }
 
