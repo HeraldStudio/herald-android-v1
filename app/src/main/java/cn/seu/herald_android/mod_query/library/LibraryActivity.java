@@ -99,7 +99,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
         HotBookAdapter.setHeightWithContent(listView_hotbook);
     }
 
-    private void refreshBorrowRocord() {
+    public void refreshBorrowRocord() {
         //获取最新的已借书记录
         showProgressDialog();
         new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).uuid()

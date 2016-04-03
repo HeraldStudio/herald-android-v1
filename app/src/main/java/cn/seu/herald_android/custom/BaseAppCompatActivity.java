@@ -99,11 +99,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         showSnackBar(msg);
     }
 
-    protected void showProgressDialog() {
+    public void showProgressDialog() {
         progressDialog.show();
     }
 
-    protected void hideProgressDialog() {
+    public void hideProgressDialog() {
         progressDialog.dismiss();
     }
 
