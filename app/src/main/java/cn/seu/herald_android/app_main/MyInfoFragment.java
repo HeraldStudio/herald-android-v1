@@ -134,7 +134,7 @@ public class MyInfoFragment extends Fragment {
         et.setText(helper.getWifiUserName());
         EditText pw = (EditText) v.findViewById(R.id.et_pwd);//密码框不设置初始值，防止密码位数泄露
 
-        new AlertDialog.Builder(getContext()).setMessage("设置校园网独立账号")
+        new AlertDialog.Builder(getContext()).setTitle("设置校园网独立账号")
                 .setView(v)
                 .setPositiveButton("保存", (dialog, which) -> {
                     if (!et.getText().toString().equals("") && !pw.getText().toString().equals("")) {
