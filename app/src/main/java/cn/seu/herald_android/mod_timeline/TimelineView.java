@@ -450,6 +450,10 @@ public class TimelineView extends ListView {
                     if (item.vertical) {
                         k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
                     }
+                    // 默认的点击事件
+                    if (!k.hasOnClickListeners()) {
+                        k.setOnClickListener(item.getOnClickListener());
+                    }
                     attachedContainer.addView(k);
                     firstChild = false;
                 }

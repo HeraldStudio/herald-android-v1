@@ -132,12 +132,7 @@ public class MyInfoFragment extends Fragment {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_wifi_setauth, null);
         EditText et = (EditText) v.findViewById(R.id.et_username);
         et.setText(helper.getWifiUserName());
-        EditText pw = (EditText) v.findViewById(R.id.et_pwd);
-        if (!helper.getWifiPassword().equals("")) {
-            pw.setHint("密码已隐藏");
-            et.setOnKeyListener((v1, keyCode, event) -> false);
-        }
-        ;
+        EditText pw = (EditText) v.findViewById(R.id.et_pwd);//密码框不设置初始值，防止密码位数泄露
 
         new AlertDialog.Builder(getContext()).setMessage("设置校园网独立账号")
                 .setView(v)
@@ -149,10 +144,11 @@ public class MyInfoFragment extends Fragment {
                         ContextUtils.showMessage(getContext(), "你没有更改设置");
                     }
                 })
-                .setNegativeButton("恢复默认", (dialog1, which1) -> {
+                .setNeutralButton("恢复默认", (dialog, which) -> {
                     helper.clearWifiAuth();
                     ContextUtils.showMessage(getContext(), "已恢复默认校园网账号设置");
                 })
+                .setNegativeButton("取消", null)
                 .show();
     }
 }

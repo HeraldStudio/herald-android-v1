@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_query.library;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,6 +78,14 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                 searchView.setOnQueryTextListener(LibrarySearchActivity.this);
             }
         }
+
+        //若有启动参数，按参数执行查询
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("q")) {
+            String q = intent.getStringExtra("q");
+            searchView.setQuery(q, true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 

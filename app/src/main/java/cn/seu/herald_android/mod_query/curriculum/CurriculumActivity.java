@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.curriculum;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -223,8 +222,6 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                                 info, pair == null ? "获取失败" : pair.first);
-                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         remainingClasses.add(block);
                     }
 
@@ -238,8 +235,6 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                                 info, pair == null ? "获取失败" : pair.first);
 
-                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         item.attachedView.add(block);
                         return item;
                     } else if (now >= startTime && now < almostEndTime) {
@@ -252,8 +247,6 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                         CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                                 info, pair == null ? "获取失败" : pair.first);
 
-                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                         item.attachedView.add(block);
                         return item;
                     }
@@ -295,8 +288,6 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                     Pair<String, String> pair = sidebarInfo.get(info.getClassName());
                     CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
                             info, pair == null ? "获取失败" : pair.first);
-                    block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                            SettingsHelper.moduleActions[SettingsHelper.MODULE_CURRICULUM])));
                     viewList.add(block);
                 }
             }

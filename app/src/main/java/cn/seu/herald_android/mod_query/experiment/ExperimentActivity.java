@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.experiment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -215,8 +214,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                         // 没开始的实验全部单独记录下来
                         if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                             ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
-                            block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                    SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                             allExperiments.add(block);
                         }
 
@@ -232,8 +229,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                                 int startStamp = item.getBeginStamp();
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
-                                    block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                     TimelineItem item1 = new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineItem.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
                                     );
@@ -245,8 +240,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                                 int endStamp = startStamp + 3 * 60;
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
                                     ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
-                                    block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                            SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                     TimelineItem item1 = new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
                                             now, TimelineItem.CONTENT_NOTIFY, "1个实验正在进行"
                                     );
@@ -268,8 +261,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
                                 // 记录今天的实验
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
-                                block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                        SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                 currExperiments.add(block);
                             }
 
@@ -282,8 +273,6 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
                                 ExperimentBlockLayout block = new ExperimentBlockLayout(host.getContext(), item);
-                                block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                        SettingsHelper.moduleActions[SettingsHelper.MODULE_EXPERIMENT])));
                                 currExperiments.add(block);
                             }
                         }

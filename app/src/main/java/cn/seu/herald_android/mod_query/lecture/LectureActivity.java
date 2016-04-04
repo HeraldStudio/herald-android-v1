@@ -2,7 +2,6 @@ package cn.seu.herald_android.mod_query.lecture;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -222,8 +221,6 @@ public class LectureActivity extends BaseAppCompatActivity {
                                 json_item.getString("speaker"),
                                 json_item.getString("location")
                         ));
-                        block.setOnClickListener(v -> host.getContext().startActivity(new Intent(
-                                SettingsHelper.moduleActions[SettingsHelper.MODULE_LECTURE])));
                         lectures.add(block);
                     }
                 }

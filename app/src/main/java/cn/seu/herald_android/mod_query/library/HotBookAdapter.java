@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_query.library;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,12 @@ class HotBookAdapter extends ArrayAdapter<HotBook> {
         tv_place.setText(hotBook.getPlace());
         tv_author.setText(hotBook.getAuthor());
         tv_name.setText(hotBook.getName());
+
+        convertView.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), LibrarySearchActivity.class);
+            intent.putExtra("q", hotBook.getName().split("\\.")[0]);
+            getContext().startActivity(intent);
+        });
 
         return convertView;
     }
