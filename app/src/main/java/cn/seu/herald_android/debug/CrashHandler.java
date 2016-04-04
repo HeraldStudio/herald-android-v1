@@ -72,27 +72,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
             return true;
         }
 
-        // 如果不是上帝模式，只有彩蛋的结尾会输出信息，其它错误吃掉
-        else if (info.contains("showTrickyMessage")) {
-            new Thread(() -> {
-                Looper.prepare();
-                manager.setText(info + "彩蛋到此结束，如果你喜欢玩技术，那就到小猴偷米工作室来做客吧~");
-
-                String[] lines = info.split("\n");
-                String briefInfo = "小猴卒\n";
-                for (String line : lines) {
-                    if (!line.trim().startsWith("at")) {
-                        briefInfo += line + "\n";
-                    }
-                }
-                briefInfo += "详细错误信息已复制到剪贴板";
-
-                Toast.makeText(mContext, briefInfo, Toast.LENGTH_LONG).show();
-                Looper.loop();
-            }).start();
-            return true;
-        }
-
         return false;
     }
 }

@@ -77,7 +77,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
                 recyclerView_srtp.setAdapter(srtpAdapter);
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析失败，请刷新后再试");
+                showSnackBar("缓存解析失败，请刷新后再试");
             }
         } else {
             refreshCache();
@@ -106,9 +106,9 @@ public class SrtpActivity extends BaseAppCompatActivity {
                 .post("schoolnum", getApiHelper().getSchoolnum())
                 .toCache("herald_srtp", o -> {
                     if (o.getJSONArray("content").length() == 1) {
-                        showMsg("暂无Srtp信息，赶紧去参加课外研学活动吧");
+                        showSnackBar("暂无Srtp信息，赶紧去参加课外研学活动吧");
                     } else {
-                        showMsg("已获取最新srtp信息");
+                        showSnackBar("已获取最新srtp信息");
                     }
                     return o;
                 })

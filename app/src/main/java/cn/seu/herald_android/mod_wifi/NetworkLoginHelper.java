@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_wifi;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.os.Vibrator;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -57,14 +58,14 @@ public class NetworkLoginHelper {
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         String ssid = wifiInfo.getSSID().replaceAll("\"", "");
         if (ssid.equals("seu-wlan") || ssid.equals("seu-dorm")) {
-            checkOnlineStatus();
+            vibrator.vibrate(50);
+            ContextUtils.showMessage(context, "正在尝试登陆，请稍候~");
+
+            // 防止两条消息同时显示会吞掉前一条消息
+            new Handler().postDelayed(this::checkOnlineStatus, 500);
         } else {
             vibrator.vibrate(50);
-            if (shake) {
-                showTrickyMessage("你需要手动连接到seu网络才能摇一摇登录~");
-            } else {
-                ContextUtils.showMessage(context, "你需要手动连接到seu网络才能摇一摇登录~");
-            }
+            ContextUtils.showMessage(context, "你需要手动连接到seu网络才能摇一摇登录~");
         }
     }
 
@@ -79,16 +80,16 @@ public class NetworkLoginHelper {
 
             @Override
             public void onResponse(String response) {
-                if (response.contains("notlogin")) {
+                if (response.contains("notlogin")
+                        // 如果已经登陆的账号与当前设置的校园网账号不同，也视为未登录
+                        || !response.contains(new ApiHelper(context).getWifiUserName())) {
                     // 未登录状态，开始登录
                     loginToService();
                 } else {
                     vibrator.vibrate(50);
-                    if (shake) {
-                        showTrickyMessage("你已经登录校园网，不用再摇了~");
-                    } else {
-                        ContextUtils.showMessage(context, "你已经登录校园网，不用再摇了~");
-                    }
+                    ContextUtils.showMessage(context, "你已经登录校园网，不用再摇了~", "退出登陆", () -> {
+                        logoutFromService();
+                    });
                 }
             }
         });
@@ -97,8 +98,8 @@ public class NetworkLoginHelper {
     private void loginToService() {
         //登陆网络服务
         ApiHelper helper = new ApiHelper(context);
-        String username = helper.getUserName();
-        String password = helper.getPassword();
+        String username = helper.getWifiUserName();
+        String password = helper.getWifiPassword();
 
         OkHttpUtils.post().url("http://w.seu.edu.cn/portal/login.php")
                 .addParams("username", username)
@@ -124,8 +125,10 @@ public class NetworkLoginHelper {
                             info.getString("login_remain"),
                             formatTime(info.getString("login_time"))
                     };
-                    vibrator.vibrate(new long[]{0, 50, 100, 50}, -1);
-                    ContextUtils.showMessage(context, "小猴已经成功帮你登陆seu网络啦，开始使用吧");
+                    vibrator.vibrate(50);
+                    ContextUtils.showMessage(context, "小猴已经成功帮你登陆seu网络啦", "退出登陆", () -> {
+                        logoutFromService();
+                    });
                 } catch (JSONException e) {
                     try {
                         String error = new JSONObject(response).getString("error");
@@ -133,31 +136,28 @@ public class NetworkLoginHelper {
                         ContextUtils.showMessage(context, "登陆失败，" + error);
                     } catch (JSONException e2) {
                         e2.printStackTrace();
+                        vibrator.vibrate(50);
+                        ContextUtils.showMessage(context, "登陆失败，出现未知错误");
                     }
                 }
             }
         });
     }
 
-    private static String lastMessage = "";
+    private void logoutFromService() {
+        OkHttpUtils.post().url("http://w.seu.edu.cn/portal/logout.php").build()
+                .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                vibrator.vibrate(50);
+                ContextUtils.showMessage(context, "校园网退出登录失败，请重试");
+            }
 
-    private static final String[] trickyMessages = new String[]{
-            "喂喂，小猴要被你摇晕啦~",
-            "停一下，停一下，不要再摇啦X_X~",
-            "主人你再这样摇下去的话，小猴要被摇坏了呜呜",
-            "好了好了，你再摇一次我就要罢工了~！"
-    };
-
-    private static int trickyCount = 0;
-
-    private void showTrickyMessage(String message) {
-        if (message.equals(lastMessage)) {
-            message = trickyMessages[trickyCount];// TODO 此处故意留出数组越界，摇多了直接任性闪退
-            trickyCount++;
-        } else {
-            lastMessage = message;
-            trickyCount = 0;
-        }
-        ContextUtils.showMessage(context, message);
+            @Override
+            public void onResponse(String response) {
+                vibrator.vibrate(50);
+                ContextUtils.showMessage(context, "校园网退出登录成功");
+            }
+        });
     }
 }

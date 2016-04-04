@@ -142,7 +142,7 @@ public class GradeActivity extends BaseAppCompatActivity {
                     progressDialog.hide();
                     if (success) {
                         loadCache();
-                        showMsg("刷新成功");
+                        showSnackBar("刷新成功");
                     }
                 }).run();
     }

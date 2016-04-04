@@ -112,7 +112,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 setupChart(json_cache.getJSONObject("content"));
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析错误，请重新刷新后再试");
+                showSnackBar("缓存解析错误，请重新刷新后再试");
             }
         } else {
             List<SliceValue> values = new ArrayList<>();
@@ -136,7 +136,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showMsg("刷新成功");
+                        showSnackBar("刷新成功");
                     }
                 }).run();
     }

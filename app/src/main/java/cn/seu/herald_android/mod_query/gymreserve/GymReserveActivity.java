@@ -109,7 +109,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
             }
         } catch (JSONException e) {
             hideProgressDialog();
-            showMsg("数据解析失败，请重试");
+            showSnackBar("数据解析失败，请重试");
         }
     }
 }

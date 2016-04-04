@@ -227,7 +227,10 @@ public class ApiHelper {
         }
     }
 
-
+    public String getUserName() {
+        CacheHelper helper = new CacheHelper(context);
+        return helper.getCache("authUser");
+    }
 
     public String getPassword() {
         CacheHelper helper = new CacheHelper(context);
@@ -236,9 +239,42 @@ public class ApiHelper {
         return helper1.decrypt(helper.getCache("authPwd"));
     }
 
-    public String getUserName() {
+    // 单独更新校园网登陆账户
+    public void setWifiAuth(String username, String password) {
+        try {
+            String encrypted = new EncryptHelper(username).encrypt(password);
+            CacheHelper helper = new CacheHelper(context);
+            helper.setCache("wifiAuthUser", username);
+            helper.setCache("wifiAuthPwd", encrypted);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getWifiUserName() {
         CacheHelper helper = new CacheHelper(context);
-        return helper.getCache("authUser");
+        String cacheUser = helper.getCache("wifiAuthUser");
+
+        // 若无校园网独立用户缓存，则使用登陆应用的账户
+        if (cacheUser.equals("")) return getUserName();
+        return cacheUser;
+    }
+
+    public String getWifiPassword() {
+        CacheHelper helper = new CacheHelper(context);
+        String username = getWifiUserName();
+        EncryptHelper helper1 = new EncryptHelper(username);
+        String cachePwd = helper.getCache("wifiAuthPwd");
+
+        // 若无校园网独立用户缓存，则使用登陆应用的账户
+        if (cachePwd.equals("") || helper1.decrypt(cachePwd).equals("")) return getPassword();
+        return helper1.decrypt(cachePwd);
+    }
+
+    public void clearWifiAuth() {
+        CacheHelper helper = new CacheHelper(context);
+        helper.setCache("wifiAuthUser", "");
+        helper.setCache("wifiAuthPwd", "");
     }
 
     public String getAuthCache(String cacheName) {

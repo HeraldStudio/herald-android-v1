@@ -83,7 +83,7 @@ public class ExamActivity extends BaseAppCompatActivity {
             recyclerView.setAdapter(new ExamAdapter(exams));
         } catch (JSONException e) {
             e.printStackTrace();
-            showMsg("数据解析失败，请重试");
+            showSnackBar("数据解析失败，请重试");
         }
     }
 
@@ -95,7 +95,7 @@ public class ExamActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showMsg("刷新成功");
+                        showSnackBar("刷新成功");
                     }
                 }).run();
     }

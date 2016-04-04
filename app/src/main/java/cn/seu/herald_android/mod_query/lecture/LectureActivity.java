@@ -110,11 +110,11 @@ public class LectureActivity extends BaseAppCompatActivity {
                 //刷新打卡记录缓存
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析出错，请刷新后再试。");
+                showSnackBar("缓存解析出错，请刷新后再试。");
             }
 
         } else {
-            showMsg("暂无缓存或者缓存已失效，请重新刷新。");
+            showSnackBar("暂无缓存或者缓存已失效，请重新刷新。");
         }
 
     }
@@ -126,9 +126,9 @@ public class LectureActivity extends BaseAppCompatActivity {
         new ApiRequest(this).url(ApiHelper.wechat_lecture_notice_url).uuid()
                 .toCache("herald_lecture_notices", o -> {
                     if (o.getJSONArray("content").length() == 0) {
-                        showMsg("最近暂无讲座预告信息");
+                        showSnackBar("最近暂无讲座预告信息");
                     } else {
-                        showMsg("已获取最新讲座预告");
+                        showSnackBar("已获取最新讲座预告");
                     }
                     return o;
                 })
@@ -167,7 +167,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadRecordCache();
-                        showMsg("获取讲座记录成功");
+                        showSnackBar("获取讲座记录成功");
                     }
                 }).run();
     }
@@ -187,7 +187,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                         LectureRecordItem.transformJSONArrayToArrayList(jsonArray)));
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析失败，请刷新后再试。");
+                showSnackBar("缓存解析失败，请刷新后再试。");
             }
         }
     }

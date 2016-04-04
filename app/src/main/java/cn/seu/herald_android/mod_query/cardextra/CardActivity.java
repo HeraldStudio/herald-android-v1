@@ -116,7 +116,7 @@ public class CardActivity extends BaseAppCompatActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            showMsg("缓存解析出错，请点击刷新按钮重新获取数据");
+            showSnackBar("缓存解析出错，请点击刷新按钮重新获取数据");
         }
     }
 
@@ -128,7 +128,7 @@ public class CardActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showMsg("刷新成功");
+                        showSnackBar("刷新成功");
                     }
                 }).run();
     }

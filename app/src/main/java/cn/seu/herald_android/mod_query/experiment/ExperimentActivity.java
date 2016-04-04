@@ -133,7 +133,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                     expandableListView.expandGroup(0);
 
             } catch (JSONException e) {
-                showMsg("缓存解析失败，请刷新后再试");
+                showSnackBar("缓存解析失败，请刷新后再试");
                 e.printStackTrace();
             }
         } else {
@@ -149,7 +149,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showMsg("刷新成功");
+                        showSnackBar("刷新成功");
                     }
                 }).run();
     }

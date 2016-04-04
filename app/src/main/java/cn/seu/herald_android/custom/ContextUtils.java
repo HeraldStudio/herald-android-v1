@@ -1,5 +1,6 @@
 package cn.seu.herald_android.custom;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -13,9 +14,23 @@ public class ContextUtils {
      **/
     public static void showMessage(Context context, String message) {
         if (context instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) context).showMsg(message);
+            ((BaseAppCompatActivity) context).showSnackBar(message);
         } else {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void showMessage(Context context, String message, String actionTitle, Runnable action) {
+        if (context instanceof BaseAppCompatActivity) {
+            ((BaseAppCompatActivity) context).showSnackBar(message, actionTitle, action);
+        } else {
+            new AlertDialog.Builder(context)
+                    .setMessage(message)
+                    .setPositiveButton(actionTitle, (dialog, which) -> {
+                        action.run();
+                    })
+                    .setNegativeButton("我知道了", null)
+                    .show();
         }
     }
 

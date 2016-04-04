@@ -87,7 +87,7 @@ public class SchoolScheduleActivity extends BaseAppCompatActivity {
                 // 强制联网刷新成功
 
                 hideProgressDialog();
-                if (refresh) showMsg("刷新成功");
+                if (refresh) showSnackBar("刷新成功");
 
                 // 保存当前缓存的时间参数，供下次使用
                 getCacheHelper().setCache("herald_schedule_cache_time", newCacheTimeFinal);
@@ -105,7 +105,7 @@ public class SchoolScheduleActivity extends BaseAppCompatActivity {
                         // 加载缓存成功
 
                         hideProgressDialog();
-                        if (refresh) showMsg("刷新失败，已加载缓存");
+                        if (refresh) showSnackBar("刷新失败，已加载缓存");
                     }
 
                     @Override
@@ -113,7 +113,7 @@ public class SchoolScheduleActivity extends BaseAppCompatActivity {
                         // 加载缓存失败
 
                         hideProgressDialog();
-                        showMsg("刷新失败，请重试");
+                        showSnackBar("刷新失败，请重试");
                     }
                 });
             }

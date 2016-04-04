@@ -50,7 +50,7 @@ public class FeedbackActivity extends BaseAppCompatActivity {
                     .onFinish((success, code, response) -> {
                         hideProgressDialog();
                         if (success) {
-                            showMsg("您的反馈已发送，小猴将尽快处理，感谢支持！");
+                            showSnackBar("您的反馈已发送，小猴将尽快处理，感谢支持！");
                         }
                     }).run();
         }

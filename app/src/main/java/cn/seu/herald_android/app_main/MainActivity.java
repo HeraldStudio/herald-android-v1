@@ -105,7 +105,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 }
                 else {
                     //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
-                    showMsg("登录信息已失效，请重新登录");
+                    showSnackBar("登录信息已失效，请重新登录");
                     getApiHelper().doLogout();
                 }
             }

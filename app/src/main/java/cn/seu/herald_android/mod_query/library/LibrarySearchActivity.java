@@ -92,16 +92,16 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
             if (success) try {
                 JSONObject json_res = new JSONObject(response);
                 if (json_res.getString("content").equals("[]")) {
-                    showMsg("当前书目不存在, 换个关键字试试");
+                    showSnackBar("当前书目不存在, 换个关键字试试");
                     return;
                 }
                 ArrayList<Book> searchResultList =
                         Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
                 loadSearchResult(searchResultList);
-                showMsg("刷新成功");
+                showSnackBar("刷新成功");
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("数据解析失败，请重试");
+                showSnackBar("数据解析失败，请重试");
             }
         }).run();
 

@@ -85,10 +85,10 @@ public class LibraryActivity extends BaseAppCompatActivity {
                         JSONObject json_res = new JSONObject(response);
                         JSONArray jsonArray = json_res.getJSONArray("content");
                         loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
-                        showMsg("刷新成功");
+                        showSnackBar("刷新成功");
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        showMsg("数据解析失败，请重试");
+                        showSnackBar("数据解析失败，请重试");
                     }
                 }).run();
     }
@@ -110,14 +110,14 @@ public class LibraryActivity extends BaseAppCompatActivity {
                         JSONArray jsonArray = json_res.getJSONArray("content");
                         if (jsonArray.length() == 0) {
                             //如果列表为空则说明没有借过书
-                            showMsg("目前尚无在借图书");
+                            showSnackBar("目前尚无在借图书");
                         } else {
                             //反之打开借书记录对话框
                             displayBorrowRecordDialog(MyBorrowBook.transfromJSONArrayToArrayList(jsonArray));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        showMsg("数据解析失败，请重试");
+                        showSnackBar("数据解析失败，请重试");
                     }
                     else {
                         //如果为401说明未绑定图书馆账号或者已经失效
@@ -179,7 +179,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
                         //返回OK说明认证成功
                         refreshBorrowRocord();
                     } else {
-                        showMsg("信息绑定失败，请重新再试。如多次失败请尝试注销登录,或者联系管理员");
+                        showSnackBar("信息绑定失败，请重新再试。如多次失败请尝试注销登录,或者联系管理员");
                     }
                 }).run();
     }

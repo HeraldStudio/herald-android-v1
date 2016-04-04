@@ -222,7 +222,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
             });
 
             if (infoList.size() == 0) {
-                showMsg("本学期暂时没有跑操记录");
+                showSnackBar("本学期暂时没有跑操记录");
             }
         } catch (Exception e) {
             e.printStackTrace();
