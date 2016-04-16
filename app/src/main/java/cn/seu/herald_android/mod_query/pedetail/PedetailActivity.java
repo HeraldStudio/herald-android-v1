@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -27,6 +26,7 @@ import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.ApiThreadManager;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_timeline.TimelineItem;
@@ -40,7 +40,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
     // 左右滑动分页的日历容器
     private ViewPager pager;
     // 跑操次数数字
-    private TextView count, monthCount;
+    private TextView count, remain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +65,8 @@ public class PedetailActivity extends BaseAppCompatActivity {
         pager = (ViewPager) findViewById(R.id.calendarPager);
 
         // 设置下拉刷新控件的进度条颜色
-        count = (TextView) findViewById(R.id.tv_fullcount);
-        monthCount = (TextView) findViewById(R.id.tv_monthcount);
+        count = (TextView) findViewById(R.id.tv_count);
+        remain = (TextView) findViewById(R.id.tv_remain);
 
         // 首先加载一次缓存数据（如未登录则弹出登陆窗口）
         readLocal();
@@ -77,13 +77,11 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_PEDETAIL).uuid()
-                .toCache("herald_pedetail", o -> o.getJSONArray("content"))
-                .onFinish((success, code, response) -> {
+        new ApiThreadManager()
+                .addAll(remoteRefreshCache(this))
+                .onFinish(() -> {
                     hideProgressDialog();
-                    if (success) {
-                        readLocal();
-                    }
+                    readLocal();
                 }).run();
     }
 
@@ -92,15 +90,15 @@ public class PedetailActivity extends BaseAppCompatActivity {
                 new ApiRequest(context).api(ApiHelper.API_PC).uuid()
                         .toCache("herald_pc_forecast", o -> o.getString("content"))
                         .onFinish((success, code, response) -> {
-                            long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-                            if (success) {
-                                new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
-                            } else if (code == 201) { // 今天还没有预告
-                                new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
-                                // 覆盖旧的预告信息
-                                new CacheHelper(context).setCache("herald_pc_forecast", "refreshing");
-                            }
-                        }),
+                    long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
+                    if (success) {
+                        new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
+                    } else if (code == 201) { // 今天还没有预告
+                        new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
+                        // 覆盖旧的预告信息
+                        new CacheHelper(context).setCache("herald_pc_forecast", "refreshing");
+                    }
+                }),
                 new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
                         .toCache("herald_pedetail", o -> o.getJSONArray("content")),
                 new ApiRequest(context).api(ApiHelper.API_PE).uuid()
@@ -138,6 +136,8 @@ public class PedetailActivity extends BaseAppCompatActivity {
         try {
             // 读取本地保存的跑操数据
             JSONArray array = new JSONArray(getCacheHelper().getCache("herald_pedetail"));
+            String countStr = getCacheHelper().getCache("herald_pe_count");
+            String remainStr = getCacheHelper().getCache("herald_pe_remain");
 
             // 用户有数据
             // 有效跑操计数器，用于显示每一个跑操是第几次
@@ -155,7 +155,8 @@ public class PedetailActivity extends BaseAppCompatActivity {
                     exerciseCount++;
                 }
             }
-            showCount(exerciseCount);
+            count.setText(countStr);
+            remain.setText(remainStr);
 
             // 用年月时间戳（年*12+自然月-1）比较器进行排序以防万一
             Collections.sort(infoList, ExerciseInfo.yearMonthComparator);
@@ -197,29 +198,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
             // 初始化当月跑操次数的值
             int monthlyCountNum = adapter.getSubCount(pager.getCurrentItem());
-            monthCount.setText(String.valueOf(monthlyCountNum));
-
-            // 水平滚动分页控件的事件监听器
-            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
-                // 用户滚动到某页时，更改标题和当月跑操次数的值
-                public void onPageSelected(int position) {
-                    // 动画切换当月跑操次数数字
-                    AlphaAnimation aa1 = new AlphaAnimation(0, 1);
-                    aa1.setDuration(250);
-                    monthCount.startAnimation(aa1);
-
-                    int monthlyCountNum = adapter.getSubCount(pager.getCurrentItem());
-                    monthCount.setText(String.valueOf(monthlyCountNum));
-                }
-
-                // 在页面左右滑动过程中临时屏蔽下拉刷新控件
-                public void onPageScrollStateChanged(int state) {
-                    //srl.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
-                }
-            });
 
             if (infoList.size() == 0) {
                 showSnackBar("本学期暂时没有跑操记录");
@@ -227,10 +205,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void showCount(int countNum) {
-        count.setText(String.valueOf(countNum));
     }
 
     /**

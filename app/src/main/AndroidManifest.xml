@@ -210,7 +210,7 @@
             android:theme="@style/AppTheme.Invisible"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="cn.seu.herald_android.WEBMODULE_GYMORDER" />
+                <action android:name="cn.seu.herald_android.WEBMODULE_GYMRESERVE" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
                 <category android:name="android.intent.category.DEFAULT" />

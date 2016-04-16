@@ -619,7 +619,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
         }
     }
 
-    private boolean isFirstActionMove = false, isFirstActionMoveIntercepted = false;
+    private boolean isMoveDirectionJudged = true, isMoveDirectionVertical = false;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -639,7 +639,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                isFirstActionMove = true;
+                isMoveDirectionJudged = false;
                 setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCircleView.getTop(), true);
                 mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
                 mIsBeingDragged = false;
@@ -652,18 +652,18 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
 
             case MotionEvent.ACTION_MOVE:
                 if (mActivePointerId == INVALID_POINTER) {
-                    if (isFirstActionMove) {
-                        isFirstActionMoveIntercepted = false;
-                        isFirstActionMove = false;
+                    if (!isMoveDirectionJudged) {
+                        isMoveDirectionVertical = false;
+                        isMoveDirectionJudged = true;
                     }
                     return false;
                 }
 
                 final float y = getMotionEventY(ev, mActivePointerId);
-                if (y == -1 || !isFirstActionMove && !isFirstActionMoveIntercepted) {
-                    if (isFirstActionMove) {
-                        isFirstActionMoveIntercepted = false;
-                        isFirstActionMove = false;
+                if (y == -1 || isMoveDirectionJudged && !isMoveDirectionVertical) {
+                    if (!isMoveDirectionJudged) {
+                        isMoveDirectionVertical = false;
+                        isMoveDirectionJudged = true;
                     }
                     return false;
                 }
@@ -673,9 +673,9 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
                     mIsBeingDragged = true;
                     mProgress.setAlpha(STARTING_PROGRESS_ALPHA);
                 }
-                if (isFirstActionMove) {
-                    isFirstActionMoveIntercepted = mIsBeingDragged;
-                    isFirstActionMove = false;
+                if (!isMoveDirectionJudged) {
+                    isMoveDirectionVertical = mIsBeingDragged;
+                    isMoveDirectionJudged = true;
                 }
                 break;
 

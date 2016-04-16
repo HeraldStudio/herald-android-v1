@@ -66,20 +66,6 @@ public class ApiHelper {
     public static final int API_GYMRESERVE = 21;
     //考试助手
     public static final int API_EXAM = 22;
-    /**
-     * 调戏
-     * 参数
-     * uuid：要搜索的书名
-     * msg：对话内容
-     */
-    public static final int API_SIMSIMI = 0;
-
-    /**
-     * 参数
-     * book:要搜索的书名
-     */
-    public static final int API_BOOK_SEARCH = 3;
-
 
     //需用其他方式访问的
     public static String auth_url = "http://115.28.27.150/uc/auth";

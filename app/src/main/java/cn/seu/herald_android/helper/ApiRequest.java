@@ -79,7 +79,7 @@ public class ApiRequest {
      * 一级回调设置部分
      * 一级回调只是跟OkHttpUtils框架之间的交互，并在此交互过程中为二级回调提供接口
      * 从此类外面看，不存在一级回调，只有二级回调和三级回调
-     * <p>
+     *
      * callback     默认的Callback（自动调用二级回调，若出错还会执行错误处理）
      **/
     private StringCallback callback = new StringCallback() {
