@@ -71,7 +71,7 @@ class ExerciseInfo {
     // 详情显示，用于点击日期时弹出对话框
     @Override
     public String toString() {
-        return "打卡时间：" + new SimpleDateFormat("yyyy/M/d h:mm").format(dateTime.getTime()) + "\n"
-                + "这是你第 " + exerciseCount + " 次跑操";
+        return "(第 " + exerciseCount + " 次跑操) " +
+                "打卡时间：" + new SimpleDateFormat("yyyy/M/d h:mm").format(dateTime.getTime());
     }
 }
