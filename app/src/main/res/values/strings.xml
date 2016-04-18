@@ -38,27 +38,41 @@
         "简历投递邮箱：\n"
         "heraldseu@outlook.com"
     </string>
-    <string name="law_declaration_text">
-        "本软件在其许可范围内使用了如下开源框架：\n"
-        "HelloCharts for Android\n"
-        "(github.com/lecho/hellocharts-android)\n"
-        "OkHttp\n"
-        "(github.com/square/okhttp)\n"
-        "okhttp-utils\n"
-        "(github.com/hongyangAndroid/okhttp-utils)\n"
-        "SortableTableView\n"
-        "(github.com/ISchwarz23/SortableTableView)\n"
-        "SwitchButton\n"
-        "(github.com/kyleduo/SwitchButton)\n"
-        "Slidr\n"
-        "(github.com/r0adkll/Slidr)\n"
-        "seismic\n"
-        "(github.com/square/seismic)\n"
-        "AndroidImageSlider\n"
-        "(github.com/daimajia/AndroidImageSlider)\n"
-        "小猴偷米工作室对以上框架的作者致以诚挚的感谢。\n"
-        "\n"
-        "本软件所有数据来自学校网站或其他第三方，受学校网站或其他第三方数据的不确定性影响，本软件显示的数据可能会出现某些不正常情况，包含但不限于无法连接、信息错误、显示延迟或自相矛盾等。小猴偷米工作室不对以上问题导致的任何后果负责。"
+    <string name="law_declaration_text">"本软件在许可范围内使用了如下开源框架：
+[Apache 2.0] HelloCharts for Android
+(github.com/lecho/hellocharts-android)
+Copyright 2014 Leszek Wach
+
+[Apache 2.0] OkHttp
+(github.com/square/okhttp)
+
+[Apache 2.0] okhttp-utils
+(github.com/hongyangAndroid/okhttp-utils)
+
+[Apache 2.0] SortableTableView
+(github.com/ISchwarz23/SortableTableView)
+Copyright 2015 Ingo Schwarz
+
+[Apache 2.0] SwitchButton
+(github.com/kyleduo/SwitchButton)
+
+[Apache 2.0] Slidr
+(github.com/r0adkll/Slidr)
+Copyright 2014 Drew Heavner
+
+[Apache 2.0] seismic
+(github.com/square/seismic)
+Copyright 2012 Square, Inc.
+
+[MIT] AndroidImageSlider
+(github.com/daimajia/AndroidImageSlider)
+
+本软件在许可范围内使用了如下设计作品：
+[CC-BY] monkey by Zille Sophie Bostinius from the Noun Project
+
+小猴偷米工作室对以上框架和设计作品的作者致以诚挚的感谢。
+
+本软件所有数据来自学校网站或其他第三方，受学校网站或其他第三方数据的不确定性影响，本软件显示的数据可能会出现某些不正常情况，包含但不限于无法连接、信息错误、显示延迟或自相矛盾等。小猴偷米工作室不对以上问题导致的任何后果负责。"
     </string>
 
 
@@ -69,6 +83,8 @@
     <string name="title_activity_experiment">实验助手</string>
     <string name="title_activity_empty_room">空教室</string>
     <string name="title_activity_seunet">校园网络</string>
+    <string name="title_activity_gymreserve">场馆预约</string>
+    <string name="title_activity_exam">考试助手</string>
     <string name="title_activity_pedetail">跑操助手</string>
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>
@@ -78,6 +94,7 @@
     <string name="title_activity_schoolbus">校车助手</string>
     <string name="title_activity_grade">绩点查询</string>
     <string name="title_activity_library">图书馆</string>
+    <string name="title_activity_schedule">校历查询</string>
     <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>

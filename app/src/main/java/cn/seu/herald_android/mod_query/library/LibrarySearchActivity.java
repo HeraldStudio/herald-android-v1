@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_query.library;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,9 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +20,7 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 /**
  * Created by corvo on 3/13/16.
@@ -80,6 +78,14 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
                 searchView.setOnQueryTextListener(LibrarySearchActivity.this);
             }
         }
+
+        //若有启动参数，按参数执行查询
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("q")) {
+            String q = intent.getStringExtra("q");
+            searchView.setQuery(q, true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -89,41 +95,25 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
         showProgressDialog();
-        OkHttpUtils.post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_LIBRARY_SEARCH))
-                .addParams("uuid", getApiHelper().getUUID())
-                .addParams("book", query)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        showMsg("请求超时");
-                        hideProgressDialog();
-                    }
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).uuid()
+                .post("book", query).onFinish((success, code, response) -> {
+            hideProgressDialog();
+            if (success) try {
+                JSONObject json_res = new JSONObject(response);
+                if (json_res.getString("content").equals("[]")) {
+                    showSnackBar("当前书目不存在, 换个关键字试试");
+                    return;
+                }
+                ArrayList<Book> searchResultList =
+                        Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
+                loadSearchResult(searchResultList);
+                showSnackBar("刷新成功");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                showSnackBar("数据解析失败，请重试");
+            }
+        }).run();
 
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                if (json_res.getString("content").equals("[]")) {
-                                    showMsg("当前书目不存在, 换个关键字试试");
-                                    return;
-                                }
-                                ArrayList<Book> searchResultlist =
-                                        Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
-                                loadSearchResult(searchResultlist);
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
         //保留输入框内容
         searchView.setQuery(query, false);
         //取消焦点，收起软键盘

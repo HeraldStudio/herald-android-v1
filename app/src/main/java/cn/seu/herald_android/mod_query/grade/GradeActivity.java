@@ -12,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,9 +19,9 @@ import org.json.JSONObject;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;
-import okhttp3.Call;
 
 public class GradeActivity extends BaseAppCompatActivity {
 
@@ -139,39 +136,15 @@ public class GradeActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         progressDialog.show();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_GPA))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        progressDialog.dismiss();
-                        showMsg("请求超时。");
+        new ApiRequest(this).api(ApiHelper.API_GPA).uuid()
+                .toCache("herald_grade_gpa", o -> o)
+                .onFinish((success, code, response) -> {
+                    progressDialog.hide();
+                    if (success) {
+                        loadCache();
+                        showSnackBar("刷新成功");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                //请求成功则缓存并且刷新
-                                getCacheHelper().setCache("herald_grade_gpa", response);
-                                loadCache();
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+                }).run();
     }
 
 

@@ -8,16 +8,10 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 public class FeedbackActivity extends BaseAppCompatActivity {
 
@@ -51,36 +45,14 @@ public class FeedbackActivity extends BaseAppCompatActivity {
             String content = et.getText().toString();
 
             showProgressDialog();
-            OkHttpUtils
-                    .post()
-                    .url(ApiHelper.feedback_url)
-                    .addParams("cardnum", getApiHelper().getUserName())
-                    .addParams("content", content)
-                    .build()
-                    .readTimeOut(10000).connTimeOut(10000)
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e) {
-                            hideProgressDialog();
-                            getApiHelper().dealApiException(e);
+            new ApiRequest(this).url(ApiHelper.feedback_url)
+                    .post("cardnum", getApiHelper().getUserName(), "content", content)
+                    .onFinish((success, code, response) -> {
+                        hideProgressDialog();
+                        if (success) {
+                            showSnackBar("您的反馈已发送，小猴将尽快处理，感谢支持！");
                         }
-
-                        @Override
-                        public void onResponse(String response) {
-                            hideProgressDialog();
-                            try {
-                                JSONObject json_res = new JSONObject(response);
-                                if (json_res.getInt("code") == 200) {
-                                    showMsg("您的反馈已发送，小猴将尽快处理，感谢支持！");
-                                } else {
-                                    showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        }
-                    });
+                    }).run();
         }
         return super.onOptionsItemSelected(item);
     }

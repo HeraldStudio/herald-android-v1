@@ -80,6 +80,20 @@
         <item name="colorAccent">@color/colorSeuNetaccent</item>
     </style>
 
+    <style name="GymReserveTheme" parent="SubActivityTheme">
+        <!-- 场馆预约风格 -->
+        <item name="colorPrimary">@color/colorGymReserveprimary</item>
+        <item name="colorPrimaryDark">@color/colorGymReserveprimary_dark</item>
+        <item name="colorAccent">@color/colorGymReserveaccent</item>
+    </style>
+
+    <style name="ExamTheme" parent="SubActivityTheme">
+        <!-- 考试助手风格 -->
+        <item name="colorPrimary">@color/colorExamprimary</item>
+        <item name="colorPrimaryDark">@color/colorExamprimary_dark</item>
+        <item name="colorAccent">@color/colorExamaccent</item>
+    </style>
+
     <style name="PedetailTheme" parent="SubActivityTheme">
         <!-- 跑操查询风格 -->
         <item name="colorPrimary">@color/colorPedetailprimary</item>
@@ -109,6 +123,12 @@
         <item name="colorAccent">@color/colorLibraryaccent</item>
     </style>
 
+    <style name="ScheduleTheme" parent="SubActivityTheme">
+        <!-- 校历风格 -->
+        <item name="colorPrimary">@color/colorScheduleprimary</item>
+        <item name="colorPrimaryDark">@color/colorScheduleprimaryDark</item>
+        <item name="colorAccent">@color/colorScheduleaccent</item>
+    </style>
 
     <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->

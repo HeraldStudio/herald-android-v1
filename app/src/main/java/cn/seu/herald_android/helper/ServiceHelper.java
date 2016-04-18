@@ -1,21 +1,23 @@
 package cn.seu.herald_android.helper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
+import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.SliderView;
-import okhttp3.Call;
+import cn.seu.herald_android.mod_timeline.TimelineItem;
+import cn.seu.herald_android.mod_timeline.TimelineView;
 
 /**
  * Created by heyon on 2016/3/14.
@@ -42,37 +44,11 @@ public class ServiceHelper {
         this.apiHelper = new ApiHelper(context);
     }
 
-    public static void refreshVersionCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        ServiceHelper serviceHelper = new ServiceHelper(context);
-        //拉取最新版本信息
-        OkHttpUtils
-                .post()
-                .url(getServiceUrl(SERVICE_VERSION))
-                .addParams("schoolnum", apiHelper.getAuthCache("schoolnum"))
-                .addParams("uuid", apiHelper.getUUID())
-                .addParams("versioncode", getAppVersionCode(context) + "")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        e.printStackTrace();
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            if (object.getInt("code") == 200) {
-                                serviceHelper.setServiceCache("versioncheck_cache", object.toString());
-                            }
-                        } catch (JSONException jsone) {
-                            jsone.printStackTrace();
-                        }
-                        doAfter.run();
-                    }
-                });
+    public static ApiRequest refreshVersionCache(Context context) {
+        return new ApiRequest(context).url(getServiceUrl(SERVICE_VERSION)).uuid()
+                .post("schoolnum", new ApiHelper(context).getAuthCache("schoolnum"),
+                        "versioncode", String.valueOf(getAppVersionCode(context)))
+                .toServiceCache("versioncheck_cache", o -> o);
     }
 
     public String getPushMessageContent() {
@@ -204,10 +180,60 @@ public class ServiceHelper {
         return pref.getString(cacheName, "");
     }
 
-    private boolean setServiceCache(String cacheName, String cacheValue) {
+    public boolean setServiceCache(String cacheName, String cacheValue) {
         //用于更新存储的某项信息
         SharedPreferences.Editor editor = context.getSharedPreferences("herald_service", Context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         return editor.commit();
+    }
+
+
+    public static TimelineItem getPushMessageItem(TimelineView host) {
+        ServiceHelper helper = new ServiceHelper(host.getContext());
+        final long now = Calendar.getInstance().getTimeInMillis();
+
+        //获取推送消息
+        String pushMessage = helper.getPushMessageContent();
+        if (!pushMessage.equals("")) {
+            TimelineItem item = new TimelineItem("小猴提示", pushMessage,
+                    now, TimelineItem.CONTENT_NOTIFY, R.mipmap.ic_pushmsg);
+
+            String pushMessageUrl = helper.getPushMessageUrl();
+            if (!pushMessageUrl.equals("") && !pushMessageUrl.equals("null")) {
+                Uri uri = Uri.parse(pushMessageUrl);
+                item.addButton(host.getContext(), "查看详情", (v) ->
+                        v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
+                item.setOnClickListener((v) ->
+                        v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
+            }
+            return item;
+        }
+
+        return null;
+    }
+
+    public static TimelineItem getCheckVersionItem(TimelineView host) {
+        ServiceHelper serviceHelper = new ServiceHelper(host.getContext());
+        final long now = Calendar.getInstance().getTimeInMillis();
+        //如果版本有更新则提示更新版本
+        int versionCode = ServiceHelper.getAppVersionCode(host.getContext());
+        int newestCode = serviceHelper.getNewestVersionCode();
+
+        if (versionCode < newestCode) {
+            //如果当前版本号小于最新版本，且用户没有忽略此版本，则提示更新
+            String tip = "小猴偷米" + serviceHelper.getNewestVersionName() + "更新说明\n"
+                    + serviceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n");
+            TimelineItem item = new TimelineItem("版本升级", tip,
+                    now, TimelineItem.CONTENT_NOTIFY, R.mipmap.ic_update);
+
+            item.addButton(host.getContext(), "下载", (v) -> {
+                Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
+                host.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            });
+
+            return item;
+        }
+
+        return null;
     }
 }

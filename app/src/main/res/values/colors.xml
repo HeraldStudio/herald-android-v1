@@ -41,6 +41,16 @@
     <color name="colorSeuNetprimary_dark">#7cb342</color>
     <color name="colorSeuNetaccent">#e57373</color>
 
+    <!--场馆预约-->
+    <color name="colorGymReserveprimary">#00abf1</color>
+    <color name="colorGymReserveprimary_dark">#00abf1</color>
+    <color name="colorGymReserveaccent">#00abf1</color>
+
+    <!--考试助手-->
+    <color name="colorExamprimary">#f5176c</color>
+    <color name="colorExamprimary_dark">#f5176c</color>
+    <color name="colorExamaccent">#f5176c</color>
+
     <!--跑操-->
     <color name="colorPedetailprimary">#26a69a</color>
     <color name="colorPedetailprimaryDark">#26a69a</color>
@@ -59,6 +69,12 @@
     <color name="colorLibraryprimary">#e53935</color>
     <color name="colorLibraryprimaryDark">#e53935</color>
     <color name="colorLibraryaccent">#e57373</color>
+
+
+    <!--校历-->
+    <color name="colorScheduleprimary">#8620bc</color>
+    <color name="colorScheduleprimaryDark">#8620bc</color>
+    <color name="colorScheduleaccent">#8620bc</color>
 
 
     <!--关于我们-->
@@ -98,5 +114,11 @@
     <color name="colorSecondaryText">#727272</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
+    <color name="colorMainPagesBg">#fff</color>
+    <color name="colorMainPagesDivider">#eaeaea</color>
     <color name="colorSwitchOff">#ffffff</color>
+    <color name="colorSwipeRefreshIcon">#ccc</color>
+    <color name="colorSwipeRefreshText">#999</color>
+    <color name="colorSwipeRefreshHeaderBg">#333</color>
+    <color name="colorSwipeRefreshHeaderShadow">#2d2d2d</color>
 </resources>

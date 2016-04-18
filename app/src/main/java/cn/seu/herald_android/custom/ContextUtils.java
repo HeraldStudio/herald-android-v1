@@ -1,5 +1,6 @@
 package cn.seu.herald_android.custom;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -13,27 +14,23 @@ public class ContextUtils {
      **/
     public static void showMessage(Context context, String message) {
         if (context instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) context).showMsg(message);
+            ((BaseAppCompatActivity) context).showSnackBar(message);
         } else {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * 实现有多个联网请求连续出错时，前面的消息都吃掉，吐的时候只把最后一个吐出来
-     **/
-    public static String eatenMessage = null;
-
-    public static void eatMessage(String message) {
-        eatenMessage = message;
-    }
-
-    public static void flushMessage(Context context, String message) {
-        if (eatenMessage != null) {
-            if(message == null)
-                showMessage(context, eatenMessage);
-            else showMessage(context, message);
-            eatenMessage = null;
+    public static void showMessage(Context context, String message, String actionTitle, Runnable action) {
+        if (context instanceof BaseAppCompatActivity) {
+            ((BaseAppCompatActivity) context).showSnackBar(message, actionTitle, action);
+        } else {
+            new AlertDialog.Builder(context)
+                    .setMessage(message)
+                    .setPositiveButton(actionTitle, (dialog, which) -> {
+                        action.run();
+                    })
+                    .setNegativeButton("我知道了", null)
+                    .show();
         }
     }
 

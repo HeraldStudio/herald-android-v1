@@ -68,11 +68,21 @@
             android:textColor="#333"
             android:textSize="15sp" />
 
+        <LinearLayout
+            android:id="@+id/attachedContainerVertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
         <HorizontalScrollView
             android:id="@+id/hsv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:scrollbarSize="2dp"
+            android:scrollbarThumbHorizontal="@color/colorDivider"
             android:visibility="gone">
 
             <LinearLayout

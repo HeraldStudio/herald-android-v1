@@ -22,22 +22,29 @@ import cn.seu.herald_android.mod_modulemanager.SeuModule;
 
 public class ModuleListFragment extends Fragment {
 
+    private View contentView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_modules, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onStart();
+        contentView = inflater.inflate(R.layout.fragment_main_modules, container, false);
         loadModuleList();
+        return contentView;
     }
 
     private View editButton;
     private ArrayList<SeuModule> seuModuleArrayList = new ArrayList<>();
 
+    @Override
+    public void onResume() {
+        // 从模块管理界面返回时,重载模块列表
+        super.onResume();
+        loadModuleList();
+    }
+
     public void loadModuleList() {
+
+        if (contentView == null) return;
 
         //获得所有模块列表
         seuModuleArrayList.clear();
@@ -49,7 +56,7 @@ public class ModuleListFragment extends Fragment {
         });
 
         //根据模块列表构造列表
-        ListView listView = (ListView) getView().findViewById(R.id.list_modules);
+        ListView listView = (ListView) contentView.findViewById(R.id.list_modules);
 
         if (editButton == null) {
             editButton = getLayoutInflater(null).inflate(R.layout.fragment_module_edit_button, null);

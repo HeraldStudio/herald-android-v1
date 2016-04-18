@@ -34,13 +34,7 @@ public class ShortcutBoxView extends GridView {
         }
 
         ShortCutBoxDisplayAdapter adapter = new ShortCutBoxDisplayAdapter(enabledShortcutList);
-        //智能分配行数和列数
-        int count = adapter.getCount();
-        if (count > 5) {
-            setNumColumns(Math.max(4, (count + 1) / ((count + 4) / 5)));
-        } else {
-            setNumColumns(Math.max(4, count));
-        }
+
         //添加并且显示
         setAdapter(adapter);
 

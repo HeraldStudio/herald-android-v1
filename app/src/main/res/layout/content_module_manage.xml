@@ -43,12 +43,17 @@
             android:id="@+id/textView7" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
     <ListView
         android:id="@+id/lsit_edit_shortcut"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#f0f0f0"
-        android:dividerHeight="1dp"
+        android:divider="@color/colorDivider"
+        android:dividerHeight="@dimen/divider_height"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:scrollbarStyle="outsideOverlay" />

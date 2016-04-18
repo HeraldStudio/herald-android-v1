@@ -19,42 +19,44 @@ public class SettingsHelper {
      * 启动模块的ACTION的添加，同时在manifests文件里注册
      * 模块图标资源文件的添加
      */
-    //模块类型列表
-    public static final int MODULE_TYPE_QUERY = 0;
     //功能模块列表
     /**
      * 查询类模块
      */
     public static final int MODULE_CARDEXTRA = 0;
-    public static final int MODULE_SEUNET = 1;
-    public static final int MODULE_PEDETAIL = 2;
-    public static final int MODULE_CURRICULUM = 3;
-    public static final int MODULE_LIBRARY = 4;
-    public static final int MODULE_EXPERIMENT = 5;
-    public static final int MODULE_GRADE = 6;
-    public static final int MODULE_SRTP = 7;
-    public static final int MODULE_SCHOOLBUS = 8;
-    public static final int MODULE_LECTURE = 9;
-    public static final int MODULE_JWC = 10;
-    public static final int MODULE_GYMORDER = 11;
-    public static final int MODULE_QUANYI = 12;
-    public static final int MODULE_EMPTYROOM = 13;
+    public static final int MODULE_PEDETAIL = 1;
+    public static final int MODULE_CURRICULUM = 2;
+    public static final int MODULE_EXPERIMENT = 3;
+    public static final int MODULE_LECTURE = 4;
+    public static final int MODULE_JWC = 5;
+    public static final int MODULE_EXAM = 6;
+    public static final int MODULE_SEUNET = 7;
+    public static final int MODULE_LIBRARY = 8;
+    public static final int MODULE_GRADE = 9;
+    public static final int MODULE_SRTP = 10;
+    public static final int MODULE_SCHOOLBUS = 11;
+    public static final int MODULE_SCHEDULE = 12;
+    public static final int WEBMODULE_GYMRESERVE = 13;
+    public static final int WEBMODULE_QUANYI = 14;
+    public static final int WEBMODULE_EMPTYROOM = 15;
 
 
     //模块名字
     public static final String[] moduleNames = {
             "cardextra",
-            "seunet",
             "pedetail",
             "curriculum",
-            "library",
             "experiment",
+            "lecture",
+            "jwc",
+            "exam",
+            "seunet",
+            "library",
             "grade",
             "srtp",
             "schoolbus",
-            "lecture",
-            "jwc",
-            "gymorder",
+            "schedule",
+            "gymreserve",
             "quanyi",
             "emptyroom"
     };
@@ -62,16 +64,18 @@ public class SettingsHelper {
     //模块名字文字提示
     public static final String[] moduleNamesTips = {
             "一卡通",
-            "校园网络",
             "跑操助手",
             "课表助手",
-            "图书馆",
             "实验助手",
+            "人文讲座",
+            "教务通知",
+            "考试助手",
+            "校园网络",
+            "图书馆",
             "绩点查询",
             "课外研学",
             "校车助手",
-            "人文讲座",
-            "教务通知",
+            "校历查询",
             "场馆预约",
             "权益服务",
             "空教室"
@@ -80,16 +84,18 @@ public class SettingsHelper {
     //模块说明，显示在快捷方式编辑界面
     public static final String[] moduleDescriptions = {
             "提供一卡通消费情况查询、一卡通在线充值以及余额提醒服务",
-            "显示校园网使用情况及校园网账户余额信息",
             "提供跑操次数及记录查询、早操预报以及跑操到账提醒服务",
             "浏览当前学期的课表信息，并提供上课提醒服务",
-            "查看图书馆实时借阅排行、已借书籍和馆藏图书搜索",
             "浏览当前学期的实验信息，并提供实验提醒服务",
+            "查看人文讲座听课记录，并提供人文讲座预告信息",
+            "显示教务处最新通知，提供重要教务通知提醒服务",
+            "查询个人考试安排，提供考试倒计时提醒服务",
+            "显示校园网使用情况及校园网账户余额信息",
+            "查看图书馆实时借阅排行、已借书籍和馆藏图书搜索",
             "查询历史学期的科目成绩、学分以及绩点详情",
             "提供SRTP学分及得分详情查询服务",
             "提供可实时更新的校车班车时间表",
-            "查看人文讲座听课记录，并提供人文讲座预告信息",
-            "显示教务处最新通知，提供重要教务通知提醒服务",
+            "显示当前年度各学期的学校校历安排",
             "提供体育场馆在线预约和查询服务",
             "向东大校会权益部反馈投诉信息",
             "提供指定时间内的空教室信息查询服务"
@@ -98,17 +104,19 @@ public class SettingsHelper {
     //模块action
     public static final String[] moduleActions = {
             "cn.seu.herald_android.MODULE_QUERY_CARDEXTRA",
-            "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_PEDETAIL",
             "cn.seu.herald_android.MODULE_QUERY_CURRICULUM",
-            "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
             "cn.seu.herald_android.MODULE_QUERY_EXPERIMENT",
+            "cn.seu.herald_android.MODULE_QUERY_LECTURE",
+            "cn.seu.herald_android.MODULE_QUERY_JWC",
+            "cn.seu.herald_android.MODULE_QUERY_EXAM",
+            "cn.seu.herald_android.MODULE_QUERY_SEUNET",
+            "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
             "cn.seu.herald_android.MODULE_QUERY_GRADE",
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
-            "cn.seu.herald_android.MODULE_QUERY_LECTURE",
-            "cn.seu.herald_android.MODULE_QUERY_JWC",
-            "cn.seu.herald_android.WEBMODULE_GYMORDER",
+            "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
+            "cn.seu.herald_android.WEBMODULE_GYMRESERVE",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
             "cn.seu.herald_android.WEBMODULE_EMPTYROOM"
     };
@@ -117,33 +125,37 @@ public class SettingsHelper {
     //模块图标
     public static final int[] moduleIconsId = {
             R.mipmap.ic_card,
-            R.mipmap.ic_seunet,
             R.mipmap.ic_pedetail,
             R.mipmap.ic_curriculum,
-            R.mipmap.ic_library,
             R.mipmap.ic_experiment,
+            R.mipmap.ic_lecture,
+            R.mipmap.ic_jwc,
+            R.mipmap.ic_exam,
+            R.mipmap.ic_seunet,
+            R.mipmap.ic_library,
             R.mipmap.ic_grade,
             R.mipmap.ic_srtp,
             R.mipmap.ic_bus,
-            R.mipmap.ic_lecture,
-            R.mipmap.ic_jwc,
-            R.mipmap.ic_gym,
+            R.mipmap.ic_schedule,
+            R.mipmap.ic_gymreserve,
             R.mipmap.ic_quanyi,
             R.mipmap.ic_emptyroom
     };
 
     public static final boolean[] moduleHasCard = {
             true,
-            false,
+            true,
+            true,
+            true,
+            true,
             true,
             true,
             false,
-            true,
             false,
             false,
             false,
-            true,
-            true,
+            false,
+            false,
             false,
             false,
             false

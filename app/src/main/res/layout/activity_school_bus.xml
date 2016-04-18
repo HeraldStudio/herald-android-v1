@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="cn.seu.herald_android.mod_query.cardextra.CardActivity">
+    tools:context="cn.seu.herald_android.mod_query.schoolbus.SchoolBusActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"

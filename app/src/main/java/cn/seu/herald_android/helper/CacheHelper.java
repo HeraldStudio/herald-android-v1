@@ -14,11 +14,11 @@ public class CacheHelper {
             "herald_experiment",
             "herald_nic",
             "herald_srtp",
-            "herald_pc_last_message",
             "herald_curriculum",
             "herald_pedetail",
             "herald_sidebar",
-            "herald_new_version_ignored"
+            "herald_exam",
+            "herald_schedule_cache_time"
     };
     private Context context;
 

@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.lecture;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,22 +10,27 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_timeline.TimelineItem;
+import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class LectureActivity extends BaseAppCompatActivity {
 
@@ -39,39 +43,6 @@ public class LectureActivity extends BaseAppCompatActivity {
     private ListView list_record;
     //打卡记录次数
     private TextView tv_count;
-    private ProgressDialog progressDialog;
-
-    public static void remoteRefreshCache(Context context, Runnable doAfter) {
-        ApiHelper apiHelper = new ApiHelper(context);
-        CacheHelper cacheHelper = new CacheHelper(context);
-        //获取讲座预告
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.wechat_lecture_notice_url)
-                .addParams("uuid", apiHelper.getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        apiHelper.dealApiExceptionSilently(e);
-                        doAfter.run();
-                    }
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                cacheHelper.setCache("herald_lecture_notices", json_res.toString());
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        doAfter.run();
-                    }
-                });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +76,6 @@ public class LectureActivity extends BaseAppCompatActivity {
         //RecyclerView加载
         recyclerView_notice = (RecyclerView) findViewById(R.id.recyclerview_lecture_notice);
         recyclerView_notice.setLayoutManager(new LinearLayoutManager(this));
-
-        //加载对话框
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setTitle("最新讲座消息获取中");
-        progressDialog.setMessage("请稍后...");
-
     }
 
     @Override
@@ -145,55 +109,37 @@ public class LectureActivity extends BaseAppCompatActivity {
                 //刷新打卡记录缓存
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析出错，请刷新后再试。");
+                showSnackBar("缓存解析出错，请刷新后再试。");
             }
 
         } else {
-            showMsg("暂无缓存或者缓存已失效，请重新刷新。");
+            showSnackBar("暂无缓存或者缓存已失效，请重新刷新。");
         }
 
     }
 
     private void refreshCache() {
-        progressDialog.show();
-        //获取讲座预告
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.wechat_lecture_notice_url)
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        progressDialog.dismiss();
-                        showMsg("由于网络错误获取最新讲座预告失败，已加载缓存。");
-                        loadNoticeCache();
-                    }
+        showProgressDialog();
 
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_lecture_notices", json_res.toString());
-                                if (json_res.getJSONArray("content").length() == 0) {
-                                    showMsg("最近暂无讲座预告信息");
-                                } else {
-                                    showMsg("已获取最新讲座预告");
-                                }
-                                loadNoticeCache();
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
+        //获取讲座预告
+        new ApiRequest(this).url(ApiHelper.wechat_lecture_notice_url).uuid()
+                .toCache("herald_lecture_notices", o -> {
+                    if (o.getJSONArray("content").length() == 0) {
+                        showSnackBar("最近暂无讲座预告信息");
+                    } else {
+                        showSnackBar("已获取最新讲座预告");
                     }
-                });
+                    return o;
+                })
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    loadNoticeCache();
+                }).run();
+    }
+
+    public static ApiRequest remoteRefreshCache(Context context) {
+        return new ApiRequest(context).url(ApiHelper.wechat_lecture_notice_url).uuid()
+                .toCache("herald_lecture_notices", o -> o);
     }
 
     private void displayLectureRecords() {
@@ -212,39 +158,17 @@ public class LectureActivity extends BaseAppCompatActivity {
         tv_count = (TextView) window.findViewById(R.id.tv_recordcount);
 
         //加载讲座记录时显示刷新框
-        progressDialog.show();
+        showProgressDialog();
         //获取已听讲座
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_LECTURE))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        progressDialog.dismiss();
-                        showMsg("由于网络错误，获取最新讲座记录失败");
+        new ApiRequest(this).api(ApiHelper.API_LECTURE).uuid()
+                .toCache("herald_lecture_records", o -> o)
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        loadRecordCache();
+                        showSnackBar("获取讲座记录成功");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_lecture_records", json_res.toString());
-                                loadRecordCache();
-                                showMsg("获取讲座记录成功");
-                            }else{
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析出错");
-                        }
-                    }
-                });
+                }).run();
     }
 
     private void loadRecordCache() {
@@ -262,10 +186,71 @@ public class LectureActivity extends BaseAppCompatActivity {
                         LectureRecordItem.transformJSONArrayToArrayList(jsonArray)));
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析失败，请刷新后再试。");
+                showSnackBar("缓存解析失败，请刷新后再试。");
             }
         }
     }
 
+    /**
+     * 读取人文讲座预告缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineItem getLectureItem(TimelineView host) {
+        String cache = new CacheHelper(host.getContext()).getCache("herald_lecture_notices");
+        final long now = Calendar.getInstance().getTimeInMillis();
+        try {
+            JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
+            ArrayList<View> lectures = new ArrayList<>();
 
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json_item = jsonArray.getJSONObject(i);
+                String dateStr = json_item.getString("date").split("日")[0];
+                String[] date = dateStr.replaceAll("年", "-").replaceAll("月", "-").split("-");
+                String[] mdStr = {date[date.length - 2], date[date.length - 1]};
+
+                int[] md = {
+                        Integer.valueOf(mdStr[0]),
+                        Integer.valueOf(mdStr[1])
+                };
+                Calendar time = Calendar.getInstance();
+                if (time.get(Calendar.MONTH) + 1 == md[0] && time.get(Calendar.DAY_OF_MONTH) == md[1]) {
+                    if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 19 * 60) {
+
+                        LectureBlockLayout block = new LectureBlockLayout(host.getContext(), new LectureNoticeItem(
+                                json_item.getString("date"),
+                                json_item.getString("topic"),
+                                json_item.getString("speaker"),
+                                json_item.getString("location")
+                        ));
+                        lectures.add(block);
+                    }
+                }
+            }
+
+            // 今天有人文讲座
+            if (lectures.size() > 0) {
+                Calendar time = Calendar.getInstance();
+                time = CalendarUtils.toSharpDay(time);
+                time.set(Calendar.HOUR_OF_DAY, 18);
+                time.set(Calendar.MINUTE, 30);
+
+                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_LECTURE,
+                        time.getTimeInMillis(), TimelineItem.CONTENT_NO_NOTIFY,
+                        "今天有新的人文讲座，有兴趣的同学欢迎来参加"
+                );
+                item.attachedView = lectures;
+                return item;
+            }
+
+            // 今天无人文讲座
+            return new TimelineItem(SettingsHelper.MODULE_LECTURE,
+                    now, TimelineItem.NO_CONTENT, jsonArray.length() == 0 ? "暂无人文讲座预告信息"
+                    : "暂无新的人文讲座，点我查看以后的预告"
+            );
+
+        } catch (Exception e) {// JSONException, NumberFormatException
+            return new TimelineItem(SettingsHelper.MODULE_LECTURE,
+                    now, TimelineItem.NO_CONTENT, "人文讲座数据加载失败，请手动刷新"
+            );
+        }
+    }
 }

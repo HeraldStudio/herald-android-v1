@@ -9,9 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +18,7 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 /**
  * 2016/2/22 By heyongdong
@@ -44,7 +41,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
         //初始化函数
         init();
         //加载校车数据
-        loadListWithCace();
+        loadListWithCache();
     }
 
     private void init() {
@@ -82,41 +79,18 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        //通过联网刷新数据
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_SCHOOLBUS))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        hideProgressDialog();
+        new ApiRequest(this).api(ApiHelper.API_SCHOOLBUS).uuid()
+                .toCache("herald_schoolbus_cache", o -> o)
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        loadListWithCache();
+                        showSnackBar("刷新成功");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_schoolbus_cache", json_res.toString());
-                                loadListWithCace();
-                                showMsg("刷新成功");
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+                }).run();
     }
 
-    private void loadListWithCace() {
+    private void loadListWithCache() {
         //尝试加载缓存
         String cache = getCacheHelper().getCache("herald_schoolbus_cache");
         if (!cache.equals("")) {
@@ -159,7 +133,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                 tabLayout.setTabsFromPagerAdapter(schoolBusViewPagerAdapter);
 
             } catch (JSONException e) {
-                showMsg("缓存加载失败，请尝试重新刷新");
+                showSnackBar("缓存加载失败，请尝试重新刷新");
             }
         } else {
             refreshCache();

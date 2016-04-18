@@ -9,9 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,10 +19,10 @@ import java.util.List;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.ApiRequest;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
-import okhttp3.Call;
 
 public class SeunetActivity extends BaseAppCompatActivity {
     //显示已用流量比例的饼状图
@@ -115,7 +112,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 setupChart(json_cache.getJSONObject("content"));
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析错误，请重新刷新后再试");
+                showSnackBar("缓存解析错误，请重新刷新后再试");
             }
         } else {
             List<SliceValue> values = new ArrayList<>();
@@ -133,38 +130,15 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_NIC))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                             @Override
-                             public void onError(Call call, Exception e) {
-                                 //如果加载错误，显示错误信息
-                                 showMsg("网络错误，请稍后再试");
-                             }
-
-                             @Override
-                             public void onResponse(String response) {
-                                 hideProgressDialog();
-                                 try {
-                                     JSONObject json_res = new JSONObject(response);
-                                     if (json_res.getInt("code") == 200) {
-                                         getCacheHelper().setCache("herald_nic", response);
-                                         loadCache();
-                                         showMsg("刷新成功");
-                                     } else {
-                                         showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                                     }
-                                 } catch (JSONException e) {
-                                     e.printStackTrace();
-                                     showMsg("数据解析失败，请重试");
-                                 }
-                             }
-                         }
-                );
+        new ApiRequest(this).api(ApiHelper.API_NIC).uuid()
+                .toCache("herald_nic", o -> o)
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        loadCache();
+                        showSnackBar("刷新成功");
+                    }
+                }).run();
     }
 
     private void setupChart(JSONObject json) {

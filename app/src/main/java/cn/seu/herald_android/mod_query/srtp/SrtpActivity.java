@@ -10,9 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +19,7 @@ import java.util.ArrayList;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
 public class SrtpActivity extends BaseAppCompatActivity {
 
@@ -80,7 +77,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
                 recyclerView_srtp.setAdapter(srtpAdapter);
             } catch (JSONException e) {
                 e.printStackTrace();
-                showMsg("缓存解析失败，请刷新后再试");
+                showSnackBar("缓存解析失败，请刷新后再试");
             }
         } else {
             refreshCache();
@@ -105,44 +102,19 @@ public class SrtpActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        //获取srtp记录
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_SRTP))
-                .addParams("uuid", getApiHelper().getUUID())
-                .addParams("schoolnum", getApiHelper().getSchoolnum())
-                .build()
-                .readTimeOut(10000).connTimeOut(10000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        getApiHelper().dealApiException(e);
-                        hideProgressDialog();
-                        showMsg("由于网络错误获取课外研学记录失败，已加载缓存。");
-                        loadCache();
+        new ApiRequest(this).api(ApiHelper.API_SRTP).uuid()
+                .post("schoolnum", getApiHelper().getSchoolnum())
+                .toCache("herald_srtp", o -> {
+                    if (o.getJSONArray("content").length() == 1) {
+                        showSnackBar("暂无Srtp信息，赶紧去参加课外研学活动吧");
+                    } else {
+                        showSnackBar("已获取最新srtp信息");
                     }
-
-                    @Override
-                    public void onResponse(String response) {
-                        hideProgressDialog();
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                getCacheHelper().setCache("herald_srtp", json_res.toString());
-                                if (json_res.getJSONArray("content").length() == 1) {
-                                    showMsg("暂无Srtp信息，赶紧去参加课外研学活动吧");
-                                } else {
-                                    showMsg("已获取最新srtp信息");
-                                }
-                                loadCache();
-                            } else {
-                                showMsg("服务器遇到了一些问题，不妨稍后再试试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showMsg("数据解析失败，请重试");
-                        }
-                    }
-                });
+                    return o;
+                })
+                .onFinish((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) loadCache();
+                }).run();
     }
 }

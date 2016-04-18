@@ -106,7 +106,7 @@ public class MarkedCalendarView extends FrameLayout {
             // 将格子添加到容器和链表
             v.setOnClickListener(v1 -> {
                 if (getContext() instanceof BaseAppCompatActivity) {
-                    ((BaseAppCompatActivity) getContext()).showMsg("该日无跑操记录");
+                    ((BaseAppCompatActivity) getContext()).showSnackBar("该日无跑操记录");
                 }
             });
             gv.addView(v);
@@ -131,7 +131,7 @@ public class MarkedCalendarView extends FrameLayout {
 
         v.setOnClickListener(view -> {
             if (getContext() instanceof BaseAppCompatActivity) {
-                ((BaseAppCompatActivity) getContext()).showMsg(info.toString());
+                ((BaseAppCompatActivity) getContext()).showSnackBar(info.toString());
             } else {
                 new AlertDialog.Builder(getContext()).setTitle("跑操记录详情").setMessage(info.toString()).show();
             }

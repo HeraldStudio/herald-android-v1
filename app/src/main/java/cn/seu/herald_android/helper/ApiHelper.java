@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.ConnectException;
@@ -58,22 +60,12 @@ public class ApiHelper {
     public static final int API_LIBRARY_MYBOOK = 18;
     //热门图书
     public static final int API_LIBRARY_HOTBOOK = 19;
-    /**
-     * 调戏
-     * 参数
-     * uuid：要搜索的书名
-     * msg：对话内容
-     */
-    public static final int API_SIMSIMI = 0;
-    //暂时无法使用的两个
-    public static final int API_RENEW = 1;
-
-    /**
-     * 参数
-     * book:要搜索的书名
-     */
-    public static final int API_BOOK_SEARCH = 3;
-
+    //图书续借
+    public static final int API_RENEW = 20;
+    //场馆预约
+    public static final int API_GYMRESERVE = 21;
+    //考试助手
+    public static final int API_EXAM = 22;
 
     //需用其他方式访问的
     public static String auth_url = "http://115.28.27.150/uc/auth";
@@ -109,7 +101,10 @@ public class ApiHelper {
             "term",
             "search",
             "library",
-            "library_hot"
+            "library_hot",
+            "renew",
+            "yuyue",
+            "exam"
     };
     private static String packagePath;
     private Context context;
@@ -145,10 +140,12 @@ public class ApiHelper {
         }
 
         return appid;
-        //以后不再通过修改此处return语句的方法来使用测试appid，而是在剪贴板中事先复制好如下字符串：
-        //IAmTheGodOfHerald|OverrideAppidWith:34cc6df78cfa7cd457284e4fc377559e
-        //其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
-        //该后门实现见LoginActivity.java
+        /**
+         * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
+         * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+         * 其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
+         * 该后门实现见LoginActivity.java
+         **/
     }
 
     public void dealApiException(Exception e) {
@@ -161,29 +158,12 @@ public class ApiHelper {
             // uuid过期的处理
             Toast.makeText(context, "账号身份已过期，请重新登录", Toast.LENGTH_LONG).show();
             doLogout();
+        } else if (e instanceof JSONException || e instanceof NumberFormatException) {
+            ContextUtils.showMessage(context, "数据解析失败，请重试");
         } else {
             ContextUtils.showMessage(context, "出现未知错误，请尝试重新登录");
         }
     }
-
-    /**
-     * 暂时吞掉生成的错误信息，此机制参见{@link ContextUtils}
-     **/
-    public void dealApiExceptionSilently(Exception e) {
-        e.printStackTrace();
-        if (e instanceof SocketTimeoutException) {
-            ContextUtils.showMessage(context, "抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
-        } else if (e instanceof ConnectException || e instanceof SocketException) {
-            ContextUtils.showMessage(context, "网络连接错误，请检查您的网络连接~");
-        } else if (e instanceof RuntimeException && e.toString().contains("Unauthorized")) {
-            // uuid过期的处理
-            Toast.makeText(context, "账号身份已过期，请重新登录", Toast.LENGTH_LONG).show();
-            doLogout();
-        } else {
-            ContextUtils.eatMessage("出现未知错误，请尝试重新登录");
-        }
-    }
-
 
     public void doLogout() {
         //清除授权信息
@@ -209,7 +189,6 @@ public class ApiHelper {
         }
     }
 
-
     public boolean isLogin() {
         //判断是否已登录
         SharedPreferences pref = context.getSharedPreferences("herald_auth", Context.MODE_PRIVATE);
@@ -234,7 +213,10 @@ public class ApiHelper {
         }
     }
 
-
+    public String getUserName() {
+        CacheHelper helper = new CacheHelper(context);
+        return helper.getCache("authUser");
+    }
 
     public String getPassword() {
         CacheHelper helper = new CacheHelper(context);
@@ -243,9 +225,42 @@ public class ApiHelper {
         return helper1.decrypt(helper.getCache("authPwd"));
     }
 
-    public String getUserName() {
+    // 单独更新校园网登陆账户
+    public void setWifiAuth(String username, String password) {
+        try {
+            String encrypted = new EncryptHelper(username).encrypt(password);
+            CacheHelper helper = new CacheHelper(context);
+            helper.setCache("wifiAuthUser", username);
+            helper.setCache("wifiAuthPwd", encrypted);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getWifiUserName() {
         CacheHelper helper = new CacheHelper(context);
-        return helper.getCache("authUser");
+        String cacheUser = helper.getCache("wifiAuthUser");
+
+        // 若无校园网独立用户缓存，则使用登陆应用的账户
+        if (cacheUser.equals("")) return getUserName();
+        return cacheUser;
+    }
+
+    public String getWifiPassword() {
+        CacheHelper helper = new CacheHelper(context);
+        String username = getWifiUserName();
+        EncryptHelper helper1 = new EncryptHelper(username);
+        String cachePwd = helper.getCache("wifiAuthPwd");
+
+        // 若无校园网独立用户缓存，则使用登陆应用的账户
+        if (cachePwd.equals("") || helper1.decrypt(cachePwd).equals("")) return getPassword();
+        return helper1.decrypt(cachePwd);
+    }
+
+    public void clearWifiAuth() {
+        CacheHelper helper = new CacheHelper(context);
+        helper.setCache("wifiAuthUser", "");
+        helper.setCache("wifiAuthPwd", "");
     }
 
     public String getAuthCache(String cacheName) {
