@@ -24,6 +24,7 @@ import java.util.Collections;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
@@ -197,8 +198,8 @@ public class TimelineView extends ListView {
         if (refresh) {
 
             // 线程管理器
-            ApiThreadManager manager = new ApiThreadManager().onResponse(() -> {
-                loadContent(false);
+            ApiThreadManager manager = new ApiThreadManager().onResponse((success, c, r) -> {
+                if (success) loadContent(false);
             });
 
             // 刷新版本信息和推送消息
@@ -272,9 +273,12 @@ public class TimelineView extends ListView {
              * 结束刷新部分
              * 当最后一个线程结束时调用这一部分，刷新结束
              **/
-            manager.onFinish(() -> {
+            manager.onFinish((success) -> {
                 if (srl != null) srl.setRefreshing(false);
-                manager.flushExceptions(getContext(), "刷新过程中出现了一些问题，请重试~");
+
+                if (!success) {
+                    ContextUtils.showMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
+                }
                 slider.startAutoCycle();
             }).run();
         }

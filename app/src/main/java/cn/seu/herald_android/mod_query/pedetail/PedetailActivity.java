@@ -79,7 +79,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
         showProgressDialog();
         new ApiThreadManager()
                 .addAll(remoteRefreshCache(this))
-                .onFinish(() -> {
+                .onFinish((success) -> {
                     hideProgressDialog();
                     readLocal();
                 }).run();

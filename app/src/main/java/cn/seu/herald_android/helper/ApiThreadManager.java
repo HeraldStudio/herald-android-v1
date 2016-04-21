@@ -10,10 +10,10 @@ import cn.seu.herald_android.custom.ContextUtils;
 public class ApiThreadManager {
     private Vector<ApiRequest> requests = new Vector<>();
 
-    private Runnable onFinish = () -> {
+    private OnFinishListener onFinish = (success) -> {
     };
 
-    private Runnable onResponse = () -> {
+    private ApiRequest.OnResponseListener onResponse = (success, code, response) -> {
     };
 
     private Vector<Exception> exceptionPool = new Vector<>();
@@ -23,9 +23,9 @@ public class ApiThreadManager {
         request.exceptionPool(exceptionPool);
         request.onFinish((success, code, response) -> {
             requests.remove(request);
-            onResponse.run();
+            onResponse.onFinish(success, code, response);
             if (requests.size() == 0)
-                onFinish.run();
+                onFinish.handle(exceptionPool.size() == 0);
         });
         requests.add(request);
         return this;
@@ -38,13 +38,13 @@ public class ApiThreadManager {
         return this;
     }
 
-    public ApiThreadManager onResponse(Runnable runnable) {
-        onResponse = runnable;
+    public ApiThreadManager onResponse(ApiRequest.OnResponseListener listener) {
+        onResponse = listener;
         return this;
     }
 
-    public ApiThreadManager onFinish(Runnable runnable) {
-        onFinish = runnable;
+    public ApiThreadManager onFinish(OnFinishListener listener) {
+        onFinish = listener;
         return this;
     }
 
@@ -58,5 +58,9 @@ public class ApiThreadManager {
         for (ApiRequest request : requests) {
             request.run();
         }
+    }
+
+    public interface OnFinishListener {
+        void handle(boolean success);
     }
 }
