@@ -228,7 +228,7 @@ public class TimelineView extends ListView {
 
             // 当考试模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXAM)) {
-                // 仅当实验数据不存在时刷新实验
+                // 仅当考试数据不存在时刷新考试
                 if (cacheHelper.getCache("herald_exam").equals("")) {
                     manager.add(ExamActivity.remoteRefreshCache(getContext()));
                 }
@@ -242,10 +242,6 @@ public class TimelineView extends ListView {
 
             // 当跑操模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
-                CacheHelper helper = new CacheHelper(getContext());
-                String date = helper.getCache("herald_pc_date");
-                // 服务器端的跑操预告消息可能会出现中途更改的情况，因此只要没有得到跑操结束时的最后消息，就允许重复刷新
-                // 这个缓存用来记录当天的最后消息是否已经到手
                 Calendar nowCal = Calendar.getInstance();
                 long now = Calendar.getInstance().getTimeInMillis();
                 long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
@@ -265,7 +261,7 @@ public class TimelineView extends ListView {
 
             // 当教务处模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
-                // 直接刷新一卡通数据
+                // 直接刷新教务处数据
                 manager.add(JwcActivity.remoteRefreshCache(getContext()));
             }
 

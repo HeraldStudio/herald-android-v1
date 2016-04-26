@@ -294,7 +294,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                     // 有跑操预告信息但时间已过
                     TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
                             startTime, TimelineItem.CONTENT_NO_NOTIFY, forecast + "(已结束)\n"
-                            + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
+                            + getRemainNotice(count, remain, false)
                     );
 
                     item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));

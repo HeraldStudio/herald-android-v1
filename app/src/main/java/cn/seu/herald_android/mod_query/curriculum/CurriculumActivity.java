@@ -185,10 +185,11 @@ public class CurriculumActivity extends BaseAppCompatActivity {
             Calendar today = Calendar.getInstance();
             today = CalendarUtils.toSharpDay(today);
 
-            // 枚举今天的课程
             int dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24);
             int week = dayDelta / 7 + 1;
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
+
+            // 枚举今天的课程
             JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             int classCount = 0;
             boolean classAlmostEnd = false;
