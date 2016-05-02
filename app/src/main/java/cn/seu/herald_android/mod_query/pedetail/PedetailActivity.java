@@ -213,7 +213,6 @@ public class PedetailActivity extends BaseAppCompatActivity {
     public static TimelineItem getPeForecastItem(TimelineView host) {
         CacheHelper helper = new CacheHelper(host.getContext());
         String date = helper.getCache("herald_pc_date");
-        String ignoredDate = helper.getCache("herald_pc_ignored_date");
         String forecast = helper.getCache("herald_pc_forecast");
         String record = helper.getCache("herald_pedetail");
         final long now = Calendar.getInstance().getTimeInMillis();
@@ -231,24 +230,11 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
             if (record.contains(todayStamp)) {
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        now, ignoredDate.equals(todayStamp) ?
-                        TimelineItem.CONTENT_NO_NOTIFY : TimelineItem.CONTENT_NOTIFY,
+                        now, TimelineItem.CONTENT_NOTIFY,
                         "你今天的跑操已经到账。" + getRemainNotice(count, remain, false)
                 );
 
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
-                if (count < 45) {
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
-                }
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
-                if (!ignoredDate.equals(todayStamp)) {
-                    PedetailTimelineBlockLayout block = new PedetailTimelineBlockLayout(host.getContext(), "我知道了", "get");
-                    block.setOnClickListener(v -> {
-                        helper.setCache("herald_pc_ignored_date", todayStamp);
-                        host.loadContent(false);
-                    });
-                    item.attachedView.add(block);
-                }
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
 
                 return item;
             }
@@ -266,11 +252,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                         + getRemainNotice(count, remain, false)
                 );
 
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
-                if (count < 45) {
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
-                }
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
 
                 return item;
             } else if (now >= endTime) {
@@ -283,11 +265,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                             + getRemainNotice(count, remain, false)
                     );
 
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
-                    if (count < 45) {
-                        item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
-                    }
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
 
                     return item;
                 } else {
@@ -297,11 +275,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                             + getRemainNotice(count, remain, false)
                     );
 
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
-                    if (count < 45) {
-                        item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
-                    }
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
 
                     return item;
                 }
@@ -313,11 +287,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                             + getRemainNotice(count, remain, false)
                     );
 
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
-                    if (count < 45) {
-                        item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
-                    }
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
 
                     return item;
                 }
@@ -328,11 +298,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                         + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
                 );
 
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "已跑次数", count));
-                if (count < 45) {
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "还需次数", 45 - count));
-                }
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), "剩余天数", remain));
+                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
 
                 return item;
             }

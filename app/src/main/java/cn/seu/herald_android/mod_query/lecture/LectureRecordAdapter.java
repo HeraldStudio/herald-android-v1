@@ -26,7 +26,7 @@ class LectureRecordAdapter extends ArrayAdapter<LectureRecordItem> {
             convertView = LayoutInflater.from(getContext()).inflate(resource, null);
         }
         //设置列表每项的时间控件
-        TextView tv_time = (TextView) convertView.findViewById(R.id.tv_time);
+        TextView tv_time = (TextView) convertView.findViewById(R.id.content);
         //设置列表每项的地点控件
         TextView tv_place = (TextView) convertView.findViewById(R.id.tv_place);
         tv_time.setText(lectureRecordItem.time);

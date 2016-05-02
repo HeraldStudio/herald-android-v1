@@ -13,7 +13,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.SettingsHelper;
@@ -48,12 +47,10 @@ public class ModuleListFragment extends Fragment {
 
         //获得所有模块列表
         seuModuleArrayList.clear();
-        seuModuleArrayList.addAll(new SettingsHelper(getContext()).getSeuModuleList());
-        Collections.sort(seuModuleArrayList, (module1, module2) -> {
-            boolean isVisible1 = module1.isEnabledShortCut() || module1.isEnabledCard();
-            boolean isVisible2 = module2.isEnabledShortCut() || module2.isEnabledCard();
-            return (isVisible1 == isVisible2) ? 0 : (isVisible1 ? -1 : 1);
-        });
+        ArrayList<SeuModule> list = new SettingsHelper(getContext()).getSeuModuleList();
+        for (SeuModule k : list) {
+            if (k.isEnabledShortCut()) seuModuleArrayList.add(k);
+        }
 
         //根据模块列表构造列表
         ListView listView = (ListView) contentView.findViewById(R.id.list_modules);

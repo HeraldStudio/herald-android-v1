@@ -229,7 +229,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                     // 快要上课的紧急提醒
                     if (now >= startTime - 15 * 60 * 1000 && now < startTime) {
                         TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                                startTime, TimelineItem.CONTENT_NOTIFY, info.getClassName() + " 即将开始上课，请注意时间，准时上课"
+                                startTime, TimelineItem.CONTENT_NOTIFY, "即将开始上课，请注意时间，准时上课"
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
@@ -241,7 +241,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                     } else if (now >= startTime && now < almostEndTime) {
                         // 正在上课的提醒
                         TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                                now, TimelineItem.CONTENT_NOTIFY, info.getClassName() + " 正在上课中"
+                                now, TimelineItem.CONTENT_NOTIFY, "正在上课中"
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());

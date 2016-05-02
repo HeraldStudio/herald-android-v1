@@ -36,7 +36,7 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_library_borrowbook, null);
         }
 
-        TextView tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+        TextView tv_title = (TextView) convertView.findViewById(R.id.title);
         TextView tv_author = (TextView) convertView.findViewById(R.id.tv_author);
         TextView tv_renderdate = (TextView) convertView.findViewById(R.id.tv_renderdate);
         TextView tv_duedate = (TextView) convertView.findViewById(R.id.tv_duedate);

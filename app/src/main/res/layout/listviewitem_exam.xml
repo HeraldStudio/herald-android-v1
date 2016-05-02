@@ -13,14 +13,14 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="考试时间"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/tv_course"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="考试科目"
@@ -34,7 +34,7 @@
             android:text="考试地点" />
 
         <TextView
-            android:id="@+id/tv_teacher"
+            android:id="@+id/subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="授课老师" />
@@ -63,7 +63,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/tv_num"
+            android:id="@+id/num"
             android:gravity="center"
             android:textSize="54sp"
             android:textColor="@color/colorExamprimary" />

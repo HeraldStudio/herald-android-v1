@@ -201,8 +201,6 @@ public class ServiceHelper {
             String pushMessageUrl = helper.getPushMessageUrl();
             if (!pushMessageUrl.equals("") && !pushMessageUrl.equals("null")) {
                 Uri uri = Uri.parse(pushMessageUrl);
-                item.addButton(host.getContext(), "查看详情", (v) ->
-                        v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
                 item.setOnClickListener((v) ->
                         v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri)));
             }
@@ -222,11 +220,11 @@ public class ServiceHelper {
         if (versionCode < newestCode) {
             //如果当前版本号小于最新版本，且用户没有忽略此版本，则提示更新
             String tip = "小猴偷米" + serviceHelper.getNewestVersionName() + "更新说明\n"
-                    + serviceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n");
+                    + serviceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n") + "\n\n点我下载新版本吧";
             TimelineItem item = new TimelineItem("版本升级", tip,
                     now, TimelineItem.CONTENT_NOTIFY, R.mipmap.ic_update);
 
-            item.addButton(host.getContext(), "下载", (v) -> {
+            item.setOnClickListener((v) -> {
                 Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
                 host.getContext().startActivity(new Intent(Intent.ACTION_VIEW, uri));
             });

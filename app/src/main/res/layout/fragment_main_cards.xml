@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:background="#eee"
             android:divider="#00000000"
+            android:dividerHeight="0dp"
             android:listSelector="@drawable/null_selector"
             android:headerDividersEnabled="false">
         </cn.seu.herald_android.mod_timeline.TimelineView>

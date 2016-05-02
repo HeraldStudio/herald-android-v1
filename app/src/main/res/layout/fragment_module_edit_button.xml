@@ -1,16 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/check_update"
-    android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/selectable_item_background"
-    android:drawableLeft="@drawable/ic_menu_manage"
-    android:gravity="center"
-    android:paddingBottom="20dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="30dp"
-    android:paddingTop="20dp"
-    android:text="模块管理"
-    android:textColor="#333"
-    android:textSize="14sp" />
+    android:orientation="vertical"
+    android:paddingBottom="25dp"
+    android:paddingTop="25dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selectable_item_background_white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/ic_shortcut"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="10dp"
+            android:src="@mipmap/ic_add" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_shortcut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:text="模块管理"
+                android:textColor="#333"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="left|center"
+                android:text="管理各模块的显示/隐藏状态"
+                android:textColor="#666"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
+</LinearLayout>

@@ -71,10 +71,10 @@ class ExperimentExpandAdapter extends BaseExpandableListAdapter {
 
         View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_childitem_experiment, null);
         ExperimentItem experimentItem = (ExperimentItem) getChild(groupPosition, childPosition);
-        TextView tv_name = (TextView) contentView.findViewById(R.id.tv_name);
+        TextView tv_name = (TextView) contentView.findViewById(R.id.title);
         TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
         TextView tv_day = (TextView) contentView.findViewById(R.id.tv_day);
-        TextView tv_teacher = (TextView) contentView.findViewById(R.id.tv_teacher);
+        TextView tv_teacher = (TextView) contentView.findViewById(R.id.subtitle);
         TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
         TextView tv_grade = (TextView) contentView.findViewById(R.id.tv_grade);
         tv_name.setText(experimentItem.name);
