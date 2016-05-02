@@ -16,12 +16,15 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="13dp"
-        android:paddingRight="13dp">
+        android:paddingRight="13dp"
+        android:paddingTop="20dp"
+        android:background="#eee">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="模块"
+            android:textSize="12sp"
             android:layout_margin="10dp"
             android:id="@+id/textView4"
             android:layout_weight="1" />
@@ -31,6 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="卡片"
+            android:textSize="12sp"
             android:layout_margin="10dp"
             android:id="@+id/textView6" />
 
@@ -38,7 +42,8 @@
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="列表"
+            android:text="快捷栏"
+            android:textSize="12sp"
             android:layout_margin="10dp"
             android:id="@+id/textView7" />
     </LinearLayout>

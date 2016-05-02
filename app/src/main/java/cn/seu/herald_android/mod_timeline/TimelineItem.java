@@ -72,7 +72,7 @@ public class TimelineItem {
 
     @Override
     public String toString() {
-        String ret = "";
+        String ret = name + "|" + info + "|";
         for (View k : attachedView) {
             ret += k.toString();
         }
