@@ -24,6 +24,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
+import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.helper.ApiThreadManager;
@@ -43,6 +44,7 @@ public class TimelineView extends ListView {
     private ArrayList<TimelineItem> itemList;
 
     private CustomSwipeRefreshLayout srl;
+    private ShortcutBoxView shortcutBox;
     private SliderView slider;
     private FadeOutHeaderContainer fadeContainer;
     private TimelineAdapter adapter;
@@ -116,6 +118,9 @@ public class TimelineView extends ListView {
         /**
          * 本地重载部分
          **/
+
+        // 单独刷新快捷栏，不刷新轮播图。轮播图在轮播图数据下载完成后单独刷新。
+        refreshShortcutBox();
 
         // 清空卡片列表，等待载入
         itemList = new ArrayList<>();
@@ -271,6 +276,17 @@ public class TimelineView extends ListView {
                 }
                 slider.startAutoCycle();
             }).run();
+        }
+    }
+
+    private void refreshShortcutBox() {
+        if (shortcutBox == null) {
+            ViewGroup vg = (ViewGroup)
+                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
+            shortcutBox = (ShortcutBoxView) vg.findViewById(R.id.shorcut_box);
+            addHeaderView(vg);
+        } else {
+            shortcutBox.refresh();
         }
     }
 

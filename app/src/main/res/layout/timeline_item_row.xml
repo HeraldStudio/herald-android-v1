@@ -22,7 +22,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="7dp" />
 
     <TextView
         android:id="@+id/subtitle"
@@ -40,7 +40,7 @@
         android:layout_marginLeft="15dp"
         android:layout_below="@+id/title"
         android:layout_alignParentBottom="true"
-        android:paddingBottom="10dp"
+        android:paddingBottom="9dp"
         android:textSize="12sp" />
 
     <TextView

@@ -40,7 +40,7 @@ public class CardsFragment extends Fragment {
     // 刷新时间轴和快捷方式
     // refresh 是否联网刷新
     public void loadTimelineView(boolean refresh) {
-        if (refresh) srl.setRefreshing(true);
+        if (refresh && srl != null) srl.setRefreshing(true);
         view.loadContent(refresh);
     }
 }

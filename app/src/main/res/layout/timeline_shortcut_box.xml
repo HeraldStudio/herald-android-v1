@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
+    <cn.seu.herald_android.custom.ShortcutBoxView
+        android:id="@+id/shorcut_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@color/colorDivider"
+        android:numColumns="auto_fit"
+        android:columnWidth="64dp"
+        android:horizontalSpacing="@dimen/divider_height"
+        android:verticalSpacing="@dimen/divider_height"
+        android:stretchMode="columnWidth" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
+</LinearLayout>
