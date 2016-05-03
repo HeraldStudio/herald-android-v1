@@ -9,6 +9,8 @@ public class CacheHelper {
             "authUser",
             "authPwd",
             "herald_card",
+            "herald_card_left",
+            "herald_card_date",
             "herald_grade_gpa",
             "herald_lecture_records",
             "herald_experiment",
@@ -16,6 +18,9 @@ public class CacheHelper {
             "herald_srtp",
             "herald_curriculum",
             "herald_pedetail",
+            "herald_pe_count",
+            "herald_pe_remain",
+            "herald_pc_ignored_date",
             "herald_sidebar",
             "herald_exam",
             "herald_schedule_cache_time"

@@ -16,23 +16,20 @@ public class ExperimentBlockLayout extends LinearLayout {
 
     private long time = 0;
 
+    String description;
+
     public ExperimentBlockLayout(Context context, ExperimentItem item) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.expandablelistview_childitem_experiment, null);
-        TextView tv_name = (TextView) contentView.findViewById(R.id.tv_name);
-        TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
-        TextView tv_day = (TextView) contentView.findViewById(R.id.tv_day);
-        TextView tv_teacher = (TextView) contentView.findViewById(R.id.tv_teacher);
-        TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
-        TextView tv_grade = (TextView) contentView.findViewById(R.id.tv_grade);
-        tv_name.setText(item.name);
-        tv_date.setText("实验日期：" + item.date);
-        tv_day.setText("时间段：" + item.time);
-        tv_teacher.setText("指导老师：" + item.teacher);
-        tv_address.setText("实验地点：" + item.address);
-        tv_grade.setText(item.grade.replace("null", ""));
-        contentView.setLayoutParams(new LayoutParams(-1, -2));
-        contentView.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
+        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
+        TextView content = (TextView) contentView.findViewById(R.id.content);
+        TextView title = (TextView) contentView.findViewById(R.id.title);
+        TextView subtitle = (TextView) contentView.findViewById(R.id.subtitle);
+
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExperimentprimary));
+
+        title.setText(item.name);
+        subtitle.setText(item.teacher);
+        content.setText(item.date + " " + item.time + " @ " + item.address);
         addView(contentView);
 
         String[] ymdStr = item.date.replace("年", "-").replace("月", "-").replace("日", "-").split("-");
@@ -46,9 +43,18 @@ public class ExperimentBlockLayout extends LinearLayout {
         cal = CalendarUtils.toSharpDay(cal);
         cal.set(Calendar.HOUR_OF_DAY, hour);
         time = cal.getTimeInMillis();
+
+        description = title.getText().toString() + "|"
+                + subtitle.getText().toString() + "|"
+                + content.getText().toString() + "|";
     }
 
     public long getTime() {
         return time;
+    }
+
+    @Override
+    public String toString() {
+        return description;
     }
 }

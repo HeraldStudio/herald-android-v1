@@ -11,19 +11,29 @@ import cn.seu.herald_android.R;
 
 public class CurriculumTimelineBlockLayout extends LinearLayout {
 
+    String description;
+
     public CurriculumTimelineBlockLayout(Context context, ClassInfo item, String teacher) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_curriculum, null);
-        TextView tv_time = (TextView) contentView.findViewById(R.id.tv_time);
-        TextView tv_name = (TextView) contentView.findViewById(R.id.tv_name);
-        TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
-        TextView tv_teacher = (TextView) contentView.findViewById(R.id.tv_teacher);
-        tv_name.setText(item.getClassName());
-        tv_time.setText("上课时间：" + item.getTimePeriod());
-        tv_address.setText("地点：" + item.getPlace().replace("(单)", "").replace("(双)", ""));
-        tv_teacher.setText("教师：" + teacher);
-        contentView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-        contentView.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
+        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
+        TextView content = (TextView) contentView.findViewById(R.id.content);
+        TextView title = (TextView) contentView.findViewById(R.id.title);
+        TextView subtitle = (TextView) contentView.findViewById(R.id.subtitle);
+
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorCurriculumPrimary));
+
+        title.setText(item.getClassName());
+        subtitle.setText(teacher);
+        content.setText(item.getTimePeriod() + " @ " + item.getPlace().replace("(单)", "").replace("(双)", ""));
         addView(contentView);
+
+        description = title.getText().toString() + "|"
+                + subtitle.getText().toString() + "|"
+                + content.getText().toString() + "|";
+    }
+
+    @Override
+    public String toString() {
+        return description;
     }
 }

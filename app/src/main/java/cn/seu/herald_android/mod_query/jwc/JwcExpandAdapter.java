@@ -73,7 +73,7 @@ class JwcExpandAdapter extends BaseExpandableListAdapter {
 
         View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_childitem_jwc, null);
         JwcItem jwcItem = (JwcItem) getChild(groupPosition, childPosition);
-        TextView tv_name = (TextView) contentView.findViewById(R.id.tv_name);
+        TextView tv_name = (TextView) contentView.findViewById(R.id.title);
         TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
         tv_name.setText(jwcItem.title);
         tv_date.setText("发布日期：" + jwcItem.date);
