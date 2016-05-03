@@ -17,7 +17,8 @@ public class TimelineItem {
     private String info;
     private long time;
     private int contentPriority;
-    private View.OnClickListener onClickListener;
+    private View.OnClickListener onClickListener = v -> {
+    };
     private int iconRes;
     public int moduleId = -1;
 
