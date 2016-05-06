@@ -348,6 +348,7 @@ public class TimelineView extends ListView {
     }
 
 
+
     public class TimelineAdapter extends BaseAdapter {
 
         private long now;

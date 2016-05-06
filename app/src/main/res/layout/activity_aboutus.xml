@@ -18,5 +18,4 @@
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/content_aboutus" />
-
 </android.support.design.widget.CoordinatorLayout>
