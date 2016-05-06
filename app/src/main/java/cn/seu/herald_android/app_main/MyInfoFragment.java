@@ -26,53 +26,49 @@ import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 public class MyInfoFragment extends Fragment {
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_my_info, null, false);
-    }
+    private View contentView;
 
-    private View check_update;
-    private View custom_account;
     private TextView tv_nowversion;
     private SwitchButton swith_seu;
     private ServiceHelper serviceHelper;
 
+    @Nullable
     @Override
-    public void onStart() {
-        super.onStart();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        contentView = inflater.inflate(R.layout.fragment_main_my_info, null, false);
+
         serviceHelper = new ServiceHelper(getContext());
 
-        check_update = getView().findViewById(R.id.check_update);
+        View check_update = contentView.findViewById(R.id.check_update);
         check_update.setOnClickListener(v -> checkUpdate());
 
-        custom_account = getView().findViewById(R.id.custom_account);
+        View custom_account = contentView.findViewById(R.id.custom_account);
         custom_account.setOnClickListener(v -> setCustomAccount());
 
-        tv_nowversion = (TextView) getView().findViewById(R.id.tv_now_version);
+        tv_nowversion = (TextView) contentView.findViewById(R.id.tv_now_version);
         tv_nowversion.setText("当前版本： " + ServiceHelper.getAppVersionName(getContext()));
 
-        getView().findViewById(R.id.tv_aboutus).setOnClickListener((v) -> {
+        contentView.findViewById(R.id.tv_aboutus).setOnClickListener((v) -> {
             startActivity(new Intent(getContext(), AboutusActivity.class));
         });
 
-        getView().findViewById(R.id.tv_feedback).setOnClickListener((v) -> {
+        contentView.findViewById(R.id.tv_feedback).setOnClickListener((v) -> {
             startActivity(new Intent(getContext(), FeedbackActivity.class));
         });
 
-        getView().findViewById(R.id.tv_logout).setOnClickListener((v) -> {
+        contentView.findViewById(R.id.tv_logout).setOnClickListener((v) -> {
             new AlertDialog.Builder(getContext()).setMessage("退出后将自动清除模块缓存，确定退出吗？")
                     .setPositiveButton("退出", (d, w) -> new ApiHelper(getContext()).doLogout())
                     .setNegativeButton("取消", null)
                     .show();
         });
 
-        swith_seu = (SwitchButton) getView().findViewById(R.id.switchseuauto);
+        swith_seu = (SwitchButton) contentView.findViewById(R.id.switchseuauto);
         swith_seu.setCheckedImmediately(new SettingsHelper(getContext()).getWifiAutoLogin());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) -> {
             new SettingsHelper(getContext()).setWifiAutoLogin(isChecked);
         });
-        getView().findViewById(R.id.switch_container).setOnLongClickListener(v -> {
+        contentView.findViewById(R.id.switch_container).setOnLongClickListener(v -> {
             new AlertDialog.Builder(getContext())
                     .setMessage("长按摇一摇设置项代替摇一摇登录，属于测试功能，" +
                             "该功能未来可能保留，也可能取消，请不要过分依赖此功能。")
@@ -82,16 +78,19 @@ public class MyInfoFragment extends Fragment {
             return true;
         });
 
-        getView().findViewById(R.id.switch_container).setOnClickListener((v) -> {
-            swith_seu.toggle();
-        });
+        contentView.findViewById(R.id.switch_container).setOnClickListener(v -> swith_seu.toggle());
 
+        refreshUsername();
+
+        return contentView;
     }
 
     public void refreshUsername() {
-        //刷新用户名显示
-        TextView tv_username = (TextView) getView().findViewById(R.id.tv_username);
-        tv_username.setText(new ApiHelper(getContext()).getAuthCache("name"));
+        // 刷新用户名显示
+        if (contentView != null) {
+            TextView tv_username = (TextView) contentView.findViewById(R.id.tv_username);
+            tv_username.setText(new ApiHelper(getContext()).getAuthCache("name"));
+        }
     }
 
     private void checkUpdate() {

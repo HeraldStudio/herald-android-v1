@@ -30,6 +30,8 @@ class CardItem {
 
     public static ArrayList<CardItem> transfromJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<CardItem> list = new ArrayList<>();
+        list.add(new CardItem("", "今天", "", "为了您的账号安全，可到充值页面查看当天流水", "未出账", ""));
+
         for (int i = 0; i < jsonArray.length(); i++) {
             list.add(new CardItem(
                     jsonArray.getJSONObject(i).getString("date").split(" ")[0],

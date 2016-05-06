@@ -1,6 +1,5 @@
 package cn.seu.herald_android.mod_query.cardextra;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,19 +12,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.ApiThreadManager;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_timeline.TimelineItem;
@@ -48,9 +47,8 @@ public class CardActivity extends BaseAppCompatActivity {
         String cache = getCacheHelper().getCache("herald_card");
         if (!cache.equals("")) {
             loadCache();
-        } else {
-            refreshCache();
         }
+        refreshCache();
     }
 
     private void init() {
@@ -102,12 +100,13 @@ public class CardActivity extends BaseAppCompatActivity {
         try {
             //尝试加载缓存
             String cache = getCacheHelper().getCache("herald_card");
+            String cacheLeft = getCacheHelper().getCache("herald_card_left");
             if (!cache.equals("")) {
                 JSONObject json_cache = new JSONObject(cache).getJSONObject("content");
                 //获取消费记录
                 JSONArray jsonArray = json_cache.getJSONArray("detial");
                 //获取余额并且设置
-                String extra = json_cache.getString("left");
+                String extra = new JSONObject(cacheLeft).getJSONObject("content").getString("left");
                 tv_extra.setText(extra);
                 //数据类型转换
                 CardAdapter cardAdapter = new CardAdapter(getBaseContext(), CardItem.transfromJSONArrayToArrayList(jsonArray));
@@ -122,20 +121,42 @@ public class CardActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
-                .post("timedelta", "31").toCache("herald_card", o -> o)
-                .onFinish((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadCache();
-                        showSnackBar("刷新成功");
-                    }
-                }).run();
+
+        // 先加入刷新余额的请求
+        ApiThreadManager manager = new ApiThreadManager();
+        manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
+                .toCache("herald_card_left", o -> o));
+
+        // 如果今天还没刷新过,加入刷新流水的请求
+        if (!todayHasRefreshed()) {
+            manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
+                    .post("timedelta", "31").toCache("herald_card", o -> o));
+        }
+
+        // 刷新完毕后登记刷新日期
+        manager.onFinish((success) -> {
+            hideProgressDialog();
+            if (success) {
+                loadCache();
+                showSnackBar("刷新成功");
+                getCacheHelper().setCache("herald_card_date", getDayStamp());
+            } else {
+                showSnackBar("刷新失败");
+            }
+        }).run();
+    }
+
+    public String getDayStamp() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+    }
+
+    public boolean todayHasRefreshed() {
+        return getCacheHelper().getCache("herald_card_date").equals(getDayStamp());
     }
 
     public static ApiRequest remoteRefreshCache(Context context) {
         return new ApiRequest(context).api(ApiHelper.API_CARD).uuid()
-                .post("timedelta", "31").toCache("herald_card", o -> o);
+                .toCache("herald_card_left", o -> o);
     }
 
     /**
@@ -143,88 +164,22 @@ public class CardActivity extends BaseAppCompatActivity {
      **/
     public static TimelineItem getCardItem(TimelineView host) {
         CacheHelper helper = new CacheHelper(host.getContext());
-        String cache = helper.getCache("herald_card");
+        String cache = helper.getCache("herald_card_left");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
-
             JSONObject json_cache = new JSONObject(cache).getJSONObject("content");
             //获取余额并且设置
             String left = json_cache.getString("left");
             float extra = Float.valueOf(left);
 
-            //若检测到超过上次忽略时的余额，认为已经充值过了，取消忽略充值提醒
-            boolean isNumber = true;
-            try {
-                if (extra > Float.valueOf(helper.getCache("herald_card_charged"))) {
-                    helper.setCache("herald_card_charged", "");
-                    isNumber = false;
-                }
-            } catch (NumberFormatException e) {
-                isNumber = false;
-            }
-
             if (extra < 20) {
-                // 若没有被忽略的充值提醒，或者超过上次忽略提醒时的余额，认为余额不足需要提醒
-                if (!isNumber || extra > Float.valueOf(helper.getCache("herald_card_charged"))) {
-
-                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
-                            now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
-                    );
-                    item.addButton(host.getContext(), "在线充值", (v) -> {
-                        Toast.makeText(host.getContext(), "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
-                        Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        host.getContext().startActivity(intent);
-
-                        new AlertDialog.Builder(host.getContext()).setMessage("充值成功了吗？\n" +
-                                "选择充值成功可以自动忽略本次充值提醒。")
-                                .setPositiveButton("充值成功了", (d, w) -> {
-                                    helper.setCache("herald_card_charged", String.valueOf(extra));
-                                    ContextUtils.showMessage(host.getContext(), "已忽略本次充值提醒，为了让小猴下次" +
-                                            "还能正常提醒你充值，本次到账后记得让小猴知道哦~");
-                                    host.loadContent(false);
-                                })
-                                .setNegativeButton("还没有", null)
-                                .show();
-                    });
-                    item.addButton(host.getContext(), "充值过了", (v) -> {
-                        helper.setCache("herald_card_charged", String.valueOf(extra));
-                        ContextUtils.showMessage(host.getContext(), "已忽略本次充值提醒，为了让小猴下次" +
-                                "还能正常提醒你充值，本次到账后记得让小猴知道哦~");
-                        host.loadContent(false);
-                    });
-                    return item;
-                } else {
-                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
-                            now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元，但小猴记得你似乎已经充值过了~"
-                    );
-                    item.addButton(host.getContext(), "查看明细", v1 -> {
-                        Intent intent = new Intent(SettingsHelper.moduleActions[SettingsHelper.MODULE_CARDEXTRA]);
-                        v1.getContext().startActivity(intent);
-                    });
-                    item.addButton(host.getContext(), "我还没充值", (v) -> {
-                        helper.setCache("herald_card_charged", "");
-                        ContextUtils.showMessage(host.getContext(), "已取消忽略充值提醒");
-                        host.loadContent(false);
-                    });
-                    return item;
-                }
+                return new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
+                        now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
+                );
             } else {
-                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
+                return new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
                         now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"
                 );
-                item.addButton(host.getContext(), "查看明细", v1 -> {
-                    Intent intent = new Intent(SettingsHelper.moduleActions[SettingsHelper.MODULE_CARDEXTRA]);
-                    v1.getContext().startActivity(intent);
-                });
-                item.addButton(host.getContext(), "在线充值", (v) -> {
-                    Toast.makeText(host.getContext(), "注意：由于一卡通中心配置问题，充值之后需要刷卡消费一次，一卡通余额才能正常显示", Toast.LENGTH_LONG).show();
-                    Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    host.getContext().startActivity(intent);
-                });
-
-                return item;
             }
         } catch (Exception e) {
             return new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,

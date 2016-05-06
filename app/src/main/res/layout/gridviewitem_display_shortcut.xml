@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/shortcut_item_background">
+    android:background="@drawable/selectable_item_background_white">
 
     <ImageView
         android:id="@+id/ic_shortcut"

@@ -20,19 +20,18 @@ public class CardsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_cards, container, false);
-    }
+        View contentView = inflater.inflate(R.layout.fragment_main_cards, container, false);
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        srl = (CustomSwipeRefreshLayout) getView().findViewById(R.id.swipe_container);
-        view = (TimelineView) getView().findViewById(R.id.timeline);
+        srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
+        view = (TimelineView) contentView.findViewById(R.id.timeline);
         srl.setOnRefreshListener(() -> view.loadContent(true));
+
+        return contentView;
     }
 
     @Override
     public void onResume() {
+        // 从模块管理页面返回时,重载卡片和快捷栏
         super.onResume();
         loadTimelineView(false);
         view.setSrl(srl);
@@ -41,7 +40,7 @@ public class CardsFragment extends Fragment {
     // 刷新时间轴和快捷方式
     // refresh 是否联网刷新
     public void loadTimelineView(boolean refresh) {
-        if (refresh) srl.setRefreshing(true);
+        if (refresh && srl != null) srl.setRefreshing(true);
         view.loadContent(refresh);
     }
 }

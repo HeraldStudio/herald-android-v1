@@ -25,13 +25,13 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
         public ViewHolder(View v) {
             super(v);
-            tv_time = (TextView) v.findViewById(R.id.tv_time);
-            tv_course = (TextView) v.findViewById(R.id.tv_course);
+            tv_time = (TextView) v.findViewById(R.id.content);
+            tv_course = (TextView) v.findViewById(R.id.title);
             tv_location = (TextView) v.findViewById(R.id.tv_location);
-            tv_teacher = (TextView) v.findViewById(R.id.tv_teacher);
+            tv_teacher = (TextView) v.findViewById(R.id.subtitle);
             tv_hour = (TextView) v.findViewById(R.id.tv_hour);
             tv_numtitle = (TextView) v.findViewById(R.id.tv_numtitle);
-            tv_num = (TextView) v.findViewById(R.id.tv_num);
+            tv_num = (TextView) v.findViewById(R.id.num);
         }
     }
 

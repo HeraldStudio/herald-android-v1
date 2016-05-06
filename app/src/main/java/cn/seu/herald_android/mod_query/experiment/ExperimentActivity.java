@@ -160,7 +160,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
     private void setupAchievementWall() {
         //设置成就数目
-        tv_numofAchievement = (TextView) findViewById(R.id.tv_num);
+        tv_numofAchievement = (TextView) findViewById(R.id.num);
         tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievementArrayList.size(), 20));
         if(0 == achievementArrayList.size()){
             //无成就时添加提示

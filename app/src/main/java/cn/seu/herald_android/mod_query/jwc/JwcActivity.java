@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
@@ -172,12 +171,9 @@ public class JwcActivity extends BaseAppCompatActivity {
                         now, TimelineItem.NO_CONTENT, "最近没有新的核心教务通知");
             }
 
-            Collections.sort(allNotices, (p1, p2) -> p2.getImportance() - p1.getImportance());
-
             TimelineItem item = new TimelineItem(SettingsHelper.MODULE_JWC,
                     now, TimelineItem.CONTENT_NOTIFY, "最近有新的核心教务通知，有关同学请关注");
             item.attachedView.addAll(allNotices);
-            item.vertical = true;
             return item;
 
         } catch (Exception e) {// JSONException, NumberFormatException

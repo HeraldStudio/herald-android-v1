@@ -2,97 +2,109 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/timeline_item_bg_selector"
+    android:background="#fff"
     android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#eee" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp">
+        android:background="#ffffff"
+        android:orientation="vertical">
         <!--可能出现在卡片最底端的元素都不要加marginBottom，要换用paddingBottom，否则在Android4.3会出错-->
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true" />
-
-            <View
-                android:id="@+id/notify_dot"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:layout_alignRight="@+id/avatar"
-                android:layout_alignTop="@+id/avatar"
-                android:background="@drawable/timeline_notify_dot"
-                android:visibility="gone" />
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/avatar"
-                android:layout_alignTop="@+id/avatar"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/avatar"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:background="@drawable/selectable_item_background_white"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true" />
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/card_header_bg"
+                    android:scaleType="fitXY" />
+
+                <View
+                    android:id="@+id/notify_dot"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_alignRight="@+id/avatar"
+                    android:layout_alignTop="@+id/avatar"
+                    android:background="@drawable/timeline_notify_dot"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#333"
-                    android:textSize="15sp" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/avatar"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textColor="#666"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333"
+                        android:textSize="15sp" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#666"
+                        android:textSize="12sp"
+                        android:layout_marginRight="15dp" />
 
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textColor="#333"
-            android:textSize="15sp" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </FrameLayout>
 
         <LinearLayout
-            android:id="@+id/attachedContainerVertical"
+            android:id="@+id/attachedContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-        <HorizontalScrollView
-            android:id="@+id/hsv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:scrollbarSize="2dp"
-            android:scrollbarThumbHorizontal="@color/colorDivider"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/attachedContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-
-        </HorizontalScrollView>
+            android:orientation="vertical" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider" />
 
 </LinearLayout>

@@ -79,7 +79,7 @@ public class ApiRequest {
      * 一级回调设置部分
      * 一级回调只是跟OkHttpUtils框架之间的交互，并在此交互过程中为二级回调提供接口
      * 从此类外面看，不存在一级回调，只有二级回调和三级回调
-     * <p>
+     *
      * callback     默认的Callback（自动调用二级回调，若出错还会执行错误处理）
      **/
     private StringCallback callback = new StringCallback() {
@@ -90,8 +90,8 @@ public class ApiRequest {
             } else {
                 new ApiHelper(context).dealApiException(e);
             }
-            for (OnFinishListener onFinishListener : onFinishListeners) {
-                onFinishListener.onFinish(false, 0, e.toString());
+            for (OnResponseListener onResponseListener : onResponseListeners) {
+                onResponseListener.onFinish(false, 0, e.toString());
             }
         }
 
@@ -99,8 +99,8 @@ public class ApiRequest {
         public void onResponse(String response) {
             try {
                 JSONObject json_res = new JSONObject(response);
-                for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(json_res.getInt("code") == 200, json_res.getInt("code"), response);
+                for (OnResponseListener onResponseListener : onResponseListeners) {
+                    onResponseListener.onFinish(json_res.getInt("code") == 200, json_res.getInt("code"), response);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -109,8 +109,8 @@ public class ApiRequest {
                 } else {
                     new ApiHelper(context).dealApiException(e);
                 }
-                for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, -1, e.toString());
+                for (OnResponseListener onResponseListener : onResponseListeners) {
+                    onResponseListener.onFinish(false, -1, e.toString());
                 }
             }
         }
@@ -121,18 +121,18 @@ public class ApiRequest {
      * 二级回调是对返回状态和返回数据处理方式的定义，相当于重写Callback，
      * 但这里允许多个二级回调策略进行叠加，因此比Callback更灵活
      * <p>
-     * onFinishListeners    二级回调接口，内含一个默认的回调操作，该操作仅在设置了三级回调策略时有效
+     * onResponseListeners    二级回调接口，内含一个默认的回调操作，该操作仅在设置了三级回调策略时有效
      **/
 
-    public interface OnFinishListener {
+    public interface OnResponseListener {
         void onFinish(boolean success, int code, String response);
     }
 
-    private ArrayList<OnFinishListener> onFinishListeners = new ArrayList<>();
+    private ArrayList<OnResponseListener> onResponseListeners = new ArrayList<>();
 
     // 外部可调用
-    public ApiRequest onFinish(OnFinishListener listener) {
-        this.onFinishListeners.add(listener);
+    public ApiRequest onFinish(OnResponseListener listener) {
+        this.onResponseListeners.add(listener);
         return this;
     }
 
@@ -157,8 +157,8 @@ public class ApiRequest {
                     String cache = parser.parse(new JSONObject(response)).toString();
                     new CacheHelper(context).setCache(key, cache);
                 } catch (JSONException e) {
-                    for (OnFinishListener onFinishListener : onFinishListeners) {
-                        onFinishListener.onFinish(false, -1, e.toString());
+                    for (OnResponseListener onResponseListener : onResponseListeners) {
+                        onResponseListener.onFinish(false, -1, e.toString());
                     }
                 }
             }
@@ -174,8 +174,8 @@ public class ApiRequest {
                     String cache = parser.parse(new JSONObject(response)).toString();
                     new ServiceHelper(context).setServiceCache(key, cache);
                 } catch (JSONException e) {
-                    for (OnFinishListener onFinishListener : onFinishListeners) {
-                        onFinishListener.onFinish(false, -1, e.toString());
+                    for (OnResponseListener onResponseListener : onResponseListeners) {
+                        onResponseListener.onFinish(false, -1, e.toString());
                     }
                 }
             }

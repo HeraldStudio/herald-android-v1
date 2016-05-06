@@ -1,6 +1,5 @@
 package cn.seu.herald_android.mod_timeline;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +21,8 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
@@ -171,7 +170,8 @@ public class TimelineView extends ListView {
         }
 
         // 有消息的排在前面，没消息的排在后面
-        Collections.sort(itemList, TimelineItem.comparator);
+        Collections.sort(itemList, (p1, p2) ->
+                p1.getDisplayPriority(getContext()) - p2.getDisplayPriority(getContext()));
 
         // 更新适配器，结束刷新
         if (adapter == null) {
@@ -197,8 +197,8 @@ public class TimelineView extends ListView {
         if (refresh) {
 
             // 线程管理器
-            ApiThreadManager manager = new ApiThreadManager().onResponse(() -> {
-                loadContent(false);
+            ApiThreadManager manager = new ApiThreadManager().onResponse((success, c, r) -> {
+                if (success) loadContent(false);
             });
 
             // 刷新版本信息和推送消息
@@ -227,7 +227,7 @@ public class TimelineView extends ListView {
 
             // 当考试模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_EXAM)) {
-                // 仅当实验数据不存在时刷新实验
+                // 仅当考试数据不存在时刷新考试
                 if (cacheHelper.getCache("herald_exam").equals("")) {
                     manager.add(ExamActivity.remoteRefreshCache(getContext()));
                 }
@@ -241,10 +241,6 @@ public class TimelineView extends ListView {
 
             // 当跑操模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_PEDETAIL)) {
-                CacheHelper helper = new CacheHelper(getContext());
-                String date = helper.getCache("herald_pc_date");
-                // 服务器端的跑操预告消息可能会出现中途更改的情况，因此只要没有得到跑操结束时的最后消息，就允许重复刷新
-                // 这个缓存用来记录当天的最后消息是否已经到手
                 Calendar nowCal = Calendar.getInstance();
                 long now = Calendar.getInstance().getTimeInMillis();
                 long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
@@ -264,7 +260,7 @@ public class TimelineView extends ListView {
 
             // 当教务处模块开启时
             if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
-                // 直接刷新一卡通数据
+                // 直接刷新教务处数据
                 manager.add(JwcActivity.remoteRefreshCache(getContext()));
             }
 
@@ -272,9 +268,12 @@ public class TimelineView extends ListView {
              * 结束刷新部分
              * 当最后一个线程结束时调用这一部分，刷新结束
              **/
-            manager.onFinish(() -> {
+            manager.onFinish((success) -> {
                 if (srl != null) srl.setRefreshing(false);
-                manager.flushExceptions(getContext(), "刷新过程中出现了一些问题，请重试~");
+
+                if (!success) {
+                    ContextUtils.showMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
+                }
                 slider.startAutoCycle();
             }).run();
         }
@@ -351,18 +350,6 @@ public class TimelineView extends ListView {
 
     public class TimelineAdapter extends BaseAdapter {
 
-        private long now;
-
-        public TimelineAdapter() {
-            now = Calendar.getInstance().getTimeInMillis();
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            now = Calendar.getInstance().getTimeInMillis();
-            super.notifyDataSetChanged();
-        }
-
         @Override
         public int getCount() {
             return itemList.size();
@@ -382,81 +369,47 @@ public class TimelineView extends ListView {
         public View getView(int position, View convertView, ViewGroup parent) {
             TimelineItem item = getItem(position);
 
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
+            if(convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
 
             TextView name = (TextView) convertView.findViewById(R.id.name);
-            TextView time = (TextView) convertView.findViewById(R.id.time);
             TextView content = (TextView) convertView.findViewById(R.id.content);
             ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
             LinearLayout attachedContainer = (LinearLayout) convertView.findViewById(R.id.attachedContainer);
-            if (item.vertical) {
-                attachedContainer = (LinearLayout) convertView.findViewById(R.id.attachedContainerVertical);
-            }
+            View header = convertView.findViewById(R.id.header);
 
-            ViewGroup hsv = (ViewGroup) convertView.findViewById(R.id.hsv);
             View notifyDot = convertView.findViewById(R.id.notify_dot);
 
             name.setText(item.getName());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(item.getTime());
-            String dateTime = timeInNaturalLanguage(calendar, now);
-            time.setText(dateTime);
             content.setText(item.getInfo());
 
-            notifyDot.setVisibility(item.getImportance() == TimelineItem.CONTENT_NOTIFY ? VISIBLE : GONE);
+            //标识已读消息和未读消息的小点
+            notifyDot.setVisibility(
+                    item.getDisplayPriority(getContext()) == TimelineItem.CONTENT_NOTIFY ? VISIBLE : GONE);
 
             avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
-            convertView.setOnClickListener(item.getOnClickListener());
+            header.setOnClickListener((v) -> {
+                item.markAsRead(getContext());
+                item.getOnClickListener().onClick(v);
+                loadContent(false);
+            });
 
-            if (item.moduleId != -1) {
-                convertView.setOnLongClickListener(v -> {
-                    new AlertDialog.Builder(getContext()).setMessage("确定要隐藏该卡片吗？")
-                            .setPositiveButton("确定", (dialog, which) -> {
-                                new SettingsHelper(getContext()).setModuleCardEnabled(item.moduleId, false);
-                                if (getContext() instanceof MainActivity) {
-                                    ((MainActivity) getContext()).syncModuleSettings();
-                                }
-                            })
-                            .setNegativeButton("取消", null)
-                            .show();
-                    return true;
-                });
-            }
-
-            (item.vertical ? attachedContainer : hsv).setVisibility(GONE);
             attachedContainer.removeAllViews();
 
-            if (item.getImportance() == TimelineItem.NO_CONTENT) {
-                time.setText(item.getInfo());
-                content.setVisibility(GONE);
-            } else {
-                content.setVisibility(VISIBLE);
-            }
-
             if (item.attachedView.size() != 0) {
-                (item.vertical ? attachedContainer : hsv).setVisibility(VISIBLE);
-                boolean firstChild = true;
-                float dp = getContext().getResources().getDisplayMetrics().density;
                 for (View k : item.attachedView) {
-                    if (!firstChild) {
-                        View padding = new View(getContext());
-                        padding.setLayoutParams(new LinearLayout.LayoutParams((int) (12 * dp), (int) (12 * dp)));
-                        attachedContainer.addView(padding);
-                    }
 
                     if (k.getParent() != null) {
                         ((ViewGroup) k.getParent()).removeView(k);
                     }
-                    if (item.vertical) {
-                        k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-                    }
+                    k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+
                     // 默认的点击事件
-                    if (!k.hasOnClickListeners()) {
+                    /*if (!k.hasOnClickListeners()) {
                         k.setOnClickListener(item.getOnClickListener());
-                    }
+                    }*/
                     attachedContainer.addView(k);
-                    firstChild = false;
                 }
             }
 

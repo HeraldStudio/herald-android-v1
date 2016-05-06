@@ -18,7 +18,7 @@ public class WebModuleActivity extends BaseAppCompatActivity {
         String Action = getIntent().getAction();
         String tag_url = null;
         switch (Action) {
-            case "cn.seu.herald_android.WEBMODULE_GYMORDER":
+            case "cn.seu.herald_android.WEBMODULE_GYMRESERVE":
                 //打开场馆预约
                 tag_url = "http://115.28.27.150/heraldapp/#/yuyue/home";
                 break;

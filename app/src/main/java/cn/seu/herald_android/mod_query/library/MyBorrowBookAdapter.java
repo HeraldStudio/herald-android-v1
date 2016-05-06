@@ -8,13 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
@@ -33,7 +36,7 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_library_borrowbook, null);
         }
 
-        TextView tv_title = (TextView) convertView.findViewById(R.id.tv_title);
+        TextView tv_title = (TextView) convertView.findViewById(R.id.title);
         TextView tv_author = (TextView) convertView.findViewById(R.id.tv_author);
         TextView tv_renderdate = (TextView) convertView.findViewById(R.id.tv_renderdate);
         TextView tv_duedate = (TextView) convertView.findViewById(R.id.tv_duedate);
@@ -57,22 +60,17 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
         btn_renew.setEnabled(myBorrowBook.getRenewTime().equals("0") && !isOverdue(myBorrowBook.getDueDate()));
 
         btn_renew.setOnClickListener(!btn_renew.isEnabled() ? null : v -> {
-            Toast toast = Toast.makeText(getContext(), "正在请求续借，请稍候…", Toast.LENGTH_LONG);
-            toast.show();
+            ContextUtils.showMessage(getContext(), "正在请求续借，请稍候…");
 
             new ApiRequest(getContext()).api(ApiHelper.API_RENEW).uuid()
                     .post("barcode", myBorrowBook.getBarcode())
                     .onFinish((success, code, response) -> {
-                        if (success) {
-                            toast.cancel();
-                            toast.setText("《" + myBorrowBook.getTitle() + "》续借成功");
-                            toast.setDuration(Toast.LENGTH_SHORT);
-                            toast.show();
-                        } else {
-                            toast.cancel();
-                            toast.setText("《" + myBorrowBook.getTitle() + "》续借失败");
-                            toast.setDuration(Toast.LENGTH_SHORT);
-                            toast.show();
+                        try {
+                            response = new JSONObject(response).getString("content");
+                            ContextUtils.showMessage(getContext(),
+                                    response.equals("success") ? "续借成功" : response);
+                        } catch (JSONException e) {
+                            ContextUtils.showMessage(getContext(), "续借失败");
                         }
                     }).run();
         });

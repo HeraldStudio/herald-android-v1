@@ -38,7 +38,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             holder.tv_date.setVisibility(View.GONE);
         }
         //判断消费是否为负，如果不为负，则为正，需要设置成其他颜色
-        if (!cardItem.getPrice().startsWith("-")) {
+        if (!cardItem.getPrice().startsWith("-") && !cardItem.getPrice().equals("")) {
             //如果不为负，则设置绿色和加号
             holder.tv_price.setText("+" + cardItem.getPrice());
             holder.tv_price.setTextColor(ContextCompat.getColor(context, R.color.colorCardprimary));
@@ -90,7 +90,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             tv_type = (TextView) itemView.findViewById(R.id.tv_type);
             tv_system = (TextView) itemView.findViewById(R.id.tv_system);
             tv_left = (TextView) itemView.findViewById(R.id.tv_left);
-            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            tv_time = (TextView) itemView.findViewById(R.id.content);
         }
     }
 }

@@ -12,21 +12,21 @@ import android.widget.TextView;
 import cn.seu.herald_android.R;
 
 public class JwcBlockLayout extends LinearLayout {
-    private int importance = 0;
+
+    String description;
 
     public JwcBlockLayout(Context context, JwcItem item) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_jwc, null);
-        TextView tv_name = (TextView) contentView.findViewById(R.id.tv_name);
-        TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
-        importance = item.title.contains("!") || item.title.contains("重要") || item.title.contains("提醒") ? 1 : 0;
-        if (importance == 1) {
-            tv_name.getPaint().setFakeBoldText(true);
-        }
-        tv_name.setText(item.title);
-        tv_date.setText(item.date);
-        contentView.setLayoutParams(new LayoutParams(-1, -2));
-        contentView.setBackground(ContextCompat.getDrawable(context, R.drawable.timeline_attached_block_bg));
+        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
+        TextView title = (TextView) contentView.findViewById(R.id.title);
+        TextView content = (TextView) contentView.findViewById(R.id.content);
+
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorJwcprimary));
+        title.setMinLines(1);
+        title.setMaxLines(3);
+
+        title.setText(item.title);
+        content.setText("发布时间：" + item.date);
         addView(contentView);
 
         setOnClickListener(v -> {
@@ -35,9 +35,13 @@ public class JwcBlockLayout extends LinearLayout {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
+
+        description = title.getText().toString() + "|"
+                + content.getText().toString() + "|";
     }
 
-    public int getImportance() {
-        return importance;
+    @Override
+    public String toString() {
+        return description;
     }
 }

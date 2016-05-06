@@ -30,7 +30,7 @@ class HotBookAdapter extends ArrayAdapter<HotBook> {
         }
         TextView tv_count = (TextView)convertView.findViewById(R.id.tv_count);
         TextView tv_place = (TextView)convertView.findViewById(R.id.tv_place);
-        TextView tv_name = (TextView)convertView.findViewById(R.id.tv_name);
+        TextView tv_name = (TextView) convertView.findViewById(R.id.title);
         TextView tv_author = (TextView)convertView.findViewById(R.id.tv_author);
 
         tv_count.setText(hotBook.getCount()+"");

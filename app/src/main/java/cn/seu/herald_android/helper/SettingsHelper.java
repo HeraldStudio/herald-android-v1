@@ -19,8 +19,6 @@ public class SettingsHelper {
      * 启动模块的ACTION的添加，同时在manifests文件里注册
      * 模块图标资源文件的添加
      */
-    //模块类型列表
-    public static final int MODULE_TYPE_QUERY = 0;
     //功能模块列表
     /**
      * 查询类模块
@@ -38,7 +36,7 @@ public class SettingsHelper {
     public static final int MODULE_SRTP = 10;
     public static final int MODULE_SCHOOLBUS = 11;
     public static final int MODULE_SCHEDULE = 12;
-    public static final int MODULE_GYMRESERVE = 13;
+    public static final int WEBMODULE_GYMRESERVE = 13;
     public static final int WEBMODULE_QUANYI = 14;
     public static final int WEBMODULE_EMPTYROOM = 15;
 
@@ -118,7 +116,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
             "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
-            "cn.seu.herald_android.MODULE_QUERY_GYMRESERVE",
+            "cn.seu.herald_android.WEBMODULE_GYMRESERVE",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
             "cn.seu.herald_android.WEBMODULE_EMPTYROOM"
     };

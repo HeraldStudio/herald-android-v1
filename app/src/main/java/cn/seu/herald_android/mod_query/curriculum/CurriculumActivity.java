@@ -185,10 +185,11 @@ public class CurriculumActivity extends BaseAppCompatActivity {
             Calendar today = Calendar.getInstance();
             today = CalendarUtils.toSharpDay(today);
 
-            // 枚举今天的课程
             int dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24);
             int week = dayDelta / 7 + 1;
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
+
+            // 枚举今天的课程
             JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             int classCount = 0;
             boolean classAlmostEnd = false;
@@ -228,7 +229,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                     // 快要上课的紧急提醒
                     if (now >= startTime - 15 * 60 * 1000 && now < startTime) {
                         TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                                startTime, TimelineItem.CONTENT_NOTIFY, info.getClassName() + " 即将开始上课，请注意时间，准时上课"
+                                startTime, TimelineItem.CONTENT_NOTIFY, "即将开始上课，请注意时间，准时上课"
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());
@@ -240,7 +241,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                     } else if (now >= startTime && now < almostEndTime) {
                         // 正在上课的提醒
                         TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                                now, TimelineItem.CONTENT_NOTIFY, info.getClassName() + " 正在上课中"
+                                now, TimelineItem.CONTENT_NOTIFY, "正在上课中"
                         );
                         info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                         Pair<String, String> pair = sidebarInfo.get(info.getClassName());

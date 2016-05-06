@@ -13,7 +13,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.SettingsHelper;
@@ -22,34 +21,40 @@ import cn.seu.herald_android.mod_modulemanager.SeuModule;
 
 public class ModuleListFragment extends Fragment {
 
+    private View contentView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_modules, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onStart();
+        contentView = inflater.inflate(R.layout.fragment_main_modules, container, false);
         loadModuleList();
+        return contentView;
     }
 
+    //模块管理的按钮
     private View editButton;
     private ArrayList<SeuModule> seuModuleArrayList = new ArrayList<>();
 
+    @Override
+    public void onResume() {
+        // 从模块管理界面返回时,重载模块列表
+        super.onResume();
+        loadModuleList();
+    }
+
     public void loadModuleList() {
+
+        if (contentView == null) return;
 
         //获得所有模块列表
         seuModuleArrayList.clear();
-        seuModuleArrayList.addAll(new SettingsHelper(getContext()).getSeuModuleList());
-        Collections.sort(seuModuleArrayList, (module1, module2) -> {
-            boolean isVisible1 = module1.isEnabledShortCut() || module1.isEnabledCard();
-            boolean isVisible2 = module2.isEnabledShortCut() || module2.isEnabledCard();
-            return (isVisible1 == isVisible2) ? 0 : (isVisible1 ? -1 : 1);
-        });
+        ArrayList<SeuModule> list = new SettingsHelper(getContext()).getSeuModuleList();
+        for (SeuModule k : list) {
+            if (k.isEnabledShortCut()) seuModuleArrayList.add(k);
+        }
 
         //根据模块列表构造列表
-        ListView listView = (ListView) getView().findViewById(R.id.list_modules);
+        ListView listView = (ListView) contentView.findViewById(R.id.list_modules);
 
         if (editButton == null) {
             editButton = getLayoutInflater(null).inflate(R.layout.fragment_module_edit_button, null);
