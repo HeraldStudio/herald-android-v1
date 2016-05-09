@@ -85,7 +85,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
     private void refreshHotBook() {
         //加载校内最热门图书列表
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) try {
@@ -109,7 +109,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
     public void refreshBorrowRocord() {
         //获取最新的已借书记录
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) try {

@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_query.lecture;
+package cn.seu.herald_android.mod_afterschool;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -8,32 +8,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_timeline.TimelineItem;
 
-public class LectureBlockLayout extends LinearLayout {
-
+/**
+ * Created by heyon on 2016/5/10.
+ */
+public class AfterSchoolActivityBlockLayout extends LinearLayout {
     String description;
+    AfterSchoolActivityItem item;
 
-    public LectureBlockLayout(Context context, LectureNoticeItem item) {
+    public AfterSchoolActivityBlockLayout(Context context, AfterSchoolActivityItem item) {
         super(context);
+        this.item = item;
         View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
-
-        TextView content = (TextView) contentView.findViewById(R.id.content);
         TextView title = (TextView) contentView.findViewById(R.id.title);
         TextView subtitle = (TextView) contentView.findViewById(R.id.subtitle);
+        TextView content = (TextView) contentView.findViewById(R.id.content);
 
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorLectureprimary));
 
-        title.setText(item.getTopic());
-        title.setMinLines(1);
-        title.setMaxLines(2);
-        title.setMaxEms(10);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAfterSchoolPrimary));
 
-        subtitle.setText(item.getSpeaker());
+        content.setText(item.start_time + " ~ " + item.end_time + " @ " + item.location);
+        title.setText(item.title);
+        subtitle.setText(item.assiciation);
 
-        //演讲人姓名最多显示5个字符
-        subtitle.setMaxEms(5);
-
-        content.setText(item.getDate());
 
         addView(contentView);
 

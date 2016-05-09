@@ -130,7 +130,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_NIC).uuid()
+        new ApiRequest(this).api(ApiHelper.API_NIC).addUUID()
                 .toCache("herald_nic", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();

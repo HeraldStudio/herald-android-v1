@@ -136,7 +136,7 @@ public class GradeActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         progressDialog.show();
-        new ApiRequest(this).api(ApiHelper.API_GPA).uuid()
+        new ApiRequest(this).api(ApiHelper.API_GPA).addUUID()
                 .toCache("herald_grade_gpa", o -> o)
                 .onFinish((success, code, response) -> {
                     progressDialog.hide();

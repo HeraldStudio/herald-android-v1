@@ -96,7 +96,7 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).addUUID()
                 .post("book", query).onFinish((success, code, response) -> {
             hideProgressDialog();
             if (success) try {

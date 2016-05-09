@@ -114,7 +114,7 @@ public class JwcActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_JWC).uuid().toCache("herald_jwc", o -> o)
+        new ApiRequest(this).api(ApiHelper.API_JWC).addUUID().toCache("herald_jwc", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
@@ -125,7 +125,7 @@ public class JwcActivity extends BaseAppCompatActivity {
     }
 
     public static ApiRequest remoteRefreshCache(Context context) {
-        return new ApiRequest(context).api(ApiHelper.API_JWC).uuid()
+        return new ApiRequest(context).api(ApiHelper.API_JWC).addUUID()
                 .toCache("herald_jwc", o -> o);
     }
 

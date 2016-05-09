@@ -11,11 +11,12 @@
     <application
         android:name=".debug.CrashApplication"
         android:allowBackup="false"
-        tools:replace="android:allowBackup"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <!--启动页-->
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
+
+        <!-- 启动页 -->
         <activity
             android:name=".mod_communicate.WelcomeActivity"
             android:screenOrientation="portrait"
@@ -37,7 +38,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".mod_modulemanager.ModuleManageActivity"
             android:label="@string/title_activity_query"
@@ -49,7 +49,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.schoolbus.SchoolBusActivity"
             android:label="@string/title_activity_schoolbus"
@@ -61,7 +60,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.grade.GradeActivity"
             android:label="@string/title_activity_grade"
@@ -95,7 +93,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.library.LibrarySearchActivity"
             android:label="@string/title_activity_library_search"
@@ -103,7 +100,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/LibraryTheme">
         </activity>
-
         <activity
             android:name=".mod_query.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
@@ -115,7 +111,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.cardextra.CardActivity"
             android:label="@string/title_activity_card"
@@ -127,7 +122,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.experiment.ExperimentActivity"
             android:label="@string/title_activity_experiment"
@@ -139,7 +133,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.seunet.SeunetActivity"
             android:label="@string/title_activity_seunet"
@@ -151,7 +144,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.gymreserve.GymReserveActivity"
             android:label="@string/title_activity_gymreserve"
@@ -163,7 +155,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.exam.ExamActivity"
             android:label="@string/title_activity_exam"
@@ -175,7 +166,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.pedetail.PedetailActivity"
             android:label="@string/title_activity_pedetail"
@@ -187,7 +177,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_query.curriculum.CurriculumActivity"
             android:label="@string/title_activity_curriculum"
@@ -199,12 +188,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".mod_webmodule.WebModuleActivity"
-            android:theme="@style/AppTheme.Invisible"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Invisible">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.WEBMODULE_GYMRESERVE" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
@@ -212,25 +199,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mod_communicate.AboutusActivity"
             android:label="@string/title_activity_aboutus"
-            android:theme="@style/AboutusTheme"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AboutusTheme" />
         <activity
             android:name=".mod_communicate.FeedbackActivity"
             android:label="@string/title_activity_feedback"
-            android:theme="@style/FeedbackTheme"
             android:screenOrientation="portrait"
+            android:theme="@style/FeedbackTheme"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".mod_query.srtp.SrtpActivity"
             android:label="@string/title_activity_srtp"
-            android:theme="@style/SrtpTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SrtpTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SRTP" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -239,10 +223,22 @@
         <activity
             android:name=".mod_query.jwc.JwcActivity"
             android:label="@string/title_activity_jwc"
-            android:theme="@style/JwcTheme"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/JwcTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".mod_afterschool.AfterSchoolActivity"
+            android:label="@string/title_activity_afterschoolactivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AfterSchoolActivityTheme">
+            <intent-filter>
+                <action android:name="cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

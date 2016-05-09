@@ -39,6 +39,7 @@ public class SettingsHelper {
     public static final int WEBMODULE_GYMRESERVE = 13;
     public static final int WEBMODULE_QUANYI = 14;
     public static final int WEBMODULE_EMPTYROOM = 15;
+    public static final int MODULE_LIVE_ACTIVITY = 16;
 
 
     //模块名字
@@ -58,7 +59,8 @@ public class SettingsHelper {
             "schedule",
             "gymreserve",
             "quanyi",
-            "emptyroom"
+            "emptyroom",
+            "activity"
     };
 
     //模块名字文字提示
@@ -78,7 +80,8 @@ public class SettingsHelper {
             "校历查询",
             "场馆预约",
             "权益服务",
-            "空教室"
+            "空教室",
+            "活动生活"
     };
 
     //模块说明，显示在快捷方式编辑界面
@@ -98,7 +101,8 @@ public class SettingsHelper {
             "显示当前年度各学期的学校校历安排",
             "提供体育场馆在线预约和查询服务",
             "向东大校会权益部反馈投诉信息",
-            "提供指定时间内的空教室信息查询服务"
+            "提供指定时间内的空教室信息查询服务",
+            "查看近期热门学生活动"
     };
 
     //模块action
@@ -118,7 +122,8 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
             "cn.seu.herald_android.WEBMODULE_GYMRESERVE",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
-            "cn.seu.herald_android.WEBMODULE_EMPTYROOM"
+            "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
+            "cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY"
     };
 
 
@@ -139,7 +144,9 @@ public class SettingsHelper {
             R.mipmap.ic_schedule,
             R.mipmap.ic_gymreserve,
             R.mipmap.ic_quanyi,
-            R.mipmap.ic_emptyroom
+            R.mipmap.ic_emptyroom,
+            R.mipmap.ic_activity
+
     };
 
     public static final boolean[] moduleHasCard = {
@@ -158,7 +165,8 @@ public class SettingsHelper {
             false,
             false,
             false,
-            false
+            false,
+            true
     };
 
     //模块类型

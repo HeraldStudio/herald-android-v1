@@ -54,7 +54,13 @@ public class ApiThreadManager {
         }
     }
 
-    public void run() {
+    public void runWithPostMethod() {
+        for (ApiRequest request : requests) {
+            request.run();
+        }
+    }
+
+    public void runWithGetMethod(){
         for (ApiRequest request : requests) {
             request.run();
         }

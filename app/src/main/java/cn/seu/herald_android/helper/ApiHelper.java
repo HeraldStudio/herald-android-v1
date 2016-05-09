@@ -67,6 +67,7 @@ public class ApiHelper {
     //考试助手
     public static final int API_EXAM = 22;
 
+
     //需用其他方式访问的
     public static String auth_url = "http://115.28.27.150/uc/auth";
     public static String auth_update_url = "http://115.28.27.150/uc/update";
@@ -75,13 +76,15 @@ public class ApiHelper {
      */
     //微信端的接口url
     public static String wechat_lecture_notice_url = "http://115.28.27.150/wechat2/lecture";
-    private static String url = "http://115.28.27.150/api/";
+
+    //大部分api的url
+    private static String queryUrl = "http://115.28.27.150/api/";
 
     //用户反馈的url
     public static String feedback_url = "http://115.28.27.150/service/feedback";
 
-    //图书馆藏书搜索
-    private static String[] apiNames = new String[]{
+    //查询接口名
+    private static String[] queryApiNames = new String[]{
             "srtp",
             "sidebar",
             "curriculum",
@@ -104,7 +107,20 @@ public class ApiHelper {
             "library_hot",
             "renew",
             "yuyue",
-            "exam"
+            "exam",
+    };
+
+
+    //小猴生活服务类url
+    public static String liveUrl = "http://115.28.27.150/herald/api/";
+
+    public static int API_LIVE_AFTERSCHOOLACTIVITY = 0;
+    public static int API_LIVE_HOTAFTERSCHOOLACTIVITY = 1;
+
+    //小猴生活服务类接口
+    private static String[] liveApiNames = new String[]{
+            "v1/huodong/get",
+            "v1/huodong/get?type=hot"
     };
     private static String packagePath;
     private Context context;
@@ -117,8 +133,12 @@ public class ApiHelper {
     }
 
 
-    public static String getApiUrl(int api) {
-        return ApiHelper.url + ApiHelper.apiNames[api];
+    public static String getQueryApiUrl(int api) {
+        return ApiHelper.queryUrl + queryApiNames[api];
+    }
+
+    public static String getLiveApiUrl(int api) {
+        return ApiHelper.liveUrl + liveApiNames[api];
     }
 
     public static String getAppId() {

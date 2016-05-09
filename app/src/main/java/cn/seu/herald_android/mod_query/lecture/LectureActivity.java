@@ -122,7 +122,7 @@ public class LectureActivity extends BaseAppCompatActivity {
         showProgressDialog();
 
         //获取讲座预告
-        new ApiRequest(this).url(ApiHelper.wechat_lecture_notice_url).uuid()
+        new ApiRequest(this).url(ApiHelper.wechat_lecture_notice_url).addUUID()
                 .toCache("herald_lecture_notices", o -> {
                     if (o.getJSONArray("content").length() == 0) {
                         showSnackBar("最近暂无讲座预告信息");
@@ -138,7 +138,7 @@ public class LectureActivity extends BaseAppCompatActivity {
     }
 
     public static ApiRequest remoteRefreshCache(Context context) {
-        return new ApiRequest(context).url(ApiHelper.wechat_lecture_notice_url).uuid()
+        return new ApiRequest(context).url(ApiHelper.wechat_lecture_notice_url).addUUID()
                 .toCache("herald_lecture_notices", o -> o);
     }
 
@@ -160,7 +160,7 @@ public class LectureActivity extends BaseAppCompatActivity {
         //加载讲座记录时显示刷新框
         showProgressDialog();
         //获取已听讲座
-        new ApiRequest(this).api(ApiHelper.API_LECTURE).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LECTURE).addUUID()
                 .toCache("herald_lecture_records", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();

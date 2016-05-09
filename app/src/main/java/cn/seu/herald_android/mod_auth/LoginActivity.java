@@ -133,7 +133,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     private void checkUUID() {
         OkHttpUtils
                 .post()
-                .url(ApiHelper.getApiUrl(ApiHelper.API_USER))
+                .url(ApiHelper.getQueryApiUrl(ApiHelper.API_USER))
                 .addParams("uuid", getApiHelper().getUUID())
                 .build()
                 .execute(new StringCallback() {

@@ -40,6 +40,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * 该方法将自动判断当前是否可以获取尺寸，如果不可以，自动将该任务推迟到可以
      * 获取尺寸时再执行；如果当前可以获取尺寸，则将立即执行该任务。
      */
+
+    /**
+     * 注意！！！！！！
+     * 继承自此类的Activity务必运行一次enableSwipeBack，否则根布局将全透明
+     */
     private List<Runnable> onLoadTasks = new ArrayList<>();
     private boolean firstCreate = true;
 

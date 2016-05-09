@@ -88,7 +88,7 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     private void checkAuth() {
-        new ApiRequest(this).api(ApiHelper.API_USER).uuid().onFinish((success, code, response) -> {
+        new ApiRequest(this).api(ApiHelper.API_USER).addUUID().onFinish((success, code, response) -> {
             if (success) {
                 if (code == 200) try {
                     JSONObject json_res = new JSONObject(response);

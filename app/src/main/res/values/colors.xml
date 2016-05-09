@@ -77,6 +77,11 @@
     <color name="colorScheduleaccent">#8620bc</color>
 
 
+    <!--生活服务-->
+    <color name="colorAfterSchoolPrimary">#1976d2</color>
+    <color name="colorAfterSchoolDark">#1976d2</color>
+    <color name="colorAfterSchoolAccent">#1976d2</color>
+
     <!--关于我们-->
     <color name="colorAboutusprimary">#57b3ff</color>
     <color name="colorAboutusprimaryDark">#57b3ff</color>

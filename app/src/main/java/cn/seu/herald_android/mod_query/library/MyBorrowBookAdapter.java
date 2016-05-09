@@ -62,7 +62,7 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
         btn_renew.setOnClickListener(!btn_renew.isEnabled() ? null : v -> {
             ContextUtils.showMessage(getContext(), "正在请求续借，请稍候…");
 
-            new ApiRequest(getContext()).api(ApiHelper.API_RENEW).uuid()
+            new ApiRequest(getContext()).api(ApiHelper.API_RENEW).addUUID()
                     .post("barcode", myBorrowBook.getBarcode())
                     .onFinish((success, code, response) -> {
                         try {
