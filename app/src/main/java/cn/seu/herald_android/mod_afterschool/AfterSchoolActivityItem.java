@@ -87,17 +87,6 @@ public class AfterSchoolActivityItem {
                     jsonItem.getString("pic_url")
             ));
         }
-        list.add(new AfterSchoolActivityItem(
-                "大家好我是标题",
-                "大家好我是介绍",
-                "大家好我是介绍",
-                "大家好我是介绍",
-                "大家好我是介绍",
-                "http://ww1.sinaimg.cn/mw690/005y4U5Pgw1f24kvzplwrj30rs0b442h.jpg",
-                "大家好我是介绍",
-                "大家好我是介绍",
-                "http://ww1.sinaimg.cn/mw690/005y4U5Pgw1f24kvzplwrj30rs0b442h.jpg"
-        ));
         return list;
     }
 

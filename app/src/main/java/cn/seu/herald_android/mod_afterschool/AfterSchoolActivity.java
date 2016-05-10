@@ -1,15 +1,15 @@
 package cn.seu.herald_android.mod_afterschool;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,28 +17,31 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.custom.CustomDividerItemDecoration;
-import cn.seu.herald_android.custom.SimpleDividerItemDecoration;
+import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
+import cn.seu.herald_android.custom.refreshrecyclerview.onFooterListener;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.ApiThreadManager;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_query.exam.ExamBlockLayout;
-import cn.seu.herald_android.mod_query.exam.ExamItem;
 import cn.seu.herald_android.mod_timeline.TimelineItem;
 import cn.seu.herald_android.mod_timeline.TimelineView;
+import okhttp3.Call;
 
 
 public class AfterSchoolActivity extends BaseAppCompatActivity {
 
     //展示活动列表
-    RecyclerView recyclerView;
+    RefreshRecyclerView recyclerView;
+    //适配器
+    AfterSchoolActivityAdapter afterSchoolActivityAdapter;
+    //当前展示的页
+    int page = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +68,7 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorAfterSchoolPrimary));
         //活动列表初始化
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_afterschoolactivity);
+        recyclerView = (RefreshRecyclerView) findViewById(R.id.recyclerview_afterschoolactivity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(
@@ -96,10 +99,50 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
                 //获取活动列表
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //数据类型转换
-                AfterSchoolActivityAdapter afterSchoolActivityAdapter = new AfterSchoolActivityAdapter(getBaseContext(),
+                afterSchoolActivityAdapter = new AfterSchoolActivityAdapter(getBaseContext(),
                         AfterSchoolActivityItem.transfromJSONArrayToArrayList(jsonArray));
                 //设置消费记录数据适配器
                 recyclerView.setAdapter(afterSchoolActivityAdapter);
+                recyclerView.setOnFooterListener((footerposition)-> {
+                        page += 1;
+                        OkHttpUtils
+                                .get()
+                                .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY)+"?page="+page)
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e) {
+                                        getApiHelper().dealApiException(e);
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            if(new JSONObject(response).getInt("code") == 200){
+                                                JSONArray array = new JSONObject(response).getJSONArray("content");
+                                                if(array.length() == 0)
+                                                {
+                                                    afterSchoolActivityAdapter.setLoadFinished(true);
+                                                    showSnackBar("已无更多内容");
+                                                }else{
+                                                    //新一页的内容
+                                                    ArrayList<AfterSchoolActivityItem> newcontent =
+                                                            AfterSchoolActivityItem.transfromJSONArrayToArrayList(array);
+                                                    for(AfterSchoolActivityItem item : newcontent){
+                                                        //逐项加入列表中
+                                                        afterSchoolActivityAdapter.addItem(item);
+                                                    }
+                                                }
+                                                afterSchoolActivityAdapter.notifyDataSetChanged();
+                                            }else {
+                                                showSnackBar("刷新失败");
+                                            }
+                                        }catch (JSONException e){
+                                            showSnackBar("数据解析失败，请重试");
+                                        }
+                                    }
+                                });
+                });
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -112,15 +155,16 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
 
         //刷新缓存
         ApiThreadManager manager = new ApiThreadManager();
+        page = 1;
         manager.add(new ApiRequest(this)
                 .get()
-                .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY))
+                .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY)+"?page="+page)
                 .toCache("herald_afterschoolschool", o -> o))
                 .onFinish((success) -> {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        showSnackBar("已获取最新活动");
                     } else {
                         showSnackBar("刷新失败");
                     }
