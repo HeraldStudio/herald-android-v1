@@ -192,11 +192,21 @@
             android:name=".mod_webmodule.WebModuleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Invisible">
+            <!--web module-->
             <intent-filter>
                 <action android:name="cn.seu.herald_android.WEBMODULE_GYMRESERVE" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".mod_webmodule.WebShowActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WebShowTheme">
+            <!--web module-->
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.WEBSHOW" />
             </intent-filter>
         </activity>
         <activity

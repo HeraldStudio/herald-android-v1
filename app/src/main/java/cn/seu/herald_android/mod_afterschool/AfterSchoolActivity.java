@@ -73,6 +73,7 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(
                 getBaseContext()));
+
     }
 
     @Override
@@ -99,7 +100,8 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
                 //获取活动列表
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //数据类型转换
-                afterSchoolActivityAdapter = new AfterSchoolActivityAdapter(getBaseContext(),
+                afterSchoolActivityAdapter = new AfterSchoolActivityAdapter(
+                        AfterSchoolActivity.this,
                         AfterSchoolActivityItem.transfromJSONArrayToArrayList(jsonArray));
                 //设置消费记录数据适配器
                 recyclerView.setAdapter(afterSchoolActivityAdapter);
@@ -189,19 +191,7 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
         String cache = new CacheHelper(host.getContext()).getCache("herald_afterschoolschool_hot");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
-            //List<AfterSchoolActivityItem> afterSchoolActivityItems = AfterSchoolActivityItem.transfromJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<AfterSchoolActivityItem> afterSchoolActivityItems = new ArrayList<>();
-            afterSchoolActivityItems.add(new AfterSchoolActivityItem(
-                    "大家好我是标题",
-                    "大家好我是介绍",
-                    "大家好我是介绍",
-                    "大家好我是介绍",
-                    "大家好我是介绍",
-                    "http://ww1.sinaimg.cn/mw690/005y4U5Pgw1f24kvzplwrj30rs0b442h.jpg",
-                    "大家好我是介绍",
-                    "大家好我是介绍",
-                    "http://ww1.sinaimg.cn/mw690/005y4U5Pgw1f24kvzplwrj30rs0b442h.jpg"
-            ));
+            List<AfterSchoolActivityItem> afterSchoolActivityItems = AfterSchoolActivityItem.transfromJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
             if (afterSchoolActivityItems.size() == 0) {
                 return new TimelineItem(SettingsHelper.MODULE_LIVE_ACTIVITY,
                         now, TimelineItem.NO_CONTENT, "最近没有热门活动");

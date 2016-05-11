@@ -63,6 +63,8 @@ public class RefreshRecyclerView extends RecyclerView {
 
 
 
+
+
     public static abstract class RefreshRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         final static int HEADER = 0;
         final static int ITEM = 1;

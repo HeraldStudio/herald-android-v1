@@ -26,6 +26,7 @@ import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_webmodule.WebShowActivity;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
@@ -203,7 +204,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-
         //切换动画
         overridePendingTransition(R.anim.activity_right_in, R.anim.activity_out_left);
     }
@@ -211,8 +211,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-
         //切换动画
         overridePendingTransition(R.anim.activity_left_in, R.anim.activity_out_right);
     }
+
+
+
 }

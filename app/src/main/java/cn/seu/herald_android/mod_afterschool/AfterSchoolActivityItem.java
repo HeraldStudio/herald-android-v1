@@ -36,8 +36,6 @@ public class AfterSchoolActivityItem {
         this.pic_url = pic_url;
     }
 
-
-
     public Calendar getStartCalendar(){
         Calendar dst = Calendar.getInstance();
         dst.set(

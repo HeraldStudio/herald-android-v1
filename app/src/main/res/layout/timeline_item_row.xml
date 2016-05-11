@@ -19,7 +19,6 @@
         android:textSize="17sp"
         android:ellipsize="end"
         android:lines="1"
-        android:maxEms="10"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
         android:layout_alignParentTop="true"

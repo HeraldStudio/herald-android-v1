@@ -22,6 +22,7 @@ public class ExamBlockLayout extends LinearLayout {
         TextView count = (TextView) contentView.findViewById(R.id.num);
 
         title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExamprimary));
+        title.setMaxEms(10);
         count.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExamprimary));
 
         content.setText(item.time + " @ " + item.location);
