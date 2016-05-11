@@ -40,7 +40,7 @@ public class AfterSchoolActivityItem {
         Calendar dst = Calendar.getInstance();
         dst.set(
                 Integer.parseInt(start_time.split("-")[0]),
-                Integer.parseInt(start_time.split("-")[1]),
+                Integer.parseInt(start_time.split("-")[1])-1,
                 Integer.parseInt(start_time.split("-")[2])
                 );
         return CalendarUtils.toSharpDay(dst);
@@ -52,7 +52,7 @@ public class AfterSchoolActivityItem {
         Calendar dst = Calendar.getInstance();
         dst.set(
                 Integer.parseInt(end_time.split("-")[0]),
-                Integer.parseInt(end_time.split("-")[1]),
+                Integer.parseInt(end_time.split("-")[1])-1,
                 Integer.parseInt(end_time.split("-")[2])
         );
         return CalendarUtils.toSharpDay(dst);

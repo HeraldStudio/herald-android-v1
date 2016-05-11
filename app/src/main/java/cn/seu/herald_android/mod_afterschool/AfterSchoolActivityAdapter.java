@@ -79,13 +79,13 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
                 WebShowActivity.startWebShowActivity(getContext(),item.title,item.getDetailUri(),R.style.AfterSchoolActivityTheme);
         });
         //判断活动是否开始
-        Calendar now_time = CalendarUtils.toSharpDay(Calendar.getInstance());
-        Calendar start_time = CalendarUtils.toSharpDay(item.getStartCalendar());
-        Calendar end_time = CalendarUtils.toSharpDay(item.getEndCalendar());
-        if(now_time.before(start_time)){
+        long now_time = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
+        long start_time = item.getStartCalendar().getTimeInMillis();
+        long end_time = item.getEndCalendar().getTimeInMillis();
+        if(now_time < start_time){
             viewHolder.tv_tag.setText("即将开始");
             viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
-        } else if (now_time.after(end_time)) {
+        } else if (now_time > end_time) {
             viewHolder.tv_tag.setText("已结束");
             viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
         }else {
