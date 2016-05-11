@@ -100,6 +100,7 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
                 //获取活动列表
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //数据类型转换
+                //此处由于需要用context启动activity，故传入的context需要是activity
                 afterSchoolActivityAdapter = new AfterSchoolActivityAdapter(
                         AfterSchoolActivity.this,
                         AfterSchoolActivityItem.transfromJSONArrayToArrayList(jsonArray));
