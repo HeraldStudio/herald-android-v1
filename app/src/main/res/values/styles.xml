@@ -153,9 +153,9 @@
 
     <style name="WebShowTheme" parent="SubActivityTheme">
         <!-- web模块 -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorWebprimary</item>
+        <item name="colorPrimaryDark">@color/colorWebprimary_dark</item>
+        <item name="colorAccent">@color/colorWebaccent</item>
     </style>
 
     <style name="AppTheme.Invisible" parent="AppTheme.NoActionBar">

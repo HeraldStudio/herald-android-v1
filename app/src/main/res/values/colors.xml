@@ -93,6 +93,10 @@
     <color name="colorFeedbackprimaryDark">#00acc1</color>
     <color name="colorFeedbackprimaryAccent">#00acc1</color>
 
+    <!--Web页面-->
+    <color name="colorWebprimary">#616161</color>
+    <color name="colorWebprimary_dark">#616161</color>
+    <color name="colorWebaccent">#616161</color>
 
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
