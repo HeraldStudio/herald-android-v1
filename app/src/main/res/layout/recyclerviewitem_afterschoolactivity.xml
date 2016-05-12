@@ -12,48 +12,61 @@
         android:orientation="vertical"
         android:elevation="4dp"
         android:background="@color/colorIcons">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:paddingTop="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:id="@+id/tv_title"
-                android:maxLines="1"
-                android:maxEms="15"
-                android:textSize="14sp"
-                android:textColor="@color/colorPrimaryText"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:paddingRight="10dp"
+                android:layout_alignParentRight="true"
                 android:id="@+id/tv_tag"
+                android:minEms="4"
                 android:textSize="11sp"
                 android:text="即将开始"
                 android:textColor="@color/colorSecondaryText"/>
-        </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_tag"
+                android:layout_alignParentLeft="true"
+                android:text="活动标题"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:id="@+id/tv_title"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimaryText"/>
+        </RelativeLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_time"
+            android:id="@+id/tv_association"
             android:layout_marginBottom="10dp"
             android:paddingLeft="10dp"
             android:textSize="11sp"
+            android:text="活动主办方"
             android:textColor="@color/colorSecondaryText"/>
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:id="@+id/imgv_activity"/>
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:id="@+id/imgv_activity"
+            android:src="@drawable/default_herald"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingLeft="10dp"
+            android:textSize="11sp"
+            android:textColor="@color/colorSecondaryText"
+            android:id="@+id/tv_time_and_location"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:textSize="11sp"
             android:text="介绍"

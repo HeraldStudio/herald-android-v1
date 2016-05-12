@@ -22,8 +22,8 @@ public class AfterSchoolActivityItem {
     String activity_time;
     String assiciation;
     String location;
-    private String detail_url;
-    private String pic_url;
+    String detail_url;
+    String pic_url;
     public AfterSchoolActivityItem(String title, String introduciton, String start_time, String end_time, String activity_time, String detail_url, String assiciation, String location,String pic_url) {
         this.title = title;
         this.introduciton = introduciton;
@@ -67,6 +67,7 @@ public class AfterSchoolActivityItem {
         Uri uri = Uri.parse(this.pic_url);
         return uri;
     }
+
 
 
     public static ArrayList<AfterSchoolActivityItem> transfromJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
