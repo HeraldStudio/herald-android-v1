@@ -26,6 +26,7 @@ import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_webmodule.WebShowActivity;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
@@ -39,6 +40,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * 这些任务可以通过调用runMeasurementDependentTask(Runnable)来执行，
      * 该方法将自动判断当前是否可以获取尺寸，如果不可以，自动将该任务推迟到可以
      * 获取尺寸时再执行；如果当前可以获取尺寸，则将立即执行该任务。
+     */
+
+    /**
+     * 注意！！！！！！
+     * 继承自此类的Activity务必运行一次enableSwipeBack，否则根布局将全透明
      */
     private List<Runnable> onLoadTasks = new ArrayList<>();
     private boolean firstCreate = true;
@@ -198,7 +204,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-
         //切换动画
         overridePendingTransition(R.anim.activity_right_in, R.anim.activity_out_left);
     }
@@ -206,8 +211,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-
         //切换动画
         overridePendingTransition(R.anim.activity_left_in, R.anim.activity_out_right);
     }
+
+
+
 }

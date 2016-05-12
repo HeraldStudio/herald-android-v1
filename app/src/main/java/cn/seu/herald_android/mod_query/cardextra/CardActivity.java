@@ -124,12 +124,12 @@ public class CardActivity extends BaseAppCompatActivity {
 
         // 先加入刷新余额的请求
         ApiThreadManager manager = new ApiThreadManager();
-        manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
+        manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).addUUID()
                 .toCache("herald_card_left", o -> o));
 
         // 如果今天还没刷新过,加入刷新流水的请求
         if (!todayHasRefreshed()) {
-            manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).uuid()
+            manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).addUUID()
                     .post("timedelta", "31").toCache("herald_card", o -> o));
         }
 
@@ -143,7 +143,7 @@ public class CardActivity extends BaseAppCompatActivity {
             } else {
                 showSnackBar("刷新失败");
             }
-        }).run();
+        }).runWithPostMethod();
     }
 
     public String getDayStamp() {
@@ -155,7 +155,7 @@ public class CardActivity extends BaseAppCompatActivity {
     }
 
     public static ApiRequest remoteRefreshCache(Context context) {
-        return new ApiRequest(context).api(ApiHelper.API_CARD).uuid()
+        return new ApiRequest(context).api(ApiHelper.API_CARD).addUUID()
                 .toCache("herald_card_left", o -> o);
     }
 

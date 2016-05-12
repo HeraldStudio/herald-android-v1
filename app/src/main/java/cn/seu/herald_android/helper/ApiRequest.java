@@ -19,6 +19,9 @@ public class ApiRequest {
 
     public static final int CONN_TIMEOUT = 10000, READ_TIMEOUT = 10000;
 
+    public static final int POST = 0;
+
+    public static final int GET = 1;
     /**
      * 构造部分
      * context  当前上下文
@@ -31,9 +34,14 @@ public class ApiRequest {
 
     private String url;
 
+    private int type;
+
+
     // 外部可调用
     public ApiRequest(Context context) {
         this.context = context;
+        //默认为post请求
+        type = POST;
     }
 
     // 外部可调用
@@ -50,7 +58,7 @@ public class ApiRequest {
 
     // 外部可调用
     public ApiRequest api(int api) {
-        return url(ApiHelper.getApiUrl(api));
+        return url(ApiHelper.getQueryApiUrl(api));
     }
 
     /**
@@ -60,18 +68,24 @@ public class ApiRequest {
     private Map<String, String> map = new HashMap<>();
 
     // 外部可调用
-    public ApiRequest uuid() {
+    public ApiRequest addUUID() {
         map.put("uuid", new ApiHelper(context).getUUID());
         return this;
     }
 
     // 外部可调用
     public ApiRequest post(String... map) {
+        type = POST;
         for (int i = 0; i < map.length / 2; i++) {
             String key = map[2 * i];
             String value = map[2 * i + 1];
             this.map.put(key, value);
         }
+        return this;
+    }
+
+    public ApiRequest get(){
+        type = GET;
         return this;
     }
 
@@ -157,6 +171,7 @@ public class ApiRequest {
                     String cache = parser.parse(new JSONObject(response)).toString();
                     new CacheHelper(context).setCache(key, cache);
                 } catch (JSONException e) {
+                    e.printStackTrace();
                     for (OnResponseListener onResponseListener : onResponseListeners) {
                         onResponseListener.onFinish(false, -1, e.toString());
                     }
@@ -174,6 +189,7 @@ public class ApiRequest {
                     String cache = parser.parse(new JSONObject(response)).toString();
                     new ServiceHelper(context).setServiceCache(key, cache);
                 } catch (JSONException e) {
+                    e.printStackTrace();
                     for (OnResponseListener onResponseListener : onResponseListeners) {
                         onResponseListener.onFinish(false, -1, e.toString());
                     }
@@ -183,12 +199,24 @@ public class ApiRequest {
         return this;
     }
 
+
+
     /**
      * 执行部分
      **/
     public void run() {
-        OkHttpUtils.post().url(url).params(map).build()
-                .connTimeOut(CONN_TIMEOUT).readTimeOut(READ_TIMEOUT)
-                .execute(callback);
+        switch (type){
+            case GET:
+                OkHttpUtils.get().url(url).params(map).build()
+                        .connTimeOut(CONN_TIMEOUT).readTimeOut(READ_TIMEOUT)
+                        .execute(callback);
+                break;
+            case POST:
+                OkHttpUtils.post().url(url).params(map).build()
+                        .connTimeOut(CONN_TIMEOUT).readTimeOut(READ_TIMEOUT)
+                        .execute(callback);
+                break;
+        }
     }
+
 }

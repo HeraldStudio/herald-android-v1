@@ -82,12 +82,12 @@ public class PedetailActivity extends BaseAppCompatActivity {
                 .onFinish((success) -> {
                     hideProgressDialog();
                     readLocal();
-                }).run();
+                }).runWithPostMethod();
     }
 
     public static ApiRequest[] remoteRefreshCache(Context context) {
         return new ApiRequest[]{
-                new ApiRequest(context).api(ApiHelper.API_PC).uuid()
+                new ApiRequest(context).api(ApiHelper.API_PC).addUUID()
                         .toCache("herald_pc_forecast", o -> o.getString("content"))
                         .onFinish((success, code, response) -> {
                     long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
@@ -99,9 +99,9 @@ public class PedetailActivity extends BaseAppCompatActivity {
                         new CacheHelper(context).setCache("herald_pc_forecast", "refreshing");
                     }
                 }),
-                new ApiRequest(context).api(ApiHelper.API_PEDETAIL).uuid()
+                new ApiRequest(context).api(ApiHelper.API_PEDETAIL).addUUID()
                         .toCache("herald_pedetail", o -> o.getJSONArray("content")),
-                new ApiRequest(context).api(ApiHelper.API_PE).uuid()
+                new ApiRequest(context).api(ApiHelper.API_PE).addUUID()
                         .toCache("herald_pe_count", o -> o.getString("content"))
                         .toCache("herald_pe_remain", o -> o.getString("remain"))
         };

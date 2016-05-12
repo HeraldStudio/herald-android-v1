@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,8 +26,12 @@ import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
+/**
+ * 图书主页面Acvitity
+ */
 public class LibraryActivity extends BaseAppCompatActivity {
 
+    //热门书籍展示列表
     private ListView listView_hotbook;
 
     @Override
@@ -51,6 +56,8 @@ public class LibraryActivity extends BaseAppCompatActivity {
 
         //加载最热门图书，初始化列表控件
         listView_hotbook = (ListView) findViewById(R.id.list_library_hotbook);
+        //取消滑动条
+        listView_hotbook.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
         //获取最热图书信息
         refreshHotBook();
@@ -78,7 +85,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
     private void refreshHotBook() {
         //加载校内最热门图书列表
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) try {
@@ -102,7 +109,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
     public void refreshBorrowRocord() {
         //获取最新的已借书记录
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) try {

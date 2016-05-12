@@ -89,7 +89,7 @@ public class ExamActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_EXAM).uuid()
+        new ApiRequest(this).api(ApiHelper.API_EXAM).addUUID()
                 .toCache("herald_exam", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
@@ -101,7 +101,7 @@ public class ExamActivity extends BaseAppCompatActivity {
     }
 
     public static ApiRequest remoteRefreshCache(Context context) {
-        return new ApiRequest(context).api(ApiHelper.API_EXAM).uuid()
+        return new ApiRequest(context).api(ApiHelper.API_EXAM).addUUID()
                 .toCache("herald_exam", o -> o);
     }
 

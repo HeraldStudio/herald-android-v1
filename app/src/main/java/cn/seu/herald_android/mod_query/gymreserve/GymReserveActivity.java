@@ -67,7 +67,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
     private void refreshCache() {
         showProgressDialog();
 
-        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).uuid().post("method", "getDate")
+        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).addUUID().post("method", "getDate")
                 .toCache("herald_gymreserve_timelist", o -> o.getJSONObject("content").getJSONArray("timeList"))
                 .onFinish((success, code, response) -> {
                     if (success) {
@@ -92,7 +92,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
                 for (int j = 7; j <= 14; j++) {
                     final int sportNum = j;
                     manager.add(
-                            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).uuid().post("method", "getOrder")
+                            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).addUUID().post("method", "getOrder")
                                     .post("itemId", String.valueOf(j), "dayInfo", timeListObject.getString("dayInfo"))
                                     .onFinish((success, code, response) -> {
                                         if (success) try {

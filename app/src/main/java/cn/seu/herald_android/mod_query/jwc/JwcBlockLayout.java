@@ -23,7 +23,7 @@ public class JwcBlockLayout extends LinearLayout {
 
         title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorJwcprimary));
         title.setMinLines(1);
-        title.setMaxLines(3);
+        title.setMaxLines(2);
 
         title.setText(item.title);
         content.setText("发布时间：" + item.date);

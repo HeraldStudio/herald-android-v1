@@ -142,7 +142,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_PHYLAB).uuid()
+        new ApiRequest(this).api(ApiHelper.API_PHYLAB).addUUID()
                 .toCache("herald_experiment", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
@@ -154,7 +154,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
     }
 
     public static ApiRequest remoteRefreshCache(Context context) {
-        return new ApiRequest(context).api(ApiHelper.API_PHYLAB).uuid()
+        return new ApiRequest(context).api(ApiHelper.API_PHYLAB).addUUID()
                 .toCache("herald_experiment", o -> o);
     }
 

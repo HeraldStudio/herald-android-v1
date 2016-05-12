@@ -130,6 +130,13 @@
         <item name="colorAccent">@color/colorScheduleaccent</item>
     </style>
 
+    <style name="AfterSchoolActivityTheme" parent="SubActivityTheme">
+        <!-- 活动生活风格 -->
+        <item name="colorPrimary">@color/colorAfterSchoolPrimary</item>
+        <item name="colorPrimaryDark">@color/colorAfterSchoolDark</item>
+        <item name="colorAccent">@color/colorAfterSchoolAccent</item>
+    </style>
+
     <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->
         <item name="colorPrimary">@color/colorAboutusprimary</item>
@@ -142,6 +149,13 @@
         <item name="colorPrimary">@color/colorFeedbackprimary</item>
         <item name="colorPrimaryDark">@color/colorFeedbackprimaryDark</item>
         <item name="colorAccent">@color/colorFeedbackprimaryAccent</item>
+    </style>
+
+    <style name="WebShowTheme" parent="SubActivityTheme">
+        <!-- web模块 -->
+        <item name="colorPrimary">@color/colorWebprimary</item>
+        <item name="colorPrimaryDark">@color/colorWebprimary_dark</item>
+        <item name="colorAccent">@color/colorWebaccent</item>
     </style>
 
     <style name="AppTheme.Invisible" parent="AppTheme.NoActionBar">

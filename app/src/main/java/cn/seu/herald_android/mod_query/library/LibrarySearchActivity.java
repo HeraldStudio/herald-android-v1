@@ -24,11 +24,12 @@ import cn.seu.herald_android.helper.ApiRequest;
 
 /**
  * Created by corvo on 3/13/16.
+ * 图书馆搜书页面Activity
  */
 public class LibrarySearchActivity extends BaseAppCompatActivity
     implements SearchView.OnQueryTextListener{
     // 用于显示搜索结果的列表
-    private RecyclerView recyclerView_search_result;             // 可以复用的recyclerview
+    private RecyclerView recyclerView_search_result;
     // 搜索框
     private SearchView searchView;
     @Override
@@ -95,7 +96,7 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).uuid()
+        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).addUUID()
                 .post("book", query).onFinish((success, code, response) -> {
             hideProgressDialog();
             if (success) try {

@@ -24,8 +24,16 @@ public class LectureBlockLayout extends LinearLayout {
         title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorLectureprimary));
 
         title.setText(item.getTopic());
+        title.setMinLines(1);
+        title.setMaxLines(2);
+        title.setMaxEms(10);
+
         subtitle.setText(item.getSpeaker());
-        content.setText(item.getDate() + " @ " + item.getLocation());
+
+        //演讲人姓名最多显示5个字符
+        subtitle.setMaxEms(5);
+
+        content.setText(item.getDate());
 
         addView(contentView);
 

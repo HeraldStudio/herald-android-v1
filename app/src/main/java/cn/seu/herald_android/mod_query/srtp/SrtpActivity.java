@@ -102,7 +102,7 @@ public class SrtpActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_SRTP).uuid()
+        new ApiRequest(this).api(ApiHelper.API_SRTP).addUUID()
                 .post("schoolnum", getApiHelper().getSchoolnum())
                 .toCache("herald_srtp", o -> {
                     if (o.getJSONArray("content").length() == 1) {

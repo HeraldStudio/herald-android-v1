@@ -69,7 +69,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_SIDEBAR).uuid()
+        new ApiRequest(this).api(ApiHelper.API_SIDEBAR).addUUID()
                 .toCache("herald_sidebar", o -> o.getJSONArray("content"))
                 .onFinish((success, code, response) -> {
                     if (success) {
@@ -81,7 +81,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
     }
 
     private void refreshCacheStep2() {
-        new ApiRequest(this).api(ApiHelper.API_CURRICULUM).uuid()
+        new ApiRequest(this).api(ApiHelper.API_CURRICULUM).addUUID()
                 .toCache("herald_curriculum", o -> o.getJSONObject("content"))
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
@@ -91,10 +91,10 @@ public class CurriculumActivity extends BaseAppCompatActivity {
 
     public static ApiRequest[] remoteRefreshCache(Context context) {
         return new ApiRequest[]{
-                new ApiRequest(context).api(ApiHelper.API_SIDEBAR).uuid()
+                new ApiRequest(context).api(ApiHelper.API_SIDEBAR).addUUID()
                         .toCache("herald_sidebar", o -> o.getJSONArray("content")),
 
-                new ApiRequest(context).api(ApiHelper.API_CURRICULUM).uuid()
+                new ApiRequest(context).api(ApiHelper.API_CURRICULUM).addUUID()
                         .toCache("herald_curriculum", o -> o.getJSONObject("content"))
         };
     }

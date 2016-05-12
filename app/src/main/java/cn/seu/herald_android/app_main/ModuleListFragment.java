@@ -31,6 +31,7 @@ public class ModuleListFragment extends Fragment {
         return contentView;
     }
 
+    //模块管理的按钮
     private View editButton;
     private ArrayList<SeuModule> seuModuleArrayList = new ArrayList<>();
 

@@ -79,7 +79,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_SCHOOLBUS).uuid()
+        new ApiRequest(this).api(ApiHelper.API_SCHOOLBUS).addUUID()
                 .toCache("herald_schoolbus_cache", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();

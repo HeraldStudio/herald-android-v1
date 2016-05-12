@@ -45,7 +45,7 @@ public class ServiceHelper {
     }
 
     public static ApiRequest refreshVersionCache(Context context) {
-        return new ApiRequest(context).url(getServiceUrl(SERVICE_VERSION)).uuid()
+        return new ApiRequest(context).url(getServiceUrl(SERVICE_VERSION)).addUUID()
                 .post("schoolnum", new ApiHelper(context).getAuthCache("schoolnum"),
                         "versioncode", String.valueOf(getAppVersionCode(context)))
                 .toServiceCache("versioncheck_cache", o -> o);

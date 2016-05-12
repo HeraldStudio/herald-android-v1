@@ -31,6 +31,7 @@ import cn.seu.herald_android.helper.ApiThreadManager;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.mod_afterschool.AfterSchoolActivity;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.exam.ExamActivity;
@@ -169,6 +170,11 @@ public class TimelineView extends ListView {
             itemList.add(JwcActivity.getJwcItem(this));
         }
 
+        if(settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LIVE_ACTIVITY)){
+            //加载并解析活动缓存
+            itemList.add(AfterSchoolActivity.getAfterSchoolActivityItem(this));
+        }
+
         // 有消息的排在前面，没消息的排在后面
         Collections.sort(itemList, (p1, p2) ->
                 p1.getDisplayPriority(getContext()) - p2.getDisplayPriority(getContext()));
@@ -264,6 +270,12 @@ public class TimelineView extends ListView {
                 manager.add(JwcActivity.remoteRefreshCache(getContext()));
             }
 
+
+            // 当活动模块开启时
+            if(settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LIVE_ACTIVITY)){
+                manager.add(AfterSchoolActivity.remoteRefreshCache(getContext()));
+            }
+
             /**
              * 结束刷新部分
              * 当最后一个线程结束时调用这一部分，刷新结束
@@ -275,7 +287,7 @@ public class TimelineView extends ListView {
                     ContextUtils.showMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
                 }
                 slider.startAutoCycle();
-            }).run();
+            }).runWithPostMethod();
         }
     }
 
@@ -347,6 +359,7 @@ public class TimelineView extends ListView {
     }
 
 
+
     public class TimelineAdapter extends BaseAdapter {
 
         @Override
@@ -368,7 +381,8 @@ public class TimelineView extends ListView {
         public View getView(int position, View convertView, ViewGroup parent) {
             TimelineItem item = getItem(position);
 
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
+            if(convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
 
             TextView name = (TextView) convertView.findViewById(R.id.name);
             TextView content = (TextView) convertView.findViewById(R.id.content);
@@ -381,6 +395,7 @@ public class TimelineView extends ListView {
             name.setText(item.getName());
             content.setText(item.getInfo());
 
+            //标识已读消息和未读消息的小点
             notifyDot.setVisibility(
                     item.getDisplayPriority(getContext()) == TimelineItem.CONTENT_NOTIFY ? VISIBLE : GONE);
 

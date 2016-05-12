@@ -7,5 +7,6 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="divider_height">1px</dimen>
+    <dimen name="divider_height_wide">6px</dimen>
     <dimen name="timeline_divider_height">6dp</dimen>
 </resources>
