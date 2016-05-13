@@ -1,38 +1,45 @@
 package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 
 public class OrderItemActivity extends BaseAppCompatActivity {
 
-    public static void startOrderItemActivity(Activity activity,GymReserveItem item, String[] timeItems){
+    public static void startOrderItemActivity(Activity activity,GymReserveItem item, String[] dayInfos){
         Intent intent = new Intent(activity,OrderItemActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("gymItem",item);
-        bundle.putStringArray("timeItem",timeItems);
+        bundle.putStringArray("dayInfos",dayInfos);
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }
 
+    //预约的体育项目
     GymReserveItem gymItem;
-    String[] timeItems;
+    //可预约的时间
+    String[] dayinfos;
+
+    //Tab
+    TabLayout tabLayout;
+    ViewPager viewPager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_item);
         init();
+        loadOrderItemByTime();
     }
 
     @Override
@@ -59,7 +66,7 @@ public class OrderItemActivity extends BaseAppCompatActivity {
     public void init(){
         Bundle bundle = getIntent().getExtras();
         gymItem = (GymReserveItem) bundle.getSerializable("gymItem");
-        timeItems = bundle.getStringArray("timeItems");
+        dayinfos = bundle.getStringArray("dayInfos");
 
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,8 +82,26 @@ public class OrderItemActivity extends BaseAppCompatActivity {
         enableSwipeBack();
 
         //设置标题
-        setTitle(gymItem.name);
+        setTitle(gymItem.name + "场馆预约");
 
+        //初始化
+        tabLayout = (TabLayout)findViewById(R.id.tablayout_orderitem);
+        viewPager = (ViewPager)findViewById(R.id.viewpager_orderitem);
+
+    }
+
+    public void loadOrderItemByTime(){
+        OrderItemTimeFragmentAdapter orderItemTimeFragmentAdapter = new OrderItemTimeFragmentAdapter(getSupportFragmentManager());
+        for(String dayinfo : dayinfos){
+            //只保留日期的月份和日期、周数
+            String timeTitle = dayinfo.split("-")[1] + "-" + dayinfo.split("-")[2];
+            OrderItemTimeFragment fragment = OrderItemTimeFragment.newInstance(dayinfo,gymItem,this);
+            orderItemTimeFragmentAdapter.add(fragment,timeTitle);
+        }
+        viewPager.setAdapter(orderItemTimeFragmentAdapter);
+        //关联tablayout和viewpager
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabsFromPagerAdapter(orderItemTimeFragmentAdapter);
     }
 
 

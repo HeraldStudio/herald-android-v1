@@ -51,6 +51,15 @@ public class GymReserveItem implements Serializable{
         return list;
     }
 
+    public static String[] transformJSONtoStringArray(JSONArray jsonArray) throws JSONException {
+        ArrayList<GymReserveItem> list = new ArrayList<>();
+        String[] items = new String[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject obj = jsonArray.getJSONObject(i);
+            items[i] = obj.getString("dayInfo");
+        }
+        return items;
+    }
 
 
 

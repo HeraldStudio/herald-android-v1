@@ -33,12 +33,8 @@ public class AfterSchoolActivityBlockLayout extends LinearLayout {
 
         content.setText(item.activity_time + " @ " + item.location);
 
-
-
         //子标题为活动是否开始
         //subtitle.setText(item.getTag());
-
-
 
         addView(contentView);
 
