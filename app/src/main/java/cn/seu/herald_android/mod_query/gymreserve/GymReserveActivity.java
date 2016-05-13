@@ -5,11 +5,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import cn.seu.herald_android.R;
@@ -20,6 +24,8 @@ import cn.seu.herald_android.helper.ApiThreadManager;
 
 public class GymReserveActivity extends BaseAppCompatActivity {
 
+
+    ListView listView_reserveitem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,9 @@ public class GymReserveActivity extends BaseAppCompatActivity {
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
+        //列表初始化
+        listView_reserveitem = (ListView)findViewById(R.id.listview_reserve);
+
     }
 
     @Override
@@ -58,55 +67,66 @@ public class GymReserveActivity extends BaseAppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
-            refreshCache();
+            refreshItemListAndTimeList();
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    private void refreshCache() {
+    private void refreshItemListAndTimeList() {
         showProgressDialog();
-
+        //获取项目和时间列表
         new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).addUUID().post("method", "getDate")
-                .toCache("herald_gymreserve_timelist", o -> o.getJSONObject("content").getJSONArray("timeList"))
+                .toCache("herald_gymreserve_timelist_and_itemlist", o -> o)
                 .onFinish((success, code, response) -> {
                     if (success) {
-                        refreshCacheStep2();
+                        loadItemList();
                     } else {
                         hideProgressDialog();
                     }
                 }).run();
     }
 
-    private void refreshCacheStep2() {
+    private void loadItemList() {
         try {
-            JSONArray array = new JSONArray(getCacheHelper().getCache("herald_gymreserve_timelist"));
-            ApiThreadManager manager = new ApiThreadManager();
+            JSONArray itemArray = new JSONObject(getCacheHelper().getCache("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("itemList");
+            //活动项目列表
+            ArrayList<GymReserveItem> list = GymReserveItem.transformJSONtoArrayList(itemArray);
+            //设置适配器
+            listView_reserveitem.setAdapter(new GymReserveItemAdapter(getBaseContext(),R.layout.listviewitem_gym_reserveitem,list));
+            //设置点击函数
+            listView_reserveitem.setOnItemClickListener((parent, view, position, id) -> {
+                GymReserveItem item = (GymReserveItem) parent.getItemAtPosition(position);
+                //打开相对应的预约界面
 
-            // 枚举所有可预约日期
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject timeListObject = array.getJSONObject(i);
-                Hashtable<Integer, JSONArray> listOfSports = new Hashtable<>();
-
-                // 枚举所有运动项目
-                for (int j = 7; j <= 14; j++) {
-                    final int sportNum = j;
-                    manager.add(
-                            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).addUUID().post("method", "getOrder")
-                                    .post("itemId", String.valueOf(j), "dayInfo", timeListObject.getString("dayInfo"))
-                                    .onFinish((success, code, response) -> {
-                                        if (success) try {
-                                            JSONArray orderIndexs = new JSONObject(response)
-                                                    .getJSONObject("content").getJSONArray("orderIndexs");
-                                            listOfSports.put(sportNum, orderIndexs);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            new ApiHelper(this).dealApiException(e);
-                                        }
-                                    })
-                    );
-                }
-            }
+            });
+//            ApiThreadManager manager = new ApiThreadManager();
+//            // 枚举所有可预约日期
+//            for (int i = 0; i < itemArray.length(); i++) {
+//                JSONObject timeListObject = itemArray.getJSONObject(i);
+//                Hashtable<Integer, JSONArray> listOfSports = new Hashtable<>();
+//                // 枚举所有运动项目
+//                for (int j = 7; j <= 14; j++) {
+//                    final int sportNum = j;
+//                    manager.add(
+//                            new ApiRequest(this)
+//                                    .api(ApiHelper.API_GYMRESERVE)
+//                                    .addUUID()
+//                                    .post("method", "getOrder")
+//                                    .post("itemId", String.valueOf(j), "dayInfo", timeListObject.getString("dayInfo"))
+//                                    .onFinish((success, code, response) -> {
+//                                        if (success) try {
+//                                            JSONArray orderIndexs = new JSONObject(response)
+//                                                    .getJSONObject("content").getJSONArray("orderIndexs");
+//                                            listOfSports.put(sportNum, orderIndexs);
+//                                        } catch (JSONException e) {
+//                                            e.printStackTrace();
+//                                            new ApiHelper(this).dealApiException(e);
+//                                        }
+//                                    })
+//                    );
+//                }
+//            }
         } catch (JSONException e) {
             hideProgressDialog();
             showSnackBar("数据解析失败，请重试");

@@ -86,22 +86,12 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
                 WebShowActivity.startWebShowActivity(getContext(),item.title,item.getDetailUri(),R.style.AfterSchoolActivityTheme);
         });
         //判断活动是否开始
-        long now_time = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-        long start_time = item.getStartCalendar().getTimeInMillis();
-        long end_time = item.getEndCalendar().getTimeInMillis();
-        if(now_time < start_time){
-            viewHolder.tv_tag.setText("即将开始");
-            viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
-        } else if (now_time > end_time) {
-            viewHolder.tv_tag.setText("已结束");
-            viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
-        }else {
-            viewHolder.tv_tag.setText("进行中");
-            viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), R.color.relaxGreen));
-        }
+        viewHolder.tv_tag.setText(item.getTag());
+        viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), item.getTagColorId()));
+
         //设置活动时间和地点
         viewHolder.tv_time_and_location.setText(
-                String.format("活动时间:%s\n活动地点:%s",item.activity_time,item.location)
+                String.format("活动时间: %s\n活动地点: %s",item.activity_time,item.location)
         );
         //设置活动主办方
         viewHolder.tv_association.setText(item.assiciation);

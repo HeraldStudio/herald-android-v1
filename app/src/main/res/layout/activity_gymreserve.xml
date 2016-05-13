@@ -27,31 +27,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize">
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner"
-                android:layout_weight="1" />
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner2"
-                android:layout_weight="1" />
-        </LinearLayout>
-
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/listView"
+            android:id="@+id/listview_reserve"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>

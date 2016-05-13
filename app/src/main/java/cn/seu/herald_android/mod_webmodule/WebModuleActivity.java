@@ -9,6 +9,7 @@ import android.webkit.WebView;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.mod_query.gymreserve.GymReserveActivity;
 
 public class WebModuleActivity extends BaseAppCompatActivity {
 
@@ -26,10 +27,11 @@ public class WebModuleActivity extends BaseAppCompatActivity {
         switch (Action) {
             case "cn.seu.herald_android.WEBMODULE_GYMRESERVE":
                 //打开场馆预约
-                tag_url = "http://115.28.27.150/heraldapp/#/yuyue/home";
-                title = "场馆预约";
-                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(tag_url));
-                startActivity(intent);
+//                tag_url = "http://115.28.27.150/heraldapp/#/yuyue/home";
+//                title = "场馆预约";
+//                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(tag_url));
+//                startActivity(intent);
+                startActivity(new Intent(WebModuleActivity.this, GymReserveActivity.class));
                 break;
             case "cn.seu.herald_android.WEBMODULE_EMPTYROOM":
                 //打开空教室
