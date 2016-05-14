@@ -196,7 +196,6 @@
 
             <!-- web module -->
             <intent-filter>
-                <action android:name="cn.seu.herald_android.WEBMODULE_GYMRESERVE" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
 

@@ -36,7 +36,7 @@ public class SettingsHelper {
     public static final int MODULE_SRTP = 10;
     public static final int MODULE_SCHOOLBUS = 11;
     public static final int MODULE_SCHEDULE = 12;
-    public static final int WEBMODULE_GYMRESERVE = 13;
+    public static final int MODULE_GYMRESERVE = 13;
     public static final int WEBMODULE_QUANYI = 14;
     public static final int WEBMODULE_EMPTYROOM = 15;
     public static final int MODULE_LIVE_ACTIVITY = 16;
@@ -120,7 +120,7 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
             "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
-            "cn.seu.herald_android.WEBMODULE_GYMRESERVE",
+            "cn.seu.herald_android.MODULE_QUERY_GYMRESERVE",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
             "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
             "cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY"

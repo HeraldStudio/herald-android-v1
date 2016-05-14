@@ -48,4 +48,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
+    //底部tab
+    compile 'me.majiajie:pager-bottom-tab-strip:1.0.0'
 }

@@ -1,6 +1,8 @@
 package cn.seu.herald_android.app_main;
 
+import android.content.Intent;
 import android.hardware.SensorManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -9,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.squareup.seismic.ShakeDetector;
@@ -23,7 +26,12 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
+import me.majiajie.pagerbottomtabstrip.Controller;
+import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
+import me.majiajie.pagerbottomtabstrip.TabLayoutMode;
+import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
 public class MainActivity extends BaseAppCompatActivity {
 
@@ -67,11 +75,11 @@ public class MainActivity extends BaseAppCompatActivity {
 
     private void init() {
         //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-        setTitle(" " + getTitle().toString().trim());
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        setTitle(" " + getTitle().toString().trim());
 
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
         //检查个人信息
         checkAuth();
 
@@ -85,6 +93,10 @@ public class MainActivity extends BaseAppCompatActivity {
             //刷新模块视图
             moduleListFragment.loadModuleList();
         });
+
+        ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
+        if (ibtn!=null)
+            ibtn.setOnClickListener(o->startActivity(new Intent(MainActivity.this, ModuleManageActivity.class)));
     }
 
     private void checkAuth() {
@@ -138,18 +150,48 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager.setOffscreenPageLimit(adapter.getCount() - 1);//三个页面都不回收，提高流畅性
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) (3 * getResources().getDisplayMetrics().density));
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        for (int i = 0; i < adapter.getCount(); i++) {
-            int drawable = new int[]{
-                    R.drawable.ic_home_24dp,
-                    R.drawable.ic_view_module_24dp,
-                    R.drawable.ic_person_24dp
-            }[i];
-            ImageView imageView = new ImageView(this);
-            imageView.setImageDrawable(ContextCompat.getDrawable(this, drawable));
-            tabLayout.getTabAt(i).setCustomView(imageView);
-        }
+
+
+        PagerBottomTabLayout pagerBottomTabLayout = (PagerBottomTabLayout)findViewById(R.id.main_tabs);
+        Controller controller =
+                pagerBottomTabLayout.builder()
+                .addTabItem(R.drawable.ic_home_24dp, "首页")
+                .addTabItem(R.drawable.ic_view_module_24dp, "模块")
+                .addTabItem(R.drawable.ic_person_24dp, "设置")
+                .build();
+
+        controller.addTabItemClickListener(new OnTabItemSelectListener() {
+            @Override
+            public void onSelected(int index, Object tag) {
+                viewPager.setCurrentItem(index,true);
+            }
+
+            @Override
+            public void onRepeatClick(int index, Object tag) {
+
+            }
+        });
+
+        //viewpage滑动时设置底部tab
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                controller.setSelect(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+
     }
 
     public void syncModuleSettings() {
