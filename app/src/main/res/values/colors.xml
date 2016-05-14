@@ -44,7 +44,7 @@
     <!--场馆预约-->
     <color name="colorGymReserveprimary">#00abf1</color>
     <color name="colorGymReserveprimary_dark">#00abf1</color>
-    <color name="colorGymReserveaccent">#00abf1</color>
+    <color name="colorGymReserveaccent">#6980de</color>
 
     <!--考试助手-->
     <color name="colorExamprimary">#f5176c</color>

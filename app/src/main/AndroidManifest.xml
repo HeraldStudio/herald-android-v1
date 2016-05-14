@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".debug.CrashApplication"
+
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -104,7 +104,7 @@
             android:label="@string/title_activity_library_search"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/LibraryTheme"></activity>
+            android:theme="@style/LibraryTheme" />
         <activity
             android:name=".mod_query.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
@@ -149,18 +149,6 @@
             android:theme="@style/SeunetTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SEUNET" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".mod_query.gymreserve.GymReserveActivity"
-            android:label="@string/title_activity_gymreserve"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -271,7 +259,35 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".mod_query.gymreserve.OrderItemActivity"></activity>
+        <activity
+            android:name=".mod_query.gymreserve.GymReserveActivity"
+            android:label="@string/title_activity_gymreserve"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 场馆预约项目时间段选择 -->
+        <activity android:name=".mod_query.gymreserve.OrderItemActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
+        <!-- 场馆预约新增预约 -->
+        <activity android:name=".mod_query.gymreserve.NewOrderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
+        <!--搜索新好友-->
+        <activity android:name=".mod_query.gymreserve.SearchFriendActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
     </application>
 
 </manifest>

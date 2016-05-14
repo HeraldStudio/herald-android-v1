@@ -57,7 +57,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sync, menu);
+        getMenuInflater().inflate(R.menu.menu_record, menu);
         return true;
     }
 
@@ -89,6 +89,22 @@ public class GymReserveActivity extends BaseAppCompatActivity {
                         hideProgressDialog();
                     }
                 }).run();
+        //如果用户手机号为空时，同时预获取用户手机号
+        if( getCacheHelper().getCache("herald_gymreserve_phone").equals("")){
+            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+                    .addUUID().post("method", "getPhone")
+                    .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
+                    .run();
+        }
+        //如果用户自己的信息未完善，则同时预查询自己的ID
+        if( getCacheHelper().getCache("herald_gymreserve_userid").equals("")){
+            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+                    .addUUID()
+                    .post("method", "getFriendList")
+                    .post("cardNo",getApiHelper().getAuthCache("cardnum"))
+                    .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
+                    .run();
+        }
     }
 
     private void loadItemList() {

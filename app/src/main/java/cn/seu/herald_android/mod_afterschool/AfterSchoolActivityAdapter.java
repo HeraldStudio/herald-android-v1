@@ -80,7 +80,7 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
 
 
         //点击相应函数
-        viewHolder.rootView.setOnClickListener(o->{
+        viewHolder.cardview.setOnClickListener(o->{
             //链接不为空则打开
             if(!item.detail_url.equals(""))
                 WebShowActivity.startWebShowActivity(getContext(),item.title,item.getDetailUri(),R.style.AfterSchoolActivityTheme);
@@ -123,8 +123,6 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
     }
 
     public static class AfterSchoolActivityViewHolder extends RecyclerView.ViewHolder{
-        //根视图
-        View rootView;
         //活动缩略图
         ImageView  imgv_activity;
         //活动标题
@@ -137,9 +135,11 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
         TextView tv_tag;
         //活动主办方
         TextView tv_association;
+        //可点击的卡片区域
+        View cardview;
         public AfterSchoolActivityViewHolder(View itemView) {
             super(itemView);
-            rootView = itemView;
+            cardview = itemView.findViewById(R.id.layout_card);
             imgv_activity = (ImageView)itemView.findViewById(R.id.imgv_activity);
             tv_title = (TextView)itemView.findViewById(R.id.tv_title);
             tv_time_and_location = (TextView)itemView.findViewById(R.id.tv_time_and_location);

@@ -23,7 +23,9 @@ public class CacheHelper {
             "herald_pc_ignored_date",
             "herald_sidebar",
             "herald_exam",
-            "herald_schedule_cache_time"
+            "herald_schedule_cache_time",
+            "herald_gymreserve_recentfriendlist",
+            "herald_gymreserve_phone"
     };
     private Context context;
 
@@ -40,6 +42,7 @@ public class CacheHelper {
          * schoolnum    学号
          * name         名字
          * sex          性别
+         * phone        手机号：在第一次打开场馆预约时会获取
          */
         //获得存储的某项信息
         SharedPreferences pref = context.getSharedPreferences("herald", Context.MODE_PRIVATE);

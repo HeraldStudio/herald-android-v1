@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.seu.herald_android.R;
@@ -118,7 +119,8 @@ public class OrderItemTimeFragment extends Fragment {
         for(int i = 0;i<array.length();i++){
             JSONObject obj = array.getJSONObject(i);
             list.add(new OrderItemTime(
-                    obj.getBoolean("enable"),
+//                    obj.getBoolean("enable"),
+                    true,
                     obj.getInt("surplus"),
                     obj.getString("avaliableTime")
             ));
@@ -137,13 +139,18 @@ public class OrderItemTimeFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(resoure,null);
-            OrderItemTime time = getItem(position);
+            final OrderItemTime time = getItem(position);
             TextView tv_avaliabletime = (TextView)convertView.findViewById(R.id.tv_avaliableyime);
             TextView tv_surplus = (TextView)convertView.findViewById(R.id.tv_surplus);
             Button btn = (Button) convertView.findViewById(R.id.btn_order);
             tv_avaliabletime.setText(time.avaliableTime);
             tv_surplus.setText("" + time.surplus);
             btn.setEnabled(time.enable);
+
+            //为预约按钮设定点击事件
+            btn.setOnClickListener(o->{
+                NewOrderActivity.startNewOrderActivity(baseAppCompatActivity,gymReserveItem,dayInfo,time.avaliableTime);
+            });
             return convertView;
         }
     }
