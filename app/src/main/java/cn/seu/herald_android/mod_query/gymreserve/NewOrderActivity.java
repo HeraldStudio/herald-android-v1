@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -22,10 +23,11 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
@@ -79,6 +81,8 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     //已邀请好友数标签提示
     TextView tv_tipsOfInvitedNums;
 
+    boolean isOrdeing = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +107,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_ok) {
-            if(refreshTipsOfInvitedNum()){
+            if(!refreshTipsOfInvitedNum()){
                 //检查预约人数是否达到要求
                 showSnackBar("预约人数不满足要求");
                 return false;
@@ -232,6 +236,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         int min = (half ? gymItem.halfMinUsers : gymItem.fullMinUsers) - 1;
         int max = (half ? gymItem.halfMaxUsers : gymItem.fullMaxUsers) - 1;
         tv_tipsOfInvitedNums.setText(String.format("已邀请好友：%d (可邀请好友数：%d 到 %d )",invitedFriends.size(),min,max));
+        //如果满足预约人数要求则返回true，反之返回false
         return invitedFriends.size() >= min && invitedFriends.size() <= max;
     }
 
@@ -244,6 +249,9 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     void sendNewOrder(){
         //发起新预约
         //检查自己的userId是否为空
+        if (isOrdeing)
+            return;
+        isOrdeing = true;
         showProgressDialog();
         String userId = getCacheHelper().getCache("herald_gymreserve_userid");
         //如果为空则需要继续获取userId
@@ -255,6 +263,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                     .post("cardNo",getApiHelper().getAuthCache("cardnum"))
                     .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
                     .onFinish((success, code, response) -> {
+                        isOrdeing = false;
                         if (success){
                             //如果成功获取了自己的userId后继续尝试发送
                             sendNewOrder();
@@ -270,14 +279,15 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         //构造发送请求
         ArrayList<String> userIds = new ArrayList<>();
         for ( Friend friend :invitedFriends){
-            userIds.add(friend.userId);
+            userIds.add("\""+friend.userId+"\"");
         }
 
 
         String itemId = gymItem.sportId + "";
         String useTime = dayinfo.split(" ")[0] + " " + avaliableTime;//参数形式为 ‘2016-05-15 12:00-13:00’
-        String useMode = half?"half":"full";
+        String useMode = half?"2":"1";
         String phone = et_phone.getText().toString();
+        String useUserIds = userIds.toString();
         new ApiRequest(this)
                 .api(ApiHelper.API_GYMRESERVE)
                 .addUUID()
@@ -286,13 +296,31 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 .post("orderVO.useTime",useTime)
                 .post("orderVO.useMode",useMode)
                 .post("orderVO.phone",phone)
-                .post("useUserIds",userIds.toString())
+                .post("orderVO.remark","remark")//随便评论点内容
+                .post("useUserIds",useUserIds)
                 .onFinish((success, code, response) -> {
-                    if (success){
-                        //如果成功获取了自己的userId后继续尝试发送
-                        showSnackBar("预约成功");
-                    }else{
-                        //没有成功则显示错误信息
+                    hideProgressDialog();
+                    isOrdeing = true;
+                    try{
+                        if (success){
+                            int rescode = new JSONObject(response).getJSONObject("content").getInt("code");
+                            Handler handler = new Handler();
+                            switch (rescode){
+                                case 0:
+                                    showSnackBar("预约成功");
+                                    handler.postDelayed((Runnable) () -> {
+                                        startActivity(new Intent(NewOrderActivity.this, MyOrderActivity.class));
+                                    },500);
+                                    break;
+                                default:
+                                    showSnackBar("预约失败，请重新选择时间段");
+                                    handler.postDelayed((Runnable) () -> {
+                                        startActivity(new Intent(NewOrderActivity.this, OrderItemActivity.class));
+                                    },500);
+                            }
+                        }
+                    }catch (JSONException e){
+                        e.printStackTrace();
                         showSnackBar("预约失败");
                     }
                 })
@@ -304,7 +332,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     void refreshRecentlyFriend(){
         //重新获取最近好友列表
         recentlyFriends = getFriendArrayList();
-        recentlyFriendAdapter = new RecentlyFriendAdapter(getBaseContext(),R.layout.listviewitem_gym_searchfriend,recentlyFriends);
+        recentlyFriendAdapter = new RecentlyFriendAdapter(getBaseContext(),R.layout.listviewitem_gym_recentlyfriend,recentlyFriends);
         list_recentlyfriend.setAdapter(recentlyFriendAdapter);
         ListViewUtils.setHeightWithContent(list_recentlyfriend);
     }

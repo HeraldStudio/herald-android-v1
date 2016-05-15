@@ -1,5 +1,6 @@
 package cn.seu.herald_android.mod_query.gymreserve;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -65,8 +66,8 @@ public class GymReserveActivity extends BaseAppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sync) {
-            refreshItemListAndTimeList();
+        if (id == R.id.action_record) {
+            startActivity(new Intent(GymReserveActivity.this,MyOrderActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

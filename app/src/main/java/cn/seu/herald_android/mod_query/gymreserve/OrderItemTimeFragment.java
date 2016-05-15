@@ -119,8 +119,8 @@ public class OrderItemTimeFragment extends Fragment {
         for(int i = 0;i<array.length();i++){
             JSONObject obj = array.getJSONObject(i);
             list.add(new OrderItemTime(
-//                    obj.getBoolean("enable"),
-                    true,
+                    obj.getBoolean("enable"),
+                    //true,
                     obj.getInt("surplus"),
                     obj.getString("avaliableTime")
             ));
