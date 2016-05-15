@@ -41,7 +41,7 @@ public class GymReserveItem implements Serializable{
                     obj.getString("name"),
                     obj.getInt("allowHalf"),
                     obj.getInt("fullMinUsers"),
-                    obj.getInt("fullMinUsers"),
+                    obj.getInt("fullMaxUsers"),
                     obj.getInt("halfMinUsers"),
                     obj.getInt("halfMaxUsers"),
                     obj.getInt("id")

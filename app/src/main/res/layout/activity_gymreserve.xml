@@ -28,12 +28,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize">
-        <ListView
+        <GridView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/listview_reserve"
+            android:background="@color/colorDivider"
+            android:horizontalSpacing="1px"
+            android:verticalSpacing="1px"
+            android:id="@+id/gridview_reserve"
+            android:numColumns="2"
             android:layout_gravity="center_horizontal" />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider"/>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,19 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:id="@+id/tv_friendname"
-        android:textSize="19sp"
         android:textColor="@color/colorGymReserveprimary"
         android:text="姓名"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_friendname"
+        android:textSize="11sp"
         android:id="@+id/tv_frienddepartment"
         android:text="院系"/>
     <ImageButton

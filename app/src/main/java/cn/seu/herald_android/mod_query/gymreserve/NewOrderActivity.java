@@ -54,7 +54,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     //预约的时间段
     String avaliableTime;
     //预约的是全场还是半场，半场则为true，全场为false
-    boolean half;
+    boolean half = false;
 
     //使用时间
     TextView tv_time;
@@ -103,12 +103,12 @@ public class NewOrderActivity extends BaseAppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_ok) {
-            if(!refreshTipsOfInvitedNum()){
+            if(refreshTipsOfInvitedNum()){
                 //检查预约人数是否达到要求
                 showSnackBar("预约人数不满足要求");
                 return false;
             }
-            if(!et_phone.getText().equals("")){
+            if(et_phone.getText().equals("")){
                 //检查手机号是否为空
                 showSnackBar("联系人不能为空");
                 return false;
@@ -192,7 +192,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
             public View getView(int position, View convertView, ViewGroup parent) {
                 if(convertView == null)
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.spinneritem_gym_half,null);
-                TextView textView = (TextView)convertView.findViewById(R.id.tv_spinneritem);
+                TextView textView = (TextView)convertView;
                 textView.setText(getItem(position));
                 return convertView;
             }
@@ -203,7 +203,11 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         }else{
             list = new String[]{"全场"};
         }
-        SpinnerSimpleAdapter spinnerSimpleAdapter = new SpinnerSimpleAdapter(getBaseContext(),R.layout.spinneritem_gym_half,list);
+        ArrayAdapter<String> spinnerSimpleAdapter = new ArrayAdapter<String>(getBaseContext(),R.layout.spinneritem_gym_half,list);
+//        for (String item:list){
+//            spinnerSimpleAdapter.add(item);
+//        }
+        spinner.setPrompt("请选择场地类型");
         spinner.setAdapter(spinnerSimpleAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -213,7 +217,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 }else {
                     half = true;
                 }
-                refreshRecentlyFriend();
+                refreshTipsOfInvitedNum();
             }
 
             @Override
@@ -226,8 +230,8 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     //刷新邀请好友数提示
     boolean refreshTipsOfInvitedNum(){
         int min = (half ? gymItem.halfMinUsers : gymItem.fullMinUsers) - 1;
-        int max = (half ? gymItem.halfMaxUsers : gymItem.halfMaxUsers) - 1;
-        tv_tipsOfInvitedNums.setText(String.format("已邀请好友：%d ( %d - %d )",invitedFriends.size(),min,max));
+        int max = (half ? gymItem.halfMaxUsers : gymItem.fullMaxUsers) - 1;
+        tv_tipsOfInvitedNums.setText(String.format("已邀请好友：%d (可邀请好友数：%d 到 %d )",invitedFriends.size(),min,max));
         return invitedFriends.size() >= min && invitedFriends.size() <= max;
     }
 
@@ -418,8 +422,6 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_gym_invitedfriend,null);
             TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
             tv_name.setText(friend.nameDepartment.split("\\(")[0]);
-            TextView tv_department = (TextView)convertView.findViewById(R.id.tv_frienddepartment);
-            tv_department.setText(friend.nameDepartment.split("\\(")[1].split("\\)")[0]);
             ImageView imgv_sub = (ImageView)convertView.findViewById(R.id.ibtn_sub);
             imgv_sub.setOnClickListener(o->{
                 invitedFriends.remove(friend);

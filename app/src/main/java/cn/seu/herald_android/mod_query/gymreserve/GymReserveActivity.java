@@ -5,27 +5,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
-import cn.seu.herald_android.helper.ApiThreadManager;
 
 public class GymReserveActivity extends BaseAppCompatActivity {
 
 
-    ListView listView_reserveitem;
+    GridView gridView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +43,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
         //列表初始化
-        listView_reserveitem = (ListView)findViewById(R.id.listview_reserve);
+        gridView = (GridView)findViewById(R.id.gridview_reserve);
 
         //启用刷新
         refreshItemListAndTimeList();
@@ -79,7 +75,9 @@ public class GymReserveActivity extends BaseAppCompatActivity {
     private void refreshItemListAndTimeList() {
         showProgressDialog();
         //获取项目和时间列表
-        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE).addUUID().post("method", "getDate")
+        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+                .addUUID()
+                .post("method", "getDate")
                 .toCache("herald_gymreserve_timelist_and_itemlist", o -> o)
                 .onFinish((success, code, response) -> {
                     if (success) {
@@ -90,7 +88,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
                     }
                 }).run();
         //如果用户手机号为空时，同时预获取用户手机号
-        if( getCacheHelper().getCache("herald_gymreserve_phone").equals("")){
+        if( getCacheHelper().getCache("herald_gymreserve_phone").equals("") || getCacheHelper().getCache("herald_gymreserve_phone").length() > 15){
             new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
                     .addUUID().post("method", "getPhone")
                     .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
@@ -116,9 +114,9 @@ public class GymReserveActivity extends BaseAppCompatActivity {
             JSONArray timeArray =  new JSONObject(getCacheHelper().getCache("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("timeList");
             String[] dayInfos = GymReserveItem.transformJSONtoStringArray(timeArray);
             //设置适配器
-            listView_reserveitem.setAdapter(new GymReserveItemAdapter(getBaseContext(),R.layout.listviewitem_gym_reserveitem,list));
+            gridView.setAdapter(new GymReserveItemAdapter(getBaseContext(),R.layout.gridviewitem_gym_reserveitem,list));
             //设置点击函数
-            listView_reserveitem.setOnItemClickListener((parent, view, position, id) -> {
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
                 GymReserveItem item = (GymReserveItem) parent.getItemAtPosition(position);
                 //打开相对应的预约界面
                 OrderItemActivity.startOrderItemActivity(GymReserveActivity.this,item,dayInfos);

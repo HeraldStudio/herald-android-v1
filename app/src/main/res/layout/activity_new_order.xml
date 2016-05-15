@@ -31,14 +31,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             >
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:orientation="vertical"
-
                 android:columnCount="2"
                 android:rowCount="3"
                 >
@@ -52,6 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_time"
+                        android:textColor="@color/colorGymReserveprimary"
                         android:text="时间"/>
                 </TableRow>
                 <TableRow>
@@ -72,37 +74,67 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="13sp"
                         android:minEms="11"
                         android:maxEms="15"
                         android:id="@+id/et_phone"/>
                 </TableRow>
             </TableLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_tipofinvitedfriends"
-                android:text="已邀请好友"/>
-            <ListView
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/colorDivider"/>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/listview_invitedfriend">
-            </ListView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="好友列表"/>
-            <Button
+                android:orientation="vertical"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_tipofinvitedfriends"
+                    android:text="已邀请好友"/>
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listview_invitedfriend">
+                </ListView>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/colorDivider"/>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:id="@+id/btn_add_friend"
-                android:background="@drawable/selectable_item_background"
-                android:text="添加新好友"/>
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/listview_recentlyfriend">
-            </ListView>
+                android:orientation="vertical"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="好友列表"/>
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/listview_recentlyfriend">
+                </ListView>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/btn_add_friend"
+                    android:background="@drawable/selectable_item_background"
+                    android:text="添加新好友"/>
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

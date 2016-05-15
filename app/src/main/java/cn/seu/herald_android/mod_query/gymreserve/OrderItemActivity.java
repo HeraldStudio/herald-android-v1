@@ -3,6 +3,7 @@ package cn.seu.herald_android.mod_query.gymreserve;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -33,6 +34,9 @@ public class OrderItemActivity extends BaseAppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
 
+    //适配器
+    OrderItemTimeFragmentAdapter orderItemTimeFragmentAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,8 @@ public class OrderItemActivity extends BaseAppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
-
+            OrderItemTimeFragment fragment =(OrderItemTimeFragment) orderItemTimeFragmentAdapter.getItem(viewPager.getCurrentItem());
+            fragment.refreshOrderItem();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,7 +96,7 @@ public class OrderItemActivity extends BaseAppCompatActivity {
     }
 
     public void loadOrderItemByTime(){
-        OrderItemTimeFragmentAdapter orderItemTimeFragmentAdapter = new OrderItemTimeFragmentAdapter(getSupportFragmentManager());
+        orderItemTimeFragmentAdapter = new OrderItemTimeFragmentAdapter(getSupportFragmentManager());
         for(String dayinfo : dayinfos){
             //只保留日期的月份和日期、周数
             String timeTitle = dayinfo.split("-")[1] + "-" + dayinfo.split("-")[2];
