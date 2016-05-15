@@ -27,6 +27,7 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.custom.ListViewUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
@@ -109,6 +110,8 @@ public class MyOrderActivity extends BaseAppCompatActivity {
                 JSONArray array = new JSONObject(cache).getJSONObject("content").getJSONArray("rows");
                 ArrayList<MyOrder> list = MyOrder.transfromJSONtoArrayList(array);
                 listView.setAdapter(new MyOrderAdapter(getBaseContext(),R.layout.listviewitem_gym_myorder,list));
+                if (listView.getCount() == 0)
+                    ListViewUtils.addDefaultEmptyTipsView(getBaseContext(),listView,"你居然还没有预约过场馆 =。=");
             }catch (JSONException e){
                 e.printStackTrace();
             }

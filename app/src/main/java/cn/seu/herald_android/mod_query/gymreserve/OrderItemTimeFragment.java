@@ -25,6 +25,7 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.custom.ListViewUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
@@ -92,6 +93,9 @@ public class OrderItemTimeFragment extends Fragment {
         try {
             ArrayList<OrderItemTime> list = transformJSONtoArrayList(new JSONObject(response).getJSONObject("content").getJSONArray("orderIndexs"));
             listView.setAdapter(new OrderItemTimeAdapter(getContext(),R.layout.listviewitem_orderitemtime,list));
+            if (listView.getCount() == 0){
+                ListViewUtils.addDefaultEmptyTipsView(getContext(),listView,"暂无可用预约场地");
+            }
             baseAppCompatActivity.hideProgressDialog();
         }catch (JSONException e){
             //数据解析错误
