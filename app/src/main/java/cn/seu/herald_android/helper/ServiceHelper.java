@@ -54,10 +54,11 @@ public class ServiceHelper {
     public String getPushMessageContent() {
         //获得服务器端的推送消息
         String cache = getServiceCache("versioncheck_cache");
-        String message = "";
+        String message;
         try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("message");
             message = jsonObject.getString("content");
+            if (message.equals("null"))message="";
         } catch (JSONException e) {
             message = "";
         }
@@ -67,7 +68,7 @@ public class ServiceHelper {
     public String getPushMessageUrl() {
         //获得服务器端的推送消息链接
         String cache = getServiceCache("versioncheck_cache");
-        String messageUrl = "";
+        String messageUrl;
         try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("message");
             messageUrl = jsonObject.getString("url");
