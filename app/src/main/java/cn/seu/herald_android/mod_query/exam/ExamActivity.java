@@ -52,6 +52,7 @@ public class ExamActivity extends BaseAppCompatActivity {
             finish();
         });
 
+
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorExamprimary));
         enableSwipeBack();
@@ -103,7 +104,7 @@ public class ExamActivity extends BaseAppCompatActivity {
             adapter.setOnItemClickListner((item, position) -> {
                 if (item.isdefined){
                     //如果是自定义的考试就弹出删除询问
-                    new AlertDialog.Builder(getBaseContext())
+                    new AlertDialog.Builder(this)
                             .setMessage("确定删除这个自定义考试吗？")
                             .setPositiveButton("确定", (dialog, which) -> {
                                 deleteDefinedExam(item);
@@ -214,11 +215,9 @@ public class ExamActivity extends BaseAppCompatActivity {
         try{
             JSONArray array_old = getDefinedExamsJSONArray();
             JSONArray array_new = new JSONArray();
-            JSONObject itemJSON = item.getJSON();
-            int removeindex = -1;
             for(int i = 0;i< array_old.length() ; i++){
                 JSONObject obj = array_old.getJSONObject(i);
-                if (itemJSON.toString().equals(obj.toString())) {
+                if (item.equals(new ExamItem(obj))) {
                     continue;
                 }
                 array_new.put(obj);

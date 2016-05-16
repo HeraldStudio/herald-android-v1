@@ -28,16 +28,42 @@ public class ExamItem {
         this.teacher = teacher;
     }
 
+    public ExamItem(JSONObject Json) {
+        try{
+            this.hour = Json.getString("hour");
+            this.course = Json.getString("course");
+            this.location =  Json.getString("location");
+            this.time =  Json.getString("time");
+            this.type =  Json.getString("type");
+            this.teacher = Json.getString("teacher");
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        ExamItem item = (ExamItem)o;
+        return this.hour.equals(item.hour)
+                && this.course.equals(item.course)
+                && this.location.equals(item.location)
+                && this.time.equals(item.time)
+                && this.type.equals(item.type)
+                && this.teacher.equals(item.teacher);
+    }
+
     public JSONObject getJSON()throws JSONException{
         JSONObject newexam = new JSONObject();
         newexam.put("hour",hour);
         newexam.put("course",course);
         newexam.put("time",time);
         newexam.put("location",location);
-        newexam.put("type",type);
         newexam.put("teacher",teacher);
+        newexam.put("type",type);
         return newexam;
     }
+
+
 
     public static ArrayList<ExamItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<ExamItem> list = new ArrayList<>();

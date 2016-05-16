@@ -160,9 +160,14 @@
             android:theme="@style/ExamTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXAM" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity android:name=".mod_query.exam.AddExamActivity"
+            android:label="@string/title_activity_exam"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExamTheme">
         </activity>
         <activity
             android:name=".mod_query.pedetail.PedetailActivity"
@@ -172,7 +177,6 @@
             android:theme="@style/PedetailTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_PEDETAIL" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -274,25 +278,29 @@
             android:name=".mod_query.gymreserve.OrderItemActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme">
+        </activity>
         <!-- 场馆预约新增预约 -->
         <activity
             android:name=".mod_query.gymreserve.NewOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme">
+        </activity>
         <!-- 搜索新好友 -->
         <activity
             android:name=".mod_query.gymreserve.SearchFriendActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme">
+        </activity>
         <activity
             android:name=".mod_query.gymreserve.MyOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
-        <activity android:name=".mod_query.exam.AddExamActivity"></activity>
+            android:theme="@style/GymReserveTheme">
+        </activity>
+
     </application>
 
 </manifest>

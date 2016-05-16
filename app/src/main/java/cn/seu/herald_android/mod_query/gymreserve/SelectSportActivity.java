@@ -2,11 +2,16 @@ package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +21,7 @@ import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.custom.DividerGridItemDecoration;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
@@ -39,9 +45,16 @@ public class SelectSportActivity extends BaseAppCompatActivity {
             finish();
         });
 
+        //设置伸缩标题栏禁用
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+
+        //设置时差图
+        ImageView imageView = (ImageView)findViewById(R.id.img_gymindex);
+        Picasso.with(getBaseContext()).load(R.drawable.changguanyuyue).into(imageView);
+
         //沉浸式
-        //setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
-        setTranslucent(this);
+        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
         //列表初始化
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview_reserve);
@@ -124,6 +137,11 @@ public class SelectSportActivity extends BaseAppCompatActivity {
             recyclerView.setAdapter(adapter);
             //设置布局管理器
             recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+            //设置分割线
+            DividerGridItemDecoration itemDecoration = new DividerGridItemDecoration(getBaseContext());
+            itemDecoration.setDividerItemDrawable(R.drawable.aboutus);
+            recyclerView.addItemDecoration(itemDecoration);
+
 
             hideProgressDialog();
         } catch (JSONException e) {

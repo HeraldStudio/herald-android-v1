@@ -73,6 +73,7 @@ public class AddExamActivity extends BaseAppCompatActivity {
             finish();
         });
 
+        setTitle("自定义考试");
         //沉浸式
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorExamprimary));
         enableSwipeBack();
@@ -90,12 +91,12 @@ public class AddExamActivity extends BaseAppCompatActivity {
             DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, monthOfYear, dayOfMonth) -> {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year,monthOfYear,dayOfMonth);
-                //判断是周几
-                String weekday = CalendarUtils.weekdayNames[calendar.get(Calendar.DAY_OF_WEEK)];
-                String date = String.format("%04d-%02d-%02d %s",year,monthOfYear,dayOfMonth,weekday);
+                //判断选择时间是周几
+                String weekday = CalendarUtils.weekdayNames[calendar.get(Calendar.DAY_OF_WEEK)-1];
+                String date = String.format("%04d-%02d-%02d %s",year,monthOfYear+1,dayOfMonth,weekday);
                 btn_select_date.setText(date);
                 selecteds[0] = true;
-            }, today.get(Calendar.YEAR),today.get(Calendar.MONTH) + 1,today.get(Calendar.DAY_OF_MONTH));
+            }, today.get(Calendar.YEAR),today.get(Calendar.MONTH),today.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.show();
         });
 
@@ -132,14 +133,14 @@ public class AddExamActivity extends BaseAppCompatActivity {
         String dateandtime = String.format("%s %s(%s)",date.split(" ")[0],time,date.split(" ")[1]);//转化为2016-06-13 09:00(星期一)的形式
 
         String location = et_location.getText().toString();
-        if (location.equals(""))location = "地点还是学习一个";
+        if (location.equals(""))location = "还是要学习一个";
         try{
             newexam.put("hour",hour);
             newexam.put("course",course);
             newexam.put("time",dateandtime);
             newexam.put("location",location);
-            newexam.put("type","自定义考试");
             newexam.put("teacher","神秘的长者");
+            newexam.put("type","自定义考试");
             //获取其他的考试列表
             JSONArray array = getDefinedExamsJSONArray();
             array.put(newexam);
@@ -170,7 +171,5 @@ public class AddExamActivity extends BaseAppCompatActivity {
     void saveDefinedExamsFromJSONArray(JSONArray array){
         getCacheHelper().setCache("herald_exam_definedexam",array.toString());
     }
-
-
 
 }

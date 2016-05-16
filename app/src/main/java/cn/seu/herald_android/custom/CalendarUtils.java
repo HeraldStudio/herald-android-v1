@@ -6,7 +6,7 @@ public class CalendarUtils {
 
     public static final long ONE_DAY = 1000 * 60 * 60 * 24;
 
-    public static final String[] weekdayNames = {"星期一","星期二","星期三","星期四","星期五","星期六","星期天"};
+    public static final String[] weekdayNames = {"星期天","星期一","星期二","星期三","星期四","星期五","星期六"};
 
     public static Calendar toSharpDay(Calendar src) {
         // 复制这个Calendar
