@@ -55,7 +55,7 @@ public class FeedbackActivity extends BaseAppCompatActivity {
                             showSnackBar("您的反馈已发送，小猴将尽快处理，感谢支持！");
                             //延时展示信息然后退出
                             Handler handler = new Handler();
-                            handler.postDelayed(this::finish,500);
+                            handler.postDelayed(this::finish,2000);
                         }
                     }).run();
         }

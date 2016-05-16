@@ -61,7 +61,11 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         holder.tv_course.setText(examItem.course);
         holder.tv_location.setText("地点：" + examItem.location);
         holder.tv_teacher.setText("教师：" + examItem.teacher);
-        holder.tv_hour.setText("时长：" + examItem.hour + "分钟");
+        if (holder.tv_hour.equals("续一秒?") || holder.tv_hour.equals("+1s")) {
+            holder.tv_hour.setText("时长: " + "61s");
+        } else {
+            holder.tv_hour.setText("时长：" + examItem.hour + "分钟");
+        }
         holder.rootView.setOnClickListener(v -> {
             mListner.onItemClick(examItem,position);
         }
