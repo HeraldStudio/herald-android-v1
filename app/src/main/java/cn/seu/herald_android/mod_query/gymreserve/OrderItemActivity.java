@@ -3,7 +3,6 @@ package cn.seu.herald_android.mod_query.gymreserve;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import cn.seu.herald_android.custom.BaseAppCompatActivity;
 
 public class OrderItemActivity extends BaseAppCompatActivity {
 
-    public static void startOrderItemActivity(Activity activity,GymReserveItem item, String[] dayInfos){
+    public static void startOrderItemActivity(Activity activity, SportTypeItem item, String[] dayInfos){
         Intent intent = new Intent(activity,OrderItemActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("gymItem",item);
@@ -26,7 +25,7 @@ public class OrderItemActivity extends BaseAppCompatActivity {
     }
 
     //预约的体育项目
-    GymReserveItem gymItem;
+    SportTypeItem gymItem;
     //可预约的时间
     String[] dayinfos;
 
@@ -70,7 +69,7 @@ public class OrderItemActivity extends BaseAppCompatActivity {
 
     public void init(){
         Bundle bundle = getIntent().getExtras();
-        gymItem = (GymReserveItem) bundle.getSerializable("gymItem");
+        gymItem = (SportTypeItem) bundle.getSerializable("gymItem");
         dayinfos = bundle.getStringArray("dayInfos");
 
         //Toolbar初始化

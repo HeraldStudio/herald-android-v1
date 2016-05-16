@@ -1,15 +1,11 @@
 package cn.seu.herald_android.mod_webmodule;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.webkit.WebView;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.mod_query.gymreserve.GymReserveActivity;
+import cn.seu.herald_android.mod_query.gymreserve.SelectSportActivity;
 
 public class WebModuleActivity extends BaseAppCompatActivity {
 
@@ -31,7 +27,7 @@ public class WebModuleActivity extends BaseAppCompatActivity {
 //                title = "场馆预约";
 //                Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(tag_url));
 //                startActivity(intent);
-                startActivity(new Intent(WebModuleActivity.this, GymReserveActivity.class));
+                startActivity(new Intent(WebModuleActivity.this, SelectSportActivity.class));
                 break;
             case "cn.seu.herald_android.WEBMODULE_EMPTYROOM":
                 //打开空教室

@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -20,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import cn.seu.herald_android.R;
@@ -45,14 +43,16 @@ public class OrderItemTimeFragment extends Fragment {
     //该项目可预约时间
     String dayInfo;
     //项目
-    GymReserveItem gymReserveItem;
+    SportTypeItem sportTypeItem;
     //fragment所在activity
     BaseAppCompatActivity baseAppCompatActivity;
+    //标识是否处于判断预约状态
+    boolean isJudging = false;
 
-    public static OrderItemTimeFragment newInstance(String timeItem, GymReserveItem gymReserveItem, BaseAppCompatActivity baseAppCompatActivity) {
+    public static OrderItemTimeFragment newInstance(String timeItem, SportTypeItem sportTypeItem, BaseAppCompatActivity baseAppCompatActivity) {
         OrderItemTimeFragment fragment = new OrderItemTimeFragment();
         fragment.dayInfo = timeItem;
-        fragment.gymReserveItem = gymReserveItem;
+        fragment.sportTypeItem = sportTypeItem;
         fragment.baseAppCompatActivity = baseAppCompatActivity;
         return fragment;
     }
@@ -76,7 +76,7 @@ public class OrderItemTimeFragment extends Fragment {
                 .api(ApiHelper.API_GYMRESERVE)
                 .addUUID()
                 .post("method", "getOrder")
-                .post("itemId",gymReserveItem.sportId+"")
+                .post("itemId", sportTypeItem.sportId+"")
                 .post("dayInfo", dayInfo)
                 .onFinish((success, code, response) -> {
                     if (success) {
@@ -101,6 +101,49 @@ public class OrderItemTimeFragment extends Fragment {
             //数据解析错误
             baseAppCompatActivity.showSnackBar("数据解析错误，请稍后再试");
         }
+    }
+
+    public void judgeOrder(OrderItemTime time){
+        if (isJudging)
+            return;
+        //判断是否可以预约，如果可以则打开预约界面
+        new ApiRequest(getContext())
+                .api(ApiHelper.API_GYMRESERVE)
+                .addUUID()
+                .post("method", "judgeOrder")
+                .post("itemId", sportTypeItem.sportId+"")
+                .post("dayInfo",dayInfo)
+                .post("time",time.avaliableTime)
+                .onFinish((success, code, response) -> {
+                    isJudging = false;
+                    try{
+                        String judgeRes = "获取预约信息失败，请重试";
+                        if (success){
+                            String rescode = new JSONObject(response).getJSONObject("content").getString("code");
+                            if (rescode.equals("1")){
+                                judgeRes = "预约时间已过";
+                            }else if (rescode.equals("2")){
+                                judgeRes = "该时间已有其他预约";
+                            }else if (rescode.equals("3")){
+                                judgeRes = "本日预约数已达最大限制";
+                            }else if (rescode.equals("4")){
+                                judgeRes = "本项目预约数已达最大限制";
+                            }else if (rescode.equals("5")){
+                                judgeRes = "您已被冻结，无法进行预约";
+                            }else if (rescode.equals("6")){
+                                judgeRes = "预约系统未开放(可预约时间为8:00-20:00)";
+                            }else {
+                                //可以进行预约
+                                NewOrderActivity.startNewOrderActivity(baseAppCompatActivity, sportTypeItem,dayInfo,time.avaliableTime);
+                            }
+                        }
+                        baseAppCompatActivity.showSnackBar(judgeRes);
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                        baseAppCompatActivity.showSnackBar("预约失败");
+                    }
+                })
+                .run();
     }
 
     class OrderItemTime {
@@ -153,7 +196,8 @@ public class OrderItemTimeFragment extends Fragment {
 
             //为预约按钮设定点击事件
             btn.setOnClickListener(o->{
-                NewOrderActivity.startNewOrderActivity(baseAppCompatActivity,gymReserveItem,dayInfo,time.avaliableTime);
+                if (!isJudging)//如果没有处于判断状态则开始判断
+                    judgeOrder(time);
             });
             return convertView;
         }

@@ -128,7 +128,6 @@ public class MyOrderActivity extends BaseAppCompatActivity {
                 .post("method","cancelUrl")
                 .post("id",id+"")
                 .onFinish((success, code, response) -> {
-                    hideProgressDialog();
                     try{
                         String res = new JSONObject(response).getJSONObject("content").getString("msg");
                         if (success && res.equals("success")){

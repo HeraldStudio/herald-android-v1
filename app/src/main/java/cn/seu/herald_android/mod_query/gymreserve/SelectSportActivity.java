@@ -2,11 +2,11 @@ package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,14 +19,13 @@ import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
-public class GymReserveActivity extends BaseAppCompatActivity {
+public class SelectSportActivity extends BaseAppCompatActivity {
 
-
-    GridView gridView;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gymreserve);
+        setContentView(R.layout.activity_selectsport);
         init();
     }
 
@@ -41,10 +40,11 @@ public class GymReserveActivity extends BaseAppCompatActivity {
         });
 
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        //setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        setTranslucent(this);
         enableSwipeBack();
         //列表初始化
-        gridView = (GridView)findViewById(R.id.gridview_reserve);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_reserve);
 
         //启用刷新
         refreshItemListAndTimeList();
@@ -67,7 +67,7 @@ public class GymReserveActivity extends BaseAppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_record) {
-            startActivity(new Intent(GymReserveActivity.this,MyOrderActivity.class));
+            startActivity(new Intent(SelectSportActivity.this,MyOrderActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -110,18 +110,21 @@ public class GymReserveActivity extends BaseAppCompatActivity {
         try {
             JSONArray itemArray = new JSONObject(getCacheHelper().getCache("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("itemList");
             //活动项目列表
-            ArrayList<GymReserveItem> list = GymReserveItem.transformJSONtoArrayList(itemArray);
+            ArrayList<SportTypeItem> list = SportTypeItem.transformJSONtoArrayList(itemArray);
             //获取日期列表
             JSONArray timeArray =  new JSONObject(getCacheHelper().getCache("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("timeList");
-            String[] dayInfos = GymReserveItem.transformJSONtoStringArray(timeArray);
-            //设置适配器
-            gridView.setAdapter(new GymReserveItemAdapter(getBaseContext(),R.layout.gridviewitem_gym_reserveitem,list));
-            //设置点击函数
-            gridView.setOnItemClickListener((parent, view, position, id) -> {
-                GymReserveItem item = (GymReserveItem) parent.getItemAtPosition(position);
+            String[] dayInfos = SportTypeItem.transformJSONtoStringArray(timeArray);
+            //设置适配器同时设置点击函数
+            SportTypeItemRecyclerAdapter adapter = new SportTypeItemRecyclerAdapter(getBaseContext(),list);
+            //点击时创建相应运动预约界面
+            adapter.setItemClickListener((view, item) -> {
                 //打开相对应的预约界面
-                OrderItemActivity.startOrderItemActivity(GymReserveActivity.this,item,dayInfos);
+                OrderItemActivity.startOrderItemActivity(SelectSportActivity.this,item,dayInfos);
             });
+            recyclerView.setAdapter(adapter);
+            //设置布局管理器
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+
             hideProgressDialog();
         } catch (JSONException e) {
             hideProgressDialog();

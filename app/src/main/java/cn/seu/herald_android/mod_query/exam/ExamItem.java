@@ -16,6 +16,8 @@ public class ExamItem {
     String time;
     String type;
     String teacher;
+    //标识是否是用户自定义的
+    boolean isdefined = false;
 
     public ExamItem(String hour, String course, String location, String time, String type, String teacher) {
         this.hour = hour;

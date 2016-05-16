@@ -258,7 +258,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".mod_query.gymreserve.GymReserveActivity"
+            android:name=".mod_query.gymreserve.SelectSportActivity"
             android:label="@string/title_activity_gymreserve"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -274,27 +274,25 @@
             android:name=".mod_query.gymreserve.OrderItemActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
+            android:theme="@style/GymReserveTheme"></activity>
         <!-- 场馆预约新增预约 -->
         <activity
             android:name=".mod_query.gymreserve.NewOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
+            android:theme="@style/GymReserveTheme"></activity>
         <!-- 搜索新好友 -->
         <activity
             android:name=".mod_query.gymreserve.SearchFriendActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
-        <activity android:name=".mod_query.gymreserve.MyOrderActivity"
-            android:launchMode="singleTask"
+            android:theme="@style/GymReserveTheme"></activity>
+        <activity
+            android:name=".mod_query.gymreserve.MyOrderActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
+            android:theme="@style/GymReserveTheme"></activity>
+        <activity android:name=".mod_query.exam.AddExamActivity"></activity>
     </application>
 
 </manifest>

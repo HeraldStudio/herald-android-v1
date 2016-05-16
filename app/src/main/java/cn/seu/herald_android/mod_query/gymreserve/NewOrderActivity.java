@@ -39,7 +39,7 @@ import cn.seu.herald_android.helper.ApiRequest;
  * Created by heyon on 2016/5/14.
  */
 public class NewOrderActivity extends BaseAppCompatActivity{
-    public static void startNewOrderActivity(Activity activity, GymReserveItem item, String dayInfo,String avaliableTime){
+    public static void startNewOrderActivity(Activity activity, SportTypeItem item, String dayInfo, String avaliableTime){
         Intent intent = new Intent(activity,NewOrderActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("gymItem",item);
@@ -50,7 +50,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     }
 
     //预约的体育项目
-    GymReserveItem gymItem;
+    SportTypeItem gymItem;
     //预约的日期
     String dayinfo;
     //预约的时间段
@@ -124,7 +124,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
 
     public void init(){
         Bundle bundle = getIntent().getExtras();
-        gymItem = (GymReserveItem) bundle.getSerializable("gymItem");
+        gymItem = (SportTypeItem) bundle.getSerializable("gymItem");
         dayinfo = bundle.getString("dayInfo");
         avaliableTime = bundle.getString("avaliableTime");
 
@@ -310,12 +310,14 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                                     showSnackBar("预约成功");
                                     handler.postDelayed((Runnable) () -> {
                                         startActivity(new Intent(NewOrderActivity.this, MyOrderActivity.class));
+                                        finish();
                                     },500);
                                     break;
                                 default:
                                     showSnackBar("预约失败，请重新选择时间段");
+                                    //预约失败会重新选择时间段
                                     handler.postDelayed((Runnable) () -> {
-                                        startActivity(new Intent(NewOrderActivity.this, OrderItemActivity.class));
+                                        finish();
                                     },500);
                             }
                         }
