@@ -414,9 +414,14 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_gym_recentlyfriend,null);
 
             TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
-            tv_name.setText(friend.nameDepartment.split("\\(")[0]);
             TextView tv_department = (TextView)convertView.findViewById(R.id.tv_frienddepartment);
-            tv_department.setText(friend.nameDepartment.split("\\(")[1].split("\\)")[0]);
+            try{
+                tv_name.setText(friend.nameDepartment.split("\\(")[0]);
+                tv_department.setText(friend.nameDepartment.split("\\(")[1].split("\\)")[0]);
+            }catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+                tv_name.setText(friend.nameDepartment);
+            }
 
 
             ImageView imgv_add = (ImageView)convertView.findViewById(R.id.ibtn_add);

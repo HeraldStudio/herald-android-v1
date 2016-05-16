@@ -23,9 +23,11 @@ public class CacheHelper {
             "herald_pc_ignored_date",
             "herald_sidebar",
             "herald_exam",
+            "herald_exam_definedexam",//自定义考试信息
             "herald_schedule_cache_time",
             "herald_gymreserve_recentfriendlist",
-            "herald_gymreserve_phone"
+            "herald_gymreserve_phone",
+
     };
     private Context context;
 

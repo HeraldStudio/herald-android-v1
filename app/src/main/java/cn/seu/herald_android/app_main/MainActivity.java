@@ -51,6 +51,7 @@ public class MainActivity extends BaseAppCompatActivity {
     private boolean preventShake = false;
 
     private ShakeDetector shakeDetector = new ShakeDetector(() -> {
+        //摇一摇自动登陆
         if (getSettingsHelper().getWifiAutoLogin() && !preventShake) {
             preventShake = true;
             new NetworkLoginHelper(this, true).checkAndLogin();
@@ -69,6 +70,7 @@ public class MainActivity extends BaseAppCompatActivity {
         super.onResume();
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        //设置摇晃力度检测阈值
         shakeDetector.setSensitivity(20);
         shakeDetector.start(sensorManager);
     }

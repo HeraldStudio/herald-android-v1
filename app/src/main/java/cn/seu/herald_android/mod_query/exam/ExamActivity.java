@@ -1,6 +1,8 @@
 package cn.seu.herald_android.mod_query.exam;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -57,7 +61,7 @@ public class ExamActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_sync, menu);
+        getMenuInflater().inflate(R.menu.menu_exam, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -66,11 +70,20 @@ public class ExamActivity extends BaseAppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_sync) {
             refreshCache();
+        }else if (id == R.id.action_add){
+            startActivity(new Intent(ExamActivity.this,AddExamActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshCache();
+    }
+
     private void loadCache() {
+        //加载缓存中的考试
         String cache = getCacheHelper().getCache("herald_exam");
         if (cache.equals("")) {
             refreshCache();
@@ -79,8 +92,27 @@ public class ExamActivity extends BaseAppCompatActivity {
 
         try {
             List<ExamItem> exams = ExamItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            List<ExamItem> definedexams = ExamItem.transformJSONArrayToArrayList(getDefinedExamsJSONArray());
+            for(ExamItem examItem : definedexams){
+                examItem.isdefined = true;
+                exams.add(examItem);
+            }
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new ExamAdapter(exams));
+            ExamAdapter adapter = new ExamAdapter(exams);
+            //绑定自定义考试可以删除的响应函数
+            adapter.setOnItemClickListner((item, position) -> {
+                if (item.isdefined){
+                    //如果是自定义的考试就弹出删除询问
+                    new AlertDialog.Builder(getBaseContext())
+                            .setMessage("确定删除这个自定义考试吗？")
+                            .setPositiveButton("确定", (dialog, which) -> {
+                                deleteDefinedExam(item);
+                            })
+                            .setNegativeButton("取消", (dialog1, which1) -> {
+                            }).show();
+                }
+            });
+            recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
             showSnackBar("数据解析失败，请重试");
@@ -109,12 +141,23 @@ public class ExamActivity extends BaseAppCompatActivity {
      * 读取考试缓存，转换成对应的时间轴条目
      **/
     public static TimelineItem getExamItem(TimelineView host) {
+        //教务处考试缓存
         String cache = new CacheHelper(host.getContext()).getCache("herald_exam");
+        //自定义考试缓存
+        String definedcache = new CacheHelper(host.getContext()).getCache("herald_exam_definedexam");
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             List<ExamItem> examList = new ArrayList<>();
             List<ExamItem> temp = ExamItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            List<ExamItem> defined = ExamItem.transformJSONArrayToArrayList(new JSONArray(definedcache));
+            //加入教务处的考试
             for (ExamItem examItem : temp) {
+                if (examItem.getRemainingDays() >= 0) {
+                    examList.add(examItem);
+                }
+            }
+            //加入本地自定义的考试
+            for (ExamItem examItem : defined) {
                 if (examItem.getRemainingDays() >= 0) {
                     examList.add(examItem);
                 }
@@ -153,5 +196,40 @@ public class ExamActivity extends BaseAppCompatActivity {
                     now, TimelineItem.NO_CONTENT, "考试数据加载失败，请手动刷新"
             );
         }
+    }
+
+    JSONArray getDefinedExamsJSONArray(){
+        String cache = getCacheHelper().getCache("herald_exam_definedexam");
+        try{
+            JSONArray array = new JSONArray(cache);
+            return array;
+        }catch (JSONException e){
+            e.printStackTrace();
+            getCacheHelper().setCache("herald_exam_definedexam",new JSONArray().toString());
+        }
+        return new JSONArray();
+    }
+
+    void deleteDefinedExam(ExamItem item){
+        try{
+            JSONArray array_old = getDefinedExamsJSONArray();
+            JSONArray array_new = new JSONArray();
+            JSONObject itemJSON = item.getJSON();
+            int removeindex = -1;
+            for(int i = 0;i< array_old.length() ; i++){
+                JSONObject obj = array_old.getJSONObject(i);
+                if (itemJSON.toString().equals(obj.toString())) {
+                    continue;
+                }
+                array_new.put(obj);
+            }
+            getCacheHelper().setCache("herald_exam_definedexam",array_new.toString());
+            showSnackBar("删除成功");
+            loadCache();
+        }catch (JSONException e){
+            e.printStackTrace();
+            showSnackBar("删除失败");
+        }
+
     }
 }

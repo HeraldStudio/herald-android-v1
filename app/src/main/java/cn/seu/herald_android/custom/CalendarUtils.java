@@ -6,6 +6,8 @@ public class CalendarUtils {
 
     public static final long ONE_DAY = 1000 * 60 * 60 * 24;
 
+    public static final String[] weekdayNames = {"星期一","星期二","星期三","星期四","星期五","星期六","星期天"};
+
     public static Calendar toSharpDay(Calendar src) {
         // 复制这个Calendar
         Calendar dst = Calendar.getInstance();
@@ -33,4 +35,5 @@ public class CalendarUtils {
         int minute = hourMinute % 60;
         return hour + (minute < 10 ? ":0" : ":") + minute;
     }
+
 }

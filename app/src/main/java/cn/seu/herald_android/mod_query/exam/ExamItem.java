@@ -28,6 +28,17 @@ public class ExamItem {
         this.teacher = teacher;
     }
 
+    public JSONObject getJSON()throws JSONException{
+        JSONObject newexam = new JSONObject();
+        newexam.put("hour",hour);
+        newexam.put("course",course);
+        newexam.put("time",time);
+        newexam.put("location",location);
+        newexam.put("type",type);
+        newexam.put("teacher",teacher);
+        return newexam;
+    }
+
     public static ArrayList<ExamItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<ExamItem> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
