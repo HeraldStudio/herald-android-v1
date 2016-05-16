@@ -28,6 +28,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -35,53 +36,44 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             >
-            <TableLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:orientation="vertical"
-                android:columnCount="2"
-                android:rowCount="3"
-                >
-                <TableRow>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:text="使用时间" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tv_time"
-                        android:textColor="@color/colorGymReserveprimary"
-                        android:text="时间"/>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="使用类型" />
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spiner_type"/>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="联系电话"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:textSize="13sp"
-                        android:minEms="11"
-                        android:maxEms="15"
-                        android:id="@+id/et_phone"/>
-                </TableRow>
-            </TableLayout>
-
+                android:layout_marginBottom="10dp"
+                app:cardElevation="2dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:id="@+id/tv_time"
+                    android:textColor="@color/colorGymReserveprimary"
+                    android:text="时间"/>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardElevation="2dp">
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spiner_type"/>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="2dp">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:hint="联系电话"
+                    android:background="@drawable/selectable_item_background_white"
+                    android:minEms="11"
+                    android:maxEms="15"
+                    android:id="@+id/et_phone"/>
+            </android.support.v7.widget.CardView>
 
             <View
                 android:layout_width="match_parent"
@@ -104,8 +96,6 @@
                     android:id="@+id/listview_invitedfriend">
                 </ListView>
             </LinearLayout>
-
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
