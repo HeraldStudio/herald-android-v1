@@ -120,21 +120,28 @@ public class OrderItemTimeFragment extends Fragment {
                         String judgeRes = "获取预约信息失败，请重试";
                         if (success){
                             String rescode = new JSONObject(response).getJSONObject("content").getString("code");
-                            if (rescode.equals("1")){
-                                judgeRes = "预约时间已过";
-                            }else if (rescode.equals("2")){
-                                judgeRes = "该时间已有其他预约";
-                            }else if (rescode.equals("3")){
-                                judgeRes = "本日预约数已达最大限制";
-                            }else if (rescode.equals("4")){
-                                judgeRes = "本项目预约数已达最大限制";
-                            }else if (rescode.equals("5")){
-                                judgeRes = "您已被冻结，无法进行预约";
-                            }else if (rescode.equals("6")){
-                                judgeRes = "预约系统未开放(可预约时间为8:00-20:00)";
-                            }else {
+                            String msg = new JSONObject(response).getJSONObject("content").getString("msg");
+//                            if (rescode.equals("1")){
+//                                judgeRes = "预约时间已过";
+//                            }else if (rescode.equals("2")){
+//                                judgeRes = "该时间已有其他预约";
+//                            }else if (rescode.equals("3")){
+//                                judgeRes = "本日预约数已达最大限制";
+//                            }else if (rescode.equals("4")){
+//                                judgeRes = "本项目预约数已达最大限制";
+//                            }else if (rescode.equals("5")){
+//                                judgeRes = "您已被冻结，无法进行预约";
+//                            }else if (rescode.equals("6")){
+//                                judgeRes = "预约系统未开放(可预约时间为8:00-20:00)";
+//                            }else {
+//                                //可以进行预约
+//                                NewOrderActivity.startNewOrderActivity(baseAppCompatActivity, sportTypeItem,dayInfo,time.avaliableTime);
+//                            }
+                            if (rescode.equals("0")){
                                 //可以进行预约
                                 NewOrderActivity.startNewOrderActivity(baseAppCompatActivity, sportTypeItem,dayInfo,time.avaliableTime);
+                            }else {
+                                judgeRes = msg;
                             }
                         }
                         baseAppCompatActivity.showSnackBar(judgeRes);

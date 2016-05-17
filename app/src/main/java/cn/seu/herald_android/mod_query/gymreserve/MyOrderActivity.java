@@ -143,7 +143,8 @@ public class MyOrderActivity extends BaseAppCompatActivity {
 
     public static class MyOrder{
         public static final int STATE_SUCCESS = 2;//预约成功，已通过
-        public static final int STATE_CANCEL = 6;
+        public static final int STATE_BREAK = 5;//失约
+        public static final int STATE_CANCEL = 6;//已取消预约
         //运动名称
         String itemName;
         //开始时间
@@ -227,6 +228,10 @@ public class MyOrderActivity extends BaseAppCompatActivity {
                     tv_state.setText("已通过");
                     tv_state.setTextColor(ContextCompat.getColor(getContext(),R.color.relaxGreen));
                     break;
+                case MyOrder.STATE_BREAK:
+                    btn_cancleorder.setVisibility(View.INVISIBLE);
+                    tv_state.setTextColor(ContextCompat.getColor(getContext(),R.color.colorSecondaryText));
+                    tv_state.setText("失约");
                 default:
                 case MyOrder.STATE_CANCEL:
                     btn_cancleorder.setVisibility(View.INVISIBLE);

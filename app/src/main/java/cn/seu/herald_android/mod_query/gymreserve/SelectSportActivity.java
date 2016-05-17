@@ -81,6 +81,8 @@ public class SelectSportActivity extends BaseAppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_record) {
             startActivity(new Intent(SelectSportActivity.this,MyOrderActivity.class));
+        }else if (id == R.id.action_sync){
+            refreshItemListAndTimeList();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -97,7 +99,7 @@ public class SelectSportActivity extends BaseAppCompatActivity {
                     if (success) {
                         loadItemList();
                     } else {
-                        showSnackBar("获取可预约活动列表失败，请检查网络");
+                        showSnackBar("获取可预约活动列表失败，请检查网络后再试");
                         hideProgressDialog();
                     }
                 }).run();
