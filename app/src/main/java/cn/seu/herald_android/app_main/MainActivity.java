@@ -1,5 +1,6 @@
 package cn.seu.herald_android.app_main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.media.Image;
@@ -13,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.squareup.seismic.ShakeDetector;
 
@@ -68,7 +70,6 @@ public class MainActivity extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         //设置摇晃力度检测阈值
         shakeDetector.setSensitivity(20);
@@ -81,6 +82,7 @@ public class MainActivity extends BaseAppCompatActivity {
 //        setSupportActionBar(toolbar);
 //        setTitle(" " + getTitle().toString().trim());
 
+        //设置状态栏颜色
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
         //检查个人信息
         checkAuth();
@@ -99,6 +101,16 @@ public class MainActivity extends BaseAppCompatActivity {
         ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
         if (ibtn!=null)
             ibtn.setOnClickListener(o->startActivity(new Intent(MainActivity.this, ModuleManageActivity.class)));
+    }
+
+    @Override
+    protected void setStatusBarColor(Activity activity, int color) {
+        //设置沉浸状态栏
+        super.setStatusBarColor(this, color);
+        //设置假toolbar
+        RelativeLayout main_toolbar = (RelativeLayout)findViewById(R.id.main_toolbar);
+        main_toolbar.setBackgroundColor(color);
+
     }
 
     private void checkAuth() {

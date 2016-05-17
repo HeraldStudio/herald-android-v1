@@ -188,7 +188,6 @@
             android:theme="@style/CurriculumTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_CURRICULUM" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

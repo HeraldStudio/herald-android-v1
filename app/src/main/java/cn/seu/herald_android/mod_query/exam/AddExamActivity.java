@@ -38,6 +38,8 @@ public class AddExamActivity extends BaseAppCompatActivity {
     EditText et_location;
     //考试名字
     EditText et_examname;
+    //老师姓名
+    EditText et_teacher;
     //标识是否日期跟时间已选择
     boolean[] selecteds = new boolean[]{false,false};
 
@@ -82,8 +84,9 @@ public class AddExamActivity extends BaseAppCompatActivity {
         btn_select_date = (Button)findViewById(R.id.btn_select_date);
         btn_select_time = (Button)findViewById(R.id.btn_select_time);
         et_duratime = (EditText)findViewById(R.id.edit_duratime);
-        et_location =(EditText)findViewById(R.id.edit_duratime);
+        et_location =(EditText)findViewById(R.id.edit_location);
         et_examname = (EditText)findViewById(R.id.edit_examname);
+        et_teacher = (EditText)findViewById(R.id.edit_teacher);
 
         //绑定点击事件
         btn_select_date.setOnClickListener(v -> {
@@ -123,23 +126,24 @@ public class AddExamActivity extends BaseAppCompatActivity {
         JSONObject newexam = new JSONObject();
 
         String hour = et_duratime.getText().toString();
-        if (hour.equals(""))hour = "续一秒?";
+        if (hour.equals(""))hour = "?";
 
         String course = et_examname.getText().toString();
-        if (course.equals(""))course = "长者的经验";
+        if (course.equals(""))course = "暂无考试名";
 
         String date = btn_select_date.getText().toString();
         String time = btn_select_time.getText().toString();
         String dateandtime = String.format("%s %s(%s)",date.split(" ")[0],time,date.split(" ")[1]);//转化为2016-06-13 09:00(星期一)的形式
 
         String location = et_location.getText().toString();
-        if (location.equals(""))location = "还是要学习一个";
+        String teacher = et_teacher.getText().toString();
+        if (location.equals(""))location = "暂无地点";
         try{
             newexam.put("hour",hour);
             newexam.put("course",course);
             newexam.put("time",dateandtime);
             newexam.put("location",location);
-            newexam.put("teacher","神秘的长者");
+            newexam.put("teacher",teacher);
             newexam.put("type","自定义考试");
             //获取其他的考试列表
             JSONArray array = getDefinedExamsJSONArray();

@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:padding="10dp"
+            android:id="@+id/main_toolbar"
             android:background="@color/colorPrimary"
             android:layout_alignParentTop="true">
             <TextView

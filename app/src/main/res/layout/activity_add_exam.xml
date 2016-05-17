@@ -147,6 +147,21 @@
                     android:elevation="5px"
                     />
             </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="2dp">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/selectable_item_background_white"
+                    android:id="@+id/edit_teacher"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:hint="老师姓名"
+                    android:elevation="5px"
+                    />
+            </android.support.v7.widget.CardView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

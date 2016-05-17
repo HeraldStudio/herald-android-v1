@@ -180,7 +180,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         //预约时间
         tv_time.setText(dayinfo + " " + avaliableTime);
 
-        //此处手机号已在GymReserveActivity中预获取
+        //此处手机号已在GymReserveActivity中预获取，如果获取失败了那么取到的字符串是空，设置的text也为空，在提交时会提示用户输入手机号
         et_phone.setText(getCacheHelper().getCache("herald_gymreserve_phone"));
 
     }

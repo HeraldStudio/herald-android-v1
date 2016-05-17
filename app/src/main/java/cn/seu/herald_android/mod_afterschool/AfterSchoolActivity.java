@@ -73,7 +73,6 @@ public class AfterSchoolActivity extends BaseAppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new CustomDividerItemDecoration(
                 getBaseContext()));
-
     }
 
     @Override

@@ -79,6 +79,14 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
         }
 
 
+        //链接不为空则显示“详情按钮”
+        if(!item.detail_url.equals("")){
+            viewHolder.tv_details.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.tv_details.setVisibility(View.GONE);
+        }
+
+
         //点击相应函数
         viewHolder.cardview.setOnClickListener(o->{
             //链接不为空则打开
@@ -137,6 +145,8 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
         TextView tv_association;
         //可点击的卡片区域
         View cardview;
+        //详情
+        TextView tv_details;
         public AfterSchoolActivityViewHolder(View itemView) {
             super(itemView);
             cardview = itemView.findViewById(R.id.layout_card);
@@ -146,6 +156,7 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
             tv_introduction = (TextView)itemView.findViewById(R.id.tv_introduction);
             tv_tag = (TextView)itemView.findViewById(R.id.tv_tag);
             tv_association = (TextView)itemView.findViewById(R.id.tv_association);
+            tv_details = (TextView)itemView.findViewById(R.id.tv_details);
             float resolution = 5f/2f;
             imgv_activity.post(()->{
                 int weight = imgv_activity.getWidth();

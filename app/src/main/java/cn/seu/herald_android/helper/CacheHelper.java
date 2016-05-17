@@ -27,7 +27,7 @@ public class CacheHelper {
             "herald_schedule_cache_time",
             "herald_gymreserve_recentfriendlist",
             "herald_gymreserve_phone",
-
+            "herald_gymreserve_userid"
     };
     private Context context;
 

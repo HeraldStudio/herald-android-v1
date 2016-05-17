@@ -47,9 +47,9 @@
     <color name="colorGymReserveaccent">#6980de</color>
 
     <!--考试助手-->
-    <color name="colorExamprimary">#f5176c</color>
-    <color name="colorExamprimary_dark">#f5176c</color>
-    <color name="colorExamaccent">#f5176c</color>
+    <color name="colorExamprimary">#FF4081</color>
+    <color name="colorExamprimary_dark">#FF4081</color>
+    <color name="colorExamaccent">#FF4081</color>
 
     <!--跑操-->
     <color name="colorPedetailprimary">#26a69a</color>

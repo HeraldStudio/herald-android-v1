@@ -104,12 +104,11 @@ public class SelectSportActivity extends BaseAppCompatActivity {
                     }
                 }).run();
         //如果用户手机号为空时，同时预获取用户手机号
-        if( getCacheHelper().getCache("herald_gymreserve_phone").equals("") || getCacheHelper().getCache("herald_gymreserve_phone").length() > 15){
-            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
-                    .addUUID().post("method", "getPhone")
-                    .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
-                    .run();
-        }
+        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+                .addUUID().post("method", "getPhone")
+                .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
+                .run();
+        
         //如果用户自己的信息未完善，则同时预查询自己的ID
         if( getCacheHelper().getCache("herald_gymreserve_userid").equals("")){
             new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
