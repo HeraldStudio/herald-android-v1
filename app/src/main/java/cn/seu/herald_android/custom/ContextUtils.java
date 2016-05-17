@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.widget.Toast;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 
 public class ContextUtils {
 
@@ -15,10 +16,14 @@ public class ContextUtils {
     public static void showMessage(Context context, String message) {
         if (context instanceof BaseAppCompatActivity) {
             ((BaseAppCompatActivity) context).showSnackBar(message);
+        }else if (context instanceof MainActivity){
+            //如果在首页，由于有底部tab的原因，不选用showSnackBar
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public static void showMessage(Context context, String message, String actionTitle, Runnable action) {
         if (context instanceof BaseAppCompatActivity) {

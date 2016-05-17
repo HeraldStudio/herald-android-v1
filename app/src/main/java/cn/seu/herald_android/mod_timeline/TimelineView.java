@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
@@ -32,6 +33,7 @@ import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_afterschool.AfterSchoolActivity;
+import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityItem;
 import cn.seu.herald_android.mod_query.cardextra.CardActivity;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumActivity;
 import cn.seu.herald_android.mod_query.exam.ExamActivity;
@@ -43,7 +45,6 @@ import cn.seu.herald_android.mod_query.pedetail.PedetailActivity;
 public class TimelineView extends ListView {
 
     private ArrayList<TimelineItem> itemList;
-
     private CustomSwipeRefreshLayout srl;
     private ShortcutBoxView shortcutBox;
     private SliderView slider;
@@ -172,7 +173,12 @@ public class TimelineView extends ListView {
 
         if(settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LIVE_ACTIVITY)){
             //加载并解析活动缓存
-            itemList.add(AfterSchoolActivity.getAfterSchoolActivityItem(this));
+            TimelineItem activityItem = AfterSchoolActivityItem.getAfterSchoolActivityItem(this);
+            //修改默认点击函数，设置为主页滑动至活动页
+            activityItem.setOnClickListener(v -> {
+                MainActivity.sendChangeMainFragmentBroadcast(getContext(),MainActivity.MAIN_FRAGMENT_ACTIVITYS);
+            });
+            itemList.add(activityItem);
         }
 
         // 有消息的排在前面，没消息的排在后面
@@ -273,7 +279,7 @@ public class TimelineView extends ListView {
 
             // 当活动模块开启时
             if(settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LIVE_ACTIVITY)){
-                manager.add(AfterSchoolActivity.remoteRefreshCache(getContext()));
+                manager.add(AfterSchoolActivityItem.remoteRefreshCache(getContext()));
             }
 
             /**

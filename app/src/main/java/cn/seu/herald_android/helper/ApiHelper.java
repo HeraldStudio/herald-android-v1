@@ -185,6 +185,7 @@ public class ApiHelper {
         }
     }
 
+
     public void doLogout() {
         //清除授权信息
         setAuthCache("authUser", "");

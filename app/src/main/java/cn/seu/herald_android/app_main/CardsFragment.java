@@ -41,6 +41,7 @@ public class CardsFragment extends Fragment {
     // refresh 是否联网刷新
     public void loadTimelineView(boolean refresh) {
         if (refresh && srl != null) srl.setRefreshing(true);
-        view.loadContent(refresh);
+        //由于此处view经常为空，引发异常，所以先判断
+        if (view!=null)view.loadContent(refresh);
     }
 }

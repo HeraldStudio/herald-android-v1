@@ -1,17 +1,24 @@
 package cn.seu.herald_android.app_main;
 
+import android.animation.ArgbEvaluator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,6 +39,7 @@ import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
+import me.majiajie.pagerbottomtabstrip.TabItemBuilder;
 import me.majiajie.pagerbottomtabstrip.TabLayoutMode;
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
@@ -39,9 +47,14 @@ public class MainActivity extends BaseAppCompatActivity {
 
     CardsFragment cardsFragment = new CardsFragment();
 
+    AfterSchoolFragment afterSchoolFragment = new AfterSchoolFragment();
+
     ModuleListFragment moduleListFragment = new ModuleListFragment();
 
     MyInfoFragment myInfoFragment = new MyInfoFragment();
+
+    ViewPager viewPager;
+    PagerBottomTabLayout pagerBottomTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,16 +97,24 @@ public class MainActivity extends BaseAppCompatActivity {
 
         //设置状态栏颜色
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+
         //检查个人信息
         checkAuth();
+
+        //控件初始化
+        viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
+        pagerBottomTabLayout = (PagerBottomTabLayout)findViewById(R.id.main_tabs);
 
         //放置三个Tab页面
         attachFragments();
 
+        //注册主页页面变化广播接收器
+        setupChangeMainFragmentReceiver();
+
+
         runMeasurementDependentTask(() -> {
             //刷新卡片视图
             cardsFragment.loadTimelineView(true);
-
             //刷新模块视图
             moduleListFragment.loadModuleList();
         });
@@ -109,8 +130,7 @@ public class MainActivity extends BaseAppCompatActivity {
         super.setStatusBarColor(this, color);
         //设置假toolbar
         RelativeLayout main_toolbar = (RelativeLayout)findViewById(R.id.main_toolbar);
-        main_toolbar.setBackgroundColor(color);
-
+        if (main_toolbar!=null)main_toolbar.setBackgroundColor(color);
     }
 
     private void checkAuth() {
@@ -140,7 +160,7 @@ public class MainActivity extends BaseAppCompatActivity {
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
         List<Fragment> fragments = Arrays.asList(
-                cardsFragment, moduleListFragment, myInfoFragment
+                cardsFragment,afterSchoolFragment,moduleListFragment, myInfoFragment
         );
 
         @Override
@@ -155,23 +175,41 @@ public class MainActivity extends BaseAppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return new String[]{"首页", "模块", "我的"}[position];
+            return new String[]{"首页","发现","模块", "我的"}[position];
         }
+
+
     };
 
     private void attachFragments() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
         viewPager.setOffscreenPageLimit(adapter.getCount() - 1);//三个页面都不回收，提高流畅性
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) (3 * getResources().getDisplayMetrics().density));
 
+        //各碎片设置状态栏颜色渐变
+        int[] statusColors = new int[]{
+                ContextCompat.getColor(getBaseContext(),R.color.colorPrimary),
+                ContextCompat.getColor(getBaseContext(),R.color.colorAfterSchoolPrimary),
+                ContextCompat.getColor(getBaseContext(),R.color.colorAfterSchoolPrimary),
+                ContextCompat.getColor(getBaseContext(),R.color.colorPrimary)};
 
-        PagerBottomTabLayout pagerBottomTabLayout = (PagerBottomTabLayout)findViewById(R.id.main_tabs);
-        Controller controller =
-                pagerBottomTabLayout.builder()
-                .addTabItem(R.drawable.ic_home_24dp, "首页")
-                .addTabItem(R.drawable.ic_view_module_24dp, "模块")
-                .addTabItem(R.drawable.ic_person_24dp, "设置")
+        //各页面Tab设置
+        TabItemBuilder tabItemBuilder0 = new TabItemBuilder(this).create()
+                .setDefaultIcon(R.drawable.ic_home_24dp).setText("首页").setSelectedColor(statusColors[0]).build();
+        TabItemBuilder tabItemBuilder1 = new TabItemBuilder(this).create()
+                .setDefaultIcon(R.drawable.ic_view_module_24dp).setText("发现").setSelectedColor(statusColors[1]).build();
+        TabItemBuilder tabItemBuilder2 = new TabItemBuilder(this).create()
+                .setDefaultIcon(R.drawable.ic_view_module_24dp).setText("模块").setSelectedColor(statusColors[1]).build();
+        TabItemBuilder tabItemBuilder3 = new TabItemBuilder(this).create()
+                .setDefaultIcon(R.drawable.ic_person_24dp).setText("我的").setSelectedColor(statusColors[2]).build();
+
+        //创建控制器
+        Controller controller = pagerBottomTabLayout
+                .builder()
+                .addTabItem(tabItemBuilder0)
+                .addTabItem(tabItemBuilder1)
+                .addTabItem(tabItemBuilder2)
+                .addTabItem(tabItemBuilder3)
                 .build();
 
         controller.addTabItemClickListener(new OnTabItemSelectListener() {
@@ -187,10 +225,15 @@ public class MainActivity extends BaseAppCompatActivity {
         });
 
         //viewpage滑动时设置底部tab
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                Log.v("viewscroll"+positionOffset,positionOffsetPixels+"");
+                ArgbEvaluator evaluator = new ArgbEvaluator();
+                int colorOld= statusColors[position];
+                int colorNew = statusColors[(position+1)%statusColors.length];
+                int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld,colorNew);
+                setStatusBarColor(MainActivity.this,evaluate);
             }
 
             @Override
@@ -203,13 +246,39 @@ public class MainActivity extends BaseAppCompatActivity {
 
             }
         });
+    }
 
+    public static int MAIN_FRAGMENT_CARDS = 0;
+    public static int MAIN_FRAGMENT_ACTIVITYS = 1;
+    public static int MAIN_FRAGMENT_MODULES = 2;
+    public static int MAIN_FRAGMENT_SETTTINGS = 3;
 
+    public static void sendChangeMainFragmentBroadcast(Context context,int fragmentCode){
+        Intent intent = new Intent();
+        intent.putExtra("fragmentCode",fragmentCode);
+        intent.setAction("android.intent.action.MAIN.changeMainFragment");
+        context.sendBroadcast(intent);
+    }
 
+    public void setupChangeMainFragmentReceiver(){
+        BroadcastReceiver changeMainFragmentReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals("android.intent.action.MAIN.changeMainFragment")){
+                    int page = intent.getIntExtra("fragmentCode",0);
+                    viewPager.setCurrentItem(page,true);
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.intent.action.MAIN.changeMainFragment");
+        registerReceiver(changeMainFragmentReceiver,intentFilter);
     }
 
     public void syncModuleSettings() {
         cardsFragment.loadTimelineView(false);
         moduleListFragment.loadModuleList();
     }
+
+
 }

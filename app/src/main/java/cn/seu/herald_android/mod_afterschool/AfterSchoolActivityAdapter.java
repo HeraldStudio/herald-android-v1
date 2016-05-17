@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
@@ -41,6 +42,8 @@ public class AfterSchoolActivityAdapter extends RefreshRecyclerView.RefreshRecyc
     public void addItem(AfterSchoolActivityItem content) {
         list.add(content);
     }
+
+    public void removeAll(){list.clear();}
 
     @Override
     public RecyclerView.ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
