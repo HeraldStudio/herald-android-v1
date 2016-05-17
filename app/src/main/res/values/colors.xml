@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#57b3ff</color>
-    <color name="colorPrimaryDark">#57b3ff</color>
-    <color name="colorAccent">#57b3ff</color>
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimaryDark">#03A9F4</color>
+    <color name="colorAccent">#03A9F4</color>
     <color name="colorPrimaryGreenDark">#b4eab3</color>
 
     <!--成绩页面-->
@@ -97,6 +97,13 @@
     <color name="colorWebprimary">#616161</color>
     <color name="colorWebprimary_dark">#616161</color>
     <color name="colorWebaccent">#616161</color>
+
+
+    <!--首页四个fragment的主题色-->
+    <color name="colorFragmentCards">#03A9F4</color>
+    <color name="colorFragmentActivitys">#1976d2</color>
+    <color name="colorFragmentModules">#1976d2</color>
+    <color name="colorFragmentSettings">#03A9F4</color>
 
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>

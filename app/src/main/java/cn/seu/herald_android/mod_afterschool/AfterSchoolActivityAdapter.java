@@ -10,16 +10,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.mod_webmodule.WebShowActivity;
 

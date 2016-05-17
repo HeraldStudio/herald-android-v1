@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
@@ -34,6 +35,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private CacheHelper cacheHelper;
     private SettingsHelper settingsHelper;
     private ServiceHelper serviceHelper;
+    //状态栏用于填充的矩形块
+    private View statusView = null;
+    private Window window = null;
 
     /**
      * 实现将任何与尺寸有关的任务延迟到启动完毕后进行。
@@ -56,11 +60,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * @param color    状态栏颜色值
      * @return 状态栏矩形条
      */
-    private static View createStatusView(Activity activity, int color) {
+    protected static View createStatusView(Activity activity, int color) {
         // 获得状态栏高度
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
         int statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
-
         // 绘制一个和状态栏一样高的矩形
         View statusView = new View(activity);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -69,6 +72,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         statusView.setBackgroundColor(color);
         return statusView;
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,10 +127,15 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 //6.0以上是自动的沉浸的所以不需要
                 // 生成一个状态栏大小的矩形
-                View statusView = createStatusView(activity, color);
+                statusView = createStatusView(activity, color);
                 // 添加 statusView 到布局中
                 ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
                 decorView.addView(statusView);
+            }else{
+                window = activity.getWindow();
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(color);
             }
             // 设置根布局的参数
             ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
@@ -133,6 +143,15 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             rootView.setClipToPadding(true);
         }
     }
+
+    protected void changeStatusBarColor(int color){
+        if (statusView!=null)statusView.setBackgroundColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (window != null)window.setStatusBarColor(color);
+        }
+    }
+
+
 
     /**
      * 使状态栏透明

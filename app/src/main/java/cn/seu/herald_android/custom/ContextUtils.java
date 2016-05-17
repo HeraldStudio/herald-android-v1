@@ -14,11 +14,11 @@ public class ContextUtils {
      * 实现根据Context类型的不同，显示不同形式的消息
      **/
     public static void showMessage(Context context, String message) {
-        if (context instanceof BaseAppCompatActivity) {
-            ((BaseAppCompatActivity) context).showSnackBar(message);
-        }else if (context instanceof MainActivity){
+        if (context instanceof MainActivity) {
             //如果在首页，由于有底部tab的原因，不选用showSnackBar
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }else if (context instanceof BaseAppCompatActivity){
+            ((BaseAppCompatActivity) context).showSnackBar(message);
         } else {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }

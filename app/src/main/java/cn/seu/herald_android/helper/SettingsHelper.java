@@ -30,16 +30,15 @@ public class SettingsHelper {
     public static final int MODULE_LECTURE = 4;
     public static final int MODULE_JWC = 5;
     public static final int MODULE_EXAM = 6;
-    public static final int MODULE_LIVE_ACTIVITY = 7;
-    public static final int MODULE_SEUNET = 8;
-    public static final int MODULE_GYMRESERVE = 9;
-    public static final int MODULE_LIBRARY = 10;
-    public static final int MODULE_GRADE = 11;
-    public static final int MODULE_SRTP = 12;
-    public static final int MODULE_SCHOOLBUS = 13;
-    public static final int MODULE_SCHEDULE = 14;
-    public static final int WEBMODULE_QUANYI = 15;
-    public static final int WEBMODULE_EMPTYROOM = 16;
+    public static final int MODULE_SEUNET = 7;
+    public static final int MODULE_GYMRESERVE = 8;
+    public static final int MODULE_LIBRARY = 9;
+    public static final int MODULE_GRADE = 10;
+    public static final int MODULE_SRTP = 11;
+    public static final int MODULE_SCHOOLBUS = 12;
+    public static final int MODULE_SCHEDULE = 13;
+    public static final int WEBMODULE_QUANYI = 14;
+    public static final int WEBMODULE_EMPTYROOM = 15;
 
 
 
@@ -52,7 +51,6 @@ public class SettingsHelper {
             "lecture",
             "jwc",
             "exam",
-            "activity",
             "seunet",
             "library",
             "grade",
@@ -73,7 +71,6 @@ public class SettingsHelper {
             "人文讲座",
             "教务通知",
             "考试助手",
-            "校园活动",
             "校园网络",
             "场馆预约",
             "图书馆",
@@ -94,7 +91,6 @@ public class SettingsHelper {
             "查看人文讲座听课记录，并提供人文讲座预告信息",
             "显示教务处最新通知，提供重要教务通知提醒服务",
             "查询个人考试安排，提供考试倒计时提醒服务",
-            "查看近期校园活动",
             "显示校园网使用情况及校园网账户余额信息",
             "提供体育场馆在线预约和查询服务",
             "查看图书馆实时借阅排行、已借书籍和馆藏图书搜索",
@@ -115,7 +111,6 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_LECTURE",
             "cn.seu.herald_android.MODULE_QUERY_JWC",
             "cn.seu.herald_android.MODULE_QUERY_EXAM",
-            "cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY",
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
             "cn.seu.herald_android.MODULE_QUERY_GYMRESERVE",
             "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
@@ -137,7 +132,6 @@ public class SettingsHelper {
             R.mipmap.ic_lecture,
             R.mipmap.ic_jwc,
             R.mipmap.ic_exam,
-            R.mipmap.ic_activity,
             R.mipmap.ic_seunet,
             R.mipmap.ic_gymreserve,
             R.mipmap.ic_library,
@@ -150,7 +144,6 @@ public class SettingsHelper {
     };
 
     public static final boolean[] moduleHasCard = {
-            true,
             true,
             true,
             true,

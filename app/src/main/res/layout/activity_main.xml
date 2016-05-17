@@ -40,9 +40,10 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:src="@drawable/home_add_btn"
                 android:scaleType="fitXY"
                 android:id="@+id/ibtn_add"
-                android:background="@drawable/home_add_btn"/>
+                android:background="@drawable/selectable_item_background"/>
         </RelativeLayout>
         <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
             android:id="@+id/main_tabs"

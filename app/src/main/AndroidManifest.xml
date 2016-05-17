@@ -163,8 +163,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!--自定义考试-->
         <activity android:name=".mod_query.exam.AddExamActivity"
-            android:label="@string/title_activity_exam"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/ExamTheme">
@@ -244,18 +244,6 @@
             android:theme="@style/JwcTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".mod_afterschool.AfterSchoolActivity"
-            android:label="@string/title_activity_afterschoolactivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AfterSchoolActivityTheme">
-            <intent-filter>
-                <action android:name="cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

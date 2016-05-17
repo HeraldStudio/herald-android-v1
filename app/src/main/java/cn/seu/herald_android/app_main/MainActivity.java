@@ -6,21 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.hardware.SensorManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.squareup.seismic.ShakeDetector;
@@ -40,7 +33,6 @@ import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
 import me.majiajie.pagerbottomtabstrip.TabItemBuilder;
-import me.majiajie.pagerbottomtabstrip.TabLayoutMode;
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
 public class MainActivity extends BaseAppCompatActivity {
@@ -53,8 +45,12 @@ public class MainActivity extends BaseAppCompatActivity {
 
     MyInfoFragment myInfoFragment = new MyInfoFragment();
 
+    //首页tab和viewPager
     ViewPager viewPager;
     PagerBottomTabLayout pagerBottomTabLayout;
+
+    //用来接收需要切换首页fragment的广播
+    BroadcastReceiver changeMainFragmentReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +93,6 @@ public class MainActivity extends BaseAppCompatActivity {
 
         //设置状态栏颜色
         setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-
         //检查个人信息
         checkAuth();
 
@@ -124,14 +119,6 @@ public class MainActivity extends BaseAppCompatActivity {
             ibtn.setOnClickListener(o->startActivity(new Intent(MainActivity.this, ModuleManageActivity.class)));
     }
 
-    @Override
-    protected void setStatusBarColor(Activity activity, int color) {
-        //设置沉浸状态栏
-        super.setStatusBarColor(this, color);
-        //设置假toolbar
-        RelativeLayout main_toolbar = (RelativeLayout)findViewById(R.id.main_toolbar);
-        if (main_toolbar!=null)main_toolbar.setBackgroundColor(color);
-    }
 
     private void checkAuth() {
         new ApiRequest(this).api(ApiHelper.API_USER).addUUID().onFinish((success, code, response) -> {
@@ -188,20 +175,21 @@ public class MainActivity extends BaseAppCompatActivity {
 
         //各碎片设置状态栏颜色渐变
         int[] statusColors = new int[]{
-                ContextCompat.getColor(getBaseContext(),R.color.colorPrimary),
-                ContextCompat.getColor(getBaseContext(),R.color.colorAfterSchoolPrimary),
-                ContextCompat.getColor(getBaseContext(),R.color.colorAfterSchoolPrimary),
-                ContextCompat.getColor(getBaseContext(),R.color.colorPrimary)};
+                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentCards),
+                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentActivitys),
+                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentModules),
+                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentSettings)};
+
 
         //各页面Tab设置
         TabItemBuilder tabItemBuilder0 = new TabItemBuilder(this).create()
                 .setDefaultIcon(R.drawable.ic_home_24dp).setText("首页").setSelectedColor(statusColors[0]).build();
         TabItemBuilder tabItemBuilder1 = new TabItemBuilder(this).create()
-                .setDefaultIcon(R.drawable.ic_view_module_24dp).setText("发现").setSelectedColor(statusColors[1]).build();
+                .setDefaultIcon(R.drawable.ic_explore).setText("发现").setSelectedColor(statusColors[1]).build();
         TabItemBuilder tabItemBuilder2 = new TabItemBuilder(this).create()
-                .setDefaultIcon(R.drawable.ic_view_module_24dp).setText("模块").setSelectedColor(statusColors[1]).build();
+                .setDefaultIcon(R.drawable.ic_view_module_24dp).setText("模块").setSelectedColor(statusColors[2]).build();
         TabItemBuilder tabItemBuilder3 = new TabItemBuilder(this).create()
-                .setDefaultIcon(R.drawable.ic_person_24dp).setText("我的").setSelectedColor(statusColors[2]).build();
+                .setDefaultIcon(R.drawable.ic_person_24dp).setText("我的").setSelectedColor(statusColors[3]).build();
 
         //创建控制器
         Controller controller = pagerBottomTabLayout
@@ -228,7 +216,7 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.v("viewscroll"+positionOffset,positionOffsetPixels+"");
+                //设置滑动时状态栏颜色渐变
                 ArgbEvaluator evaluator = new ArgbEvaluator();
                 int colorOld= statusColors[position];
                 int colorNew = statusColors[(position+1)%statusColors.length];
@@ -261,7 +249,7 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     public void setupChangeMainFragmentReceiver(){
-        BroadcastReceiver changeMainFragmentReceiver = new BroadcastReceiver() {
+        changeMainFragmentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals("android.intent.action.MAIN.changeMainFragment")){
@@ -281,4 +269,18 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(changeMainFragmentReceiver);
+    }
+
+
+    @Override
+    protected void setStatusBarColor(Activity activity, int color) {
+        super.setStatusBarColor(activity, color);
+        RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.main_toolbar);
+        relativeLayout.setBackgroundColor(color);
+        changeStatusBarColor(color);
+    }
 }

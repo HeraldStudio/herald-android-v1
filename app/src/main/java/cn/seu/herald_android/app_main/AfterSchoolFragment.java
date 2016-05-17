@@ -1,31 +1,23 @@
 package cn.seu.herald_android.app_main;
 
-import android.app.Activity;
-import android.content.Intent;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
@@ -33,12 +25,14 @@ import cn.seu.herald_android.custom.ContextUtils;
 import cn.seu.herald_android.custom.CustomDividerItemDecoration;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
-import cn.seu.herald_android.custom.swiperefresh.SwipeRefreshLayout;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityAdapter;
+import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityBlockLayout;
 import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityItem;
+import cn.seu.herald_android.mod_timeline.TimelineItem;
+import cn.seu.herald_android.mod_timeline.TimelineView;
 
 
 /**
@@ -54,6 +48,10 @@ public class AfterSchoolFragment extends Fragment{
     int page = 1;
     //缓存助手
     CacheHelper cacheHelper;
+    //下拉刷新控件
+    CustomSwipeRefreshLayout srl;
+    //标识刷新状态，如果还在刷新就拒绝刷新请求
+    boolean isRefreshing = false;
 
     public static AfterSchoolFragment getInstance(BaseAppCompatActivity baseAppCompatActivity){
         AfterSchoolFragment fragment = new AfterSchoolFragment();
@@ -70,7 +68,6 @@ public class AfterSchoolFragment extends Fragment{
         return contentView;
     }
 
-
     @Override
     public void onResume() {
         // 从模块管理界面返回时,重载模块列表
@@ -85,17 +82,22 @@ public class AfterSchoolFragment extends Fragment{
         }
         //同时刷新第一页的缓存,刷新后载入最新的第一页，同时重置page为第一页
         refreshCache();
-
     }
 
     public void refreshCache(){
         //刷新第一页的缓存,刷新后载入最新的第一页，同时重置page为第一页
+        if (isRefreshing)
+            return;
+        isRefreshing = true;
         page = 1;
         new ApiRequest(getContext())
                 .get()
                 .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY)+"?page="+page)
                 .toCache("herald_afterschoolschool", o -> o)
                 .onFinish((success, code, response) -> {
+                    ContextUtils.showMessage(getContext(),"刷新成功");
+                    isRefreshing = false;
+                    if ( srl != null) srl.setRefreshing(false);
                     //成功则
                     if (success){
                         afterSchoolActivityAdapter.removeAll();
@@ -132,8 +134,8 @@ public class AfterSchoolFragment extends Fragment{
                     }).run();
         });
         //设置下拉刷新
-        CustomSwipeRefreshLayout srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
-        srl.setOnRefreshListener(() -> refreshCache());
+        srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
+        srl.setOnRefreshListener(this::refreshCache);
     }
 
     public void addNewItemWithData(String data){
@@ -157,6 +159,41 @@ public class AfterSchoolFragment extends Fragment{
         }catch (JSONException e){
             ContextUtils.showMessage(getContext(),"数据加载错误");
             e.printStackTrace();
+        }
+    }
+
+    //获取最新热门活动
+    public static ApiRequest remoteRefreshCache(Context context) {
+        return new ApiRequest(context)
+                .get()
+                .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_HOTAFTERSCHOOLACTIVITY))
+                .toCache("herald_afterschoolschool_hot", o -> o);
+    }
+
+    /**
+     * 读取热门活动缓存，转换成对应的时间轴条目
+     **/
+    public static TimelineItem getAfterSchoolActivityItem(TimelineView host) {
+        String cache = new CacheHelper(host.getContext()).getCache("herald_afterschoolschool_hot");
+        final long now = Calendar.getInstance().getTimeInMillis();
+        try {
+            List<AfterSchoolActivityItem> afterSchoolActivityItems = AfterSchoolActivityItem.transfromJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            if (afterSchoolActivityItems.size() == 0) {
+                return new TimelineItem("校园活动","最近没有热门活动",now,TimelineItem.NO_CONTENT,R.mipmap.ic_activity);
+            } else {
+                TimelineItem item  = new TimelineItem("校园活动","最近有" + afterSchoolActivityItems.size() + "个热门活动",
+                        now,TimelineItem.CONTENT_NOTIFY,R.mipmap.ic_activity);
+                for (AfterSchoolActivityItem afterSchoolActivityItem : afterSchoolActivityItems) {
+                    item.attachedView.add(new AfterSchoolActivityBlockLayout(host.getContext(), afterSchoolActivityItem));
+                }
+                return item;
+            }
+
+        } catch (Exception e) {// JSONException, NumberFormatException
+            // 清除出错的数据，使下次懒惰刷新时刷新考试
+            new CacheHelper(host.getContext()).setCache("herald_afterschoolschool_hot", "");
+            return new TimelineItem("校园活动","热门活动数据加载失败",
+                    now,TimelineItem.NO_CONTENT,R.mipmap.ic_activity);
         }
     }
 
