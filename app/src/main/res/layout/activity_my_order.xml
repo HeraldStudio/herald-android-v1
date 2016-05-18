@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorDivider"
     android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.mod_afterschool.AfterSchoolActivity">
+    tools:context="cn.seu.herald_android.mod_query.gymreserve.MyOrderActivity">
+
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -19,13 +19,18 @@
             android:background="?attr/colorPrimary"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
-    <cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorDivider"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/recyclerview_afterschoolactivity">
-    </cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView>
+        android:paddingTop="?attr/actionBarSize">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listview_gym_myorder">
+        </ListView>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
+

@@ -4,18 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorDivider"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
     >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:id="@+id/layout_card"
         android:orientation="vertical"
         android:elevation="4dp"
-        android:background="@color/colorIcons">
+        android:background="@drawable/selectable_item_background_white">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
             <TextView
@@ -37,7 +41,7 @@
                 android:ellipsize="end"
                 android:id="@+id/tv_title"
                 android:textSize="14sp"
-                android:textColor="@color/colorPrimaryText"/>
+                android:textColor="@color/colorAfterSchoolPrimary"/>
         </RelativeLayout>
         <TextView
             android:layout_width="wrap_content"
@@ -60,6 +64,7 @@
             android:paddingTop="15dp"
             android:paddingLeft="10dp"
             android:textSize="11sp"
+            android:text="时间 :\n地点 :"
             android:textColor="@color/colorSecondaryText"
             android:id="@+id/tv_time_and_location"/>
         <TextView
@@ -67,10 +72,20 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingBottom="15dp"
+            android:layout_marginTop="5dp"
             android:textSize="11sp"
             android:text="介绍"
             android:textColor="@color/colorSecondaryText"
             android:id="@+id/tv_introduction"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:textSize="11sp"
+            android:text="查看详情"
+            android:textColor="@color/colorAfterSchoolPrimary"
+            android:id="@+id/tv_details"/>
     </LinearLayout>
 </RelativeLayout>

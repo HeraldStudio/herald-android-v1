@@ -174,11 +174,11 @@ public class CardActivity extends BaseAppCompatActivity {
 
             if (extra < 20) {
                 return new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
-                        now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额还有" + left + "元，提醒你及时充值"
+                        now, TimelineItem.CONTENT_NOTIFY, "你的一卡通余额为" + left + "元，提醒你及时充值"
                 );
             } else {
                 return new TimelineItem(SettingsHelper.MODULE_CARDEXTRA,
-                        now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"
+                        now, TimelineItem.CONTENT_NO_NOTIFY, "你的一卡通余额为" + left + "元"
                 );
             }
         } catch (Exception e) {

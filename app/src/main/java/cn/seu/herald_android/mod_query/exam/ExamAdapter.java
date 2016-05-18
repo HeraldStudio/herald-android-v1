@@ -9,11 +9,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_query.gymreserve.SportTypeItemRecyclerAdapter;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
     private List<ExamItem> examList;
-
+    public static interface onItemClickListner{
+       void onItemClick(ExamItem item,int position);
+    }
+    private onItemClickListner mListner = null;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_time;
         public TextView tv_course;
@@ -22,9 +26,11 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         public TextView tv_hour;
         public TextView tv_numtitle;
         public TextView tv_num;
+        public View rootView;
 
         public ViewHolder(View v) {
             super(v);
+            rootView = v;
             tv_time = (TextView) v.findViewById(R.id.content);
             tv_course = (TextView) v.findViewById(R.id.title);
             tv_location = (TextView) v.findViewById(R.id.tv_location);
@@ -35,6 +41,9 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         }
     }
 
+    public void setOnItemClickListner(onItemClickListner mlistner){
+        this.mListner = mlistner;
+    }
     public ExamAdapter(List<ExamItem> exams) {
         this.examList = exams;
     }
@@ -52,14 +61,19 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         holder.tv_course.setText(examItem.course);
         holder.tv_location.setText("地点：" + examItem.location);
         holder.tv_teacher.setText("教师：" + examItem.teacher);
-        holder.tv_hour.setText("时长：" + examItem.hour + "分钟");
-
+        if (examItem.hour.equals("续一秒") || examItem.hour.equals("+1s") || examItem.teacher.equals("长者")) {
+            holder.tv_hour.setText("时长：" + "61s");
+        } else {
+            holder.tv_hour.setText("时长：" + examItem.hour + "分钟");
+        }
+        holder.rootView.setOnClickListener(v -> mListner.onItemClick(examItem,position)
+        );
         try {
             int remainingDays = examItem.getRemainingDays();
             holder.tv_num.setText(String.valueOf(remainingDays));
 
             if (remainingDays < 0) {
-                holder.tv_numtitle.setText("已结束");
+                holder.tv_numtitle.setText("已结束天数");
             } else if (remainingDays == 0) {
                 holder.tv_numtitle.setText("今天考试");
             } else {

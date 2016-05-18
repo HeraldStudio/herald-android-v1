@@ -38,6 +38,9 @@
         "简历投递邮箱：\n"
         "heraldseu@outlook.com"
     </string>
+    <string name="feedback_text">
+        在这里写下您的珍贵意见~\n\n\n填写联系方式有助于：\n对于您的问题，工作人员会主动联系您，而对于可行性建议，我们会考虑直接投入开发喔~
+    </string>
     <string name="law_declaration_text">"本软件在许可范围内使用了如下开源框架：
 [Apache 2.0] HelloCharts for Android
 (github.com/lecho/hellocharts-android)
@@ -98,6 +101,6 @@ Copyright 2012 Square, Inc.
     <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>
-    <string name="title_activity_afterschoolactivity">活动生活</string>
+    <string name="title_activity_afterschoolactivity">校园生活</string>
 
 </resources>

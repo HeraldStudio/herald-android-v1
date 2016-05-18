@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_communicate;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -42,7 +43,8 @@ public class FeedbackActivity extends BaseAppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_send) {
             EditText et = (EditText) findViewById(R.id.editText);
-            String content = et.getText().toString();
+            EditText et_contact = (EditText)findViewById(R.id.tv_contact);
+            String content = "[来自Android版]" + et.getText().toString() + "[联系方式：" + et_contact.getText() +"]";
 
             showProgressDialog();
             new ApiRequest(this).url(ApiHelper.feedback_url)
@@ -51,6 +53,9 @@ public class FeedbackActivity extends BaseAppCompatActivity {
                         hideProgressDialog();
                         if (success) {
                             showSnackBar("您的反馈已发送，小猴将尽快处理，感谢支持！");
+                            //延时展示信息然后退出
+                            Handler handler = new Handler();
+                            handler.postDelayed(this::finish,2000);
                         }
                     }).run();
         }

@@ -27,7 +27,12 @@ public class ExamBlockLayout extends LinearLayout {
 
         content.setText(item.time + " @ " + item.location);
         title.setText(item.course);
-        subtitle.setText(item.hour + "分钟");
+        if (item.hour.equals("续一秒") || item.hour.equals("+1s") || item.teacher.equals("长者")) {
+            subtitle.setText("时长：" + "61s");
+        } else {
+            subtitle.setText(item.hour + "分钟");
+        }
+
 
         try {
             int remainingDays = item.getRemainingDays();

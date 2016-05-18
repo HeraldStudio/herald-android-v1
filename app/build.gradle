@@ -9,8 +9,8 @@ android {
         applicationId "cn.seu.herald_android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 12
-        versionName "V1.5.1"
+        versionCode 13
+        versionName "V1.6.0"
     }
     buildTypes {
         release {
@@ -37,6 +37,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
     compile 'com.zhy:okhttputils:2.2.0'
@@ -48,4 +49,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
+    //底部tab
+    compile 'me.majiajie:pager-bottom-tab-strip:1.0.0'
 }

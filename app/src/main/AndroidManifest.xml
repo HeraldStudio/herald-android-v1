@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".debug.CrashApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,6 +22,7 @@
             android:theme="@style/AppTheme.Invisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -46,6 +46,7 @@
             android:theme="@style/SubActivityTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -57,6 +58,7 @@
             android:theme="@style/QuerySchoolBusTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -68,6 +70,7 @@
             android:theme="@style/QueryGradeTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_GRADE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -79,6 +82,7 @@
             android:theme="@style/LibraryTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_LIBRARY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -90,6 +94,7 @@
             android:theme="@style/ScheduleTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHEDULE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -98,8 +103,7 @@
             android:label="@string/title_activity_library_search"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/LibraryTheme">
-        </activity>
+            android:theme="@style/LibraryTheme" />
         <activity
             android:name=".mod_query.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
@@ -108,6 +112,7 @@
             android:theme="@style/LectureTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_LECTURE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -119,6 +124,7 @@
             android:theme="@style/CardTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_CARDEXTRA" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -130,6 +136,7 @@
             android:theme="@style/ExperimentTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXPERIMENT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -141,17 +148,7 @@
             android:theme="@style/SeunetTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SEUNET" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".mod_query.gymreserve.GymReserveActivity"
-            android:label="@string/title_activity_gymreserve"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -165,6 +162,12 @@
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXAM" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <!--自定义考试-->
+        <activity android:name=".mod_query.exam.AddExamActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExamTheme">
         </activity>
         <activity
             android:name=".mod_query.pedetail.PedetailActivity"
@@ -192,11 +195,12 @@
             android:name=".mod_webmodule.WebModuleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Invisible">
-            <!--web module-->
+
+            <!-- web module -->
             <intent-filter>
-                <action android:name="cn.seu.herald_android.WEBMODULE_GYMRESERVE" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
                 <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -204,7 +208,8 @@
             android:name=".mod_webmodule.WebShowActivity"
             android:screenOrientation="portrait"
             android:theme="@style/WebShowTheme">
-            <!--web module-->
+
+            <!-- web module -->
             <intent-filter>
                 <action android:name="cn.seu.herald_android.WEBSHOW" />
             </intent-filter>
@@ -227,6 +232,7 @@
             android:theme="@style/SrtpTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SRTP" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -238,20 +244,50 @@
             android:theme="@style/JwcTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".mod_afterschool.AfterSchoolActivity"
-            android:label="@string/title_activity_afterschoolactivity"
+            android:name=".mod_query.gymreserve.SelectSportActivity"
+            android:label="@string/title_activity_gymreserve"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AfterSchoolActivityTheme">
+            android:theme="@style/GymReserveTheme">
             <intent-filter>
-                <action android:name="cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY" />
+                <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- 场馆预约项目时间段选择 -->
+        <activity
+            android:name=".mod_query.gymreserve.OrderItemActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
+        <!-- 场馆预约新增预约 -->
+        <activity
+            android:name=".mod_query.gymreserve.NewOrderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
+        <!-- 搜索新好友 -->
+        <activity
+            android:name=".mod_query.gymreserve.SearchFriendActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
+        <activity
+            android:name=".mod_query.gymreserve.MyOrderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/GymReserveTheme">
+        </activity>
+
     </application>
 
 </manifest>
