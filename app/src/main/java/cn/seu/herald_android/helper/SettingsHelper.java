@@ -31,15 +31,15 @@ public class SettingsHelper {
     public static final int MODULE_JWC = 5;
     public static final int MODULE_EXAM = 6;
     public static final int MODULE_SEUNET = 7;
-    public static final int MODULE_LIBRARY = 8;
-    public static final int MODULE_GRADE = 9;
-    public static final int MODULE_SRTP = 10;
-    public static final int MODULE_SCHOOLBUS = 11;
-    public static final int MODULE_SCHEDULE = 12;
-    public static final int WEBMODULE_GYMRESERVE = 13;
+    public static final int MODULE_GYMRESERVE = 8;
+    public static final int MODULE_LIBRARY = 9;
+    public static final int MODULE_GRADE = 10;
+    public static final int MODULE_SRTP = 11;
+    public static final int MODULE_SCHOOLBUS = 12;
+    public static final int MODULE_SCHEDULE = 13;
     public static final int WEBMODULE_QUANYI = 14;
     public static final int WEBMODULE_EMPTYROOM = 15;
-    public static final int MODULE_LIVE_ACTIVITY = 16;
+
 
 
     //模块名字
@@ -60,7 +60,6 @@ public class SettingsHelper {
             "gymreserve",
             "quanyi",
             "emptyroom",
-            "activity"
     };
 
     //模块名字文字提示
@@ -73,15 +72,14 @@ public class SettingsHelper {
             "教务通知",
             "考试助手",
             "校园网络",
+            "场馆预约",
             "图书馆",
             "绩点查询",
             "课外研学",
             "校车助手",
             "校历查询",
-            "场馆预约",
             "权益服务",
             "空教室",
-            "活动生活"
     };
 
     //模块说明，显示在快捷方式编辑界面
@@ -94,15 +92,14 @@ public class SettingsHelper {
             "显示教务处最新通知，提供重要教务通知提醒服务",
             "查询个人考试安排，提供考试倒计时提醒服务",
             "显示校园网使用情况及校园网账户余额信息",
+            "提供体育场馆在线预约和查询服务",
             "查看图书馆实时借阅排行、已借书籍和馆藏图书搜索",
             "查询历史学期的科目成绩、学分以及绩点详情",
             "提供SRTP学分及得分详情查询服务",
             "提供可实时更新的校车班车时间表",
             "显示当前年度各学期的学校校历安排",
-            "提供体育场馆在线预约和查询服务",
             "向东大校会权益部反馈投诉信息",
             "提供指定时间内的空教室信息查询服务",
-            "查看近期热门学生活动"
     };
 
     //模块action
@@ -115,15 +112,14 @@ public class SettingsHelper {
             "cn.seu.herald_android.MODULE_QUERY_JWC",
             "cn.seu.herald_android.MODULE_QUERY_EXAM",
             "cn.seu.herald_android.MODULE_QUERY_SEUNET",
+            "cn.seu.herald_android.MODULE_QUERY_GYMRESERVE",
             "cn.seu.herald_android.MODULE_QUERY_LIBRARY",
             "cn.seu.herald_android.MODULE_QUERY_GRADE",
             "cn.seu.herald_android.MODULE_QUERY_SRTP",
             "cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS",
             "cn.seu.herald_android.MODULE_QUERY_SCHEDULE",
-            "cn.seu.herald_android.WEBMODULE_GYMRESERVE",
             "cn.seu.herald_android.WEBMODULE_QUANYI",
             "cn.seu.herald_android.WEBMODULE_EMPTYROOM",
-            "cn.seu.hreald_android.MODULE_LIVE_AFTERSCHOOLACTIVITY"
     };
 
 
@@ -137,16 +133,14 @@ public class SettingsHelper {
             R.mipmap.ic_jwc,
             R.mipmap.ic_exam,
             R.mipmap.ic_seunet,
+            R.mipmap.ic_gymreserve,
             R.mipmap.ic_library,
             R.mipmap.ic_grade,
             R.mipmap.ic_srtp,
             R.mipmap.ic_bus,
             R.mipmap.ic_schedule,
-            R.mipmap.ic_gymreserve,
             R.mipmap.ic_quanyi,
             R.mipmap.ic_emptyroom,
-            R.mipmap.ic_activity
-
     };
 
     public static final boolean[] moduleHasCard = {
@@ -166,7 +160,6 @@ public class SettingsHelper {
             false,
             false,
             false,
-            true
     };
 
     //模块类型

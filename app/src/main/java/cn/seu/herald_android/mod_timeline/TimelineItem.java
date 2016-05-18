@@ -23,6 +23,7 @@ public class TimelineItem {
     public int moduleId = -1;
 
     public TimelineItem(String name, String info, long time, int contentPriority, int iconRes) {
+        //非模块部分所调用的timelineItem构造
         this.name = name;
         this.info = info;
         this.time = time;
@@ -31,6 +32,7 @@ public class TimelineItem {
     }
 
     public TimelineItem(int module, long time, int contentPriority, String info) {
+        //各个模块部分所调用的timelineItem构造
         this.name = SettingsHelper.moduleNamesTips[module];
         this.info = info;
         this.time = time;
@@ -42,6 +44,7 @@ public class TimelineItem {
         this.iconRes = SettingsHelper.moduleIconsId[module];
         this.moduleId = module;
     }
+
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;

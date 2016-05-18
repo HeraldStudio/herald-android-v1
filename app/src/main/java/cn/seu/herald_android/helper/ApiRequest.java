@@ -57,7 +57,7 @@ public class ApiRequest {
     }
 
     // 外部可调用
-    public ApiRequest api(int api) {
+    public  ApiRequest api(int api) {
         return url(ApiHelper.getQueryApiUrl(api));
     }
 
@@ -172,6 +172,7 @@ public class ApiRequest {
                     new CacheHelper(context).setCache(key, cache);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    new CacheHelper(context).setCache(key,"");
                     for (OnResponseListener onResponseListener : onResponseListeners) {
                         onResponseListener.onFinish(false, -1, e.toString());
                     }

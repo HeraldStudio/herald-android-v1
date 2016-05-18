@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.mod_query.gymreserve.GymReserveActivity">
+    android:orientation="vertical"
+    tools:context="cn.seu.herald_android.mod_query.gymreserve.OrderItemActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
@@ -16,10 +17,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:gravity="top"
+            android:minHeight="?attr/actionBarSize"
             app:layout_collapseMode="pin"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleMarginTop="15dp" />
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <LinearLayout
@@ -28,32 +30,16 @@
         android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize">
 
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout_orderitem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:background="#fff" />
 
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner"
-                android:layout_weight="1" />
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner2"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <ListView
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_orderitem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView"
-            android:layout_gravity="center_horizontal" />
-
+            android:layout_height="match_parent"
+            android:background="#f8f8f8" />
     </LinearLayout>
-
 </android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <android.support.v7.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchview_gym_friend"
+            android:background="@color/colorGymReserveprimary">
+        </android.support.v7.widget.SearchView>
+        <ListView
+            android:id="@+id/list_searchresult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/colorDivider"
+            android:dividerHeight="@dimen/divider_height"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:scrollbarStyle="outsideOverlay" />
+    </LinearLayout>
+</LinearLayout>

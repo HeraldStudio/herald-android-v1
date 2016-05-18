@@ -5,11 +5,12 @@ import android.net.Uri;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
+
 
 /**
  * Created by heyon on 2016/5/9.
@@ -24,6 +25,10 @@ public class AfterSchoolActivityItem {
     String location;
     String detail_url;
     String pic_url;
+    //标识活动是否已开始等信息
+    String tag;
+    //标识活动开始信息的颜色
+    int tagColorID;
     public AfterSchoolActivityItem(String title, String introduciton, String start_time, String end_time, String activity_time, String detail_url, String assiciation, String location,String pic_url) {
         this.title = title;
         this.introduciton = introduciton;
@@ -34,6 +39,21 @@ public class AfterSchoolActivityItem {
         this.assiciation = assiciation;
         this.location = location;
         this.pic_url = pic_url;
+
+        //判断活动是否开始
+        long now_time = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
+        long start_time_value = getStartCalendar().getTimeInMillis();
+        long end_time_value = getEndCalendar().getTimeInMillis();
+        if(now_time < start_time_value){
+            tag = "即将开始";
+            tagColorID =  R.color.colorSecondaryText;
+        } else if (now_time > end_time_value) {
+            tag = "已结束";
+            tagColorID =  R.color.colorSecondaryText;
+        }else {
+            tag = "进行中";
+            tagColorID =  R.color.relaxGreen;
+        }
     }
 
     public Calendar getStartCalendar(){
@@ -66,6 +86,14 @@ public class AfterSchoolActivityItem {
     public Uri getPicUrl(){
         Uri uri = Uri.parse(this.pic_url);
         return uri;
+    }
+
+    public String getTag(){
+        return tag;
+    }
+
+    public int getTagColorId(){
+        return tagColorID;
     }
 
 

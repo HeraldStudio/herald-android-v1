@@ -316,13 +316,13 @@ public class PedetailActivity extends BaseAppCompatActivity {
             return "已经跑够次数啦，" + (remain > 0 && remain >= 50 - count ?
                     "你还可以再继续加餐，多多益善哟~" : "小猴给你个满分~");
         }
-        float ratio = ((float) remain) / (45 - count);
-        if (ratio >= 1.5f) {
+        int offset =  remain - (45 - count);
+        if (offset >= 20) {
             return "时间似乎比较充裕，但还是要加油哟~";
-        } else if (ratio >= 1.2f) {
-            return "时间比较紧迫了，" + (todayAvailable ? "赶紧加油出门跑操吧~" : "还需要继续锻炼哟~");
-        } else if (ratio >= 1f) {
-            return "时间紧任务重，" + (todayAvailable ? "没时间解释了，赶紧出门补齐跑操吧~" : "赶紧找机会补齐跑操吧~");
+        } else if (offset >= 10) {
+            return "时间比较紧迫了，" + (todayAvailable ? "赶紧加油出门跑操吧~" : "还需要继续加油哟~");
+        } else if (offset >= 0) {
+            return "没时间解释了，" + (todayAvailable ? "赶紧出门补齐跑操吧~" : "赶紧找机会补齐跑操吧~");
         } else {
             return "似乎没什么希望了，小猴为你感到难过，不如参加一些加跑操的活动试试？";
         }
