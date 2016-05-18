@@ -52,6 +52,9 @@ public class MainActivity extends BaseAppCompatActivity {
     //用来接收需要切换首页fragment的广播
     BroadcastReceiver changeMainFragmentReceiver;
 
+    //首页的假toolbar
+    RelativeLayout main_toolbar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,7 +224,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 int colorOld= statusColors[position];
                 int colorNew = statusColors[(position+1)%statusColors.length];
                 int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld,colorNew);
-                setStatusBarColor(MainActivity.this,evaluate);
+                changeStatusBarColor(evaluate);
             }
 
             @Override
@@ -278,9 +281,14 @@ public class MainActivity extends BaseAppCompatActivity {
 
     @Override
     protected void setStatusBarColor(Activity activity, int color) {
+        //效率比change低，一般先set,之后的颜色用change来做变换
         super.setStatusBarColor(activity, color);
-        RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.main_toolbar);
-        relativeLayout.setBackgroundColor(color);
-        changeStatusBarColor(color);
+        main_toolbar = (RelativeLayout)findViewById(R.id.main_toolbar);
+    }
+
+    @Override
+    protected void changeStatusBarColor(int color) {
+        super.changeStatusBarColor(color);
+        if (main_toolbar!=null) main_toolbar.setBackgroundColor(color);
     }
 }

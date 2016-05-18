@@ -142,9 +142,10 @@ public class OrderItemTimeFragment extends Fragment {
                                 NewOrderActivity.startNewOrderActivity(baseAppCompatActivity, sportTypeItem,dayInfo,time.avaliableTime);
                             }else {
                                 judgeRes = msg;
+                                baseAppCompatActivity.showSnackBar(judgeRes);
                             }
                         }
-                        baseAppCompatActivity.showSnackBar(judgeRes);
+
                     }catch (JSONException e){
                         e.printStackTrace();
                         baseAppCompatActivity.showSnackBar("预约失败");
