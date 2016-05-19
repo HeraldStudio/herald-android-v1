@@ -121,7 +121,6 @@ public class TimelineView extends ListView {
          * 本地重载部分
          **/
 
-        
         // 单独刷新快捷栏，不刷新轮播图。轮播图在轮播图数据下载完成后单独刷新。
         refreshShortcutBox();
 
@@ -423,6 +422,7 @@ public class TimelineView extends ListView {
                         ((ViewGroup) k.getParent()).removeView(k);
                     }
                     k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+
                     // 默认的点击事件
                     /*if (!k.hasOnClickListeners()) {
                         k.setOnClickListener(item.getOnClickListener());
