@@ -60,6 +60,37 @@ public class TimelineView extends ListView {
     public TimelineView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setVerticalScrollBarEnabled(false);
+        init();
+    }
+
+    public void init(){
+        //加入快捷栏
+        setupShortCutBox();
+        //加入轮播栏
+        setupSliderView();
+    }
+
+    public void setupSliderView(){
+        ViewGroup vg = (ViewGroup)
+                LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
+        shortcutBox = (ShortcutBoxView) vg.findViewById(R.id.shorcut_box);
+        addHeaderView(vg);
+    }
+
+    public void setupShortCutBox(){
+        slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+
+        // 轮播图居中变色动效的调用
+        fadeContainer = new FadeOutHeaderContainer<SliderView>(getContext())
+                .maskColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                .append(slider);
+
+        // 设置高度。在其他地方设置没用。
+        float resolution = 5 / 2f;
+        int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
+        slider.setLayoutParams(new FadeOutHeaderContainer.LayoutParams(-1, height));
+
+        addHeaderView(fadeContainer);
     }
 
     // 因为此函数在getView()中被调用，视图回收再分配时，时间可能发生变化，所以此函数内不能调用Calendar.getInstance()
@@ -288,7 +319,6 @@ public class TimelineView extends ListView {
              **/
             manager.onFinish((success) -> {
                 if (srl != null) srl.setRefreshing(false);
-
                 if (!success) {
                     ContextUtils.showMessage(getContext(), "刷新过程中出现了一些问题，请重试~");
                 }
@@ -298,14 +328,7 @@ public class TimelineView extends ListView {
     }
 
     private void refreshShortcutBox() {
-        if (shortcutBox == null) {
-            ViewGroup vg = (ViewGroup)
-                    LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
-            shortcutBox = (ShortcutBoxView) vg.findViewById(R.id.shorcut_box);
-            addHeaderView(vg);
-        } else {
-            shortcutBox.refresh();
-        }
+        if (shortcutBox != null) shortcutBox.refresh();
     }
 
     /**
@@ -313,36 +336,20 @@ public class TimelineView extends ListView {
      * 注意：因为轮播图刷新的时候会有明显的界面变化，所以不能跟上面的快捷栏放在一起刷新
      **/
     private void refreshSliders() {
-
-        if (slider == null) {
-            slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
-
-            // 轮播图居中变色动效的调用
-            fadeContainer = new FadeOutHeaderContainer<SliderView>(getContext())
-                    .maskColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
-                    .append(slider);
-
-            // 设置高度。在其他地方设置没用。
-            float resolution = 5 / 2f;
-            int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
-            slider.setLayoutParams(new FadeOutHeaderContainer.LayoutParams(-1, height));
-
-            addHeaderView(fadeContainer);
-        }
-
         // 为轮播栏设置内容
         ServiceHelper serviceHelper = new ServiceHelper(getContext());
         ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = serviceHelper.getSliderViewItemArray();
-        slider.setupWithArrayList(sliderViewItemArrayList);
+        if (slider!=null) slider.setupWithArrayList(sliderViewItemArrayList);
     }
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-
         // 轮播图居中变色动效的实现
-        fadeContainer.syncFadeState();
-        fadeContainer.syncScrollState();
+        if (fadeContainer!=null){
+            fadeContainer.syncFadeState();
+            fadeContainer.syncScrollState();
+        }
     }
 
     @Override
