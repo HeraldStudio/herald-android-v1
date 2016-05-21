@@ -33,6 +33,8 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
     private SchoolBusFragment weekdayFragment;
     //周末显示的Fragment
     private SchoolBusFragment weekendFragment;
+    //适配器
+    private SchoolBusViewPagerAdapter schoolBusViewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,16 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
         //初始化控件
         tabLayout = (TabLayout) findViewById(R.id.tablayout_schoolbus);
         viewPager = (ViewPager) findViewById(R.id.schoolbus_viewpager);
+
+        //适配器初始化
+        //添加到viewpager中
+        schoolBusViewPagerAdapter = new SchoolBusViewPagerAdapter(getSupportFragmentManager());
+
+        viewPager.setAdapter(schoolBusViewPagerAdapter);
+
+        //关联ViewPager和Tablayout
+        tabLayout.setupWithViewPager(viewPager);
+//        tabLayout.setTabsFromPagerAdapter(schoolBusViewPagerAdapter);
     }
 
     @Override
@@ -120,17 +132,11 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                 weekendList.add(list_weekend_toschool);
                 weekendFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekendList);
 
-
-                //添加到viewpager中
-                SchoolBusViewPagerAdapter schoolBusViewPagerAdapter = new SchoolBusViewPagerAdapter(getSupportFragmentManager());
+                schoolBusViewPagerAdapter.removeAll();
                 schoolBusViewPagerAdapter.add(weekdayFragment, "周一至周五");
                 schoolBusViewPagerAdapter.add(weekendFragment, "周末");
+                schoolBusViewPagerAdapter.notifyDataSetChanged();
 
-                viewPager.setAdapter(schoolBusViewPagerAdapter);
-
-                //关联ViewPager和Tablayout
-                tabLayout.setupWithViewPager(viewPager);
-                tabLayout.setTabsFromPagerAdapter(schoolBusViewPagerAdapter);
 
             } catch (JSONException e) {
                 showSnackBar("缓存加载失败，请尝试重新刷新");
