@@ -91,6 +91,8 @@ public class OrderItemActivity extends BaseAppCompatActivity {
         //初始化
         tabLayout = (TabLayout)findViewById(R.id.tablayout_orderitem);
         viewPager = (ViewPager)findViewById(R.id.viewpager_orderitem);
+        //设置只存在一页缓存
+        if (viewPager!=null)viewPager.setOffscreenPageLimit(1);
 
     }
 
