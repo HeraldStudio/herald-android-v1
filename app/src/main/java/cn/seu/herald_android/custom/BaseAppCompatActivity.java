@@ -121,6 +121,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * @param color    状态栏颜色值
      */
     protected void setStatusBarColor(Activity activity, int color) {
+        //最好每个actvity中只使用一次
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置状态栏透明
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -132,6 +133,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
                 decorView.addView(statusView);
             }else{
+                //6.0以上通过window来设置颜色
                 window = activity.getWindow();
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -139,12 +141,14 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             }
             // 设置根布局的参数
             ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+            //6.0以上有伸缩布局和伸缩视差的地方必须在xml文件里设置根布局FitsSystemWindows为false，其他的地方依然为true
             rootView.setFitsSystemWindows(true);
             rootView.setClipToPadding(true);
         }
     }
 
     protected void changeStatusBarColor(int color){
+        //频繁变化颜色时请使用此方法而不是setStatusBarColor
         if (statusView!=null)statusView.setBackgroundColor(color);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (window != null)window.setStatusBarColor(color);
