@@ -84,7 +84,7 @@ public class MainActivity extends BaseAppCompatActivity {
         super.onResume();
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         //设置摇晃力度检测阈值
-        shakeDetector.setSensitivity(20);
+        shakeDetector.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT);
         shakeDetector.start(sensorManager);
     }
 

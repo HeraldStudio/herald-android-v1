@@ -9,8 +9,8 @@ android {
         applicationId "cn.seu.herald_android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 13
-        versionName "V1.6.0"
+        versionCode 14
+        versionName "V1.6.1"
     }
     buildTypes {
         release {
