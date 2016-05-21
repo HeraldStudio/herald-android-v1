@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
@@ -119,7 +120,7 @@ public class MainActivity extends BaseAppCompatActivity {
 
         ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
         if (ibtn!=null)
-            ibtn.setOnClickListener(o->startActivity(new Intent(MainActivity.this, ModuleManageActivity.class)));
+            ibtn.setOnClickListener(v -> showSnackBar("更多功能，敬请期待"));
     }
 
 
