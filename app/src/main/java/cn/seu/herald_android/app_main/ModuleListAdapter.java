@@ -36,15 +36,15 @@ public class ModuleListAdapter extends ArrayAdapter<SeuModule> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_modules, null);
         }
 
+        //控制标题的显示
         boolean isVisible1 = position != 0 &&
                 (getItem(position - 1).isEnabledShortCut() || getItem(position - 1).isEnabledCard());
+        //标识该项是否存在快捷栏或者卡片在首页展示
         boolean isVisible2 = getItem(position).isEnabledShortCut() || getItem(position).isEnabledCard();
 
         TextView tv_header = (TextView) convertView.findViewById(R.id.module_item_header);
         tv_header.setVisibility((position == 0 || isVisible1 != isVisible2) ? View.VISIBLE : View.GONE);
-        tv_header.setText(isVisible2 ? "显示在卡片或快捷栏的模块" : "完全隐藏的模块");
-        tv_header.setOnClickListener((v) -> {
-        });
+        tv_header.setText("所有模块");
 
         //快捷方式图标
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);

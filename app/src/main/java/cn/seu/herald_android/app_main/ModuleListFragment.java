@@ -50,7 +50,8 @@ public class ModuleListFragment extends Fragment {
         seuModuleArrayList.clear();
         ArrayList<SeuModule> list = new SettingsHelper(getContext()).getSeuModuleList();
         for (SeuModule k : list) {
-            if (k.isEnabledShortCut()) seuModuleArrayList.add(k);
+            //加入所有模块，如果想对加入的模块进行筛选，请在这里进行
+            seuModuleArrayList.add(k);
         }
 
         //根据模块列表构造列表

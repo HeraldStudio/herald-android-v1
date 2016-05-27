@@ -285,6 +285,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
 
         String itemId = gymItem.sportId + "";
         String useTime = dayinfo.split(" ")[0] + " " + avaliableTime;//参数形式为 ‘2016-05-15 12:00-13:00’
+        //客户端这里发的1是全场，2是半场，在服务端会改掉这个
         String useMode = half?"2":"1";
         String phone = et_phone.getText().toString();
         String useUserIds = userIds.toString();
