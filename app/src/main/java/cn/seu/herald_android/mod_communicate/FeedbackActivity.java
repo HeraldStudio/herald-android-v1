@@ -13,6 +13,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.ServiceHelper;
 
 public class FeedbackActivity extends BaseAppCompatActivity {
 
@@ -48,7 +49,9 @@ public class FeedbackActivity extends BaseAppCompatActivity {
 
             showProgressDialog();
             new ApiRequest(this).url(ApiHelper.feedback_url)
-                    .post("cardnum", getApiHelper().getUserName(), "content", content)
+                    .post("cardnum", getApiHelper().getUserName(),
+                            "content", content,
+                            "user", new ApiHelper(getBaseContext()).getAuthCache("cardnum"))
                     .onFinish((success, code, response) -> {
                         hideProgressDialog();
                         if (success) {
