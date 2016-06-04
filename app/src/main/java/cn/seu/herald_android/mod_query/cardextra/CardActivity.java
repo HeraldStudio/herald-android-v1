@@ -91,9 +91,9 @@ public class CardActivity extends BaseAppCompatActivity {
             //点击刷新按钮时进行刷新
             refreshCache();
         }else if(id == R.id.action_card_chongzhi) {
-            new AlertDialog.Builder(getBaseContext())
+            new AlertDialog.Builder(this)
                     .setMessage("请注意通过此一卡通充值入口充值后，" +
-                            "要在食堂刷卡机消费一次才能到账，在此之前充值款项将保存在过度余额中，请放心使用")
+                            "要在食堂刷卡机消费一次才能到账（故推荐尽量避免在一卡通余额不足时使用该充值功能），在此之前充值款项将保存在过度余额中，请放心使用")
                     .setPositiveButton("我明白了", (d, w) -> {
                         Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
                         Intent intent = new  Intent(Intent.ACTION_VIEW, uri);

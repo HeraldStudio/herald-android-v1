@@ -50,8 +50,7 @@ public class FeedbackActivity extends BaseAppCompatActivity {
             showProgressDialog();
             new ApiRequest(this).url(ApiHelper.feedback_url)
                     .post("cardnum", getApiHelper().getUserName(),
-                            "content", content,
-                            "user", new ApiHelper(getBaseContext()).getAuthCache("cardnum"))
+                            "content", content)
                     .onFinish((success, code, response) -> {
                         hideProgressDialog();
                         if (success) {
