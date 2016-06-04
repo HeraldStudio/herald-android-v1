@@ -58,6 +58,13 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
         }
 
         btn_renew.setEnabled(myBorrowBook.getRenewTime().equals("0") && !isOverdue(myBorrowBook.getDueDate()));
+        if (btn_renew.isEnabled()){
+            btn_renew.setTextColor(ContextCompat.getColor(getContext(),R.color.colorLibraryprimary));
+            btn_renew.setText("续借");
+        }else {
+            btn_renew.setTextColor(ContextCompat.getColor(getContext(),R.color.colorSecondaryText));
+            btn_renew.setText("已超期");
+        }
 
         btn_renew.setOnClickListener(!btn_renew.isEnabled() ? null : v -> {
             ContextUtils.showMessage(getContext(), "正在请求续借，请稍候…");

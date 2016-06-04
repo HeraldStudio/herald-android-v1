@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.SliderView;
@@ -47,7 +48,9 @@ public class ServiceHelper {
     public static ApiRequest refreshVersionCache(Context context) {
         return new ApiRequest(context).url(getServiceUrl(SERVICE_VERSION)).addUUID()
                 .post("schoolnum", new ApiHelper(context).getAuthCache("schoolnum"),
-                        "versioncode", String.valueOf(getAppVersionCode(context)))
+                        "versioncode", String.valueOf(getAppVersionCode(context)),
+                        "versionname", getAppVersionName(context),
+                        "versiontype","Android")
                 .toServiceCache("versioncheck_cache", o -> o);
     }
 
