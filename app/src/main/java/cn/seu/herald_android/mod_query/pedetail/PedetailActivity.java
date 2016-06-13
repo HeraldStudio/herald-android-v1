@@ -81,7 +81,11 @@ public class PedetailActivity extends BaseAppCompatActivity {
                 .addAll(remoteRefreshCache(this))
                 .onFinish((success) -> {
                     hideProgressDialog();
-                    readLocal();
+                    if (success) {
+                        readLocal();
+                    } else {
+                        showSnackBar("刷新失败，请重试");
+                    }
                 }).runWithPostMethod();
     }
 
@@ -203,6 +207,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                 showSnackBar("本学期暂时没有跑操记录");
             }
         } catch (Exception e) {
+            showSnackBar("解析失败，请刷新");
             e.printStackTrace();
         }
     }
@@ -241,7 +246,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
             if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
                 return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        now, TimelineItem.NO_CONTENT, "跑操预告加载失败，请手动刷新"
+                        now, TimelineItem.CONTENT_NOTIFY, "跑操预告数据为空，请尝试刷新"
                 );
             }
 
@@ -304,7 +309,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
             }
         } catch (Exception e) {
             return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                    now, TimelineItem.NO_CONTENT, "跑操预告加载失败，请手动刷新"
+                    now, TimelineItem.CONTENT_NOTIFY, "跑操数据为空，请尝试刷新"
             );
         }
     }

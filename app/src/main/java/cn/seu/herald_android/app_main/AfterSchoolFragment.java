@@ -95,13 +95,15 @@ public class AfterSchoolFragment extends Fragment{
                 .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY)+"?page="+page)
                 .toCache("herald_afterschoolschool", o -> o)
                 .onFinish((success, code, response) -> {
-                    ContextUtils.showMessage(getContext(),"刷新成功");
+                    // ContextUtils.showMessage(getContext(),"刷新成功");
                     isRefreshing = false;
                     if ( srl != null) srl.setRefreshing(false);
                     //成功则
                     if (success){
                         afterSchoolActivityAdapter.removeAll();
                         addNewItemWithData(response);
+                    } else {
+                        ContextUtils.showMessage(getContext(),"刷新失败，请重试");
                     }
                 }).run();
     }
@@ -122,14 +124,16 @@ public class AfterSchoolFragment extends Fragment{
         //绑定适配器跟上拉加载监听函数
         recyclerView.setAdapter(afterSchoolActivityAdapter);
         recyclerView.setOnFooterListener((footerposition)-> {
-            //每次上拉记载时，页数都加1
-            page += 1;
             new ApiRequest(getContext())
-                    .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY)+"?page="+page)
+                    .url(ApiHelper.getLiveApiUrl(ApiHelper.API_LIVE_AFTERSCHOOLACTIVITY)+"?page="+(page+1))
                     .get()
                     .onFinish((success, code, response) -> {
                         if (success){
+                            //每次上拉记载时，页数都加1
+                            page += 1;
                             addNewItemWithData(response);
+                        } else {
+                            ContextUtils.showMessage(getContext(), "加载失败，请重试");
                         }
                     }).run();
         });
@@ -142,11 +146,10 @@ public class AfterSchoolFragment extends Fragment{
         //根据所给数据(格式为服务器中返回的数据格式)将活动添加到列表中
         try {
             JSONArray array = new JSONObject(data).getJSONArray("content");
-            if(array.length() == 0)
-            {
+            if(array.length() == 0) {
                 afterSchoolActivityAdapter.setLoadFinished(true);
-                ContextUtils.showMessage(getContext(), "已无更多内容");
-            }else{
+                ContextUtils.showMessage(getContext(), "没有更多数据");
+            } else {
                 //新一页的内容
                 ArrayList<AfterSchoolActivityItem> newcontent =
                         AfterSchoolActivityItem.transfromJSONArrayToArrayList(array);
@@ -157,7 +160,7 @@ public class AfterSchoolFragment extends Fragment{
             }
             afterSchoolActivityAdapter.notifyDataSetChanged();
         }catch (JSONException e){
-            ContextUtils.showMessage(getContext(),"数据加载错误");
+            ContextUtils.showMessage(getContext(),"解析失败，请刷新");
             e.printStackTrace();
         }
     }
@@ -179,9 +182,9 @@ public class AfterSchoolFragment extends Fragment{
         try {
             List<AfterSchoolActivityItem> afterSchoolActivityItems = AfterSchoolActivityItem.transfromJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
             if (afterSchoolActivityItems.size() == 0) {
-                return new TimelineItem("校园活动","最近没有热门活动",now,TimelineItem.NO_CONTENT,R.mipmap.ic_activity);
+                return new TimelineItem("校园活动","最近没有新的热门校园活动",now,TimelineItem.NO_CONTENT,R.mipmap.ic_activity);
             } else {
-                TimelineItem item  = new TimelineItem("校园活动","最近有" + afterSchoolActivityItems.size() + "个热门活动",
+                TimelineItem item  = new TimelineItem("校园活动","最近有新的热门校园活动，欢迎来参加~",
                         now,TimelineItem.CONTENT_NOTIFY,R.mipmap.ic_activity);
                 for (AfterSchoolActivityItem afterSchoolActivityItem : afterSchoolActivityItems) {
                     item.attachedView.add(new AfterSchoolActivityBlockLayout(host.getContext(), afterSchoolActivityItem));
@@ -192,8 +195,8 @@ public class AfterSchoolFragment extends Fragment{
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新考试
             new CacheHelper(host.getContext()).setCache("herald_afterschoolschool_hot", "");
-            return new TimelineItem("校园活动","热门活动数据加载失败",
-                    now,TimelineItem.NO_CONTENT,R.mipmap.ic_activity);
+            return new TimelineItem("校园活动","热门活动数据为空，请尝试刷新",
+                    now,TimelineItem.CONTENT_NOTIFY,R.mipmap.ic_activity);
         }
     }
 

@@ -36,14 +36,15 @@
                 android:textColor="@color/colorIcons"
                 android:text="@string/app_name"/>
             <ImageButton
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="8dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/home_add_btn"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 android:id="@+id/ibtn_add"
-                android:background="@drawable/selectable_item_background"/>
+                android:background="@null"/>
         </RelativeLayout>
         <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
             android:id="@+id/main_tabs"

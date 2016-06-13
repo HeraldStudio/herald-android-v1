@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.seu.herald_android.custom.ContextUtils;
+
 
 /**
  * 水平滑动分页的适配器，修改时很容易出错，请慎重操作
@@ -46,6 +48,13 @@ class PagesAdapter extends PagerAdapter {
                     if (info.getEndWeek() > maxWeek) maxWeek = info.getEndWeek();
                 }
             }
+
+            // 如果没课, 什么也不做
+            if (maxWeek < 1) {
+                ContextUtils.showMessage(context, "暂无课程");
+                return;
+            }
+
             Map<String, Pair<String, String>> sidebarInfo = new HashMap<>();
 
             // 将课程的授课教师和学分信息放入键值对
@@ -96,7 +105,7 @@ class PagesAdapter extends PagerAdapter {
     }
 
     public int getCurrentPage() {
-        return Math.min(viewList.size(), thisWeek - 1);
+        return Math.min(viewList.size() - 1, thisWeek - 1);
     }
 
     @Override

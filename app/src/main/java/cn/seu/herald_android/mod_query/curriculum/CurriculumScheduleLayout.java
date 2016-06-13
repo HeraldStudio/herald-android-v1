@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.ContextUtils;
 
 /**
  * 课程表视图的实现
@@ -145,6 +146,9 @@ public class CurriculumScheduleLayout extends FrameLayout {
             // 双重列表，用每个子列表表示一天的课程
             List<List<ClassInfo>> listOfList = new ArrayList<>();
 
+            // 是否有无法读取的课程, 如辅修课
+            boolean hasInvalid = false;
+
             // 放两个循环是为了先把列数确定下来
             for (int i = 0; i < 7; i++) {
 
@@ -154,12 +158,16 @@ public class CurriculumScheduleLayout extends FrameLayout {
                 // 剔除不属于本周的课程，并将对应的课程添加到对应星期的列表中
                 List<ClassInfo> list = new ArrayList<>();
                 for (int j = 0; j < array.length(); j++) {
-                    ClassInfo info = new ClassInfo(array.getJSONArray(j));
-                    info.weekNum = WEEK_NUMS_CN[i];
-                    int startWeek = info.getStartWeek();
-                    int endWeek = info.getEndWeek();
-                    if (endWeek >= week && startWeek <= week && info.isFitEvenOrOdd(week))
-                        list.add(info);
+                    try {
+                        ClassInfo info = new ClassInfo(array.getJSONArray(j));
+                        info.weekNum = WEEK_NUMS_CN[i];
+                        int startWeek = info.getStartWeek();
+                        int endWeek = info.getEndWeek();
+                        if (endWeek >= week && startWeek <= week && info.isFitEvenOrOdd(week))
+                            list.add(info);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        hasInvalid = true;
+                    }
                 }
 
                 // 根据周六或周日无课的天数对列数进行删减
@@ -169,6 +177,11 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
                 // 将子列表添加到父列表
                 listOfList.add(list);
+            }
+
+            // 有无效课程时的提示
+            if (hasInvalid) {
+                ContextUtils.showMessage(getContext(), "暂不支持导入辅修课，敬请期待后续版本。");
             }
 
             // 确定好实际要显示的列数后，将每列数据交给子函数处理

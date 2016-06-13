@@ -12,7 +12,7 @@ public class ClassInfo {
     private String className, place;
     private int startWeek, endWeek, startTime, endTime;
 
-    public ClassInfo(JSONArray json) throws JSONException {
+    public ClassInfo(JSONArray json) throws JSONException, ArrayIndexOutOfBoundsException {
         className = json.getString(0);
         place = json.getString(2);
         String timeStr = json.getString(1);

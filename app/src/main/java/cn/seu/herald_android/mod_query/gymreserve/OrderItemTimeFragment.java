@@ -83,7 +83,7 @@ public class OrderItemTimeFragment extends Fragment {
                         loadOrderItemTimes(response);
                     } else {
                         baseAppCompatActivity.hideProgressDialog();
-                        baseAppCompatActivity.showSnackBar("获取可预约时间段失败，请检查网络");
+                        baseAppCompatActivity.showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -117,7 +117,7 @@ public class OrderItemTimeFragment extends Fragment {
                 .onFinish((success, code, response) -> {
                     isJudging = false;
                     try{
-                        String judgeRes = "获取预约信息失败，请重试";
+                        String judgeRes = "获取失败，请重试";
                         if (success){
                             String rescode = new JSONObject(response).getJSONObject("content").getString("code");
                             String msg = new JSONObject(response).getJSONObject("content").getString("msg");

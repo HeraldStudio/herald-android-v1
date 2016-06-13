@@ -57,7 +57,7 @@ public class MyOrderActivity extends BaseAppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
-            refreshMyOrder("刷新成功");
+            refreshMyOrder();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -79,25 +79,23 @@ public class MyOrderActivity extends BaseAppCompatActivity {
         //列表初始化
         listView = (ListView) findViewById(R.id.listview_gym_myorder);
 
-        refreshMyOrder(null);
+        refreshMyOrder();
     }
 
 
-     void refreshMyOrder(@Nullable String showMsg){
+    private void refreshMyOrder() {
         showProgressDialog();
         new ApiRequest(this)
                 .addUUID()
                 .api(ApiHelper.API_GYMRESERVE)
-                .post("method","myOrder")
-                .toCache("herald_gymreserve_myorder",o->o)
+                .post("method", "myOrder")
+                .toCache("herald_gymreserve_myorder", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    if (success){
+                    if (success) {
                         loadMyOrder();
-                        if (showMsg!=null)
-                            showSnackBar(showMsg);
-                    }else {
-                        showSnackBar("获取预约记录失败，请稍后重试");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 })
                 .run();
@@ -111,13 +109,13 @@ public class MyOrderActivity extends BaseAppCompatActivity {
                 ArrayList<MyOrder> list = MyOrder.transfromJSONtoArrayList(array);
                 listView.setAdapter(new MyOrderAdapter(getBaseContext(),R.layout.listviewitem_gym_myorder,list));
                 if (listView.getCount() == 0)
-                    ListViewUtils.addDefaultEmptyTipsView(getBaseContext(),listView,"你居然还没有预约过场馆 =。=");
+                    ListViewUtils.addDefaultEmptyTipsView(getBaseContext(),listView,"暂无场馆预约记录");
             }catch (JSONException e){
                 e.printStackTrace();
             }
             return;
         }
-        refreshMyOrder(null);
+        refreshMyOrder();
     }
 
     public void cancelOrder(int id){
@@ -128,14 +126,15 @@ public class MyOrderActivity extends BaseAppCompatActivity {
                 .post("method","cancelUrl")
                 .post("id",id+"")
                 .onFinish((success, code, response) -> {
-                    try{
+                    try {
                         String res = new JSONObject(response).getJSONObject("content").getString("msg");
                         if (success && res.equals("success")){
-                            refreshMyOrder("取消预约成功");
-                        }else {
-                            showSnackBar("取消失败");
+                            showSnackBar("取消预约成功");
+                            refreshMyOrder();
+                        } else {
+                            showSnackBar("取消预约失败，请重试");
                         }
-                    }catch (JSONException e){
+                    } catch (JSONException e){
                         e.printStackTrace();
                     }
                 }).run();

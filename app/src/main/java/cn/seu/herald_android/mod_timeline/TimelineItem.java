@@ -85,7 +85,9 @@ public class TimelineItem {
 
     public boolean isRead(Context context) {
         String code = String.valueOf(toString().hashCode());
-        String key = "herald_cards_read_" + moduleId;
+
+        // 这里用name的哈希值做键, 而不用moduleId, 防止多个moduleId=-1的模块共用一个存储造成冲突
+        String key = "herald_cards_read_" + name.hashCode();
         return new CacheHelper(context).getCache(key).equals(code);
     }
 
@@ -98,7 +100,9 @@ public class TimelineItem {
 
     public void markAsRead(Context context) {
         String code = String.valueOf(toString().hashCode());
-        String key = "herald_cards_read_" + moduleId;
+
+        // 这里用name的哈希值做键, 而不用moduleId, 防止多个moduleId=-1的模块共用一个存储造成冲突
+        String key = "herald_cards_read_" + name.hashCode();
         new CacheHelper(context).setCache(key, code);
     }
 }

@@ -97,7 +97,9 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadListWithCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败");
                     }
                 }).run();
     }
@@ -139,7 +141,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 
 
             } catch (JSONException e) {
-                showSnackBar("缓存加载失败，请尝试重新刷新");
+                showSnackBar("解析失败，请刷新");
             }
         } else {
             refreshCache();

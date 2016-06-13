@@ -48,7 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             holder.tv_price.setTextColor(ContextCompat.getColor(context, R.color.relaxRed));
         }
 
-        holder.tv_date.setText(cardItem.getDate());
+        holder.tv_date.setText(cardItem.getDisplayDate());
         holder.tv_time.setText(cardItem.getTime());
 
         //没有标题的条目，把说明显示在标题上

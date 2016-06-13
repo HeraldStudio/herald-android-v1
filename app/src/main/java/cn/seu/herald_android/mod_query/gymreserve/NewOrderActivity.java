@@ -302,7 +302,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     isOrdeing = true;
-                    try{
+                    try {
                         if (success){
                             int rescode = new JSONObject(response).getJSONObject("content").getInt("code");
                             Handler handler = new Handler();
@@ -324,7 +324,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
-                        showSnackBar("预约失败");
+                        showSnackBar("判断预约结果失败，请手动查询");
                     }
                 })
                 .run();

@@ -11,6 +11,7 @@ public class CacheHelper {
             "herald_card",
             "herald_card_left",
             "herald_card_date",
+            "herald_card_today",
             "herald_grade_gpa",
             "herald_lecture_records",
             "herald_experiment",
