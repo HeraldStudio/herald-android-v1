@@ -87,7 +87,7 @@ public class SchoolScheduleActivity extends BaseAppCompatActivity {
                 // 强制联网刷新成功
 
                 hideProgressDialog();
-                if (refresh) showSnackBar("刷新成功");
+                // if (refresh) showSnackBar("刷新成功");
 
                 // 保存当前缓存的时间参数，供下次使用
                 getCacheHelper().setCache("herald_schedule_cache_time", newCacheTimeFinal);
