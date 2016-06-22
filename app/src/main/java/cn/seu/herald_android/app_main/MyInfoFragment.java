@@ -30,6 +30,7 @@ public class MyInfoFragment extends Fragment {
 
     private TextView tv_nowversion;
     private SwitchButton swith_seu;
+    private SwitchButton swith_bottomtab;
     private ServiceHelper serviceHelper;
 
     @Nullable
@@ -63,6 +64,32 @@ public class MyInfoFragment extends Fragment {
                     .show();
         });
 
+        //seu登录模块设置
+        setupSeuSettings();
+
+        //个性化设置
+        setupPersonalSettings();
+
+        //刷新用户名
+        refreshUsername();
+
+        return contentView;
+    }
+
+    private void setupPersonalSettings(){
+        //底部菜单设置
+        swith_bottomtab = (SwitchButton) contentView.findViewById(R.id.switchbottomtab);
+        swith_bottomtab = (SwitchButton) contentView.findViewById(R.id.switchbottomtab);
+        swith_bottomtab.setCheckedImmediately(!new SettingsHelper(getContext()).getBottomTabEnabled());
+        swith_bottomtab.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            new SettingsHelper(getContext()).setBottomTabEnabled(!isChecked);
+        });
+        contentView.findViewById(R.id.switch_container).setOnClickListener(v -> swith_bottomtab.toggle());
+    }
+
+
+    private void setupSeuSettings(){
+        //seu登录模块设置
         swith_seu = (SwitchButton) contentView.findViewById(R.id.switchseuauto);
         swith_seu.setCheckedImmediately(new SettingsHelper(getContext()).getWifiAutoLogin());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -77,12 +104,7 @@ public class MyInfoFragment extends Fragment {
                     }).show();
             return true;
         });
-
         contentView.findViewById(R.id.switch_container).setOnClickListener(v -> swith_seu.toggle());
-
-        refreshUsername();
-
-        return contentView;
     }
 
     public void refreshUsername() {
