@@ -2,6 +2,7 @@ package cn.seu.herald_android.app_main;
 
 import android.animation.ArgbEvaluator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +19,10 @@ import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
@@ -139,6 +143,23 @@ public class MainActivity extends BaseAppCompatActivity {
         if (ibtn != null) {
             ibtn.setOnClickListener(v -> {
                 //快捷方式
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                AlertDialog dialog_more = builder.create();
+                //show函数需要在getWindow前调用
+                dialog_more.show();
+                //对话框窗口设置布局文件
+                Window window = dialog_more.getWindow();
+                WindowManager.LayoutParams wmlp =window.getAttributes();
+                wmlp.gravity = Gravity.RIGHT | Gravity.TOP;
+                //此处容易引发布局的ClassCastException，需要注意
+                wmlp.x = new Double (ibtn.getLayoutParams().width * 0.5).intValue();
+                wmlp.y = ibtn.getLayoutParams().height;
+                wmlp.width = 400;
+                wmlp.height = 200;
+                window.setAttributes(wmlp);
+                window.setContentView(R.layout.content_dialog_main_more);
+                //设置布局
+
             });
         }
     }
