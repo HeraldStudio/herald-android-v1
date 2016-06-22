@@ -132,7 +132,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                     expandableListView.expandGroup(0);
 
             } catch (JSONException e) {
-                showSnackBar("缓存解析失败，请刷新后再试");
+                showSnackBar("解析失败，请刷新");
                 e.printStackTrace();
             }
         } else {
@@ -148,7 +148,9 @@ public class ExperimentActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -315,7 +317,7 @@ public class ExperimentActivity extends BaseAppCompatActivity {
             // 清除出错的数据，使下次懒惰刷新时刷新实验
             new CacheHelper(host.getContext()).setCache("herald_experiment", "");
             return new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
-                    now, TimelineItem.NO_CONTENT, "实验数据加载失败，请手动刷新"
+                    now, TimelineItem.CONTENT_NOTIFY, "实验数据为空，请尝试刷新"
             );
         }
     }

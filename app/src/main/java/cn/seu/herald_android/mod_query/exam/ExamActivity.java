@@ -116,7 +116,7 @@ public class ExamActivity extends BaseAppCompatActivity {
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
-            showSnackBar("数据解析失败，请重试");
+            showSnackBar("解析失败，请刷新");
         }
     }
 
@@ -128,7 +128,9 @@ public class ExamActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -146,6 +148,9 @@ public class ExamActivity extends BaseAppCompatActivity {
         String cache = new CacheHelper(host.getContext()).getCache("herald_exam");
         //自定义考试缓存
         String definedcache = new CacheHelper(host.getContext()).getCache("herald_exam_definedexam");
+        if (definedcache.equals("")) {
+            definedcache = "[]";
+        }
         final long now = Calendar.getInstance().getTimeInMillis();
         try {
             List<ExamItem> examList = new ArrayList<>();
@@ -194,7 +199,7 @@ public class ExamActivity extends BaseAppCompatActivity {
             // 清除出错的数据，使下次懒惰刷新时刷新考试
             new CacheHelper(host.getContext()).setCache("herald_exam", "");
             return new TimelineItem(SettingsHelper.MODULE_EXAM,
-                    now, TimelineItem.NO_CONTENT, "考试数据加载失败，请手动刷新"
+                    now, TimelineItem.CONTENT_NOTIFY, "考试数据为空，请尝试刷新"
             );
         }
     }

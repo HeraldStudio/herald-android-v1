@@ -104,7 +104,7 @@ public class JwcActivity extends BaseAppCompatActivity {
                     expandableListView.expandGroup(0);
 
             } catch (JSONException e) {
-                showSnackBar("缓存解析失败，请刷新后再试");
+                showSnackBar("解析失败，请刷新");
                 e.printStackTrace();
             }
         } else {
@@ -119,7 +119,9 @@ public class JwcActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -180,7 +182,7 @@ public class JwcActivity extends BaseAppCompatActivity {
             // 清除出错的数据，使下次懒惰刷新时刷新实验
             new CacheHelper(host.getContext()).setCache("herald_jwc", "");
             return new TimelineItem(SettingsHelper.MODULE_EXPERIMENT,
-                    now, TimelineItem.NO_CONTENT, "教务通知加载失败，请手动刷新"
+                    now, TimelineItem.CONTENT_NOTIFY, "教务通知数据为空，请尝试刷新"
             );
         }
     }

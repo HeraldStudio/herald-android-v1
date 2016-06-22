@@ -3,7 +3,10 @@ package cn.seu.herald_android.mod_query.cardextra;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 class CardItem {
     //消费日期
@@ -30,7 +33,6 @@ class CardItem {
 
     public static ArrayList<CardItem> transfromJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<CardItem> list = new ArrayList<>();
-        list.add(new CardItem("", "今天", "", "为了您的账号安全，可到充值页面查看当天流水", "未出账", ""));
 
         for (int i = 0; i < jsonArray.length(); i++) {
             list.add(new CardItem(
@@ -47,6 +49,22 @@ class CardItem {
 
     public String getDate() {
         return date;
+    }
+
+    public String getDisplayDate() {
+        Calendar cal = Calendar.getInstance();
+
+        if (date.equals(new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime()))){
+            return "今天";
+        }
+
+        cal.roll(Calendar.DATE, -1);
+
+        if (date.equals(new SimpleDateFormat("yyyy/MM/dd").format(cal.getTime()))){
+            return "昨天";
+        }
+
+        return getDate();
     }
 
     public String getPrice() {

@@ -99,19 +99,23 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
         new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).addUUID()
                 .post("book", query).onFinish((success, code, response) -> {
             hideProgressDialog();
-            if (success) try {
-                JSONObject json_res = new JSONObject(response);
-                if (json_res.getString("content").equals("[]")) {
-                    showSnackBar("当前书目不存在, 换个关键字试试");
-                    return;
+            if (success) {
+                try {
+                    JSONObject json_res = new JSONObject(response);
+                    if (json_res.getString("content").equals("[]")) {
+                        showSnackBar("当前书目不存在, 换个关键字试试");
+                        return;
+                    }
+                    ArrayList<Book> searchResultList =
+                            Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
+                    loadSearchResult(searchResultList);
+                    // showSnackBar("刷新成功");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    showSnackBar("解析失败，请刷新");
                 }
-                ArrayList<Book> searchResultList =
-                        Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
-                loadSearchResult(searchResultList);
-                showSnackBar("刷新成功");
-            } catch (JSONException e) {
-                e.printStackTrace();
-                showSnackBar("数据解析失败，请重试");
+            } else {
+                showSnackBar("刷新失败，请重试");
             }
         }).run();
 

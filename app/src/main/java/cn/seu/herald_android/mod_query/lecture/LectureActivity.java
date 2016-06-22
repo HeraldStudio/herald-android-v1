@@ -109,13 +109,11 @@ public class LectureActivity extends BaseAppCompatActivity {
                 //刷新打卡记录缓存
             } catch (JSONException e) {
                 e.printStackTrace();
-                showSnackBar("缓存解析出错，请刷新后再试。");
+                showSnackBar("解析失败，请刷新");
             }
-
         } else {
-            showSnackBar("暂无缓存或者缓存已失效，请重新刷新。");
+            showSnackBar("解析失败，请刷新");
         }
-
     }
 
     private void refreshCache() {
@@ -133,7 +131,11 @@ public class LectureActivity extends BaseAppCompatActivity {
                 })
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    loadNoticeCache();
+                    if (success) {
+                        loadNoticeCache();
+                    } else {
+                        showSnackBar("刷新失败，请重试");
+                    }
                 }).run();
     }
 
@@ -166,7 +168,9 @@ public class LectureActivity extends BaseAppCompatActivity {
                     hideProgressDialog();
                     if (success) {
                         loadRecordCache();
-                        showSnackBar("获取讲座记录成功");
+                        // showSnackBar("获取讲座记录成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -186,7 +190,7 @@ public class LectureActivity extends BaseAppCompatActivity {
                         LectureRecordItem.transformJSONArrayToArrayList(jsonArray)));
             } catch (JSONException e) {
                 e.printStackTrace();
-                showSnackBar("缓存解析失败，请刷新后再试。");
+                showSnackBar("解析失败，请刷新");
             }
         }
     }
@@ -235,7 +239,7 @@ public class LectureActivity extends BaseAppCompatActivity {
 
                 TimelineItem item = new TimelineItem(SettingsHelper.MODULE_LECTURE,
                         time.getTimeInMillis(), TimelineItem.CONTENT_NO_NOTIFY,
-                        "今天有新的人文讲座，有兴趣的同学欢迎来参加"
+                        "今天有新的人文讲座，有兴趣的同学欢迎参加"
                 );
                 item.attachedView = lectures;
                 return item;
@@ -249,7 +253,7 @@ public class LectureActivity extends BaseAppCompatActivity {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             return new TimelineItem(SettingsHelper.MODULE_LECTURE,
-                    now, TimelineItem.NO_CONTENT, "人文讲座数据加载失败，请手动刷新"
+                    now, TimelineItem.CONTENT_NOTIFY, "人文讲座数据为空，请尝试刷新"
             );
         }
     }

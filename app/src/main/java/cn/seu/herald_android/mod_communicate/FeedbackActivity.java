@@ -58,6 +58,8 @@ public class FeedbackActivity extends BaseAppCompatActivity {
                             //延时展示信息然后退出
                             Handler handler = new Handler();
                             handler.postDelayed(this::finish,2000);
+                        } else {
+                            showSnackBar("发送失败，请重试");
                         }
                     }).run();
         }

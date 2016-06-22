@@ -76,6 +76,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                         refreshCacheStep2();
                     } else {
                         hideProgressDialog();
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -85,7 +86,11 @@ public class CurriculumActivity extends BaseAppCompatActivity {
                 .toCache("herald_curriculum", o -> o.getJSONObject("content"))
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    if (success) readLocal();
+                    if (success) {
+                        readLocal();
+                    } else {
+                        showSnackBar("刷新失败，请重试");
+                    }
                 }).run();
     }
 
@@ -197,60 +202,64 @@ public class CurriculumActivity extends BaseAppCompatActivity {
             ArrayList<View> remainingClasses = new ArrayList<>();
 
             for (int j = 0; j < array.length(); j++) {
-                ClassInfo info = new ClassInfo(array.getJSONArray(j));
-                // 如果该课程本周上课
-                if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
-                    classCount++;
-                    // 上课时间
-                    long startTime = today.getTimeInMillis();
-                    startTime += CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getStartTime() - 1] * 60 * 1000;
+                try {
+                    ClassInfo info = new ClassInfo(array.getJSONArray(j));
+                    // 如果该课程本周上课
+                    if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
+                        classCount++;
+                        // 上课时间
+                        long startTime = today.getTimeInMillis();
+                        startTime += CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getStartTime() - 1] * 60 * 1000;
 
-                    // 下课时间
-                    long endTime = today.getTimeInMillis();
-                    endTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 45) * 60 * 1000;
+                        // 下课时间
+                        long endTime = today.getTimeInMillis();
+                        endTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 45) * 60 * 1000;
 
-                    // 快要下课的时间
-                    long almostEndTime = today.getTimeInMillis();
-                    almostEndTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 35) * 60 * 1000;
+                        // 快要下课的时间
+                        long almostEndTime = today.getTimeInMillis();
+                        almostEndTime += (CurriculumScheduleLayout.CLASS_BEGIN_TIME[info.getEndTime() - 1] + 35) * 60 * 1000;
 
-                    // 如果是还没到时间的课，放在“你今天(还)有x节课”的列表里备用
-                    // 只要没有快上课或正在上课的提醒导致中途退出循环的话，这个列表就会显示
-                    if (now < startTime) {
-                        if (now >= almostEndTime && now < endTime) {
-                            classAlmostEnd = true;
+                        // 如果是还没到时间的课，放在“你今天(还)有x节课”的列表里备用
+                        // 只要没有快上课或正在上课的提醒导致中途退出循环的话，这个列表就会显示
+                        if (now < startTime) {
+                            if (now >= almostEndTime && now < endTime) {
+                                classAlmostEnd = true;
+                            }
+                            info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                            Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                            CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
+                                    info, pair == null ? "获取失败" : pair.first);
+                            remainingClasses.add(block);
                         }
-                        info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                        Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
-                                info, pair == null ? "获取失败" : pair.first);
-                        remainingClasses.add(block);
+
+                        // 快要上课的紧急提醒
+                        if (now >= startTime - 15 * 60 * 1000 && now < startTime) {
+                            TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
+                                    startTime, TimelineItem.CONTENT_NOTIFY, "即将开始上课，请注意时间，准时上课"
+                            );
+                            info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                            Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                            CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
+                                    info, pair == null ? "获取失败" : pair.first);
+
+                            item.attachedView.add(block);
+                            return item;
+                        } else if (now >= startTime && now < almostEndTime) {
+                            // 正在上课的提醒
+                            TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
+                                    now, TimelineItem.CONTENT_NOTIFY, "正在上课中"
+                            );
+                            info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
+                            Pair<String, String> pair = sidebarInfo.get(info.getClassName());
+                            CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
+                                    info, pair == null ? "获取失败" : pair.first);
+
+                            item.attachedView.add(block);
+                            return item;
+                        }
                     }
-
-                    // 快要上课的紧急提醒
-                    if (now >= startTime - 15 * 60 * 1000 && now < startTime) {
-                        TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                                startTime, TimelineItem.CONTENT_NOTIFY, "即将开始上课，请注意时间，准时上课"
-                        );
-                        info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                        Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
-                                info, pair == null ? "获取失败" : pair.first);
-
-                        item.attachedView.add(block);
-                        return item;
-                    } else if (now >= startTime && now < almostEndTime) {
-                        // 正在上课的提醒
-                        TimelineItem item = new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                                now, TimelineItem.CONTENT_NOTIFY, "正在上课中"
-                        );
-                        info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
-                        Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                        CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(host.getContext(),
-                                info, pair == null ? "获取失败" : pair.first);
-
-                        item.attachedView.add(block);
-                        return item;
-                    }
+                } catch (Exception e) {
+                    // 该课程信息不标准，例如辅修课等，无法被识别，则跳过
                 }
             }
             // 此处退出循环有三种可能：可能是今天没课，可能是课与课之间或早上的没上课状态，也可能是课上完了的状态
@@ -312,7 +321,7 @@ public class CurriculumActivity extends BaseAppCompatActivity {
             new CacheHelper(host.getContext()).setCache("herald_curriculum", "");
         }
         return new TimelineItem(SettingsHelper.MODULE_CURRICULUM,
-                now, TimelineItem.NO_CONTENT, "课表数据加载失败，请手动刷新"
+                now, TimelineItem.CONTENT_NOTIFY, "课表数据为空，请尝试刷新"
         );
     }
 }

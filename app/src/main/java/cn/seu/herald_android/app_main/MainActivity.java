@@ -119,8 +119,12 @@ public class MainActivity extends BaseAppCompatActivity {
         });
 
         ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
-        if (ibtn!=null)
-            ibtn.setOnClickListener(v -> showSnackBar("更多功能，敬请期待"));
+        if (ibtn != null) {
+            ibtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, ModuleManageActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
 

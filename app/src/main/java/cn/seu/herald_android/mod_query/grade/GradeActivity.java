@@ -84,7 +84,6 @@ public class GradeActivity extends BaseAppCompatActivity {
         tableViewGrade.setHeaderBackgroundColor(ContextCompat.getColor(GradeActivity.this, R.color.colorGradeprimary));
         tableViewGrade.setHeaderAdapter(tableHeaderAdapter);
 
-
         //刷新时的进度对话框
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -142,11 +141,11 @@ public class GradeActivity extends BaseAppCompatActivity {
                     progressDialog.hide();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
-
-
 }
 

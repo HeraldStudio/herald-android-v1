@@ -105,7 +105,7 @@ public class SearchFriendActivity extends BaseAppCompatActivity implements Searc
                             e.printStackTrace();
                         }
                     }else {
-                        showSnackBar("网络错误");
+                        showSnackBar("查询失败，请重试");
                     }
                 }).run();
 

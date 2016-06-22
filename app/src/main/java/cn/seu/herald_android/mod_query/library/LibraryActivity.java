@@ -88,14 +88,18 @@ public class LibraryActivity extends BaseAppCompatActivity {
         new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    if (success) try {
-                        JSONObject json_res = new JSONObject(response);
-                        JSONArray jsonArray = json_res.getJSONArray("content");
-                        loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
-                        showSnackBar("刷新成功");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        showSnackBar("数据解析失败，请重试");
+                    if (success) {
+                        try {
+                            JSONObject json_res = new JSONObject(response);
+                            JSONArray jsonArray = json_res.getJSONArray("content");
+                            loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
+                            // showSnackBar("刷新成功");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showSnackBar("解析失败，请刷新");
+                        }
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -112,23 +116,28 @@ public class LibraryActivity extends BaseAppCompatActivity {
         new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    if (success) try {
-                        JSONObject json_res = new JSONObject(response);
-                        JSONArray jsonArray = json_res.getJSONArray("content");
-                        if (jsonArray.length() == 0) {
-                            //如果列表为空则说明没有借过书
-                            showSnackBar("目前尚无在借图书");
-                        } else {
-                            //反之打开借书记录对话框
-                            displayBorrowRecordDialog(MyBorrowBook.transfromJSONArrayToArrayList(jsonArray));
+                    if (success) {
+                        try {
+                            JSONObject json_res = new JSONObject(response);
+                            JSONArray jsonArray = json_res.getJSONArray("content");
+                            if (jsonArray.length() == 0) {
+                                //如果列表为空则说明没有借过书
+                                showSnackBar("目前尚无在借图书");
+                            } else {
+                                //反之打开借书记录对话框
+                                displayBorrowRecordDialog(MyBorrowBook.transfromJSONArrayToArrayList(jsonArray));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showSnackBar("解析失败，请刷新");
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        showSnackBar("数据解析失败，请重试");
-                    }
-                    else {
+                    } else {
                         //如果为401说明未绑定图书馆账号或者已经失效
-                        if (code == 401) displayLibraryAuthDialog();
+                        if (code == 401) {
+                            displayLibraryAuthDialog();
+                        } else {
+                            showSnackBar("刷新失败，请重试");
+                        }
                     }
                 }).run();
     }
@@ -154,14 +163,14 @@ public class LibraryActivity extends BaseAppCompatActivity {
     private void displayLibraryAuthDialog() {
         //显示图书馆账号需要绑定的对话框
         final EditText et_pwd = new EditText(this);
-        et_pwd.setHint("图书馆密码(默认为一卡通)");
+        et_pwd.setHint("图书馆密码（默认为一卡通号）");
         et_pwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         //设置对话框布局
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(et_pwd);
-        new AlertDialog.Builder(this).setTitle("登陆图书馆").setMessage("你没有绑定图书馆账号或绑定失效，" +
-                "请输入图书馆密码").setView(linearLayout)
+        new AlertDialog.Builder(this).setTitle("绑定图书馆账号").setMessage("你还没有绑定图书馆账号或账号不正确，" +
+                "请重新绑定：").setView(linearLayout)
                 .setPositiveButton("确定", (arg0, arg1) -> {
                     String pwd = et_pwd.getText().toString();
                     //发送更新请求
@@ -186,7 +195,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
                         //返回OK说明认证成功
                         refreshBorrowRocord();
                     } else {
-                        showSnackBar("信息绑定失败，请重新再试。如多次失败请尝试注销登录,或者联系管理员");
+                        showSnackBar("绑定失败，请重试");
                     }
                 }).run();
     }

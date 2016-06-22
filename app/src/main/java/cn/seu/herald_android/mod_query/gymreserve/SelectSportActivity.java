@@ -99,7 +99,7 @@ public class SelectSportActivity extends BaseAppCompatActivity {
                     if (success) {
                         loadItemList();
                     } else {
-                        showSnackBar("获取可预约活动列表失败，请检查网络后再试");
+                        showSnackBar("刷新失败，请重试");
                         hideProgressDialog();
                     }
                 }).run();
