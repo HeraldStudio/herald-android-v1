@@ -71,9 +71,11 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         try {
             int remainingDays = examItem.getRemainingDays();
             holder.tv_num.setText(String.valueOf(remainingDays));
-
+            holder.tv_num.setVisibility(View.VISIBLE);
             if (remainingDays < 0) {
-                holder.tv_numtitle.setText("已结束天数");
+                //如果考试已经结束就标识已结束
+                holder.tv_numtitle.setText("已结束");
+                holder.tv_num.setVisibility(View.GONE);
             } else if (remainingDays == 0) {
                 holder.tv_numtitle.setText("今天考试");
             } else {

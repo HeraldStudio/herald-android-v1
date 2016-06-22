@@ -302,10 +302,11 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     isOrdeing = true;
+                    Handler handler = new Handler();
                     try {
                         if (success){
                             int rescode = new JSONObject(response).getJSONObject("content").getInt("code");
-                            Handler handler = new Handler();
+
                             switch (rescode){
                                 case 0:
                                     showSnackBar("预约成功");
@@ -323,6 +324,11 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                     }catch (JSONException e){
                         e.printStackTrace();
                         showSnackBar("判断预约结果失败，请手动查询");
+                        //跳转至我的预约列表，方便查看预约结果
+                        handler.postDelayed(() -> {
+                            startActivity(new Intent(NewOrderActivity.this, MyOrderActivity.class));
+                            finish();
+                        },500);
                     }
                 })
                 .run();

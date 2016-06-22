@@ -254,6 +254,7 @@ public class SettingsHelper {
         return seuauto.equals("") || seuauto.equals("1");
     }
 
+
     public void setWifiAutoLogin(boolean flag){
         if (flag){
             setCache("herald_settings_wifi_autologin","1");
