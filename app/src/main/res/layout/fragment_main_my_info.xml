@@ -54,6 +54,7 @@
             android:textColor="#666"
             android:textSize="12sp" />
 
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
@@ -105,6 +106,8 @@
 
         </LinearLayout>
 
+
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -148,6 +151,75 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
+
+        <!--个性设置-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/colorDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="7dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="20dp"
+            android:text="个性设置"
+            android:textColor="#666"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/colorDivider" />
+
+        <LinearLayout
+            android:id="@+id/switch_container_bottomtab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selectable_item_background_white"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="听说我是Android粉"
+                    android:textColor="#333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="3dp"
+                    android:text="首页启用底部菜单用于页面切换(重新打开后生效)"
+                    android:textColor="#888"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <cn.seu.herald_android.custom.CustomSwitchButton
+                android:id="@+id/switchbottomtab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:paddingLeft="15dp"
+                android:paddingRight="5dp" />
+
+        </LinearLayout>
+        <!--个性设置-->
 
         <View
             android:layout_width="match_parent"

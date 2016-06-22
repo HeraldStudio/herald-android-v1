@@ -104,6 +104,8 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
         pagerBottomTabLayout = (PagerBottomTabLayout)findViewById(R.id.main_tabs);
 
+        setupPagerBottomTabLayout();
+
         //放置三个Tab页面
         attachFragments();
 
@@ -124,6 +126,14 @@ public class MainActivity extends BaseAppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ModuleManageActivity.class);
                 startActivity(intent);
             });
+        }
+    }
+
+    private void setupPagerBottomTabLayout(){
+        if (getSettingsHelper().getBottomTabEnabled()){
+            pagerBottomTabLayout.setVisibility(View.VISIBLE);
+        }else {
+            pagerBottomTabLayout.setVisibility(View.GONE);
         }
     }
 

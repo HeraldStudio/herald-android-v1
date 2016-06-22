@@ -264,6 +264,23 @@ public class SettingsHelper {
     }
 
     /**
+     * 设置底部tab是否可见
+     * @return
+     */
+    public boolean getBottomTabEnabled(){
+        String seuauto = getCache("herald_settings_bottomtabvisible");
+        return seuauto.equals("") || seuauto.equals("1");
+    }
+
+    public void setBottomTabEnabled(boolean flag){
+        if (flag){
+            setCache("herald_settings_bottomtabvisible","1");
+        }else {
+            setCache("herald_settings_bottomtabvisible","0");
+        }
+    }
+
+    /**
      * 获得应用启动次数
      */
     public int getLaunchTimes() {
