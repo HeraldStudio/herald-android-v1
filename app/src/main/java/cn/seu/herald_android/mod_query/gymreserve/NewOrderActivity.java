@@ -309,17 +309,15 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                             switch (rescode){
                                 case 0:
                                     showSnackBar("预约成功");
-                                    handler.postDelayed((Runnable) () -> {
+                                    handler.postDelayed(() -> {
                                         startActivity(new Intent(NewOrderActivity.this, MyOrderActivity.class));
                                         finish();
                                     },500);
                                     break;
                                 default:
-                                    showSnackBar("预约失败，请重新选择时间段");
+                                    showSnackBar(new JSONObject(response).getJSONObject("content").getString("msg"));
                                     //预约失败会重新选择时间段
-                                    handler.postDelayed((Runnable) () -> {
-                                        finish();
-                                    },500);
+                                    handler.postDelayed(() -> finish(),500);
                             }
                         }
                     }catch (JSONException e){
