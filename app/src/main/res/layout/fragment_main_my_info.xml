@@ -194,7 +194,7 @@
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:text="听说我是Android粉"
+                    android:text="隐藏首页Tab栏"
                     android:textColor="#333"
                     android:textSize="15sp" />
 
@@ -204,7 +204,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:paddingTop="3dp"
-                    android:text="首页启用底部菜单用于页面切换(重新打开后生效)"
+                    android:text="可隐藏首页Tab栏以兼容某些屏幕空间小的设备(重新打开后生效)"
                     android:textColor="#888"
                     android:textSize="12sp" />
 

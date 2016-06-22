@@ -6,13 +6,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -49,6 +54,7 @@ public class MainActivity extends BaseAppCompatActivity {
     //首页tab和viewPager
     ViewPager viewPager;
     PagerBottomTabLayout pagerBottomTabLayout;
+    TabLayout topTabLayout;
 
     //用来接收需要切换首页fragment的广播
     BroadcastReceiver changeMainFragmentReceiver;
@@ -103,6 +109,8 @@ public class MainActivity extends BaseAppCompatActivity {
         //控件初始化
         viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
         pagerBottomTabLayout = (PagerBottomTabLayout)findViewById(R.id.main_tabs);
+        topTabLayout = (TabLayout)findViewById(R.id.main_toptabs);
+
 
         setupPagerBottomTabLayout();
 
@@ -113,6 +121,9 @@ public class MainActivity extends BaseAppCompatActivity {
         setupChangeMainFragmentReceiver();
 
 
+        //右上角更多按钮
+        setupMoreButton();
+
         runMeasurementDependentTask(() -> {
             //刷新卡片视图
             cardsFragment.loadTimelineView(true);
@@ -120,11 +131,14 @@ public class MainActivity extends BaseAppCompatActivity {
             moduleListFragment.loadModuleList();
         });
 
+
+    }
+
+    private void setupMoreButton(){
         ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
         if (ibtn != null) {
             ibtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, ModuleManageActivity.class);
-                startActivity(intent);
+                //快捷方式
             });
         }
     }
@@ -132,8 +146,10 @@ public class MainActivity extends BaseAppCompatActivity {
     private void setupPagerBottomTabLayout(){
         if (getSettingsHelper().getBottomTabEnabled()){
             pagerBottomTabLayout.setVisibility(View.VISIBLE);
+            topTabLayout.setVisibility(View.GONE);
         }else {
             pagerBottomTabLayout.setVisibility(View.GONE);
+            topTabLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -180,8 +196,21 @@ public class MainActivity extends BaseAppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return new String[]{"首页","发现","模块", "我的"}[position];
+            String[] titles = new String[]{"首页","发现","模块", "我的"};
+//            int[] imageResId = new int[]{R.drawable.ic_home_24dp,R.drawable.ic_explore,R.drawable.ic_view_module_24dp,R.drawable.ic_person_24dp};
+//            Drawable image = ContextCompat.getDrawable(getBaseContext(),imageResId[position]);
+//            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
+//            SpannableString sb = new SpannableString(titles[position]);
+//            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
+//            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            return sb;
+            return "";
         }
+
+
+
+
+
 
 
     };
@@ -190,6 +219,9 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager.setOffscreenPageLimit(adapter.getCount() - 1);//三个页面都不回收，提高流畅性
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) (3 * getResources().getDisplayMetrics().density));
+
+        topTabLayout.setupWithViewPager(viewPager);
+
 
         //各碎片设置状态栏颜色渐变
         int[] statusColors = new int[]{

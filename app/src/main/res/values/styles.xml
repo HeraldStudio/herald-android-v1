@@ -158,6 +158,21 @@
         <item name="colorAccent">@color/colorWebaccent</item>
     </style>
 
+    <!--自定义tab样式-->
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorAlphawhite</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
     <style name="AppTheme.Invisible" parent="AppTheme.NoActionBar">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
