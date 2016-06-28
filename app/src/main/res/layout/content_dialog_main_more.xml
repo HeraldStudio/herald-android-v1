@@ -6,8 +6,44 @@
     android:scaleType="fitXY"
     android:background="@drawable/dialog_white"
     android:orientation="vertical">
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="所有模块"/>
+        android:id="@+id/content_wifi"
+        android:background="@drawable/selectable_item_background_white"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/action_wifi"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="登录校园网"
+            android:textSize="11sp"
+            android:textColor="@color/colorSecondaryText"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorDivider"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content_module_manage"
+        android:background="@drawable/selectable_item_background_white"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/action_module_manage"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="模块管理"
+            android:textSize="11sp"
+            android:textColor="@color/colorSecondaryText"/>
+    </LinearLayout>
 </LinearLayout>

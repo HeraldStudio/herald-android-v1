@@ -125,7 +125,7 @@ public class MainActivity extends BaseAppCompatActivity {
         setupChangeMainFragmentReceiver();
 
 
-        //右上角更多按钮
+        //设置右上角加号按钮
         setupMoreButton();
 
         runMeasurementDependentTask(() -> {
@@ -139,6 +139,7 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     private void setupMoreButton(){
+        //右上角加号按钮弹出
         ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
         if (ibtn != null) {
             ibtn.setOnClickListener(v -> {
@@ -158,7 +159,15 @@ public class MainActivity extends BaseAppCompatActivity {
                 wmlp.height = 200;
                 window.setAttributes(wmlp);
                 window.setContentView(R.layout.content_dialog_main_more);
-                //设置布局
+                //设置点击项
+                window.findViewById(R.id.content_wifi).setOnClickListener(v1 -> {
+                    //设置登录校园网
+                    new NetworkLoginHelper(this, true).checkAndLogin();
+                });
+                window.findViewById(R.id.content_module_manage).setOnClickListener(v1 -> {
+                    //设置打开模块管理
+                    startActivity(new Intent(MainActivity.this, ModuleManageActivity.class));
+                });
 
             });
         }
@@ -227,13 +236,6 @@ public class MainActivity extends BaseAppCompatActivity {
 //            return sb;
             return "";
         }
-
-
-
-
-
-
-
     };
 
     private void attachFragments() {
