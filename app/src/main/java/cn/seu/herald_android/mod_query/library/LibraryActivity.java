@@ -107,7 +107,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
     private void loadHotBookList(ArrayList<HotBook> list) {
         listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.listviewitem_library_hotbook, list));
         //设置高度自适应
-        HotBookAdapter.setHeightWithContent(listView_hotbook);
+//        HotBookAdapter.setHeightWithContent(listView_hotbook);
     }
 
     public void refreshBorrowRocord() {
