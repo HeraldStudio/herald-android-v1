@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="right"
+    android:gravity="center"
     android:scaleType="fitXY"
     android:background="@drawable/dialog_white"
     android:orientation="vertical">
@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/content_wifi"
         android:background="@drawable/selectable_item_background_white"
-        android:gravity="center_vertical">
+        android:gravity="center">
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/action_wifi"
             android:layout_margin="5dp"/>
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="登录校园网"
             android:textSize="11sp"
@@ -33,14 +33,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/content_module_manage"
         android:background="@drawable/selectable_item_background_white"
-        android:gravity="center_vertical">
+        android:gravity="center">
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/action_module_manage"
             android:layout_margin="5dp"/>
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="模块管理"
             android:textSize="11sp"

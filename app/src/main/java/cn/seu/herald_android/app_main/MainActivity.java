@@ -156,7 +156,6 @@ public class MainActivity extends BaseAppCompatActivity {
                 wmlp.x = new Double (ibtn.getLayoutParams().width * 0.5).intValue();
                 wmlp.y = ibtn.getLayoutParams().height;
                 wmlp.width = 400;
-                wmlp.height = 200;
                 window.setAttributes(wmlp);
                 window.setContentView(R.layout.content_dialog_main_more);
                 //设置点击项
