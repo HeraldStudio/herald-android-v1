@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_webmodule.WebShowActivity;
 
 class JwcExpandAdapter extends BaseExpandableListAdapter {
     private ArrayList<String> parentViews;
@@ -80,9 +81,7 @@ class JwcExpandAdapter extends BaseExpandableListAdapter {
         contentView.setOnClickListener(v -> {
             try {
                 Uri uri = Uri.parse(jwcItem.href);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                WebShowActivity.startWebShowActivity(context,jwcItem.title,uri,R.style.JwcTheme);
             } catch (Exception e) {
                 e.printStackTrace();
             }
