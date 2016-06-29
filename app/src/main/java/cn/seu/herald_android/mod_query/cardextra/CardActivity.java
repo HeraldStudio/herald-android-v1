@@ -32,6 +32,7 @@ import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_timeline.TimelineItem;
 import cn.seu.herald_android.mod_timeline.TimelineView;
+import cn.seu.herald_android.mod_webmodule.WebShowActivity;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 
 public class CardActivity extends BaseAppCompatActivity {
@@ -97,8 +98,7 @@ public class CardActivity extends BaseAppCompatActivity {
                     .setMessage("注意：充值之后需要在食堂刷卡机上刷卡，充值金额才能到账哦")
                     .setPositiveButton("确定", (d, w) -> {
                         Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        startActivity(intent);
+                        WebShowActivity.startWebShowActivity(CardActivity.this,"一卡通充值",uri,R.style.CardTheme);
                     }).show();
             return true;
         }
@@ -200,8 +200,7 @@ public class CardActivity extends BaseAppCompatActivity {
                 );
                 item.setOnClickListener(v -> {
                     Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    host.getContext().startActivity(intent);
+                    WebShowActivity.startWebShowActivity(host.getContext(),"一卡通充值",uri,R.style.CardTheme);
                 });
                 return item;
             } else {

@@ -20,6 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minEms="5"
             android:text="登录校园网"
             android:textSize="11sp"
             android:textColor="@color/colorSecondaryText"/>
@@ -42,7 +43,31 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minEms="5"
             android:text="模块管理"
+            android:textSize="11sp"
+            android:textColor="@color/colorSecondaryText"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorDivider"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content_charge"
+        android:background="@drawable/selectable_item_background_white"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/action_charge"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="5"
+            android:text="一卡通充值"
             android:textSize="11sp"
             android:textColor="@color/colorSecondaryText"/>
     </LinearLayout>

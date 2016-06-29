@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -39,6 +40,7 @@ import cn.seu.herald_android.custom.BaseAppCompatActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
+import cn.seu.herald_android.mod_webmodule.WebShowActivity;
 import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
@@ -167,6 +169,12 @@ public class MainActivity extends BaseAppCompatActivity {
                     //设置打开模块管理
                     startActivity(new Intent(MainActivity.this, ModuleManageActivity.class));
                 });
+                window.findViewById(R.id.content_charge).setOnClickListener(v1 -> {
+                    //打开充值页面
+                    Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
+                    WebShowActivity.startWebShowActivity(MainActivity.this,"一卡通充值",uri,R.style.CardTheme);
+                });
+
 
             });
         }
