@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.seu.herald_android.R;
 
@@ -16,10 +17,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     private Context context;
     private ArrayList<CardItem> list;
+    private HashMap<String,Double> totalConsumptions;
+
 
     public CardAdapter(Context context, ArrayList<CardItem> list) {
         this.context = context;
         this.list = list;
+        //消费记录按每天计数
+        totalConsumptions = new HashMap<>();
+        for (CardItem item : list){
+            if (totalConsumptions.containsKey(item.getDate())){
+                totalConsumptions.put(item.getDate(),
+                        totalConsumptions.get(item.getDate())+ Double.parseDouble(item.getPrice()));
+            }else {
+                totalConsumptions.put(item.getDate(),
+                        Double.parseDouble(item.getPrice()));
+            }
+        }
     }
 
     @Override
@@ -34,8 +48,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 //        判断日期和分割线是否显示，用来给每天的消费记录分组
         if (position == 0 || !list.get(position).getDate().equals(list.get(position - 1).getDate())) {
             holder.tv_date.setVisibility(View.VISIBLE);
+            holder.tv_data_total.setVisibility(View.VISIBLE);
+            //消费总额计算
+            if (totalConsumptions.containsKey(cardItem.getDate())){
+                holder.tv_data_total.setText(totalConsumptions.get(cardItem.getDate()).toString());
+            }
         } else {
             holder.tv_date.setVisibility(View.GONE);
+            holder.tv_data_total.setVisibility(View.GONE);
         }
         //判断消费是否为负，如果不为负，则为正，需要设置成其他颜色
         if (!cardItem.getPrice().startsWith("-") && !cardItem.getPrice().equals("")) {
@@ -82,6 +102,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         TextView tv_system;
         //消费后余额
         TextView tv_left;
+        //当日消费总金额
+        TextView tv_data_total;
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -90,7 +112,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             tv_type = (TextView) itemView.findViewById(R.id.tv_type);
             tv_system = (TextView) itemView.findViewById(R.id.tv_system);
             tv_left = (TextView) itemView.findViewById(R.id.tv_left);
-            tv_time = (TextView) itemView.findViewById(R.id.content);
+            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            tv_data_total = (TextView) itemView.findViewById(R.id.tv_date_total);
         }
     }
 }

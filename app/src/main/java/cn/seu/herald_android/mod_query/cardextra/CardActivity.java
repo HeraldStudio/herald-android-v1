@@ -132,6 +132,8 @@ public class CardActivity extends BaseAppCompatActivity {
                 list.addAll(CardItem.transfromJSONArrayToArrayList(jsonArray));
             }
 
+
+
             CardAdapter cardAdapter = new CardAdapter(getBaseContext(), list);
             //设置消费记录数据适配器
             recyclerViewCard.setAdapter(cardAdapter);
@@ -150,10 +152,10 @@ public class CardActivity extends BaseAppCompatActivity {
         manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).addUUID().post("timedelta", "1")
                 .toCache("herald_card_today", o -> o));
 
-        // 如果今天还没刷新过,加入刷新流水的请求
+        // 如果今天还没刷新过,加入刷新流水的请求,默认刷新14天防止丢失数据
         if (!todayHasRefreshed()) {
             manager.add(new ApiRequest(this).api(ApiHelper.API_CARD).addUUID()
-                    .post("timedelta", "31").toCache("herald_card", o -> o));
+                    .post("timedelta", "14").toCache("herald_card", o -> o));
         }
 
         // 刷新完毕后登记刷新日期
