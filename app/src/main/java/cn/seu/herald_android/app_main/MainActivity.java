@@ -172,7 +172,8 @@ public class MainActivity extends BaseAppCompatActivity {
                 window.findViewById(R.id.content_charge).setOnClickListener(v1 -> {
                     //打开充值页面
                     Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
-                    WebShowActivity.startWebShowActivity(MainActivity.this,"一卡通充值",uri,R.style.CardTheme);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                 });
 
 
