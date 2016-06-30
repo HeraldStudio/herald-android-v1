@@ -129,6 +129,7 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
     <color name="colorAlphawhite">#96ffffff</color>
+    <color name="colorUnenabledGray">#535252</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
     <color name="colorMainPagesBg">#fff</color>

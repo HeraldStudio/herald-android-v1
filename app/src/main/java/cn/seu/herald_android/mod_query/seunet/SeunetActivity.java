@@ -109,7 +109,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 }
                 tv_used.setText(used);
                 //设置统计饼状图
-                setupChart(json_cache.getJSONObject("content"));
+                setupChart(json_cache.getJSONObject("content"),pieChartView_wlan);
             } catch (JSONException e) {
                 e.printStackTrace();
                 showSnackBar("解析失败，请刷新");
@@ -143,7 +143,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 }).run();
     }
 
-    private void setupChart(JSONObject json) {
+    public static void setupChart(JSONObject json,PieChartView pieChartView) {
         if (json == null)
             return;
         try {
@@ -157,10 +157,10 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 values.add(sliceValue);
                 PieChartData pieChartData = new PieChartData(values);
                 //为控件设置数据
-                pieChartView_wlan.setPieChartData(pieChartData);
+                pieChartView.setPieChartData(pieChartData);
             } else {
                 String str_use = json.getJSONObject("web").getString("used");
-                setUsedPercentage(str_use, pieChartView_wlan);
+                setUsedPercentage(str_use, pieChartView);
             }
 
         } catch (JSONException | NumberFormatException e) {
@@ -169,7 +169,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
     }
 
 
-    private void setUsedPercentage(String used_str, PieChartView pieChartView) {
+    public static void setUsedPercentage(String used_str, PieChartView pieChartView) {
         //根据获取的已用流量加载下面的饼状图，展示已用百分比
         double used = Double.parseDouble(used_str.split(" ")[0]);
         String unit = used_str.split(" ")[1];
@@ -193,11 +193,11 @@ public class SeunetActivity extends BaseAppCompatActivity {
         DecimalFormat df = new DecimalFormat( "#.## ");
         //设置已用的流量部分的颜色
         sliceValue_used.setLabel(df.format(used_per * 100) + "%");
-        sliceValue_used.setColor(ContextCompat.getColor(this, R.color.colorSeuNetaccent));
+        sliceValue_used.setColor(ContextCompat.getColor(pieChartView.getContext(), R.color.colorSeuNetaccent));
         //设置未使用的流量部分的颜色
         sliceValue_left.setLabel(df.format((1f - used_per) * 100) + "%");
         sliceValue_left.setTarget((float)used_per * 100);
-        sliceValue_left.setColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
+        sliceValue_left.setColor(ContextCompat.getColor(pieChartView.getContext(), R.color.colorSeuNetprimary));
         values.add(sliceValue_used);
         values.add(sliceValue_left);
         PieChartData pieChartData = new PieChartData(values);

@@ -34,14 +34,14 @@ public class NetworkLoginHelper {
         this.shake = shake;
     }
 
-    private static String formatTime(String time) {
+    public static String formatTime(String time) {
         int seconds = Integer.valueOf(time);
         int minutes = seconds / 60;
         seconds %= 60;
         return minutes + ":" + ((seconds < 10) ? "0" : "") + seconds;
     }
 
-    private static String unicodeToString(String str) {
+    public static String unicodeToString(String str) {
 
         Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");
         Matcher matcher = pattern.matcher(str);
@@ -95,12 +95,9 @@ public class NetworkLoginHelper {
         });
     }
 
-    private void loginToService() {
+    private void loginToService(String username,String password){
         //登陆网络服务
         ApiHelper helper = new ApiHelper(context);
-        String username = helper.getWifiUserName();
-        String password = helper.getWifiPassword();
-
         OkHttpUtils.post().url("http://w.seu.edu.cn/portal/login.php")
                 .addParams("username", username)
                 .addParams("password", password).build()
@@ -143,6 +140,16 @@ public class NetworkLoginHelper {
             }
         });
     }
+
+    private void loginToService() {
+        //登陆网络服务
+        ApiHelper helper = new ApiHelper(context);
+        String username = helper.getWifiUserName();
+        String password = helper.getWifiPassword();
+        loginToService(username,password);
+    }
+
+
 
     private void logoutFromService() {
         OkHttpUtils.post().url("http://w.seu.edu.cn/portal/logout.php").build()

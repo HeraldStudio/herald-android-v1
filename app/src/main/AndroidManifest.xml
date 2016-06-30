@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -160,15 +161,16 @@
             android:theme="@style/ExamTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXAM" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!--自定义考试-->
-        <activity android:name=".mod_query.exam.AddExamActivity"
+        <!-- 自定义考试 -->
+        <activity
+            android:name=".mod_query.exam.AddExamActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/ExamTheme">
-        </activity>
+            android:theme="@style/ExamTheme" />
         <activity
             android:name=".mod_query.pedetail.PedetailActivity"
             android:label="@string/title_activity_pedetail"
@@ -177,6 +179,7 @@
             android:theme="@style/PedetailTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_PEDETAIL" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -188,6 +191,7 @@
             android:theme="@style/CurriculumTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_CURRICULUM" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -256,7 +260,6 @@
             android:theme="@style/GymReserveTheme">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -265,29 +268,32 @@
             android:name=".mod_query.gymreserve.OrderItemActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
+            android:theme="@style/GymReserveTheme"></activity>
         <!-- 场馆预约新增预约 -->
         <activity
             android:name=".mod_query.gymreserve.NewOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
+            android:theme="@style/GymReserveTheme"></activity>
         <!-- 搜索新好友 -->
         <activity
             android:name=".mod_query.gymreserve.SearchFriendActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
-        </activity>
+            android:theme="@style/GymReserveTheme"></activity>
         <activity
             android:name=".mod_query.gymreserve.MyOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
+            android:theme="@style/GymReserveTheme"></activity>
+        <activity android:name=".mod_wifi.WifiActivity"
+            android:theme="@style/WifiAutoLoginTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.WIFI_AUTOLOGIN_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
