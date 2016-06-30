@@ -99,6 +99,7 @@ public class MyInfoFragment extends Fragment {
         swith_bottomtab.setCheckedImmediately(!new SettingsHelper(getContext()).getBottomTabEnabled());
         swith_bottomtab.setOnCheckedChangeListener((buttonView, isChecked) -> {
             new SettingsHelper(getContext()).setBottomTabEnabled(!isChecked);
+            getActivity().recreate();
         });
         contentView.findViewById(R.id.switch_container).setOnClickListener(v -> swith_bottomtab.toggle());
     }

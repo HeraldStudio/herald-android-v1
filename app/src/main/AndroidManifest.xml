@@ -287,7 +287,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"></activity>
         <activity android:name=".mod_wifi.WifiActivity"
-            android:theme="@style/WifiAutoLoginTheme">
+            android:theme="@style/WifiAutoLoginTheme"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.WIFI_AUTOLOGIN_ACTIVITY" />
                 <category android:name="android.intent.category.DEFAULT" />
