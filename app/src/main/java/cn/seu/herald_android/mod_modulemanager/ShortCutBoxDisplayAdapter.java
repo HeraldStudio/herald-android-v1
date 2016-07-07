@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,8 +66,10 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
             View webmodule = convertView.findViewById(R.id.tv_webmodule);
             webmodule.setVisibility(seuModule.getAction().contains("WEBMODULE") ? View.VISIBLE : View.GONE);
 
+            int columnCount = ((GridView)parent).getNumColumns();
+
             convertView.setBackgroundColor(
-                    position % 2 == 1 ? (
+                    (position / columnCount + position % columnCount) % 2 == 1 ? (
                         Color.WHITE
                     ) : (
                         Color.rgb(248, 248, 248)
@@ -99,8 +102,10 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
         } else {// “添加”按钮
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridviewitem_display_shortcut, null);
 
+            int columnCount = ((GridView)parent).getNumColumns();
+
             v.setBackgroundColor(
-                    position % 2 == 1 ? (
+                    (position / columnCount + position % columnCount) % 2 == 1 ? (
                             Color.WHITE
                     ) : (
                             Color.rgb(248, 248, 248)

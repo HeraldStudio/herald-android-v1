@@ -29,7 +29,6 @@ public class NetworkLoginHelper {
     public NetworkLoginHelper(Context context, boolean shake) {
         this.context = context;
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        this.shake = shake;
     }
 
     public static String formatTime(String time) {
