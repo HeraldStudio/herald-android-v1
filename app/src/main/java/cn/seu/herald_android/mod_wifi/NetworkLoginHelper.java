@@ -26,8 +26,6 @@ public class NetworkLoginHelper {
 
     private Vibrator vibrator;
 
-    private boolean shake;
-
     public NetworkLoginHelper(Context context, boolean shake) {
         this.context = context;
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -65,7 +63,7 @@ public class NetworkLoginHelper {
             new Handler().postDelayed(this::checkOnlineStatus, 500);
         } else {
             vibrator.vibrate(50);
-            ContextUtils.showMessage(context, "你需要手动连接到seu网络才能摇一摇登录~");
+            ContextUtils.showMessage(context, "你需要手动连接到seu网络才能登录校园网~");
         }
     }
 

@@ -98,7 +98,14 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
             return convertView;
         } else {// “添加”按钮
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridviewitem_display_shortcut, null);
-            ;
+
+            v.setBackgroundColor(
+                    position % 2 == 1 ? (
+                            Color.WHITE
+                    ) : (
+                            Color.rgb(248, 248, 248)
+                    )
+            );
 
             //快捷方式图标
             ImageView imageView = (ImageView) v.findViewById(R.id.ic_shortcut);
