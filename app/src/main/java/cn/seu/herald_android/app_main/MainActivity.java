@@ -145,19 +145,29 @@ public class MainActivity extends BaseAppCompatActivity {
         ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
         if (ibtn != null) {
             ibtn.setOnClickListener(v -> {
+
+                float dp = getResources().getDisplayMetrics().density;
+
                 //快捷方式
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                AlertDialog dialog_more = builder.create();
+                AlertDialog dialog_more = builder.setCancelable(true).create();
+                //点击外部时关闭
+                dialog_more.setCanceledOnTouchOutside(true);
                 //show函数需要在getWindow前调用
                 dialog_more.show();
                 //对话框窗口设置布局文件
                 Window window = dialog_more.getWindow();
-                WindowManager.LayoutParams wmlp =window.getAttributes();
+                //自定义背景半透明深度
+                window.setDimAmount(0.25f);
+                //防止某些机型对话框显示背景色
+                window.setBackgroundDrawable(null);
+                WindowManager.LayoutParams wmlp = window.getAttributes();
                 wmlp.gravity = Gravity.RIGHT | Gravity.TOP;
                 //此处容易引发布局的ClassCastException，需要注意
-                wmlp.x = new Double (ibtn.getLayoutParams().width * 0.5).intValue();
+                //所有写死的尺寸一定要乘以dp，否则会出现兼容问题
+                wmlp.x = (int)(3 * dp);
                 wmlp.y = ibtn.getLayoutParams().height;
-                wmlp.width = 400;
+                wmlp.width = (int)(140 * dp);
                 window.setAttributes(wmlp);
                 window.setContentView(R.layout.content_dialog_main_more);
                 //设置点击项

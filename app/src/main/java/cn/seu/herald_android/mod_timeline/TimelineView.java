@@ -182,6 +182,16 @@ public class TimelineView extends ListView {
             itemList.add(ExamActivity.getExamItem(this));
         }
 
+        if(true){
+            //活动这项永远保留在首页，加载并解析活动缓存
+            TimelineItem activityItem = AfterSchoolFragment.getAfterSchoolActivityItem(this);
+            //修改默认点击函数，设置为主页滑动至活动页
+            activityItem.setOnClickListener(v -> {
+                MainActivity.sendChangeMainFragmentBroadcast(getContext(),MainActivity.MAIN_FRAGMENT_ACTIVITYS);
+            });
+            itemList.add(activityItem);
+        }
+
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_LECTURE)) {
             // 加载并解析人文讲座预告缓存
             itemList.add(LectureActivity.getLectureItem(this));
@@ -200,16 +210,6 @@ public class TimelineView extends ListView {
         if (settingsHelper.getModuleCardEnabled(SettingsHelper.MODULE_JWC)) {
             // 加载并解析教务处缓存
             itemList.add(JwcActivity.getJwcItem(this));
-        }
-
-        if(true){
-            //活动这项永远保留在首页，加载并解析活动缓存
-            TimelineItem activityItem = AfterSchoolFragment.getAfterSchoolActivityItem(this);
-            //修改默认点击函数，设置为主页滑动至活动页
-            activityItem.setOnClickListener(v -> {
-                MainActivity.sendChangeMainFragmentBroadcast(getContext(),MainActivity.MAIN_FRAGMENT_ACTIVITYS);
-            });
-            itemList.add(activityItem);
         }
 
         // 有消息的排在前面，没消息的排在后面

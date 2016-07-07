@@ -2,6 +2,7 @@ package cn.seu.herald_android.mod_modulemanager;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,14 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
             //web标签
             View webmodule = convertView.findViewById(R.id.tv_webmodule);
             webmodule.setVisibility(seuModule.getAction().contains("WEBMODULE") ? View.VISIBLE : View.GONE);
+
+            convertView.setBackgroundColor(
+                    position % 2 == 1 ? (
+                        Color.WHITE
+                    ) : (
+                        Color.rgb(248, 248, 248)
+                    )
+            );
 
             convertView.setOnClickListener((v) -> {
                 Intent intent = new Intent();
