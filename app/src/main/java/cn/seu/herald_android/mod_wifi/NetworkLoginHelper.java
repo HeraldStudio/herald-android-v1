@@ -56,7 +56,7 @@ public class NetworkLoginHelper {
         String ssid = wifiInfo.getSSID().replaceAll("\"", "");
         if (ssid.equals("seu-wlan") || ssid.equals("seu-dorm")) {
             vibrator.vibrate(50);
-            ContextUtils.showMessage(context, "正在尝试登陆，请稍候~");
+            ContextUtils.showMessage(context, "正在快捷登录校园网，请稍候~");
 
             // 防止两条消息同时显示会吞掉前一条消息
             new Handler().postDelayed(this::checkOnlineStatus, 500);
@@ -72,7 +72,7 @@ public class NetworkLoginHelper {
             @Override
             public void onError(Call call, Exception e) {
                 vibrator.vibrate(50);
-                ContextUtils.showMessage(context, "似乎信号有点差，不妨换个姿势试试？");
+                ContextUtils.showMessage(context, "校园网信号不佳，换个姿势试试？");
             }
 
             @Override
@@ -84,7 +84,7 @@ public class NetworkLoginHelper {
                     loginToService();
                 } else {
                     vibrator.vibrate(50);
-                    ContextUtils.showMessage(context, "你已经登录校园网，不用再摇了~", "退出登陆", () -> {
+                    ContextUtils.showMessage(context, "已登录校园网，无需重复登录~", "退出登录", () -> {
                         logoutFromService();
                     });
                 }
@@ -102,7 +102,7 @@ public class NetworkLoginHelper {
             @Override
             public void onError(Call call, Exception e) {
                 vibrator.vibrate(50);
-                ContextUtils.showMessage(context, "似乎信号有点差，不妨换个姿势试试？");
+                ContextUtils.showMessage(context, "校园网信号不佳，换个姿势试试？");
             }
 
             @Override
@@ -120,18 +120,18 @@ public class NetworkLoginHelper {
                             formatTime(info.getString("login_time"))
                     };
                     vibrator.vibrate(50);
-                    ContextUtils.showMessage(context, "小猴已经成功帮你登陆seu网络啦", "退出登陆", () -> {
+                    ContextUtils.showMessage(context, "小猴登录校园网成功~", "退出登陆", () -> {
                         logoutFromService();
                     });
                 } catch (JSONException e) {
                     try {
                         String error = new JSONObject(response).getString("error");
                         vibrator.vibrate(50);
-                        ContextUtils.showMessage(context, "登陆失败，" + error);
+                        ContextUtils.showMessage(context, "登录失败：" + error);
                     } catch (JSONException e2) {
                         e2.printStackTrace();
                         vibrator.vibrate(50);
-                        ContextUtils.showMessage(context, "登陆失败，出现未知错误");
+                        ContextUtils.showMessage(context, "登录失败，出现未知错误");
                     }
                 }
             }
