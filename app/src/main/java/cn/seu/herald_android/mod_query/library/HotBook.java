@@ -6,9 +6,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by heyon on 2016/3/15.
- */
 class HotBook {
     //书的借阅次数
     private int count;

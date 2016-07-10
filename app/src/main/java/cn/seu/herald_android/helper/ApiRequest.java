@@ -1,7 +1,5 @@
 package cn.seu.herald_android.helper;
 
-import android.content.Context;
-
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -11,7 +9,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 import okhttp3.Call;
 
@@ -19,46 +16,33 @@ public class ApiRequest {
 
     public static final int CONN_TIMEOUT = 10000, READ_TIMEOUT = 10000;
 
-    public static final int POST = 0;
-
-    public static final int GET = 1;
-    /**
-     * 构造部分
-     * context  当前上下文
-     * exceptionPool   是否吞掉错误消息
-     * url      请求的目标url
-     **/
-    private Context context;
-
-    private Vector<Exception> exceptionPool = null;
+    public enum Method {
+        POST, GET
+    }
 
     private String url;
 
-    private int type;
+    private Method method;
 
+    private boolean noCheck200 = false;
 
-    // 外部可调用
-    public ApiRequest(Context context) {
-        this.context = context;
+    public ApiRequest() {
         //默认为post请求
-        type = POST;
+        method = Method.POST;
     }
 
-    // 外部可调用
-    public ApiRequest exceptionPool(Vector<Exception> pool) {
-        exceptionPool = pool;
-        return this;
-    }
-
-    // 外部可调用
     public ApiRequest url(String url) {
         this.url = url;
         return this;
     }
 
-    // 外部可调用
-    public  ApiRequest api(int api) {
-        return url(ApiHelper.getQueryApiUrl(api));
+    public ApiRequest api(String name) {
+        return url(ApiHelper.getApiUrl(name));
+    }
+
+    public ApiRequest noCheck200() {
+        noCheck200 = true;
+        return this;
     }
 
     /**
@@ -67,15 +51,12 @@ public class ApiRequest {
      **/
     private Map<String, String> map = new HashMap<>();
 
-    // 外部可调用
     public ApiRequest addUUID() {
-        map.put("uuid", new ApiHelper(context).getUUID());
+        map.put("uuid", ApiHelper.getUUID());
         return this;
     }
 
-    // 外部可调用
     public ApiRequest post(String... map) {
-        type = POST;
         for (int i = 0; i < map.length / 2; i++) {
             String key = map[2 * i];
             String value = map[2 * i + 1];
@@ -85,7 +66,7 @@ public class ApiRequest {
     }
 
     public ApiRequest get(){
-        type = GET;
+        method = Method.GET;
         return this;
     }
 
@@ -97,35 +78,37 @@ public class ApiRequest {
      * callback     默认的Callback（自动调用二级回调，若出错还会执行错误处理）
      **/
     private StringCallback callback = new StringCallback() {
-        @Override
-        public void onError(Call call, Exception e) {
-            if (exceptionPool != null) {
-                exceptionPool.add(e);
-            } else {
-                new ApiHelper(context).dealApiException(e);
-            }
-            for (OnResponseListener onResponseListener : onResponseListeners) {
-                onResponseListener.onFinish(false, 0, e.toString());
-            }
-        }
 
         @Override
         public void onResponse(String response) {
             try {
                 JSONObject json_res = new JSONObject(response);
-                for (OnResponseListener onResponseListener : onResponseListeners) {
-                    onResponseListener.onFinish(json_res.getInt("code") == 200, json_res.getInt("code"), response);
+                int code = json_res.getInt("code");
+                if (noCheck200) {
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(true, code, response);
+                    }
+                } else {
+                    if (code == 400) {
+                        ApiHelper.doLogout("用户身份已过期,请重新登录");
+                    }
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(code == 200, code, response);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                if (exceptionPool != null) {
-                    exceptionPool.add(e);
-                } else {
-                    new ApiHelper(context).dealApiException(e);
+                for (OnFinishListener onFinishListener : onFinishListeners) {
+                    onFinishListener.onFinish(false, -1, response);
                 }
-                for (OnResponseListener onResponseListener : onResponseListeners) {
-                    onResponseListener.onFinish(false, -1, e.toString());
-                }
+            }
+        }
+
+        @Override
+        public void onError(Call call, Exception e) {
+            e.printStackTrace();
+            for (OnFinishListener onFinishListener : onFinishListeners) {
+                onFinishListener.onFinish(false, 0, e.toString());
             }
         }
     };
@@ -135,18 +118,18 @@ public class ApiRequest {
      * 二级回调是对返回状态和返回数据处理方式的定义，相当于重写Callback，
      * 但这里允许多个二级回调策略进行叠加，因此比Callback更灵活
      * <p>
-     * onResponseListeners    二级回调接口，内含一个默认的回调操作，该操作仅在设置了三级回调策略时有效
+     * onFinishListeners    二级回调接口，内含一个默认的回调操作，该操作仅在设置了三级回调策略时有效
      **/
 
-    public interface OnResponseListener {
+    public interface OnFinishListener {
         void onFinish(boolean success, int code, String response);
     }
 
-    private ArrayList<OnResponseListener> onResponseListeners = new ArrayList<>();
+    private ArrayList<OnFinishListener> onFinishListeners = new ArrayList<>();
 
     // 外部可调用
-    public ApiRequest onFinish(OnResponseListener listener) {
-        this.onResponseListeners.add(listener);
+    public ApiRequest onFinish(OnFinishListener listener) {
+        this.onFinishListeners.add(listener);
         return this;
     }
 
@@ -163,18 +146,32 @@ public class ApiRequest {
         Object parse(JSONObject src) throws JSONException;
     }
 
-    // 外部可调用
+    public ApiRequest toCache(String key) {
+        return toCache(key, src -> src, null);
+    }
+
     public ApiRequest toCache(String key, JSONParser parser) {
+        return toCache(key, parser, null);
+    }
+
+    public ApiRequest toCache(String key, AppModule notifyModuleIfChanged) {
+        return toCache(key, o -> o, notifyModuleIfChanged);
+    }
+
+    // 若对应的缓存发生了改变, 向对应的模块缓存中保存"已改动"的标记
+    // 目前暂时只有CacheHelper有更新检测机制，如果另外两个也需要该机制，请修改对应的Helper的setCache函数
+    public ApiRequest toCache(String key, JSONParser parser, AppModule notifyModuleIfChanged) {
         onFinish((success, code, response) -> {
             if (success) {
                 try {
                     String cache = parser.parse(new JSONObject(response)).toString();
-                    new CacheHelper(context).setCache(key, cache);
+                    if (CacheHelper.set(key, cache) && notifyModuleIfChanged != null) {
+                        notifyModuleIfChanged.hasUpdates.set(true);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    new CacheHelper(context).setCache(key,"");
-                    for (OnResponseListener onResponseListener : onResponseListeners) {
-                        onResponseListener.onFinish(false, -1, e.toString());
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(false, 0, "");
                     }
                 }
             }
@@ -182,17 +179,41 @@ public class ApiRequest {
         return this;
     }
 
-    // 外部可调用
+    public ApiRequest toServiceCache(String key) {
+        return toServiceCache(key, o -> o);
+    }
+
     public ApiRequest toServiceCache(String key, JSONParser parser) {
         onFinish((success, code, response) -> {
             if (success) {
                 try {
                     String cache = parser.parse(new JSONObject(response)).toString();
-                    new ServiceHelper(context).setServiceCache(key, cache);
+                    ServiceHelper.set(key, cache);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    for (OnResponseListener onResponseListener : onResponseListeners) {
-                        onResponseListener.onFinish(false, -1, e.toString());
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(false, 0, "");
+                    }
+                }
+            }
+        });
+        return this;
+    }
+
+    public ApiRequest toAuthCache(String key) {
+        return toAuthCache(key, o -> o);
+    }
+
+    public ApiRequest toAuthCache(String key, JSONParser parser) {
+        onFinish((success, code, response) -> {
+            if (success) {
+                try {
+                    String cache = parser.parse(new JSONObject(response)).toString();
+                    ApiHelper.setAuthCache(key, cache);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    for (OnFinishListener onFinishListener : onFinishListeners) {
+                        onFinishListener.onFinish(false, 0, "");
                     }
                 }
             }
@@ -206,7 +227,7 @@ public class ApiRequest {
      * 执行部分
      **/
     public void run() {
-        switch (type){
+        switch (method){
             case GET:
                 OkHttpUtils.get().url(url).params(map).build()
                         .connTimeOut(CONN_TIMEOUT).readTimeOut(READ_TIMEOUT)

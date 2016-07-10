@@ -18,15 +18,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
 
 /**
  * Created by corvo on 3/13/16.
  * 图书馆搜书页面Activity
  */
-public class LibrarySearchActivity extends BaseAppCompatActivity
+public class LibrarySearchActivity extends BaseActivity
     implements SearchView.OnQueryTextListener{
     // 用于显示搜索结果的列表
     private RecyclerView recyclerView_search_result;
@@ -43,20 +42,24 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
         //设置toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.libary_toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorLibraryprimary));
         enableSwipeBack();
 
 
         //设置展示搜索结果的列表
         recyclerView_search_result = (RecyclerView)findViewById(R.id.recyclerview_library_searchres);
-        recyclerView_search_result.setHasFixedSize(true);
-        recyclerView_search_result.setLayoutManager(new LinearLayoutManager(this));
+        if (recyclerView_search_result != null) {
+            recyclerView_search_result.setHasFixedSize(true);
+            recyclerView_search_result.setLayoutManager(new LinearLayoutManager(this));
+        }
     }
 
 
@@ -96,7 +99,7 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).addUUID()
+        new ApiRequest().api("search").addUUID()
                 .post("book", query).onFinish((success, code, response) -> {
             hideProgressDialog();
             if (success) {

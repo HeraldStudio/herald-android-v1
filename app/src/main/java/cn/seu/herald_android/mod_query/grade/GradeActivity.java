@@ -1,6 +1,5 @@
 package cn.seu.herald_android.mod_query.grade;
 
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -17,13 +16,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;
 
-public class GradeActivity extends BaseAppCompatActivity {
+public class GradeActivity extends BaseActivity {
 
     private SortableTableView<GradeItem> tableViewGrade;
     private ProgressDialog progressDialog;
@@ -46,16 +45,18 @@ public class GradeActivity extends BaseAppCompatActivity {
     private void init() {
         //设置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("成绩查询");
-        setSupportActionBar(toolbar);
-        //设置点击函数
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setTitle("成绩查询");
+            setSupportActionBar(toolbar);
+            //设置点击函数
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
         //沉浸式状态栏颜色
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGradeprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGradeprimary));
         enableSwipeBack();
 
         //设置collapsingToolbarLayout标题禁用
@@ -63,6 +64,7 @@ public class GradeActivity extends BaseAppCompatActivity {
 //        collapsingToolbarLayout.setTitleEnabled(false);
 
         //控件初始化
+        //noinspection unchecked
         tableViewGrade = (SortableTableView<GradeItem>) findViewById(R.id.tableview_grade);
         tv_gpa = (TextView) findViewById(R.id.tv_grade_gpawithoutrevamp);
         tv_gpa2 = (TextView) findViewById(R.id.tv_grade_gpa);
@@ -95,7 +97,7 @@ public class GradeActivity extends BaseAppCompatActivity {
     private void loadCache() {
         try {
             //测试数据测试
-            String cache = getCacheHelper().getCache("herald_grade_gpa");
+            String cache = CacheHelper.get("herald_grade_gpa");
             if (!cache.equals("")) {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //获取计算后的绩点
@@ -135,7 +137,7 @@ public class GradeActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         progressDialog.show();
-        new ApiRequest(this).api(ApiHelper.API_GPA).addUUID()
+        new ApiRequest().api("gpa").addUUID()
                 .toCache("herald_grade_gpa", o -> o)
                 .onFinish((success, code, response) -> {
                     progressDialog.hide();

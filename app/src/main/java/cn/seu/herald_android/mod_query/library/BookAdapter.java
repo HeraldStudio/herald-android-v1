@@ -10,9 +10,6 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 
-/**
- * Created by corvo on 2/14/16.
- */
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     private List<Book> bookList;
@@ -43,10 +40,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book book = bookList.get(position);
-        holder.booksName.setText(book.getName());
-        holder.booksPosition.setText(book.getIndex());
-        holder.booksLeft.setText("剩余" + book.getLeft() + "本");
-        holder.pubWithAuthor.setText(String.format("作者:%s\n出版社:%s" ,book.getAuthor(), book.getPublish()));
+        holder.booksName.setText(book.name);
+        holder.booksPosition.setText(book.index);
+        holder.booksLeft.setText("剩余" + book.left + "本");
+        holder.pubWithAuthor.setText(String.format("作者:%s\n出版社:%s" ,book.author, book.publish));
     }
 
     @Override

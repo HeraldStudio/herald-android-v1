@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,15 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.ListViewUtils;
-import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
-
-/**
- * Created by heyon on 2016/5/13.
- */
 public class OrderItemTimeFragment extends Fragment {
     //展示可预约时间段的列表
     private ListView listView;
@@ -45,15 +39,15 @@ public class OrderItemTimeFragment extends Fragment {
     //项目
     SportTypeItem sportTypeItem;
     //fragment所在activity
-    BaseAppCompatActivity baseAppCompatActivity;
+    BaseActivity baseActivity;
     //标识是否处于判断预约状态
     boolean isJudging = false;
 
-    public static OrderItemTimeFragment newInstance(String timeItem, SportTypeItem sportTypeItem, BaseAppCompatActivity baseAppCompatActivity) {
+    public static OrderItemTimeFragment newInstance(String timeItem, SportTypeItem sportTypeItem, BaseActivity baseActivity) {
         OrderItemTimeFragment fragment = new OrderItemTimeFragment();
         fragment.dayInfo = timeItem;
         fragment.sportTypeItem = sportTypeItem;
-        fragment.baseAppCompatActivity = baseAppCompatActivity;
+        fragment.baseActivity = baseActivity;
         return fragment;
     }
 
@@ -70,10 +64,10 @@ public class OrderItemTimeFragment extends Fragment {
     }
 
     public void refreshOrderItem(){
-        baseAppCompatActivity.showProgressDialog();
-        ApiRequest apiRequest = new ApiRequest(getContext());
+        baseActivity.showProgressDialog();
+        ApiRequest apiRequest = new ApiRequest();
         apiRequest
-                .api(ApiHelper.API_GYMRESERVE)
+                .api("yuyue")
                 .addUUID()
                 .post("method", "getOrder")
                 .post("itemId", sportTypeItem.sportId+"")
@@ -82,8 +76,8 @@ public class OrderItemTimeFragment extends Fragment {
                     if (success) {
                         loadOrderItemTimes(response);
                     } else {
-                        baseAppCompatActivity.hideProgressDialog();
-                        baseAppCompatActivity.showSnackBar("刷新失败，请重试");
+                        baseActivity.hideProgressDialog();
+                        baseActivity.showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
@@ -96,10 +90,10 @@ public class OrderItemTimeFragment extends Fragment {
             if (listView.getCount() == 0){
                 ListViewUtils.addDefaultEmptyTipsView(getContext(),listView,"暂无可用预约场地");
             }
-            baseAppCompatActivity.hideProgressDialog();
+            baseActivity.hideProgressDialog();
         }catch (JSONException e){
             //数据解析错误
-            baseAppCompatActivity.showSnackBar("数据解析错误，请稍后再试");
+            baseActivity.showSnackBar("数据解析错误，请稍后再试");
         }
     }
 
@@ -107,8 +101,8 @@ public class OrderItemTimeFragment extends Fragment {
         if (isJudging)
             return;
         //判断是否可以预约，如果可以则打开预约界面
-        new ApiRequest(getContext())
-                .api(ApiHelper.API_GYMRESERVE)
+        new ApiRequest()
+                .api("yuyue")
                 .addUUID()
                 .post("method", "judgeOrder")
                 .post("itemId", sportTypeItem.sportId+"")
@@ -121,34 +115,18 @@ public class OrderItemTimeFragment extends Fragment {
                         if (success){
                             String rescode = new JSONObject(response).getJSONObject("content").getString("code");
                             String msg = new JSONObject(response).getJSONObject("content").getString("msg");
-//                            if (rescode.equals("1")){
-//                                judgeRes = "预约时间已过";
-//                            }else if (rescode.equals("2")){
-//                                judgeRes = "该时间已有其他预约";
-//                            }else if (rescode.equals("3")){
-//                                judgeRes = "本日预约数已达最大限制";
-//                            }else if (rescode.equals("4")){
-//                                judgeRes = "本项目预约数已达最大限制";
-//                            }else if (rescode.equals("5")){
-//                                judgeRes = "您已被冻结，无法进行预约";
-//                            }else if (rescode.equals("6")){
-//                                judgeRes = "预约系统未开放(可预约时间为8:00-20:00)";
-//                            }else {
-//                                //可以进行预约
-//                                NewOrderActivity.startNewOrderActivity(baseAppCompatActivity, sportTypeItem,dayInfo,time.avaliableTime);
-//                            }
                             if (rescode.equals("0")){
                                 //可以进行预约
-                                NewOrderActivity.startNewOrderActivity(baseAppCompatActivity, sportTypeItem,dayInfo,time.avaliableTime);
+                                NewOrderActivity.startNewOrderActivity(baseActivity, sportTypeItem,dayInfo,time.avaliableTime);
                             }else {
                                 judgeRes = msg;
-                                baseAppCompatActivity.showSnackBar(judgeRes);
+                                baseActivity.showSnackBar(judgeRes);
                             }
                         }
 
                     }catch (JSONException e){
                         e.printStackTrace();
-                        baseAppCompatActivity.showSnackBar("预约失败");
+                        baseActivity.showSnackBar("预约失败");
                     }
                 })
                 .run();

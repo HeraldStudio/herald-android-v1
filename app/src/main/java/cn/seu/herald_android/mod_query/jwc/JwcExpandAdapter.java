@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.jwc;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_webmodule.WebShowActivity;
+import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
 
 class JwcExpandAdapter extends BaseExpandableListAdapter {
     private ArrayList<String> parentViews;
@@ -81,7 +80,7 @@ class JwcExpandAdapter extends BaseExpandableListAdapter {
         contentView.setOnClickListener(v -> {
             try {
                 Uri uri = Uri.parse(jwcItem.href);
-                WebShowActivity.startWebShowActivity(context,jwcItem.title,uri,R.style.JwcTheme);
+                WebModuleActivity.startWebModuleActivity(context,jwcItem.title,uri,R.style.JwcTheme);
             } catch (Exception e) {
                 e.printStackTrace();
             }

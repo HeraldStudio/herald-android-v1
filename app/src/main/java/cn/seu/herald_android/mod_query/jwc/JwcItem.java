@@ -7,9 +7,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class JwcItem {
-    String date;
-    String href;
-    String title;
+    public String date;
+    public String href;
+    public String title;
 
     public JwcItem(String date, String href, String title) {
         this.date = date;
@@ -29,17 +29,4 @@ public class JwcItem {
         }
         return list;
     }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
 }

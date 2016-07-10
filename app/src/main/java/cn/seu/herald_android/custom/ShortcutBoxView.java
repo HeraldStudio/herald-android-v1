@@ -5,9 +5,11 @@ import android.util.AttributeSet;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import cn.seu.herald_android.helper.AppModule;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_modulemanager.SeuModule;
 import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
 
 public class ShortcutBoxView extends GridView {
@@ -26,10 +28,10 @@ public class ShortcutBoxView extends GridView {
     public void refresh() {
         //加载适配器
         //获取设置为快捷方式的查询模块
-        ArrayList<SeuModule> settingArrayList = new SettingsHelper(getContext()).getSeuModuleList();
-        ArrayList<SeuModule> enabledShortcutList = new ArrayList<>();
-        for (SeuModule module : settingArrayList) {
-            if (module.isEnabledShortCut())
+        List<AppModule> settingArrayList = Arrays.asList(SettingsHelper.Module.array);
+        List<AppModule> enabledShortcutList = new ArrayList<>();
+        for (AppModule module : settingArrayList) {
+            if (module.shortcutEnabled.get())
                 enabledShortcutList.add(module);
         }
 

@@ -30,15 +30,13 @@ import java.util.List;
 
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.ListViewUtils;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 
-/**
- * Created by heyon on 2016/5/14.
- */
-public class NewOrderActivity extends BaseAppCompatActivity{
+public class NewOrderActivity extends BaseActivity {
     public static void startNewOrderActivity(Activity activity, SportTypeItem item, String dayInfo, String avaliableTime){
         Intent intent = new Intent(activity,NewOrderActivity.class);
         Bundle bundle = new Bundle();
@@ -112,7 +110,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                 showSnackBar("预约人数不满足要求");
                 return false;
             }
-            if(et_phone.getText().equals("")){
+            if(et_phone.getText().toString().equals("")){
                 //检查手机号是否为空
                 showSnackBar("联系人不能为空");
                 return false;
@@ -132,14 +130,16 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
 
         //设置标题
@@ -154,7 +154,9 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         //列表初始化
         list_invitedfriend = (ListView) findViewById(R.id.listview_invitedfriend);
         list_recentlyfriend = (ListView) findViewById(R.id.listview_recentlyfriend);
-        list_recentlyfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        if (list_recentlyfriend != null) {
+            list_recentlyfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        }
         list_invitedfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
         //初始化数组
@@ -163,8 +165,10 @@ public class NewOrderActivity extends BaseAppCompatActivity{
 
         //初始化添加新朋友按钮
         btn_addfriend = (Button)findViewById(R.id.btn_add_friend);
-        btn_addfriend.setOnClickListener(
-                o-> startActivity(new Intent(NewOrderActivity.this,SearchFriendActivity.class)));
+        if (btn_addfriend != null) {
+            btn_addfriend.setOnClickListener(
+                    o-> startActivity(new Intent(NewOrderActivity.this,SearchFriendActivity.class)));
+        }
 
         //加载跟所选项目和用户有关的、一般不变的信息
         setupItemInfo();
@@ -181,46 +185,26 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         tv_time.setText(dayinfo + " " + avaliableTime);
 
         //此处手机号已在GymReserveActivity中预获取，如果获取失败了那么取到的字符串是空，设置的text也为空，在提交时会提示用户输入手机号
-        et_phone.setText(getCacheHelper().getCache("herald_gymreserve_phone"));
+        et_phone.setText(CacheHelper.get("herald_gymreserve_phone"));
 
     }
 
     public void setupSpinner(){
         //下拉框设置
-        class SpinnerSimpleAdapter extends ArrayAdapter<String>{
-            public SpinnerSimpleAdapter(Context context, int resource, String[] objects) {
-                super(context, resource, objects);
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if(convertView == null)
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.spinneritem_gym_half,null);
-                TextView textView = (TextView)convertView;
-                textView.setText(getItem(position));
-                return convertView;
-            }
-        }
         String[] list;
         if ( gymItem.allowHalf == 1){
             list = new String[]{"全场","半场"};
         }else{
             list = new String[]{"全场"};
         }
-        ArrayAdapter<String> spinnerSimpleAdapter = new ArrayAdapter<String>(getBaseContext(),R.layout.spinneritem_gym_half,list);
-//        for (String item:list){
-//            spinnerSimpleAdapter.add(item);
-//        }
+        ArrayAdapter<String> spinnerSimpleAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.spinneritem_gym_half, list);
+
         spinner.setPrompt("请选择场地类型");
         spinner.setAdapter(spinnerSimpleAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (parent.getItemAtPosition(position).equals("全场")){
-                    half = false;
-                }else {
-                    half = true;
-                }
+                half = !parent.getItemAtPosition(position).equals("全场");
                 refreshTipsOfInvitedNum();
             }
 
@@ -253,14 +237,14 @@ public class NewOrderActivity extends BaseAppCompatActivity{
             return;
         isOrdeing = true;
         showProgressDialog();
-        String userId = getCacheHelper().getCache("herald_gymreserve_userid");
+        String userId = CacheHelper.get("herald_gymreserve_userid");
         //如果为空则需要继续获取userId
         if (userId.equals("")){
-            new ApiRequest(this)
-                    .api(ApiHelper.API_GYMRESERVE)
+            new ApiRequest()
+                    .api("yuyue")
                     .addUUID()
                     .post("method", "getFriendList")
-                    .post("cardNo",getApiHelper().getAuthCache("cardnum"))
+                    .post("cardNo", ApiHelper.getUserName())
                     .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
                     .onFinish((success, code, response) -> {
                         isOrdeing = false;
@@ -289,8 +273,8 @@ public class NewOrderActivity extends BaseAppCompatActivity{
         String useMode = half?"2":"1";
         String phone = et_phone.getText().toString();
         String useUserIds = userIds.toString();
-        new ApiRequest(this)
-                .api(ApiHelper.API_GYMRESERVE)
+        new ApiRequest()
+                .api("yuyue")
                 .addUUID()
                 .post("method", "new")
                 .post("orderVO.itemId",itemId)
@@ -318,7 +302,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                                 default:
                                     showSnackBar(new JSONObject(response).getJSONObject("content").getString("msg"));
                                     //预约失败会重新选择时间段
-                                    handler.postDelayed(() -> finish(),500);
+                                    handler.postDelayed(this::finish,500);
                             }
                         }
                     }catch (JSONException e){
@@ -368,25 +352,16 @@ public class NewOrderActivity extends BaseAppCompatActivity{
     }
 
     public  JSONArray getFriendJSONArray(){
-        String cache = getCacheHelper().getCache("herald_gymreserve_recentfriendlist");
+        String cache = CacheHelper.get("herald_gymreserve_recentfriendlist");
         try{
             if(!cache.equals("")){
-                JSONArray array = new JSONArray(cache);
-                return array;
+                return new JSONArray(cache);
             }
         }catch (JSONException e){
             e.printStackTrace();
-            getCacheHelper().setCache("herald_gymreserve_recentfriendlist","");
+            CacheHelper.set("herald_gymreserve_recentfriendlist","");
         }
         return new JSONArray();
-    }
-
-    public void addFriend(Friend friend){
-        try{
-            getCacheHelper().setCache("herald_gymreserve_recentfriendlist", getFriendJSONArray().put(friend.getJSONObject()).toString());
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
     }
 
     public void removeFriend(Friend friend){
@@ -398,7 +373,7 @@ public class NewOrderActivity extends BaseAppCompatActivity{
                     continue;
                 result.put(array.getJSONObject(i));
             }
-            getCacheHelper().setCache("herald_gymreserve_recentfriendlist",result.toString());
+            CacheHelper.set("herald_gymreserve_recentfriendlist",result.toString());
         }catch (JSONException e){
             e.printStackTrace();
         }

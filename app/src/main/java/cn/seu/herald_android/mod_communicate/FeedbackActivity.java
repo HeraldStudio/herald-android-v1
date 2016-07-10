@@ -10,12 +10,11 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
-import cn.seu.herald_android.helper.ServiceHelper;
 
-public class FeedbackActivity extends BaseAppCompatActivity {
+public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +22,14 @@ public class FeedbackActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_feedback);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorFeedbackprimary));
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorFeedbackprimary));
         enableSwipeBack();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
@@ -45,11 +46,14 @@ public class FeedbackActivity extends BaseAppCompatActivity {
         if (id == R.id.action_send) {
             EditText et = (EditText) findViewById(R.id.editText);
             EditText et_contact = (EditText)findViewById(R.id.tv_contact);
-            String content = "[来自Android版]" + et.getText().toString() + "[联系方式：" + et_contact.getText() +"]";
+            String content = null;
+            if (et != null && et_contact != null) {
+                    content = "[来自Android版]" + et.getText().toString() + "[联系方式：" + et_contact.getText() +"]";
+            }
 
             showProgressDialog();
-            new ApiRequest(this).url(ApiHelper.feedback_url)
-                    .post("cardnum", getApiHelper().getUserName(),
+            new ApiRequest().url(ApiHelper.feedback_url)
+                    .post("cardnum", ApiHelper.getUserName(),
                             "content", content)
                     .onFinish((success, code, response) -> {
                         hideProgressDialog();

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.ContextUtils;
+import cn.seu.herald_android.app_framework.AppContext;
 
 /**
  * 课程表视图的实现
@@ -181,7 +181,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
             // 有无效课程时的提示
             if (hasInvalid) {
-                ContextUtils.showMessage(getContext(), "暂不支持导入辅修课，敬请期待后续版本。");
+                AppContext.showMessage("暂不支持导入辅修课，敬请期待后续版本。");
             }
 
             // 确定好实际要显示的列数后，将每列数据交给子函数处理

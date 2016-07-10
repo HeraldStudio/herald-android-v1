@@ -38,8 +38,8 @@
 -printmapping mapping.txt
 #自己项目特殊处理代码
 -keep class android.support.**{*;}
--keep public class * extends cn.seu.herald_android.custom.BaseAppCompatActivity {*;}
--keep class cn.seu.herald_android.mod_wifi.NetworkLoginHelper {*;} #彩蛋
+-keep public class * extends cn.seu.herald_android.custom.BaseActivity {*;}
+-keep class cn.seu.herald_android.helper.NetworkLoginHelper {*;} #彩蛋
 -keep class cn.seu.herald_android.mod_timeline.TimelineView {*;}
 -keep class cn.seu.herald_android.mod_query.lecture.LectureBlockLayout {*;}
 -keep class cn.seu.herald_android.mod_query.jwc.JwcBlockLayout {*;}

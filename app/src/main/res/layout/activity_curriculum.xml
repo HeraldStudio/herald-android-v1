@@ -31,7 +31,6 @@
         android:paddingTop="?attr/actionBarSize">
 
         <FrameLayout
-            android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#eee">

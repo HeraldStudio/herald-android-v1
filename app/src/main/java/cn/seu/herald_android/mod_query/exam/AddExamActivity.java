@@ -2,18 +2,14 @@ package cn.seu.herald_android.mod_query.exam;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,11 +18,11 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.helper.CacheHelper;
 
-public class AddExamActivity extends BaseAppCompatActivity {
-
+public class AddExamActivity extends BaseActivity {
 
     //选择日期
     Button btn_select_date;
@@ -69,15 +65,17 @@ public class AddExamActivity extends BaseAppCompatActivity {
         //toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         setTitle("自定义考试");
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorExamprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorExamprimary));
         enableSwipeBack();
 
         //控件初始化
@@ -153,7 +151,7 @@ public class AddExamActivity extends BaseAppCompatActivity {
             showSnackBar("保存成功");
             Handler handler = new Handler();
             //延时0.5秒显示保存成功信息后返回
-            handler.postDelayed((Runnable) () -> finish(), 500);
+            handler.postDelayed(this::finish, 500);
         }catch (JSONException e){
             e.printStackTrace();
             showSnackBar("考试信息不规范，请重新输入");
@@ -161,19 +159,18 @@ public class AddExamActivity extends BaseAppCompatActivity {
     }
 
     JSONArray getDefinedExamsJSONArray(){
-        String cache = getCacheHelper().getCache("herald_exam_definedexam");
+        String cache = CacheHelper.get("herald_exam_definedexam");
         try{
-            JSONArray array = new JSONArray(cache);
-            return array;
+            return new JSONArray(cache);
         }catch (JSONException e){
             e.printStackTrace();
-            getCacheHelper().setCache("herald_exam_definedexam",new JSONArray().toString());
+            CacheHelper.set("herald_exam_definedexam",new JSONArray().toString());
         }
         return new JSONArray();
     }
 
     void saveDefinedExamsFromJSONArray(JSONArray array){
-        getCacheHelper().setCache("herald_exam_definedexam",array.toString());
+        CacheHelper.set("herald_exam_definedexam",array.toString());
     }
 
 }

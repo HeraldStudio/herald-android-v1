@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".app_framework.AppContext"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,7 +33,11 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.SWITCH_TAB" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".mod_auth.LoginActivity"
             android:label="@string/title_activity_login"
@@ -198,24 +203,11 @@
         <activity
             android:name=".mod_webmodule.WebModuleActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Invisible">
-
-            <!-- web module -->
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.WEBMODULE_EMPTYROOM" />
-                <action android:name="cn.seu.herald_android.WEBMODULE_QUANYI" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".mod_webmodule.WebShowActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/WebShowTheme">
 
             <!-- web module -->
             <intent-filter>
-                <action android:name="cn.seu.herald_android.WEBSHOW" />
+                <action android:name="cn.seu.herald_android.WEBMODULE" />
             </intent-filter>
         </activity>
         <activity
@@ -259,7 +251,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme">
             <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_GYMRESERVE" />
+                <action android:name="cn.seu.herald_android.MODULE_GYMRESERVE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -268,24 +260,24 @@
             android:name=".mod_query.gymreserve.OrderItemActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme"/>
         <!-- 场馆预约新增预约 -->
         <activity
             android:name=".mod_query.gymreserve.NewOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme"/>
         <!-- 搜索新好友 -->
         <activity
             android:name=".mod_query.gymreserve.SearchFriendActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme"/>
         <activity
             android:name=".mod_query.gymreserve.MyOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"></activity>
+            android:theme="@style/GymReserveTheme"/>
         <activity android:name=".mod_wifi.WifiActivity"
             android:theme="@style/WifiAutoLoginTheme"
             android:screenOrientation="portrait"

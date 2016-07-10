@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <cn.seu.herald_android.mod_timeline.TimelineView
+        <cn.seu.herald_android.app_main.CardsListView
             android:id="@+id/timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,7 +23,7 @@
             android:dividerHeight="0dp"
             android:listSelector="@drawable/null_selector"
             android:headerDividersEnabled="false">
-        </cn.seu.herald_android.mod_timeline.TimelineView>
+        </cn.seu.herald_android.app_main.CardsListView>
 
     </cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout>
 

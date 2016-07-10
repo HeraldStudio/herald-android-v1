@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import cn.seu.herald_android.R;
 
-
-/**
- * Created by heyon on 2016/5/10.
- */
 public class AfterSchoolActivityBlockLayout extends LinearLayout {
     String description;
     AfterSchoolActivityItem item;

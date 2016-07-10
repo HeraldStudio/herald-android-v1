@@ -25,7 +25,6 @@
             android:text="模块"
             android:textSize="12sp"
             android:layout_margin="10dp"
-            android:id="@+id/textView4"
             android:layout_weight="1" />
 
         <TextView
@@ -34,8 +33,7 @@
             android:gravity="center"
             android:text="卡片"
             android:textSize="12sp"
-            android:layout_margin="10dp"
-            android:id="@+id/textView6" />
+            android:layout_margin="10dp" />
 
         <TextView
             android:layout_width="45dp"
@@ -43,8 +41,7 @@
             android:gravity="center"
             android:text="快捷栏"
             android:textSize="12sp"
-            android:layout_margin="10dp"
-            android:id="@+id/textView7" />
+            android:layout_margin="10dp" />
     </LinearLayout>
 
     <View

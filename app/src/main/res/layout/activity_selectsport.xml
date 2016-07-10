@@ -8,7 +8,6 @@
     tools:context=".mod_query.gymreserve.SelectSportActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
-        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"

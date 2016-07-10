@@ -2,10 +2,8 @@ package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
-
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,16 +17,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 
-
-public class SearchFriendActivity extends BaseAppCompatActivity implements SearchView.OnQueryTextListener{
+public class SearchFriendActivity extends BaseActivity implements SearchView.OnQueryTextListener{
 
     ListView listView_searchfriendrelust;
     SearchView searchView;
-    public static int RESULT_CODE_OK = 0;
     public static int RESULT_CODE_CANCEL = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +37,17 @@ public class SearchFriendActivity extends BaseAppCompatActivity implements Searc
         //设置toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.libary_toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            //如果是返回则设置result为CANCEL
-            onBackPressed();
-            setResult(RESULT_CODE_CANCEL);
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                //如果是返回则设置result为CANCEL
+                onBackPressed();
+                setResult(RESULT_CODE_CANCEL);
+                finish();
+            });
+        }
 
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
 
         //设置展示搜索结果的列表
@@ -87,7 +85,7 @@ public class SearchFriendActivity extends BaseAppCompatActivity implements Searc
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+        new ApiRequest().api("yuyue")
                 .addUUID()
                 .post("method","getFriendList")
                 .post("cardNo",query)
@@ -144,26 +142,25 @@ public class SearchFriendActivity extends BaseAppCompatActivity implements Searc
         }catch (JSONException e){
             e.printStackTrace();
         }
-        return new ArrayList<Friend>();
+        return new ArrayList<>();
     }
 
     public  JSONArray getFriendJSONArray(){
-        String cache = getCacheHelper().getCache("herald_gymreserve_recentfriendlist");
+        String cache = CacheHelper.get("herald_gymreserve_recentfriendlist");
         try{
             if(!cache.equals("")){
-                JSONArray array = new JSONArray(cache);
-                return array;
+                return new JSONArray(cache);
             }
         }catch (JSONException e){
             e.printStackTrace();
-            getCacheHelper().setCache("herald_gymreserve_recentfriendlist","");
+            CacheHelper.set("herald_gymreserve_recentfriendlist","");
         }
         return new JSONArray();
     }
 
     public void addFriend(Friend friend){
         try{
-            getCacheHelper().setCache("herald_gymreserve_recentfriendlist", getFriendJSONArray().put(friend.getJSONObject()).toString());
+            CacheHelper.set("herald_gymreserve_recentfriendlist", getFriendJSONArray().put(friend.getJSONObject()).toString());
         }catch (JSONException e){
             e.printStackTrace();
         }

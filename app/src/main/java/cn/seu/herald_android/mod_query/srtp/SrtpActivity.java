@@ -17,11 +17,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 
-public class SrtpActivity extends BaseAppCompatActivity {
+public class SrtpActivity extends BaseActivity {
 
     private RecyclerView recyclerView_srtp;
     private TextView tv_total_credit;
@@ -46,23 +47,27 @@ public class SrtpActivity extends BaseAppCompatActivity {
         //设置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
 
         //设置伸缩标题禁用
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setTitleEnabled(false);
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setTitleEnabled(false);
+        }
         //适配4.4的沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSrtpprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorSrtpprimary));
         enableSwipeBack();
     }
 
     private void loadCache() {
-        String cache = getCacheHelper().getCache("herald_srtp");
+        String cache = CacheHelper.get("herald_srtp");
         if (!cache.equals("")) {
             try {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
@@ -102,13 +107,11 @@ public class SrtpActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_SRTP).addUUID()
-                .post("schoolnum", getApiHelper().getSchoolnum())
+        new ApiRequest().api("srtp").addUUID()
+                .post("schoolnum", ApiHelper.getSchoolnum())
                 .toCache("herald_srtp", o -> {
                     if (o.getJSONArray("content").length() == 1) {
                         showSnackBar("你还没有参加课外研学项目");
-                    } else {
-                        // showSnackBar("已获取最新srtp信息");
                     }
                     return o;
                 })

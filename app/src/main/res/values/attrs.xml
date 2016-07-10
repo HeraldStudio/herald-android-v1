@@ -9,11 +9,6 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
-    <style name="TextAppearanceTitle">
-        <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
-    </style>
-
     <declare-styleable name="CollapsingToolbarLayout">
         <attr name="expandedTitleMargin" format="dimension" />
         <attr name="expandedTitleMarginStart" format="dimension" />

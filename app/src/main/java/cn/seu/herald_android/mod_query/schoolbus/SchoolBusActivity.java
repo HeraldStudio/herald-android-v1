@@ -1,6 +1,5 @@
 package cn.seu.herald_android.mod_query.schoolbus;
 
-
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -16,23 +15,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 
 /**
  * 2016/2/22 By heyongdong
  * 校车时刻表查询
  */
-public class SchoolBusActivity extends BaseAppCompatActivity {
-    //工作日和双休日切换的TabLayout
-    private TabLayout tabLayout;
-    //工作日和双休日切换ViewPager
-    private ViewPager viewPager;
-    //工作日显示的Fragment
-    private SchoolBusFragment weekdayFragment;
-    //周末显示的Fragment
-    private SchoolBusFragment weekendFragment;
+public class SchoolBusActivity extends BaseActivity {
     //适配器
     private SchoolBusViewPagerAdapter schoolBusViewPagerAdapter;
 
@@ -48,29 +39,35 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 
     private void init() {
         //沉浸式布局
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSchoolBusprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorSchoolBusprimary));
         enableSwipeBack();
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //初始化控件
-        tabLayout = (TabLayout) findViewById(R.id.tablayout_schoolbus);
-        viewPager = (ViewPager) findViewById(R.id.schoolbus_viewpager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout_schoolbus);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.schoolbus_viewpager);
 
         //适配器初始化
         //添加到viewpager中
         schoolBusViewPagerAdapter = new SchoolBusViewPagerAdapter(getSupportFragmentManager());
 
-        viewPager.setAdapter(schoolBusViewPagerAdapter);
+        if (viewPager != null) {
+            viewPager.setAdapter(schoolBusViewPagerAdapter);
 
-        //关联ViewPager和Tablayout
-        tabLayout.setupWithViewPager(viewPager);
+            //关联ViewPager和Tablayout
+            if (tabLayout != null) {
+                tabLayout.setupWithViewPager(viewPager);
+            }
+        }
 //        tabLayout.setTabsFromPagerAdapter(schoolBusViewPagerAdapter);
     }
 
@@ -91,7 +88,7 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_SCHOOLBUS).addUUID()
+        new ApiRequest().api("schoolbus").addUUID()
                 .toCache("herald_schoolbus_cache", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
@@ -106,10 +103,10 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
 
     private void loadListWithCache() {
         //尝试加载缓存
-        String cache = getCacheHelper().getCache("herald_schoolbus_cache");
+        String cache = CacheHelper.get("herald_schoolbus_cache");
         if (!cache.equals("")) {
             try {
-                JSONObject cache_json = new JSONObject(getCacheHelper().getCache("herald_schoolbus_cache")).getJSONObject("content");
+                JSONObject cache_json = new JSONObject(CacheHelper.get("herald_schoolbus_cache")).getJSONObject("content");
                 JSONArray weekend_tosubway = cache_json.getJSONObject("weekend").getJSONArray("前往地铁站");
                 JSONArray weekend_toschool = cache_json.getJSONObject("weekend").getJSONArray("返回九龙湖");
                 JSONArray weekday_tosubway = cache_json.getJSONObject("weekday").getJSONArray("前往地铁站");
@@ -126,13 +123,13 @@ public class SchoolBusActivity extends BaseAppCompatActivity {
                 ArrayList<ArrayList<SchoolBusItem>> weekdayList = new ArrayList<>();
                 weekdayList.add(list_weekday_tosubway);
                 weekdayList.add(list_weekday_toschool);
-                weekdayFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekdayList);
+                SchoolBusFragment weekdayFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekdayList);
 
                 //加载WeekEnd，双休日的Fragment
                 ArrayList<ArrayList<SchoolBusItem>> weekendList = new ArrayList<>();
                 weekendList.add(list_weekend_tosubway);
                 weekendList.add(list_weekend_toschool);
-                weekendFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekendList);
+                SchoolBusFragment weekendFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekendList);
 
                 schoolBusViewPagerAdapter.removeAll();
                 schoolBusViewPagerAdapter.add(weekdayFragment, "周一至周五");

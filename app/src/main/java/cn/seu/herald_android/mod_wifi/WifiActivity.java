@@ -20,17 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.custom.ContextUtils;
+import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.NetworkLoginHelper;
 import cn.seu.herald_android.mod_query.seunet.SeunetActivity;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 import okhttp3.Call;
 
-public class WifiActivity extends BaseAppCompatActivity {
+public class WifiActivity extends BaseActivity {
     Vibrator vibrator;
     Button btnConnect;
     Button btnDisconnect;
@@ -52,7 +54,7 @@ public class WifiActivity extends BaseAppCompatActivity {
         loginToService();
     }
     private void init(){
-        setStatusBarColor(this, ContextCompat.getColor(this,R.color.colorGray));
+        setStatusBarColor(ContextCompat.getColor(this,R.color.colorGray));
         btnConnect = (Button) findViewById(R.id.btn_connect_wifi);
         btnDisconnect = (Button) findViewById(R.id.btn_disconnect_wifi);
         btnRefresh = (Button) findViewById(R.id.btn_refresh_wifi);
@@ -65,25 +67,18 @@ public class WifiActivity extends BaseAppCompatActivity {
     }
 
     private void setup(){
-        btnConnect.setOnClickListener(v -> {
-            loginToService();
-        });
-        btnDisconnect.setOnClickListener(v -> {
-            logoutFromService();
-        });
-        btnRefresh.setOnClickListener(v -> {
-            refreshCache();
-        });
+        btnConnect.setOnClickListener(v -> loginToService());
+        btnDisconnect.setOnClickListener(v -> logoutFromService());
+        btnRefresh.setOnClickListener(v -> refreshCache());
     }
 
     private void loginToService(){
         btnConnect.setEnabled(false);
         btnConnect.setText("正在登录中");
-        ContextUtils.showMessage(WifiActivity.this, "正在登录校园网");
+        AppContext.showMessage("正在登录校园网");
         //登陆网络服务
-        ApiHelper helper = new ApiHelper(this);
-        String username = helper.getWifiUserName();
-        String password = helper.getWifiPassword();
+        String username = ApiHelper.getWifiUserName();
+        String password = ApiHelper.getWifiPassword();
         OkHttpUtils.post().url("http://w.seu.edu.cn/portal/login.php")
                 .addParams("username", username)
                 .addParams("password", password).build()
@@ -93,7 +88,7 @@ public class WifiActivity extends BaseAppCompatActivity {
                 vibrator.vibrate(50);
                 btnConnect.setEnabled(true);
                 btnConnect.setText("连接校园网");
-                ContextUtils.showMessage(WifiActivity.this, "似乎信号有点差，不妨换个姿势试试？");
+                AppContext.showMessage("似乎信号有点差，不妨换个姿势试试？");
             }
 
             @Override
@@ -118,19 +113,18 @@ public class WifiActivity extends BaseAppCompatActivity {
                     tv_index.setText(String.format("在线设备数: %s",infoStr[1]));
                     tv_ip.setText(String.format("当前ip: %s",infoStr[2]));
                     tv_expire.setText(String.format("剩余天数: %s",infoStr[4]));
-                    ContextUtils.showMessage(WifiActivity.this, "小猴已经成功帮你登陆seu网络啦", "退出登陆", () -> {
-                        logoutFromService();
-                    });
+                    AppContext.showMessage("小猴已经成功帮你登陆seu网络啦", "退出登陆",
+                            () -> logoutFromService());
                 } catch (JSONException e) {
                     info_layout.setVisibility(View.GONE);
                     try {
                         String error = new JSONObject(response).getString("error");
                         vibrator.vibrate(50);
-                        ContextUtils.showMessage(WifiActivity.this, "登陆失败，" + error);
+                        AppContext.showMessage("登陆失败，" + error);
                     } catch (JSONException e2) {
                         e2.printStackTrace();
                         vibrator.vibrate(50);
-                        ContextUtils.showMessage(WifiActivity.this, "登陆失败，出现未知错误");
+                        AppContext.showMessage("登陆失败，出现未知错误");
                     }
                 }
             }
@@ -147,7 +141,7 @@ public class WifiActivity extends BaseAppCompatActivity {
                 btnDisconnect.setEnabled(true);
                 btnDisconnect.setText("断开连接");
                 vibrator.vibrate(50);
-                ContextUtils.showMessage(WifiActivity.this, "校园网退出登录失败，请重试");
+                AppContext.showMessage("校园网退出登录失败，请重试");
             }
 
             @Override
@@ -156,24 +150,24 @@ public class WifiActivity extends BaseAppCompatActivity {
                 btnDisconnect.setText("断开连接");
                 info_layout.setVisibility(View.GONE);
                 vibrator.vibrate(50);
-                ContextUtils.showMessage(WifiActivity.this, "校园网退出登录成功");
+                AppContext.showMessage("校园网退出登录成功");
             }
         });
     }
 
     private void loadCache() {
         //尝试加载缓存
-        String cache = getCacheHelper().getCache("herald_nic");
+        String cache = CacheHelper.get("herald_nic");
         if (!cache.equals("")) {
             //如果缓存不为空
             try {
                 JSONObject json_cache = new JSONObject(cache);
                 //设置统计饼状图
                 SeunetActivity.setupChart(json_cache.getJSONObject("content"),pieChartView);
-                ContextUtils.showMessage(WifiActivity.this,"刷新成功");
+                AppContext.showMessage("刷新成功");
             } catch (JSONException e) {
                 e.printStackTrace();
-                ContextUtils.showMessage(WifiActivity.this,"解析失败，请刷新");
+                AppContext.showMessage("解析失败，请刷新");
             }
         } else {
             List<SliceValue> values = new ArrayList<>();
@@ -191,7 +185,7 @@ public class WifiActivity extends BaseAppCompatActivity {
     private void refreshCache() {
         btnRefresh.setEnabled(false);
         btnRefresh.setText("正在刷新流量使用情况");
-        new ApiRequest(this).api(ApiHelper.API_NIC).addUUID()
+        new ApiRequest().api("nic").addUUID()
                 .toCache("herald_nic", o -> o)
                 .onFinish((success, code, response) -> {
                     btnRefresh.setEnabled(true);
@@ -199,7 +193,7 @@ public class WifiActivity extends BaseAppCompatActivity {
                     if (success) {
                         loadCache();
                     } else {
-                        ContextUtils.showMessage(WifiActivity.this,"刷新失败，请重试");
+                        AppContext.showMessage("刷新失败，请重试");
                     }
                 }).run();
     }

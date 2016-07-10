@@ -6,7 +6,6 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 class CardItem {
     //消费日期
@@ -31,7 +30,7 @@ class CardItem {
         this.left = left;
     }
 
-    public static ArrayList<CardItem> transfromJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<CardItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<CardItem> list = new ArrayList<>();
 
         for (int i = 0; i < jsonArray.length(); i++) {

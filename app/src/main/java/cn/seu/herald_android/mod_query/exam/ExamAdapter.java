@@ -9,12 +9,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_query.gymreserve.SportTypeItemRecyclerAdapter;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
     private List<ExamItem> examList;
-    public static interface onItemClickListner{
+    public interface onItemClickListner{
        void onItemClick(ExamItem item,int position);
     }
     private onItemClickListner mListner = null;

@@ -1,7 +1,6 @@
 package cn.seu.herald_android.app_main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +11,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_modulemanager.SeuModule;
+import cn.seu.herald_android.helper.AppModule;
 
-/**
- * 这个适配器类所适配的功能是：展示所给的模块列表，并且允许用户设置这些模块的快捷方式是否可用
- * Created by heyon on 2016/3/8.
- */
-public class ModuleListAdapter extends ArrayAdapter<SeuModule> {
+public class ModuleListAdapter extends ArrayAdapter<AppModule> {
 
-    public ModuleListAdapter(Context context, int resource, List<SeuModule> objects) {
+    public ModuleListAdapter(Context context, int resource, List<AppModule> objects) {
         super(context, resource, objects);
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SeuModule seuModule = getItem(position);
+        AppModule seuModule = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_modules, null);
         }
@@ -39,17 +33,15 @@ public class ModuleListAdapter extends ArrayAdapter<SeuModule> {
 
         //快捷方式图标
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);
-        imageView.setImageResource(seuModule.getIc_id());
+        imageView.setImageResource(seuModule.icon);
         //文字标题
         TextView tv_title = (TextView) convertView.findViewById(R.id.tv_shortcut);
-        tv_title.setText(seuModule.getName());
+        tv_title.setText(seuModule.nameTip);
         //文字说明
         TextView tv_desc = (TextView) convertView.findViewById(R.id.tv_desc);
-        tv_desc.setText(seuModule.getDescription());
+        tv_desc.setText(seuModule.desc);
 
-        convertView.setOnClickListener((v) -> {
-            getContext().startActivity(new Intent(seuModule.getAction()));
-        });
+        convertView.setOnClickListener((v) -> seuModule.open());
         return convertView;
     }
 

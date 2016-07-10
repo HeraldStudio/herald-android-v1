@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.seu.herald_android.custom.ContextUtils;
+import cn.seu.herald_android.app_framework.AppContext;
 
 
 /**
@@ -51,7 +51,7 @@ class PagesAdapter extends PagerAdapter {
 
             // 如果没课, 什么也不做
             if (maxWeek < 1) {
-                ContextUtils.showMessage(context, "暂无课程");
+                AppContext.showMessage("暂无课程");
                 return;
             }
 

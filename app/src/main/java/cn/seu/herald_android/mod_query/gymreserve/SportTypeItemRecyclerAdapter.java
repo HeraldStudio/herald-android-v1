@@ -14,9 +14,6 @@ import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
 
-/**
- * Created by heyon on 2016/5/16.
- */
 public class SportTypeItemRecyclerAdapter extends RecyclerView.Adapter<SportTypeItemRecyclerAdapter.GymReserveHolder>{
     Context context;
     ArrayList<SportTypeItem> list;

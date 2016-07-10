@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 
 /**
  * MarkedCalendarView | 自定义日历控件
@@ -29,10 +29,6 @@ public class MarkedCalendarView extends FrameLayout {
     private List<View> views;
     // 对话框中刷新按钮的点击事件
     public DialogInterface.OnClickListener refreshListener;
-    // 本页和今天的时间
-    private Calendar thisPage;
-    private Calendar today;
-    private int yearMonth;
 
     // Constructor
     public MarkedCalendarView(Context context, AttributeSet attrs) {
@@ -52,10 +48,9 @@ public class MarkedCalendarView extends FrameLayout {
     // 初始化月历页面
     public void initialize(int yearMonth, List<ExerciseInfo> page) {
 
-        this.yearMonth = yearMonth;
-        today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.SUNDAY);
-        thisPage = Calendar.getInstance();
+        Calendar thisPage = Calendar.getInstance();
         thisPage.setFirstDayOfWeek(Calendar.SUNDAY);
 
         // 首先将本页的日期改为1，防止当天日期超出本页所在月的日期范围造成月份显示错误
@@ -105,8 +100,8 @@ public class MarkedCalendarView extends FrameLayout {
 
             // 将格子添加到容器和链表
             v.setOnClickListener(v1 -> {
-                if (getContext() instanceof BaseAppCompatActivity) {
-                    ((BaseAppCompatActivity) getContext()).showSnackBar("该日无跑操记录");
+                if (getContext() instanceof BaseActivity) {
+                    ((BaseActivity) getContext()).showSnackBar("该日无跑操记录");
                 }
             });
             gv.addView(v);
@@ -130,15 +125,11 @@ public class MarkedCalendarView extends FrameLayout {
         tv.setTextColor(Color.WHITE);
 
         v.setOnClickListener(view -> {
-            if (getContext() instanceof BaseAppCompatActivity) {
-                ((BaseAppCompatActivity) getContext()).showSnackBar(info.toString());
+            if (getContext() instanceof BaseActivity) {
+                ((BaseActivity) getContext()).showSnackBar(info.toString());
             } else {
                 new AlertDialog.Builder(getContext()).setTitle("跑操记录详情").setMessage(info.toString()).show();
             }
         });
-    }
-
-    public int getYearMonth() {
-        return yearMonth;
     }
 }

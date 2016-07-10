@@ -22,14 +22,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
 /**
  * 图书主页面Acvitity
  */
-public class LibraryActivity extends BaseAppCompatActivity {
+public class LibraryActivity extends BaseActivity {
 
     //热门书籍展示列表
     private ListView listView_hotbook;
@@ -45,19 +45,23 @@ public class LibraryActivity extends BaseAppCompatActivity {
         //设置toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorLibraryprimary));
         enableSwipeBack();
 
 
         //加载最热门图书，初始化列表控件
         listView_hotbook = (ListView) findViewById(R.id.list_library_hotbook);
         //取消滑动条
-        listView_hotbook.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        if (listView_hotbook != null) {
+            listView_hotbook.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        }
 
         //获取最热图书信息
         refreshHotBook();
@@ -85,7 +89,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
     private void refreshHotBook() {
         //加载校内最热门图书列表
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_HOTBOOK).addUUID()
+        new ApiRequest().api("library_hot").addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
@@ -106,14 +110,12 @@ public class LibraryActivity extends BaseAppCompatActivity {
 
     private void loadHotBookList(ArrayList<HotBook> list) {
         listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.listviewitem_library_hotbook, list));
-        //设置高度自适应
-//        HotBookAdapter.setHeightWithContent(listView_hotbook);
     }
 
     public void refreshBorrowRocord() {
         //获取最新的已借书记录
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_MYBOOK).addUUID()
+        new ApiRequest().api("library").addUUID()
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
@@ -125,7 +127,7 @@ public class LibraryActivity extends BaseAppCompatActivity {
                                 showSnackBar("目前尚无在借图书");
                             } else {
                                 //反之打开借书记录对话框
-                                displayBorrowRecordDialog(MyBorrowBook.transfromJSONArrayToArrayList(jsonArray));
+                                displayBorrowRecordDialog(MyBorrowBook.transformJSONArrayToArrayList(jsonArray));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -186,9 +188,9 @@ public class LibraryActivity extends BaseAppCompatActivity {
     private void updateAuthInfo(String password) {
         //用于更新图书馆的账号和密码
         showProgressDialog();
-        new ApiRequest(this).url(ApiHelper.auth_update_url)
-                .post("cardnum", getApiHelper().getUserName(), "password", getApiHelper().getPassword())
-                .post("lib_username", getApiHelper().getUserName(), "lib_password", password)
+        new ApiRequest().url(ApiHelper.auth_update_url)
+                .post("cardnum", ApiHelper.getUserName(), "password", ApiHelper.getPassword())
+                .post("lib_username", ApiHelper.getUserName(), "lib_password", password)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (response.equals("OK")) {

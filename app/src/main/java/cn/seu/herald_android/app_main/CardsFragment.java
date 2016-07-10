@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
-import cn.seu.herald_android.mod_timeline.TimelineView;
 
 public class CardsFragment extends Fragment {
 
     private CustomSwipeRefreshLayout srl;
 
-    private TimelineView view;
+    private CardsListView view;
 
     @Nullable
     @Override
@@ -23,7 +22,7 @@ public class CardsFragment extends Fragment {
         View contentView = inflater.inflate(R.layout.fragment_main_cards, container, false);
 
         srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
-        view = (TimelineView) contentView.findViewById(R.id.timeline);
+        view = (CardsListView) contentView.findViewById(R.id.timeline);
         srl.setOnRefreshListener(() -> view.loadContent(true));
 
         return contentView;

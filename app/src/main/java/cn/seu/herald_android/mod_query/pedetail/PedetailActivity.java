@@ -1,6 +1,5 @@
 package cn.seu.herald_android.mod_query.pedetail;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,17 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.custom.CalendarUtils;
-import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiThreadManager;
 import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_timeline.TimelineItem;
-import cn.seu.herald_android.mod_timeline.TimelineView;
+import cn.seu.herald_android.mod_cards.PedetailCard;
 
-public class PedetailActivity extends BaseAppCompatActivity {
+public class PedetailActivity extends BaseActivity {
 
     public static final int[] FORECAST_TIME_PERIOD = {
             6 * 60 + 20, 7 * 60 + 20
@@ -49,17 +42,21 @@ public class PedetailActivity extends BaseAppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //禁用collapsingToolbarLayout的伸缩标题
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setTitleEnabled(false);
+        }
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPedetailprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorPedetailprimary));
         enableSwipeBack();
 
         pager = (ViewPager) findViewById(R.id.calendarPager);
@@ -78,7 +75,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
     private void refreshCache() {
         showProgressDialog();
         new ApiThreadManager()
-                .addAll(remoteRefreshCache(this))
+                .addAll(PedetailCard.getRefresher())
                 .onFinish((success) -> {
                     hideProgressDialog();
                     if (success) {
@@ -86,29 +83,7 @@ public class PedetailActivity extends BaseAppCompatActivity {
                     } else {
                         showSnackBar("刷新失败，请重试");
                     }
-                }).runWithPostMethod();
-    }
-
-    public static ApiRequest[] remoteRefreshCache(Context context) {
-        return new ApiRequest[]{
-                new ApiRequest(context).api(ApiHelper.API_PC).addUUID()
-                        .toCache("herald_pc_forecast", o -> o.getString("content"))
-                        .onFinish((success, code, response) -> {
-                    long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-                    if (success) {
-                        new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
-                    } else if (code == 201) { // 今天还没有预告
-                        new CacheHelper(context).setCache("herald_pc_date", String.valueOf(today));
-                        // 覆盖旧的预告信息
-                        new CacheHelper(context).setCache("herald_pc_forecast", "refreshing");
-                    }
-                }),
-                new ApiRequest(context).api(ApiHelper.API_PEDETAIL).addUUID()
-                        .toCache("herald_pedetail", o -> o.getJSONArray("content")),
-                new ApiRequest(context).api(ApiHelper.API_PE).addUUID()
-                        .toCache("herald_pe_count", o -> o.getString("content"))
-                        .toCache("herald_pe_remain", o -> o.getString("remain"))
-        };
+                }).run();
     }
 
     private boolean isRefreshNeeded() {
@@ -139,9 +114,9 @@ public class PedetailActivity extends BaseAppCompatActivity {
     private void readLocal() {
         try {
             // 读取本地保存的跑操数据
-            JSONArray array = new JSONArray(getCacheHelper().getCache("herald_pedetail"));
-            String countStr = getCacheHelper().getCache("herald_pe_count");
-            String remainStr = getCacheHelper().getCache("herald_pe_remain");
+            JSONArray array = new JSONArray(CacheHelper.get("herald_pedetail"));
+            String countStr = CacheHelper.get("herald_pe_count");
+            String remainStr = CacheHelper.get("herald_pe_remain");
 
             // 用户有数据
             // 有效跑操计数器，用于显示每一个跑操是第几次
@@ -200,136 +175,12 @@ public class PedetailActivity extends BaseAppCompatActivity {
             // 根据实际需要，显示时应首先滑动到末页
             pager.setCurrentItem(adapter.getCount() - 1);
 
-            // 初始化当月跑操次数的值
-            int monthlyCountNum = adapter.getSubCount(pager.getCurrentItem());
-
             if (infoList.size() == 0) {
                 showSnackBar("本学期暂时没有跑操记录");
             }
         } catch (Exception e) {
             showSnackBar("解析失败，请刷新");
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * 读取跑操预报缓存，转换成对应的时间轴条目
-     **/
-    public static TimelineItem getPeForecastItem(TimelineView host) {
-        CacheHelper helper = new CacheHelper(host.getContext());
-        String date = helper.getCache("herald_pc_date");
-        String forecast = helper.getCache("herald_pc_forecast");
-        String record = helper.getCache("herald_pedetail");
-        final long now = Calendar.getInstance().getTimeInMillis();
-
-        try {
-            int count = Integer.valueOf(helper.getCache("herald_pe_count"));
-            int remain = Integer.valueOf(helper.getCache("herald_pe_remain"));
-
-            Calendar nowCal = Calendar.getInstance();
-            long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
-            long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
-            long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
-
-            String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime());
-
-            if (record.contains(todayStamp)) {
-                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        now, TimelineItem.CONTENT_NOTIFY,
-                        "你今天的跑操已经到账。" + getRemainNotice(count, remain, false)
-                );
-
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
-
-                return item;
-            }
-
-            if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
-                return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        now, TimelineItem.CONTENT_NOTIFY, "跑操预告数据为空，请尝试刷新"
-                );
-            }
-
-            if (now < startTime) {
-                // 跑操时间没到
-                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        now, TimelineItem.CONTENT_NO_NOTIFY, "小猴会在早上跑操时间实时显示跑操预告\n"
-                        + getRemainNotice(count, remain, false)
-                );
-
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
-
-                return item;
-            } else if (now >= endTime) {
-                // 跑操时间已过
-
-                if (!forecast.contains("跑操")) {
-                    // 没有跑操预告信息
-                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                            now, TimelineItem.CONTENT_NO_NOTIFY, "今天没有跑操预告信息\n"
-                            + getRemainNotice(count, remain, false)
-                    );
-
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
-
-                    return item;
-                } else {
-                    // 有跑操预告信息但时间已过
-                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                            startTime, TimelineItem.CONTENT_NO_NOTIFY, forecast + "(已结束)\n"
-                            + getRemainNotice(count, remain, false)
-                    );
-
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
-
-                    return item;
-                }
-            } else {
-                // 还没有跑操预告信息
-                if (!forecast.contains("跑操")) {
-                    TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                            now, TimelineItem.CONTENT_NO_NOTIFY, "目前暂无跑操预报信息，过一会再来看吧~\n"
-                            + getRemainNotice(count, remain, false)
-                    );
-
-                    item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
-
-                    return item;
-                }
-
-                // 有跑操预告信息
-                TimelineItem item = new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                        now, TimelineItem.CONTENT_NOTIFY, "小猴预测" + forecast + "\n"
-                        + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
-                );
-
-                item.attachedView.add(new PedetailTimelineBlockLayout(host.getContext(), count, Math.max(0, 45 - count), remain));
-
-                return item;
-            }
-        } catch (Exception e) {
-            return new TimelineItem(SettingsHelper.MODULE_PEDETAIL,
-                    now, TimelineItem.CONTENT_NOTIFY, "跑操数据为空，请尝试刷新"
-            );
-        }
-    }
-
-    private static String getRemainNotice(int count, int remain, boolean todayAvailable) {
-
-        if (count == 0) return "你这学期还没有跑操，如果是需要跑操的同学要加油咯~";
-        if (count >= 45) {
-            return "已经跑够次数啦，" + (remain > 0 && remain >= 50 - count ?
-                    "你还可以再继续加餐，多多益善哟~" : "小猴给你个满分~");
-        }
-        int offset =  remain - (45 - count);
-        if (offset >= 20) {
-            return "时间似乎比较充裕，但还是要加油哟~";
-        } else if (offset >= 10) {
-            return "时间比较紧迫了，" + (todayAvailable ? "赶紧加油出门跑操吧~" : "还需要继续加油哟~");
-        } else if (offset >= 0) {
-            return "没时间解释了，" + (todayAvailable ? "赶紧出门补齐跑操吧~" : "赶紧找机会补齐跑操吧~");
-        } else {
-            return "似乎没什么希望了，小猴为你感到难过，不如参加一些加跑操的活动试试？";
         }
     }
 }

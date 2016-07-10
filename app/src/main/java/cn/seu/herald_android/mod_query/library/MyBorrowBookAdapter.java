@@ -16,14 +16,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.custom.CalendarUtils;
-import cn.seu.herald_android.custom.ContextUtils;
-import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
-/**
- * Created by corvo on 3/12/16.
- */
 class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
     public MyBorrowBookAdapter(Context context, int resource, List<MyBorrowBook> objects) {
         super(context, resource, objects);
@@ -43,21 +39,21 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
         TextView tv_renewtime = (TextView) convertView.findViewById(R.id.tv_renewtime);
         Button btn_renew = (Button) convertView.findViewById(R.id.btn_lib_renew);
 
-        tv_title.setText(myBorrowBook.getTitle());
-        tv_author.setText(myBorrowBook.getAuthor());
-        tv_renderdate.setText("借阅时间：" + myBorrowBook.getRenderDate());
-        tv_duedate.setText("应还时间：" + myBorrowBook.getDueDate()
-                + (isOverdue(myBorrowBook.getDueDate()) ? "（已到期）" : ""));
-        tv_renewtime.setText("续借次数：" + myBorrowBook.getRenewTime());
+        tv_title.setText(myBorrowBook.title);
+        tv_author.setText(myBorrowBook.author);
+        tv_renderdate.setText("借阅时间：" + myBorrowBook.renderDate);
+        tv_duedate.setText("应还时间：" + myBorrowBook.dueDate
+                + (isOverdue(myBorrowBook.dueDate) ? "（已到期）" : ""));
+        tv_renewtime.setText("续借次数：" + myBorrowBook.renewTime);
 
-        if (isDue(myBorrowBook.getDueDate())) {
+        if (isDue(myBorrowBook.dueDate)) {
             //如果已经接近归还日期则标红日期
             tv_duedate.setTextColor(ContextCompat.getColor(getContext(), R.color.colorLectureprimary));
         } else {
             tv_duedate.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
         }
 
-        btn_renew.setEnabled(myBorrowBook.getRenewTime().equals("0") && !isOverdue(myBorrowBook.getDueDate()));
+        btn_renew.setEnabled(myBorrowBook.renewTime.equals("0") && !isOverdue(myBorrowBook.dueDate));
         if (btn_renew.isEnabled()){
             btn_renew.setTextColor(ContextCompat.getColor(getContext(),R.color.colorLibraryprimary));
             btn_renew.setText("续借");
@@ -67,17 +63,17 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
         }
 
         btn_renew.setOnClickListener(!btn_renew.isEnabled() ? null : v -> {
-            ContextUtils.showMessage(getContext(), "正在请求续借，请稍候…");
+            AppContext.showMessage("正在请求续借，请稍候…");
 
-            new ApiRequest(getContext()).api(ApiHelper.API_RENEW).addUUID()
-                    .post("barcode", myBorrowBook.getBarcode())
+            new ApiRequest().api("renew").addUUID()
+                    .post("barcode", myBorrowBook.barcode)
                     .onFinish((success, code, response) -> {
                         try {
                             response = new JSONObject(response).getString("content");
-                            ContextUtils.showMessage(getContext(),
+                            AppContext.showMessage(
                                     response.equals("success") ? "续借成功" : response);
                         } catch (JSONException e) {
-                            ContextUtils.showMessage(getContext(), "续借失败");
+                            AppContext.showMessage("续借失败");
                         }
                     }).run();
         });

@@ -16,17 +16,13 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
-import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.helper.AppModule;
 
-/**
- * 这个适配器类所适配的功能是：展示所给的模块列表
- * Created by heyon on 2016/3/7.
- */
 public class ShortCutBoxDisplayAdapter extends BaseAdapter {
 
-    private List<SeuModule> modules = new ArrayList<>();
+    private List<AppModule> modules = new ArrayList<>();
 
-    public ShortCutBoxDisplayAdapter(List<SeuModule> modules) {
+    public ShortCutBoxDisplayAdapter(List<AppModule> modules) {
         this.modules = new ArrayList<>(modules);
     }
 
@@ -36,7 +32,7 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
     }
 
     @Override
-    public SeuModule getItem(int position) {
+    public AppModule getItem(int position) {
         if (position == modules.size()) return null;
 
         return modules.get(position);
@@ -52,19 +48,16 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (position < modules.size()) {// 模块图标
-            SeuModule seuModule = getItem(position);
+            AppModule seuModule = getItem(position);
             if (convertView == null) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridviewitem_display_shortcut, null);
             }
             //快捷方式图标
             ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);
-            imageView.setImageResource(seuModule.getIc_id());
+            imageView.setImageResource(seuModule.icon);
             //文字说明
             TextView textView = (TextView) convertView.findViewById(R.id.tv_shortcut);
-            textView.setText(seuModule.getName());
-            //web标签
-            View webmodule = convertView.findViewById(R.id.tv_webmodule);
-            webmodule.setVisibility(seuModule.getAction().contains("WEBMODULE") ? View.VISIBLE : View.GONE);
+            textView.setText(seuModule.nameTip.split(" ")[0]);
 
             int columnCount = ((GridView)parent).getNumColumns();
 
@@ -76,19 +69,14 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
                     )
             );
 
-            convertView.setOnClickListener((v) -> {
-                Intent intent = new Intent();
-                intent.setAction(seuModule.getAction());
-                parent.getContext().startActivity(intent);
-            });
+            convertView.setOnClickListener((v) -> seuModule.open());
 
             convertView.setOnLongClickListener((v) -> {
-                SettingsHelper settingsHelper = new SettingsHelper(parent.getContext());
                 new AlertDialog.Builder(parent.getContext())
                         .setMessage("确定移除此模块的快捷方式吗？")
                         .setPositiveButton("确定", (dialog, which) -> {
                             //设置为不可用
-                            settingsHelper.setModuleShortCutEnabled(seuModule.getModuleId(), false);
+                            seuModule.shortcutEnabled.set(false);
                             if (parent.getContext() instanceof MainActivity) {
                                 ((MainActivity) parent.getContext()).syncModuleSettings();
                             }

@@ -85,10 +85,6 @@ public class ExperimentItem {
         return teacher;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
     public String getGrade() {
         return grade;
     }

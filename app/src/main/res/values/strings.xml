@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">小猴偷米</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">settings</string>
-    <string name="action_logout">注销登录</string>
 
     <string name="action_search">搜索</string>
     <string name="action_borrowrecord">已借图书</string>
@@ -84,7 +80,6 @@ Copyright 2012 Square, Inc.
 
     <string name="title_activity_card">一卡通</string>
     <string name="title_activity_experiment">实验助手</string>
-    <string name="title_activity_empty_room">空教室</string>
     <string name="title_activity_seunet">校园网络</string>
     <string name="title_activity_gymreserve">场馆预约</string>
     <string name="title_activity_exam">考试助手</string>
@@ -92,7 +87,6 @@ Copyright 2012 Square, Inc.
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>
     <string name="title_activity_srtp">课外研学</string>
-    <string name="title_activity_sys_settings">系统设置</string>
     <string name="title_activity_query">模块管理</string>
     <string name="title_activity_schoolbus">校车助手</string>
     <string name="title_activity_grade">绩点查询</string>
@@ -101,6 +95,5 @@ Copyright 2012 Square, Inc.
     <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>
-    <string name="title_activity_afterschoolactivity">校园生活</string>
 
 </resources>

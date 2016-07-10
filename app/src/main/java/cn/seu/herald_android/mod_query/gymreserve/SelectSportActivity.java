@@ -20,12 +20,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.custom.DividerGridItemDecoration;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 
-public class SelectSportActivity extends BaseAppCompatActivity {
+public class SelectSportActivity extends BaseActivity {
 
     RecyclerView recyclerView;
     @Override
@@ -39,22 +39,26 @@ public class SelectSportActivity extends BaseAppCompatActivity {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //设置伸缩标题栏禁用
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setTitleEnabled(false);
+        }
 
         //设置时差图
         ImageView imageView = (ImageView)findViewById(R.id.img_gymindex);
         Picasso.with(getBaseContext()).load(R.drawable.changguanyuyue).into(imageView);
 
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
         //列表初始化
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview_reserve);
@@ -91,7 +95,7 @@ public class SelectSportActivity extends BaseAppCompatActivity {
     private void refreshItemListAndTimeList() {
         showProgressDialog();
         //获取项目和时间列表
-        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+        new ApiRequest().api("yuyue")
                 .addUUID()
                 .post("method", "getDate")
                 .toCache("herald_gymreserve_timelist_and_itemlist", o -> o)
@@ -104,17 +108,17 @@ public class SelectSportActivity extends BaseAppCompatActivity {
                     }
                 }).run();
         //如果用户手机号为空时，同时预获取用户手机号
-        new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+        new ApiRequest().api("yuyue")
                 .addUUID().post("method", "getPhone")
                 .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
                 .run();
         
         //如果用户自己的信息未完善，则同时预查询自己的ID
-        if( getCacheHelper().getCache("herald_gymreserve_userid").equals("")){
-            new ApiRequest(this).api(ApiHelper.API_GYMRESERVE)
+        if(CacheHelper.get("herald_gymreserve_userid").equals("")){
+            new ApiRequest().api("yuyue")
                     .addUUID()
                     .post("method", "getFriendList")
-                    .post("cardNo",getApiHelper().getAuthCache("cardnum"))
+                    .post("cardNo", ApiHelper.getUserName())
                     .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
                     .run();
         }
@@ -122,11 +126,11 @@ public class SelectSportActivity extends BaseAppCompatActivity {
 
     private void loadItemList() {
         try {
-            JSONArray itemArray = new JSONObject(getCacheHelper().getCache("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("itemList");
+            JSONArray itemArray = new JSONObject(CacheHelper.get("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("itemList");
             //活动项目列表
             ArrayList<SportTypeItem> list = SportTypeItem.transformJSONtoArrayList(itemArray);
             //获取日期列表
-            JSONArray timeArray =  new JSONObject(getCacheHelper().getCache("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("timeList");
+            JSONArray timeArray =  new JSONObject(CacheHelper.get("herald_gymreserve_timelist_and_itemlist")).getJSONObject("content").getJSONArray("timeList");
             String[] dayInfos = SportTypeItem.transformJSONtoStringArray(timeArray);
             //设置适配器同时设置点击函数
             SportTypeItemRecyclerAdapter adapter = new SportTypeItemRecyclerAdapter(getBaseContext(),list);
@@ -138,11 +142,6 @@ public class SelectSportActivity extends BaseAppCompatActivity {
             recyclerView.setAdapter(adapter);
             //设置布局管理器
             recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-            //设置分割线
-            DividerGridItemDecoration itemDecoration = new DividerGridItemDecoration(getBaseContext());
-            itemDecoration.setDividerItemDrawable(R.drawable.aboutus);
-            recyclerView.addItemDecoration(itemDecoration);
-
 
             hideProgressDialog();
         } catch (JSONException e) {

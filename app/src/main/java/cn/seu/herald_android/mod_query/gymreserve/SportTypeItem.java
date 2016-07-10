@@ -65,7 +65,6 @@ public class SportTypeItem implements Serializable{
     }
 
     public static String[] transformJSONtoStringArray(JSONArray jsonArray) throws JSONException {
-        ArrayList<SportTypeItem> list = new ArrayList<>();
         String[] items = new String[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = jsonArray.getJSONObject(i);

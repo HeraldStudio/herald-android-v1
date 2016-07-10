@@ -11,9 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 
-public class OrderItemActivity extends BaseAppCompatActivity {
+public class OrderItemActivity extends BaseActivity {
 
     public static void startOrderItemActivity(Activity activity, SportTypeItem item, String[] dayInfos){
         Intent intent = new Intent(activity,OrderItemActivity.class);
@@ -75,14 +75,16 @@ public class OrderItemActivity extends BaseAppCompatActivity {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
 
         //设置标题
@@ -107,8 +109,5 @@ public class OrderItemActivity extends BaseAppCompatActivity {
         viewPager.setAdapter(orderItemTimeFragmentAdapter);
         //关联tablayout和viewpager
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabsFromPagerAdapter(orderItemTimeFragmentAdapter);
     }
-
-
 }

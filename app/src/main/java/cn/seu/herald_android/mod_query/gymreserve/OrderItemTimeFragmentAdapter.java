@@ -6,9 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-/**
- * Created by heyon on 2016/5/13.
- */
 public class OrderItemTimeFragmentAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> fragmentArrayList;
     private ArrayList<String> titleArrayList;

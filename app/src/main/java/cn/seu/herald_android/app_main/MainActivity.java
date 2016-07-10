@@ -1,13 +1,11 @@
 package cn.seu.herald_android.app_main;
 
 import android.animation.ArgbEvaluator;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,9 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -29,33 +24,28 @@ import android.widget.RelativeLayout;
 
 import com.squareup.seismic.ShakeDetector;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.app_framework.BaseActivity;
+import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
-import cn.seu.herald_android.mod_webmodule.WebShowActivity;
-import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
+import cn.seu.herald_android.helper.NetworkLoginHelper;
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
 import me.majiajie.pagerbottomtabstrip.TabItemBuilder;
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
-public class MainActivity extends BaseAppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     CardsFragment cardsFragment = new CardsFragment();
 
-    AfterSchoolFragment afterSchoolFragment = new AfterSchoolFragment();
+    ActivityFragment afterSchoolFragment = new ActivityFragment();
 
     ModuleListFragment moduleListFragment = new ModuleListFragment();
 
-    MyInfoFragment myInfoFragment = new MyInfoFragment();
+    SettingsFragment myInfoFragment = new SettingsFragment();
 
     //首页tab和viewPager
     ViewPager viewPager;
@@ -79,9 +69,9 @@ public class MainActivity extends BaseAppCompatActivity {
 
     private ShakeDetector shakeDetector = new ShakeDetector(() -> {
         //摇一摇自动登陆
-        if (getSettingsHelper().getWifiAutoLogin() && !preventShake) {
+        if (SettingsHelper.wifiAutoLogin.get() && !preventShake) {
             preventShake = true;
-            new NetworkLoginHelper(this, true).checkAndLogin();
+            new NetworkLoginHelper(this).checkAndLogin();
             new Handler().postDelayed(() -> preventShake = false, 2000);
         }
     });
@@ -108,9 +98,7 @@ public class MainActivity extends BaseAppCompatActivity {
 //        setTitle(" " + getTitle().toString().trim());
 
         //设置状态栏颜色
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-        //检查个人信息
-        checkAuth();
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         //控件初始化
         viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
@@ -125,7 +113,6 @@ public class MainActivity extends BaseAppCompatActivity {
 
         //注册主页页面变化广播接收器
         setupChangeMainFragmentReceiver();
-
 
         //设置右上角加号按钮
         setupMoreButton();
@@ -173,7 +160,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 //设置点击项
                 window.findViewById(R.id.content_wifi).setOnClickListener(v1 -> {
                     //设置登录校园网
-                    new NetworkLoginHelper(this, true).checkAndLogin();
+                    new NetworkLoginHelper(this).checkAndLogin();
                 });
                 window.findViewById(R.id.content_module_manage).setOnClickListener(v1 -> {
                     //设置打开模块管理
@@ -192,39 +179,13 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     private void setupPagerBottomTabLayout(){
-        if (getSettingsHelper().getBottomTabEnabled()){
+        if (SettingsHelper.bottomTabEnabled.get()){
             pagerBottomTabLayout.setVisibility(View.VISIBLE);
             topTabLayout.setVisibility(View.GONE);
         }else {
             pagerBottomTabLayout.setVisibility(View.GONE);
             topTabLayout.setVisibility(View.VISIBLE);
         }
-    }
-
-
-    private void checkAuth() {
-        new ApiRequest(this).api(ApiHelper.API_USER).addUUID().onFinish((success, code, response) -> {
-            if (success) {
-                if (code == 200) try {
-                    JSONObject json_res = new JSONObject(response);
-                    //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
-                    //更新首页欢迎信息和侧边栏信息
-                    JSONObject json_content = json_res.getJSONObject("content");
-                    getApiHelper().setAuthCache("name", json_content.getString("name"));
-                    getApiHelper().setAuthCache("sex", json_content.getString("sex"));
-                    getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
-                    getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
-                    myInfoFragment.refreshUsername();
-                } catch (JSONException e) {
-                    getApiHelper().dealApiException(e);
-                }
-                else {
-                    //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
-                    showSnackBar("登录信息已失效，请重新登录");
-                    getApiHelper().doLogout();
-                }
-            }
-        }).run();
     }
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -244,14 +205,6 @@ public class MainActivity extends BaseAppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = new String[]{"首页","发现","模块", "我的"};
-//            int[] imageResId = new int[]{R.drawable.ic_home_24dp,R.drawable.ic_explore,R.drawable.ic_view_module_24dp,R.drawable.ic_person_24dp};
-//            Drawable image = ContextCompat.getDrawable(getBaseContext(),imageResId[position]);
-//            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
-//            SpannableString sb = new SpannableString(titles[position]);
-//            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
-//            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            return sb;
             return "";
         }
     };
@@ -312,7 +265,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 int colorOld= statusColors[position];
                 int colorNew = statusColors[(position+1)%statusColors.length];
                 int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld,colorNew);
-                changeStatusBarColor(evaluate);
+                setNavigationColor(evaluate);
             }
 
             @Override
@@ -359,24 +312,17 @@ public class MainActivity extends BaseAppCompatActivity {
         moduleListFragment.loadModuleList();
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(changeMainFragmentReceiver);
     }
 
-
-    @Override
-    protected void setStatusBarColor(Activity activity, int color) {
-        //效率比change低，一般先set,之后的颜色用change来做变换
-        super.setStatusBarColor(activity, color);
+    protected void setNavigationColor(int color) {
+        setStatusBarColor(color);
         main_toolbar = (RelativeLayout)findViewById(R.id.main_toolbar);
-    }
-
-    @Override
-    protected void changeStatusBarColor(int color) {
-        super.changeStatusBarColor(color);
-        if (main_toolbar!=null) main_toolbar.setBackgroundColor(color);
+        if (main_toolbar != null) {
+            main_toolbar.setBackgroundColor(color);
+        }
     }
 }

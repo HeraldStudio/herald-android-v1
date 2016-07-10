@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
-public class SeunetActivity extends BaseAppCompatActivity {
+public class SeunetActivity extends BaseActivity {
     //显示已用流量比例的饼状图
     private PieChartView pieChartView_wlan;
     //钱包余额
@@ -43,22 +43,28 @@ public class SeunetActivity extends BaseAppCompatActivity {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //禁用collapsingToolbarLayout的伸缩标题
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setTitleEnabled(false);
+        }
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSeuNetprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
         enableSwipeBack();
         //初始化流量显示饼状图
         pieChartView_wlan = (PieChartView) findViewById(R.id.chartwlan);
         //设置饼图不旋转
-        pieChartView_wlan.setChartRotationEnabled(false);
+        if (pieChartView_wlan != null) {
+            pieChartView_wlan.setChartRotationEnabled(false);
+        }
         //余额显示的tv
         tv_money_left = (TextView) findViewById(R.id.tv_extra_money);
         //已用流量
@@ -92,7 +98,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void loadCache() {
         //尝试加载缓存
-        String cache = getCacheHelper().getCache("herald_nic");
+        String cache = CacheHelper.get("herald_nic");
         if (!cache.equals("")) {
             //如果缓存不为空
             try {
@@ -130,7 +136,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_NIC).addUUID()
+        new ApiRequest().api("nic").addUUID()
                 .toCache("herald_nic", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
@@ -175,7 +181,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
         String unit = used_str.split(" ")[1];
         if (unit.equals("B")) used = 0d;
         double used_per = 0;
-        //TODO 总流量不要写死
+
         if (unit.equals("KB")) used_per = used / (1024d * 5d * 1024d);
         if (unit.equals("MB")) used_per = used / (1024d * 5d);
         if (unit.equals("GB")) {

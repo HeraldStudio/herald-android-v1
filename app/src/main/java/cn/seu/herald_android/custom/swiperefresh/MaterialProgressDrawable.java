@@ -30,8 +30,6 @@ import java.util.ArrayList;
 
 /**
  * Fancy progress indicator for Material theme.
- *
- * @hide
  */
 class MaterialProgressDrawable extends Drawable implements Animatable {
     private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
@@ -59,10 +57,6 @@ class MaterialProgressDrawable extends Drawable implements Animatable {
     private static final float CENTER_RADIUS_LARGE = 12.5f;
     private static final float STROKE_WIDTH_LARGE = 3f;
 
-    private final int[] COLORS = new int[]{
-            Color.BLACK
-    };
-
     /**
      * The value in the linear interpolator for animating the drawable at which
      * the color transition should start
@@ -83,7 +77,7 @@ class MaterialProgressDrawable extends Drawable implements Animatable {
     /**
      * The list of animators operating on this drawable.
      */
-    private final ArrayList<Animation> mAnimators = new ArrayList<Animation>();
+    private final ArrayList<Animation> mAnimators = new ArrayList<>();
 
     /**
      * The indicator ring, used to manage animation state.
@@ -121,7 +115,26 @@ class MaterialProgressDrawable extends Drawable implements Animatable {
         mParent = parent;
         mResources = context.getResources();
 
+        Callback mCallback = new Callback() {
+            @Override
+            public void invalidateDrawable(Drawable d) {
+                invalidateSelf();
+            }
+
+            @Override
+            public void scheduleDrawable(Drawable d, Runnable what, long when) {
+                scheduleSelf(what, when);
+            }
+
+            @Override
+            public void unscheduleDrawable(Drawable d, Runnable what) {
+                unscheduleSelf(what);
+            }
+        };
         mRing = new Ring(mCallback);
+        int[] COLORS = new int[]{
+                Color.BLACK
+        };
         mRing.setColors(COLORS);
 
         updateSizes(DEFAULT);
@@ -202,8 +215,6 @@ class MaterialProgressDrawable extends Drawable implements Animatable {
      * Set the colors used in the progress animation from color resources.
      * The first color will also be the color of the bar that grows in response
      * to a user swipe gesture.
-     *
-     * @param colors
      */
     public void setColorSchemeColors(int... colors) {
         mRing.setColors(colors);
@@ -305,22 +316,20 @@ class MaterialProgressDrawable extends Drawable implements Animatable {
 
     // Adapted from ArgbEvaluator.java
     private int evaluateColorChange(float fraction, int startValue, int endValue) {
-        int startInt = (Integer) startValue;
-        int startA = (startInt >> 24) & 0xff;
-        int startR = (startInt >> 16) & 0xff;
-        int startG = (startInt >> 8) & 0xff;
-        int startB = startInt & 0xff;
+        int startA = (startValue >> 24) & 0xff;
+        int startR = (startValue >> 16) & 0xff;
+        int startG = (startValue >> 8) & 0xff;
+        int startB = startValue & 0xff;
 
-        int endInt = (Integer) endValue;
-        int endA = (endInt >> 24) & 0xff;
-        int endR = (endInt >> 16) & 0xff;
-        int endG = (endInt >> 8) & 0xff;
-        int endB = endInt & 0xff;
+        int endA = (endValue >> 24) & 0xff;
+        int endR = (endValue >> 16) & 0xff;
+        int endG = (endValue >> 8) & 0xff;
+        int endB = endValue & 0xff;
 
-        return (int) ((startA + (int) (fraction * (endA - startA))) << 24) |
-                (int) ((startR + (int) (fraction * (endR - startR))) << 16) |
-                (int) ((startG + (int) (fraction * (endG - startG))) << 8) |
-                (int) ((startB + (int) (fraction * (endB - startB))));
+        return (startA + (int) (fraction * (endA - startA))) << 24 |
+                (startR + (int) (fraction * (endR - startR))) << 16 |
+                (startG + (int) (fraction * (endG - startG))) << 8 |
+                (startB + (int) (fraction * (endB - startB)));
     }
 
     /**
@@ -444,23 +453,6 @@ class MaterialProgressDrawable extends Drawable implements Animatable {
         });
         mAnimation = animation;
     }
-
-    private final Callback mCallback = new Callback() {
-        @Override
-        public void invalidateDrawable(Drawable d) {
-            invalidateSelf();
-        }
-
-        @Override
-        public void scheduleDrawable(Drawable d, Runnable what, long when) {
-            scheduleSelf(what, when);
-        }
-
-        @Override
-        public void unscheduleDrawable(Drawable d, Runnable what) {
-            unscheduleSelf(what);
-        }
-    };
 
     private static class Ring {
         private final RectF mTempBounds = new RectF();

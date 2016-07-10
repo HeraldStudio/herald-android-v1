@@ -5,9 +5,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 
-public class AboutusActivity extends BaseAppCompatActivity {
+public class AboutusActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,14 +15,16 @@ public class AboutusActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_aboutus);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
 
         //设置状态栏颜色
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         enableSwipeBack();
     }
 }

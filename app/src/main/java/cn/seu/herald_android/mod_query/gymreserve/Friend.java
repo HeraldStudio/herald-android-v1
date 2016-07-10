@@ -15,9 +15,6 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 
-/**
- * Created by heyon on 2016/5/14.
- */
 public class Friend implements Serializable{
     String nameDepartment;
     String userId;

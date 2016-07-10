@@ -13,11 +13,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.helper.AppModule;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
-import cn.seu.herald_android.mod_modulemanager.SeuModule;
 
 public class ModuleListFragment extends Fragment {
 
@@ -33,7 +35,7 @@ public class ModuleListFragment extends Fragment {
 
     //模块管理的按钮
     private View editButton;
-    private ArrayList<SeuModule> seuModuleArrayList = new ArrayList<>();
+    private ArrayList<AppModule> seuModuleArrayList = new ArrayList<>();
 
     @Override
     public void onResume() {
@@ -48,10 +50,10 @@ public class ModuleListFragment extends Fragment {
 
         //获得所有模块列表
         seuModuleArrayList.clear();
-        ArrayList<SeuModule> list = new SettingsHelper(getContext()).getSeuModuleList();
-        for (SeuModule k : list) {
+        List<AppModule> list = Arrays.asList(SettingsHelper.Module.array);
+        for (AppModule k : list) {
             //筛选已开启的模块
-            if (k.isEnabledCard() || k.isEnabledShortCut()) {
+            if (k.cardEnabled.get() || k.shortcutEnabled.get()) {
                 seuModuleArrayList.add(k);
             }
         }

@@ -1,11 +1,8 @@
 package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.ListViewUtils;
-import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 
-public class MyOrderActivity extends BaseAppCompatActivity {
+public class MyOrderActivity extends BaseActivity {
 
     ListView listView;
     @Override
@@ -66,15 +62,17 @@ public class MyOrderActivity extends BaseAppCompatActivity {
         //Toolbar初始化
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
         setTitle("我的预约");
 
         //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGymReserveprimary));
+        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
         enableSwipeBack();
         //列表初始化
         listView = (ListView) findViewById(R.id.listview_gym_myorder);
@@ -85,9 +83,9 @@ public class MyOrderActivity extends BaseAppCompatActivity {
 
     private void refreshMyOrder() {
         showProgressDialog();
-        new ApiRequest(this)
+        new ApiRequest()
                 .addUUID()
-                .api(ApiHelper.API_GYMRESERVE)
+                .api("yuyue")
                 .post("method", "myOrder")
                 .toCache("herald_gymreserve_myorder", o -> o)
                 .onFinish((success, code, response) -> {
@@ -102,11 +100,11 @@ public class MyOrderActivity extends BaseAppCompatActivity {
     }
 
     public void loadMyOrder(){
-        String cache = getCacheHelper().getCache("herald_gymreserve_myorder");
+        String cache = CacheHelper.get("herald_gymreserve_myorder");
         if(!cache.equals("")){
             try{
                 JSONArray array = new JSONObject(cache).getJSONObject("content").getJSONArray("rows");
-                ArrayList<MyOrder> list = MyOrder.transfromJSONtoArrayList(array);
+                ArrayList<MyOrder> list = MyOrder.transformJSONtoArrayList(array);
                 listView.setAdapter(new MyOrderAdapter(getBaseContext(),R.layout.listviewitem_gym_myorder,list));
                 if (listView.getCount() == 0)
                     ListViewUtils.addDefaultEmptyTipsView(getBaseContext(),listView,"暂无场馆预约记录");
@@ -120,9 +118,9 @@ public class MyOrderActivity extends BaseAppCompatActivity {
 
     public void cancelOrder(int id){
         showProgressDialog();
-        new ApiRequest(this)
+        new ApiRequest()
                 .addUUID()
-                .api(ApiHelper.API_GYMRESERVE)
+                .api("yuyue")
                 .post("method","cancelUrl")
                 .post("id",id+"")
                 .onFinish((success, code, response) -> {
@@ -173,7 +171,7 @@ public class MyOrderActivity extends BaseAppCompatActivity {
             this.state = state;
         }
 
-        public static ArrayList<MyOrder> transfromJSONtoArrayList(JSONArray array)throws JSONException{
+        public static ArrayList<MyOrder> transformJSONtoArrayList(JSONArray array)throws JSONException{
             ArrayList<MyOrder> list =new ArrayList<>();
             for(int i= 0;i<array.length();i++){
                 JSONObject obj = array.getJSONObject(i);

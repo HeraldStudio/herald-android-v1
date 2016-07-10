@@ -134,11 +134,6 @@
     <color name="colorDivider">#e5e5e5</color>
     <color name="colorMainPagesBg">#fff</color>
     <color name="colorMainPagesDivider">#eaeaea</color>
-    <color name="colorSwitchOff">#ffffff</color>
-    <color name="colorSwipeRefreshIcon">#ccc</color>
-    <color name="colorSwipeRefreshText">#999</color>
-    <color name="colorSwipeRefreshHeaderBg">#333</color>
-    <color name="colorSwipeRefreshHeaderShadow">#2d2d2d</color>
 
 
 </resources>

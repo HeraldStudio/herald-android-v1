@@ -1,8 +1,6 @@
 package cn.seu.herald_android.custom;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
 
@@ -14,7 +12,7 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_webmodule.WebShowActivity;
+import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
 
 
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
@@ -117,11 +115,10 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
     public void onSliderClick(BaseSliderView slider) {
         //点击时如果url不为空则打开图片所代表的网页
         String url = slider.getBundle().getString("url");
-        if(!url.equals("")) {
+        if (url != null && !url.equals("")) {
             String title = slider.getBundle().getString("title");
-            WebShowActivity.startWebShowActivity(getContext(),title,url,R.style.WebShowTheme);
+            WebModuleActivity.startWebModuleActivity(getContext(), title, url, R.style.WebShowTheme);
         }
-
     }
 
     public static class SliderViewItem {
