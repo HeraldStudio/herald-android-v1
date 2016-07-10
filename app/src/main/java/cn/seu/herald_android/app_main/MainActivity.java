@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
 
     private ShakeDetector shakeDetector = new ShakeDetector(() -> {
         //摇一摇自动登陆
-        if (SettingsHelper.wifiAutoLogin.get() && !preventShake) {
+        if (SettingsHelper.wifiAutoLogin.$get() && !preventShake) {
             preventShake = true;
             new NetworkLoginHelper(this).checkAndLogin();
             new Handler().postDelayed(() -> preventShake = false, 2000);
@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupPagerBottomTabLayout(){
-        if (SettingsHelper.bottomTabEnabled.get()){
+        if (SettingsHelper.bottomTabEnabled.$get()){
             pagerBottomTabLayout.setVisibility(View.VISIBLE);
             topTabLayout.setVisibility(View.GONE);
         }else {

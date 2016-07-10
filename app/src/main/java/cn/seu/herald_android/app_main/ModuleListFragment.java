@@ -53,7 +53,7 @@ public class ModuleListFragment extends Fragment {
         List<AppModule> list = Arrays.asList(SettingsHelper.Module.array);
         for (AppModule k : list) {
             //筛选已开启的模块
-            if (k.cardEnabled.get() || k.shortcutEnabled.get()) {
+            if (k.cardEnabled.$get() || k.shortcutEnabled.$get()) {
                 seuModuleArrayList.add(k);
             }
         }

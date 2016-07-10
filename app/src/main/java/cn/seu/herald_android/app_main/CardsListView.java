@@ -117,17 +117,17 @@ public class CardsListView extends ListView {
         if (item != null) itemList.add(item);
 
         // 判断各模块是否开启并加载对应数据
-        if (SettingsHelper.Module.curriculum.cardEnabled.get()) {
+        if (SettingsHelper.Module.curriculum.cardEnabled.$get()) {
             // 加载并解析课表缓存
             itemList.add(CurriculumCard.getCard());
         }
 
-        if (SettingsHelper.Module.experiment.cardEnabled.get()) {
+        if (SettingsHelper.Module.experiment.cardEnabled.$get()) {
             // 加载并解析实验缓存
             itemList.add(ExperimentCard.getCard());
         }
 
-        if (SettingsHelper.Module.exam.cardEnabled.get()) {
+        if (SettingsHelper.Module.exam.cardEnabled.$get()) {
             // 加载并解析考试缓存
             itemList.add(ExamCard.getCard());
         }
@@ -139,22 +139,22 @@ public class CardsListView extends ListView {
                 MainActivity.sendChangeMainFragmentBroadcast(getContext(),MainActivity.MAIN_FRAGMENT_ACTIVITYS));
         itemList.add(activityItem);
 
-        if (SettingsHelper.Module.lecture.cardEnabled.get()) {
+        if (SettingsHelper.Module.lecture.cardEnabled.$get()) {
             // 加载并解析人文讲座预告缓存
             itemList.add(LectureCard.getCard());
         }
 
-        if (SettingsHelper.Module.pedetail.cardEnabled.get()) {
+        if (SettingsHelper.Module.pedetail.cardEnabled.$get()) {
             // 加载并解析跑操预报缓存
             itemList.add(PedetailCard.getCard());
         }
 
-        if (SettingsHelper.Module.card.cardEnabled.get()) {
+        if (SettingsHelper.Module.card.cardEnabled.$get()) {
             // 加载并解析一卡通缓存
             itemList.add(CardCard.getCard());
         }
 
-        if (SettingsHelper.Module.jwc.cardEnabled.get()) {
+        if (SettingsHelper.Module.jwc.cardEnabled.$get()) {
             // 加载并解析教务处缓存
             itemList.add(JwcCard.getCard());
         }
@@ -199,7 +199,7 @@ public class CardsListView extends ListView {
             }));
 
             // 当课表模块开启时
-            if (SettingsHelper.Module.curriculum.cardEnabled.get()) {
+            if (SettingsHelper.Module.curriculum.cardEnabled.$get()) {
                 // 仅当课表数据不存在时刷新课表
                 if (CacheHelper.get("herald_curriculum").equals("")
                         || CacheHelper.get("herald_sidebar").equals("")) {
@@ -208,7 +208,7 @@ public class CardsListView extends ListView {
             }
 
             // 当实验模块开启时
-            if (SettingsHelper.Module.experiment.cardEnabled.get()) {
+            if (SettingsHelper.Module.experiment.cardEnabled.$get()) {
                 // 仅当实验数据不存在时刷新实验
                 if (CacheHelper.get("herald_experiment").equals("")) {
                     manager.add(ExperimentCard.getRefresher());
@@ -216,7 +216,7 @@ public class CardsListView extends ListView {
             }
 
             // 当考试模块开启时
-            if (SettingsHelper.Module.exam.cardEnabled.get()) {
+            if (SettingsHelper.Module.exam.cardEnabled.$get()) {
                 // 仅当考试数据不存在时刷新考试
                 if (CacheHelper.get("herald_exam").equals("")) {
                     manager.add(ExamCard.getRefresher());
@@ -224,25 +224,25 @@ public class CardsListView extends ListView {
             }
 
             // 当人文讲座模块开启时
-            if (SettingsHelper.Module.lecture.cardEnabled.get()) {
+            if (SettingsHelper.Module.lecture.cardEnabled.$get()) {
                 // 直接刷新人文讲座预告
                 manager.add(LectureCard.getRefresher());
             }
 
             // 当跑操模块开启时
-            if (SettingsHelper.Module.pedetail.cardEnabled.get()) {
+            if (SettingsHelper.Module.pedetail.cardEnabled.$get()) {
                 // 直接刷新跑操
                 manager.addAll(PedetailCard.getRefresher());
             }
 
             // 当一卡通模块开启时
-            if (SettingsHelper.Module.card.cardEnabled.get()) {
+            if (SettingsHelper.Module.card.cardEnabled.$get()) {
                 // 直接刷新一卡通数据
                 manager.add(CardCard.getRefresher());
             }
 
             // 当教务处模块开启时
-            if (SettingsHelper.Module.jwc.cardEnabled.get()) {
+            if (SettingsHelper.Module.jwc.cardEnabled.$get()) {
                 // 直接刷新教务处数据
                 manager.add(JwcCard.getRefresher());
             }

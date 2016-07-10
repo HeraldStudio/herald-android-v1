@@ -39,16 +39,16 @@ public class ShortCutBoxEditAdapter extends ArrayAdapter<AppModule> {
         //表示卡片是否显示在主页的开关
         SwitchButton switchCard = (SwitchButton) convertView.findViewById(R.id.switch_card);
         switchCard.setVisibility(seuModule.hasCard ? View.VISIBLE : View.GONE);
-        switchCard.setOnCheckedChangeListener((v, checked) -> seuModule.cardEnabled.set(checked));
-        switchCard.setCheckedImmediately(seuModule.cardEnabled.get());
+        switchCard.setOnCheckedChangeListener((v, checked) -> seuModule.cardEnabled.$set(checked));
+        switchCard.setCheckedImmediately(seuModule.cardEnabled.$get());
 
         //表示快捷方式是否显示在主页的开关
         SwitchButton switchShortcut = (SwitchButton) convertView.findViewById(R.id.switch_shortcut);
         switchShortcut.setOnCheckedChangeListener((v, checked) -> {
             //应用设置
-            seuModule.shortcutEnabled.set(checked);
+            seuModule.shortcutEnabled.$set(checked);
         });
-        switchShortcut.setCheckedImmediately(seuModule.shortcutEnabled.get());
+        switchShortcut.setCheckedImmediately(seuModule.shortcutEnabled.$get());
 
         // 只有一个开关的条目设置点击事件
         if (switchCard.getVisibility() != View.VISIBLE) {

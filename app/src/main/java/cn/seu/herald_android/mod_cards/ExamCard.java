@@ -71,7 +71,7 @@ public class ExamCard {
                 CardsModel item = new CardsModel(SettingsHelper.Module.exam,
                         CardsModel.Priority.CONTENT_NOTIFY, "你最近有" + examList.size() + "场考试，抓紧时间复习吧");
                 for (ExamItem examItem : examList) {
-                    item.attachedView.add(new ExamBlockLayout(AppContext.currentContext.get(), examItem));
+                    item.attachedView.add(new ExamBlockLayout(AppContext.currentContext.$get(), examItem));
                 }
                 return item;
             }

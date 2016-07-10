@@ -65,7 +65,7 @@ public class ExperimentCard {
 
                         // 没开始的实验全部单独记录下来
                         if (time.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
-                            ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.get(), item);
+                            ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.$get(), item);
                             allExperiments.add(block);
                         }
 
@@ -80,7 +80,7 @@ public class ExperimentCard {
                                 int nowStamp = nowCal.get(Calendar.HOUR_OF_DAY) * 60 + nowCal.get(Calendar.MINUTE);
                                 int startStamp = item.getBeginStamp();
                                 if (nowStamp < startStamp && nowStamp >= startStamp - 30) {
-                                    ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.get(), item);
+                                    ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.$get(), item);
                                     CardsModel item1 = new CardsModel(SettingsHelper.Module.experiment,
                                             CardsModel.Priority.CONTENT_NOTIFY, "你有1个实验即将开始，请注意时间准时参加"
                                     );
@@ -91,7 +91,7 @@ public class ExperimentCard {
                                 // 如果是已经开始还未结束的实验，放弃之前所有操作，直接返回这个实验的提醒
                                 int endStamp = startStamp + 3 * 60;
                                 if (nowStamp >= startStamp && nowStamp < endStamp) {
-                                    ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.get(), item);
+                                    ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.$get(), item);
                                     CardsModel item1 = new CardsModel(SettingsHelper.Module.experiment,
                                             CardsModel.Priority.CONTENT_NOTIFY, "1个实验正在进行"
                                     );
@@ -112,7 +112,7 @@ public class ExperimentCard {
                                 }
 
                                 // 记录今天的实验
-                                ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.get(), item);
+                                ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.$get(), item);
                                 currExperiments.add(block);
                             }
 
@@ -124,7 +124,7 @@ public class ExperimentCard {
 
                             // 如果至今还未发现今天有实验，则继续记录本周的实验
                             if (!todayHasExperiments) {
-                                ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.get(), item);
+                                ExperimentBlockLayout block = new ExperimentBlockLayout(AppContext.currentContext.$get(), item);
                                 currExperiments.add(block);
                             }
                         }

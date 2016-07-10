@@ -95,42 +95,34 @@ public class SettingsHelper {
         };
     }
 
-    /** 用 UserCache 代替 SharedPreferences; 此处不能直接初始化, 所以用一个 get 函数代替 */
-    private static $<UserCache> settingsCache = new $<UserCache>() {
-        @Override public UserCache get() {
-            return new UserCache("herald_settings");
-        }
-    };
+    /** 用 UserCache 代替 SharedPreferences; 此处不能直接初始化, 所以用一个 $get 函数代替 */
+    private static $<UserCache> settingsCache = new $<>(() -> new UserCache("herald_settings"));
 
     public static String get(String key) {
-        return settingsCache.get().get(key);
+        return settingsCache.$get().get(key);
     }
 
     public static void set(String key, String value) {
-        settingsCache.get().set(key, value);
+        settingsCache.$get().set(key, value);
     }
 
-    public static $$<Integer> launchTimes = new $$<Integer>() {
-        @Override public Integer get() {
-            String times = SettingsHelper.get("herald_settings_launch_time");
-            if (times.equals("")) {
-                SettingsHelper.set("herald_settings_launch_time", "0");
-                return 0;
-            } else {
-                return Integer.valueOf(times);
-            }
+    public static $$<Integer> launchTimes = new $$<>(() -> {
+        String times = SettingsHelper.get("herald_settings_launch_time");
+        if (times.equals("")) {
+            SettingsHelper.set("herald_settings_launch_time", "0");
+            return 0;
+        } else {
+            return Integer.valueOf(times);
         }
-
-        @Override public void set(Integer value) {
-            SettingsHelper.set("herald_settings_launch_time", String.valueOf(value));
-        }
-    };
+    }, value -> {
+        SettingsHelper.set("herald_settings_launch_time", String.valueOf(value));
+    });
 
     public static $$<Boolean> wifiAutoLogin =
-            settingsCache.get().booleanForKey("herald_settings_wifi_autologin", false);
+            settingsCache.$get().booleanForKey("herald_settings_wifi_autologin", false);
 
     public static $$<Boolean> bottomTabEnabled =
-            settingsCache.get().booleanForKey("herald_settings_bottomtabvisible", true);
+            settingsCache.$get().booleanForKey("herald_settings_bottomtabvisible", true);
 
     /** 模块设置变化的监听器 */
     private static Vector<Runnable> moduleSettingsChangeListeners = new Vector<>();

@@ -68,7 +68,7 @@ public class ServiceCard {
 
             item.setOnClickListener((v) -> {
                 Uri uri = Uri.parse("http://android.heraldstudio.com/download");
-                AppContext.currentContext.get().startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                AppContext.currentContext.$get().startActivity(new Intent(Intent.ACTION_VIEW, uri));
             });
 
             return item;

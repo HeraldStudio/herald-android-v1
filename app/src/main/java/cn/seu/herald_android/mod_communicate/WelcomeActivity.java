@@ -20,9 +20,9 @@ public class WelcomeActivity extends Activity {
         handler.post(() -> {
             //欢迎页：如果已登录则跳转到MainActivity
             //判断是否是首次启动
-            int launchtimes = SettingsHelper.launchTimes.get();
+            int launchtimes = SettingsHelper.launchTimes.$get();
             //启动次数递增
-            SettingsHelper.launchTimes.set(launchtimes + 1);
+            SettingsHelper.launchTimes.$set(launchtimes + 1);
             if (ApiHelper.isLogin()) {
                 AppContext.showMain();
             } else {

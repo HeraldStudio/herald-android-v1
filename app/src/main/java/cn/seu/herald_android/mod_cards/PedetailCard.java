@@ -63,7 +63,7 @@ public class PedetailCard {
                         "你今天的跑操已经到账。" + getRemainNotice(count, remain, false)
                 );
 
-                item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.get(), count, Math.max(0, 45 - count), remain));
+                item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.$get(), count, Math.max(0, 45 - count), remain));
 
                 return item;
             }
@@ -81,7 +81,7 @@ public class PedetailCard {
                         + getRemainNotice(count, remain, false)
                 );
 
-                item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.get(), count, Math.max(0, 45 - count), remain));
+                item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.$get(), count, Math.max(0, 45 - count), remain));
 
                 return item;
             } else if (now >= endTime) {
@@ -94,7 +94,7 @@ public class PedetailCard {
                             + getRemainNotice(count, remain, false)
                     );
 
-                    item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.get(), count, Math.max(0, 45 - count), remain));
+                    item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.$get(), count, Math.max(0, 45 - count), remain));
 
                     return item;
                 } else {
@@ -104,7 +104,7 @@ public class PedetailCard {
                             + getRemainNotice(count, remain, false)
                     );
 
-                    item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.get(), count, Math.max(0, 45 - count), remain));
+                    item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.$get(), count, Math.max(0, 45 - count), remain));
 
                     return item;
                 }
@@ -116,7 +116,7 @@ public class PedetailCard {
                             + getRemainNotice(count, remain, false)
                     );
 
-                    item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.get(), count, Math.max(0, 45 - count), remain));
+                    item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.$get(), count, Math.max(0, 45 - count), remain));
 
                     return item;
                 }
@@ -127,7 +127,7 @@ public class PedetailCard {
                         + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
                 );
 
-                item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.get(), count, Math.max(0, 45 - count), remain));
+                item.attachedView.add(new PedetailTimelineBlockLayout(AppContext.currentContext.$get(), count, Math.max(0, 45 - count), remain));
 
                 return item;
             }

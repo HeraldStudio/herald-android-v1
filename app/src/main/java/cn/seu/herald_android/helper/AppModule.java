@@ -52,54 +52,42 @@ public class AppModule {
     }
 
     /// 卡片是否开启
-    public $$<Boolean> cardEnabled = new $$<Boolean>() {
-        @Override public Boolean get() {
-            String cache = SettingsHelper.get("herald_settings_module_cardenabled_" + name);
-            return hasCard && !cache.equals("0");
+    public $$<Boolean> cardEnabled = new $$<>(/** $get = */() -> {
+        String cache = SettingsHelper.get("herald_settings_module_cardenabled_" + name);
+        return hasCard && !cache.equals("0");
+    }, /** $set = */(value) -> {
+        if (!hasCard) {
+            return;
         }
-
-        @Override public void set(Boolean value) {
-            if (!hasCard) {
-                return;
-            }
-            // flag为true则设置为选中，否则设置为不选中
-            SettingsHelper.set("herald_settings_module_cardenabled_" + name, value ? "1" : "0");
-            SettingsHelper.notifyModuleSettingsChanged();
-        }
-    };
+        // flag为true则设置为选中，否则设置为不选中
+        SettingsHelper.set("herald_settings_module_cardenabled_" + name, value ? "1" : "0");
+        SettingsHelper.notifyModuleSettingsChanged();
+    });
 
     /// 快捷方式是否开启
-    public $$<Boolean> shortcutEnabled = new $$<Boolean>() {
-        @Override public Boolean get() {
-            String cache = SettingsHelper.get("herald_settings_module_shortcutenabled_" + name);
+    public $$<Boolean> shortcutEnabled = new $$<>(() -> {
+        String cache = SettingsHelper.get("herald_settings_module_shortcutenabled_" + name);
 
-            // 默认只开启无卡片的模块
-            if (cache.equals("")) {
-                return !hasCard;
-            }
-            return !cache.equals("0");
+        // 默认只开启无卡片的模块
+        if (cache.equals("")) {
+            return !hasCard;
         }
-
-        @Override public void set(Boolean value) {
-            // flag为true则设置为选中，否则设置为不选中
-            SettingsHelper.set("herald_settings_module_shortcutenabled_" + name, value ? "1" : "0");
-            SettingsHelper.notifyModuleSettingsChanged();
-        }
-    };
+        return !cache.equals("0");
+    }, value -> {
+        // flag为true则设置为选中，否则设置为不选中
+        SettingsHelper.set("herald_settings_module_shortcutenabled_" + name, value ? "1" : "0");
+        SettingsHelper.notifyModuleSettingsChanged();
+    });
 
     /// 用来标识一个不带卡片的模块数据是否有更新
-    public $$<Boolean> hasUpdates = new $$<Boolean>() {
-        @Override public Boolean get() {
-            String cache = SettingsHelper.get("herald_settings_module_hasupdates_" + name);
-            return !hasCard && cache.equals("1");
-        }
-
-        @Override public void set(Boolean value) {
-            // flag为true则设置为选中，否则设置为不选中
-            SettingsHelper.set("herald_settings_module_hasupdates_" + name, value ? "1" : "0");
-            SettingsHelper.notifyModuleSettingsChanged();
-        }
-    };
+    public $$<Boolean> hasUpdates = new $$<>(() -> {
+        String cache = SettingsHelper.get("herald_settings_module_hasupdates_" + name);
+        return !hasCard && cache.equals("1");
+    }, value -> {
+        // flag为true则设置为选中，否则设置为不选中
+        SettingsHelper.set("herald_settings_module_hasupdates_" + name, value ? "1" : "0");
+        SettingsHelper.notifyModuleSettingsChanged();
+    });
 
     /// 打开模块
     public void open() {
@@ -108,15 +96,15 @@ public class AppModule {
 
         // Web 页面，交给 WebModule 打开
         if (controller.startsWith("http")) {
-            WebModuleActivity.startWebModuleActivity(AppContext.currentContext.get(), nameTip, controller);
+            WebModuleActivity.startWebModuleActivity(AppContext.currentContext.$get(), nameTip, controller);
         } else if (controller.startsWith("TAB")) {
             Intent intent = new Intent("cn.seu.herald_android.SWITCH_TAB");
             intent.putExtra("index", Integer.valueOf(controller.replaceAll("TAB", "")));
-            AppContext.currentContext.get().sendBroadcast(intent);
+            AppContext.currentContext.$get().sendBroadcast(intent);
         } else {
             Intent intent = new Intent();
             intent.setAction("cn.seu.herald_android." + controller);
-            AppContext.currentContext.get().startActivity(intent);
+            AppContext.currentContext.$get().startActivity(intent);
         }
     }
 

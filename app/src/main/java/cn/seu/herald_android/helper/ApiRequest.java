@@ -166,7 +166,7 @@ public class ApiRequest {
                 try {
                     String cache = parser.parse(new JSONObject(response)).toString();
                     if (CacheHelper.set(key, cache) && notifyModuleIfChanged != null) {
-                        notifyModuleIfChanged.hasUpdates.set(true);
+                        notifyModuleIfChanged.hasUpdates.$set(true);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

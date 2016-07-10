@@ -65,7 +65,7 @@ public class LoginActivity extends BaseActivity {
 
 
     private void doLogin() {
-        String appid = ApiHelper.appid.get();
+        String appid = ApiHelper.appid.$get();
         String godModePrefix = "IAmTheGodOfHerald|OverrideAppidWith:";
 
         ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

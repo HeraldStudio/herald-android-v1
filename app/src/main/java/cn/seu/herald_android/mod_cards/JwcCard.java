@@ -44,14 +44,14 @@ public class JwcCard {
                 if (item.date.equals(new SimpleDateFormat("yyyy-MM-dd")
                         .format(cal.getTime()))) {
                     item.date = "今天";
-                    JwcBlockLayout block = new JwcBlockLayout(AppContext.currentContext.get(), item);
+                    JwcBlockLayout block = new JwcBlockLayout(AppContext.currentContext.$get(), item);
                     allNotices.add(block);
                 } else {
                     cal.roll(Calendar.DAY_OF_MONTH, -1);
                     if (item.date.equals(new SimpleDateFormat("yyyy-MM-dd")
                             .format(cal.getTime()))) {
                         item.date = "昨天";
-                        JwcBlockLayout block = new JwcBlockLayout(AppContext.currentContext.get(), item);
+                        JwcBlockLayout block = new JwcBlockLayout(AppContext.currentContext.$get(), item);
                         allNotices.add(block);
                     }
                 }

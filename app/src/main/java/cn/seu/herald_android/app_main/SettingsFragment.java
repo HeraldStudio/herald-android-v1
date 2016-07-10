@@ -85,9 +85,9 @@ public class SettingsFragment extends Fragment {
     private void setupPersonalSettings(){
         //底部菜单设置
         SwitchButton swith_bottomtab = (SwitchButton) contentView.findViewById(R.id.switchbottomtab);
-        swith_bottomtab.setCheckedImmediately(!SettingsHelper.bottomTabEnabled.get());
+        swith_bottomtab.setCheckedImmediately(!SettingsHelper.bottomTabEnabled.$get());
         swith_bottomtab.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            SettingsHelper.bottomTabEnabled.set(!isChecked);
+            SettingsHelper.bottomTabEnabled.$set(!isChecked);
             getActivity().recreate();
         });
     }
@@ -96,9 +96,9 @@ public class SettingsFragment extends Fragment {
     private void setupSeuSettings(){
         //seu登录模块设置
         SwitchButton swith_seu = (SwitchButton) contentView.findViewById(R.id.switchseuauto);
-        swith_seu.setCheckedImmediately(SettingsHelper.wifiAutoLogin.get());
+        swith_seu.setCheckedImmediately(SettingsHelper.wifiAutoLogin.$get());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) ->
-                SettingsHelper.wifiAutoLogin.set(isChecked));
+                SettingsHelper.wifiAutoLogin.$set(isChecked));
     }
 
     public void refreshUsername() {

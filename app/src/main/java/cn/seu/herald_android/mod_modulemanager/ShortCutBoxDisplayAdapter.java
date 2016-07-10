@@ -76,7 +76,7 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
                         .setMessage("确定移除此模块的快捷方式吗？")
                         .setPositiveButton("确定", (dialog, which) -> {
                             //设置为不可用
-                            seuModule.shortcutEnabled.set(false);
+                            seuModule.shortcutEnabled.$set(false);
                             if (parent.getContext() instanceof MainActivity) {
                                 ((MainActivity) parent.getContext()).syncModuleSettings();
                             }

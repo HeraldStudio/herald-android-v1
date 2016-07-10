@@ -48,7 +48,7 @@ public class LectureCard {
                 if (time.get(Calendar.MONTH) + 1 == md[0] && time.get(Calendar.DAY_OF_MONTH) == md[1]) {
                     if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 19 * 60) {
 
-                        LectureBlockLayout block = new LectureBlockLayout(AppContext.currentContext.get(),
+                        LectureBlockLayout block = new LectureBlockLayout(AppContext.currentContext.$get(),
                                 new LectureNoticeItem(
                                         json_item.getString("date"),
                                         json_item.getString("topic"),

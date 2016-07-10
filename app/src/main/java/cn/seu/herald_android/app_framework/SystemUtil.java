@@ -7,8 +7,8 @@ public class SystemUtil {
     public static String getAppVersionName() {
         String versionName = "";
         try {
-            PackageManager pm = AppContext.currentContext.get().getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(AppContext.currentContext.get().getPackageName(), 0);
+            PackageManager pm = AppContext.currentContext.$get().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(AppContext.currentContext.$get().getPackageName(), 0);
             versionName = pi.versionName;
             if (versionName == null || versionName.length() <= 0) {
                 return "";
@@ -23,8 +23,8 @@ public class SystemUtil {
     public static int getAppVersionCode() {
         int versionCode = 0;
         try {
-            PackageManager pm = AppContext.currentContext.get().getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(AppContext.currentContext.get().getPackageName(), 0);
+            PackageManager pm = AppContext.currentContext.$get().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(AppContext.currentContext.$get().getPackageName(), 0);
             versionCode = pi.versionCode;
         } catch (Exception e) {
             e.printStackTrace();

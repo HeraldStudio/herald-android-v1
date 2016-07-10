@@ -35,7 +35,7 @@ public class ActivityCard {
                 CardsModel item  = new CardsModel("校园活动","最近有新的热门校园活动，欢迎来参加~",
                         CardsModel.Priority.CONTENT_NOTIFY,R.mipmap.ic_activity);
                 for (AfterSchoolActivityItem afterSchoolActivityItem : afterSchoolActivityItems) {
-                    item.attachedView.add(new AfterSchoolActivityBlockLayout(AppContext.currentContext.get(), afterSchoolActivityItem));
+                    item.attachedView.add(new AfterSchoolActivityBlockLayout(AppContext.currentContext.$get(), afterSchoolActivityItem));
                 }
                 return item;
             }

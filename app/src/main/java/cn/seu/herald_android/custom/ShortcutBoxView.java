@@ -31,7 +31,7 @@ public class ShortcutBoxView extends GridView {
         List<AppModule> settingArrayList = Arrays.asList(SettingsHelper.Module.array);
         List<AppModule> enabledShortcutList = new ArrayList<>();
         for (AppModule module : settingArrayList) {
-            if (module.shortcutEnabled.get())
+            if (module.shortcutEnabled.$get())
                 enabledShortcutList.add(module);
         }
 

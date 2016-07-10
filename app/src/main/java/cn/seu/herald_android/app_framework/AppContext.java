@@ -32,22 +32,19 @@ public class AppContext extends Application {
         applicationContext = this;
     }
 
-    public static $<Context> currentContext = new $<Context>() {
-        @Override
-        public Context get() {
-            while (activities.size() != 0 &&
-                    (activities.lastElement() == null || activities.lastElement().isFinishing())){
-                activities.remove(activities.size() - 1);
-            }
-            if (activities.size() == 0) {
-                return applicationContext;
-            } else {
-                return activities.lastElement();
-            }
-        }
-    };
-
     public static Vector<BaseActivity> activities = new Vector<>();
+
+    public static $<Context> currentContext = new $<>(/** Getter */() -> {
+        while (activities.size() != 0 &&
+                (activities.lastElement() == null || activities.lastElement().isFinishing())) {
+            activities.remove(activities.size() - 1);
+        }
+        if (activities.size() == 0) {
+            return applicationContext;
+        } else {
+            return activities.lastElement();
+        }
+    });
 
     public static void closeAllActivities() {
         for (Activity activity : activities) {
@@ -58,7 +55,7 @@ public class AppContext extends Application {
     }
 
     public static void showLogin() {
-        Context baseContext = currentContext.get().getApplicationContext();
+        Context baseContext = currentContext.$get().getApplicationContext();
         closeAllActivities();
 
         Intent intent = new Intent(baseContext, LoginActivity.class);
@@ -67,7 +64,7 @@ public class AppContext extends Application {
     }
 
     public static void showMain() {
-        Context baseContext = currentContext.get().getApplicationContext();
+        Context baseContext = currentContext.$get().getApplicationContext();
         closeAllActivities();
 
         Intent intent = new Intent(baseContext, MainActivity.class);
@@ -76,18 +73,18 @@ public class AppContext extends Application {
     }
 
     public static void showMessage(String message) {
-        if (currentContext.get() instanceof BaseActivity) {
-            ((BaseActivity) currentContext.get()).showSnackBar(message);
+        if (currentContext.$get() instanceof BaseActivity) {
+            ((BaseActivity) currentContext.$get()).showSnackBar(message);
         } else {
-            Toast.makeText(currentContext.get(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(currentContext.$get(), message, Toast.LENGTH_SHORT).show();
         }
     }
 
     public static void showMessage(String message, String actionText, Runnable action) {
-        if (currentContext.get() instanceof BaseActivity) {
-            ((BaseActivity) currentContext.get()).showSnackBar(message, actionText, action);
+        if (currentContext.$get() instanceof BaseActivity) {
+            ((BaseActivity) currentContext.$get()).showSnackBar(message, actionText, action);
         } else {
-            Toast.makeText(currentContext.get(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(currentContext.$get(), message, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -96,7 +93,7 @@ public class AppContext extends Application {
      **/
     public static int getColorPrimary() {
         TypedValue typedValue = new TypedValue();
-        currentContext.get().getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        currentContext.$get().getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
         return typedValue.resourceId;
     }
 }

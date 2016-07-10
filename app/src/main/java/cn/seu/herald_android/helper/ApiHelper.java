@@ -1,6 +1,5 @@
 package cn.seu.herald_android.helper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -23,44 +22,38 @@ public class ApiHelper {
 
     private ApiHelper() {}
 
-    public static $<String> appid = new $<String>() {
-        @Override
-        public String get() {
-            Context context = AppContext.currentContext.get();
-            InputStream fis;
-            byte[] buffer = new byte[1024];
-            int numRead;
-            MessageDigest md5;
-            String appid = "";
-            try {
-                fis = new FileInputStream(context.getPackageResourcePath());
-                md5 = MessageDigest.getInstance("MD5");
-                while ((numRead = fis.read(buffer)) > 0) {
-                    md5.update(buffer, 0, numRead);
-                }
-                fis.close();
-                appid = HashHelper.toHexString(md5.digest());
-            } catch (Exception e) {
-                e.printStackTrace();
+    public static $<String> appid = new $<>(() -> {
+        Context context = AppContext.currentContext.$get();
+        InputStream fis;
+        byte[] buffer = new byte[1024];
+        int numRead;
+        MessageDigest md5;
+        String appid = "";
+        try {
+            fis = new FileInputStream(context.getPackageResourcePath());
+            md5 = MessageDigest.getInstance("MD5");
+            while ((numRead = fis.read(buffer)) > 0) {
+                md5.update(buffer, 0, numRead);
             }
-
-            return /*"34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
-            /**
-             * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
-             * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-             * 其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
-             * 该后门实现见LoginActivity.java
-             **/
+            fis.close();
+            appid = HashHelper.toHexString(md5.digest());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    };
 
-    public static $<SharedPreferences> authCache = new $<SharedPreferences>() {
-        @Override
-        public SharedPreferences get() {
-            Context context = AppContext.currentContext.get();
-            return context.getSharedPreferences("herald_auth", Context.MODE_PRIVATE);
-        }
-    };
+        return /*"34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
+        /**
+         * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
+         * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+         * 其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
+         * 该后门实现见LoginActivity.java
+         **/
+    });
+
+    public static $<SharedPreferences> authCache = new $<>(() -> {
+        Context context = AppContext.currentContext.$get();
+        return context.getSharedPreferences("herald_auth", Context.MODE_PRIVATE);
+    });
 
     public static String getApiUrl(String api) {
         return API_ROOT + api;
@@ -91,13 +84,13 @@ public class ApiHelper {
 
     public static boolean isLogin() {
         //判断是否已登录
-        String uuid = authCache.get().getString("uuid", "");
+        String uuid = authCache.$get().getString("uuid", "");
         return !uuid.equals("");
     }
 
     public static String getUUID() {
         //获得存储的uuid
-        return authCache.get().getString("uuid", "");
+        return authCache.$get().getString("uuid", "");
     }
 
     public static void setAuth(String username, String password) {
@@ -164,12 +157,12 @@ public class ApiHelper {
          * sex          性别
          */
         //获得存储的某项信息
-        return authCache.get().getString(cacheName, "");
+        return authCache.$get().getString(cacheName, "");
     }
 
     public static void setAuthCache(String cacheName, String cacheValue) {
         //用于更新存储的某项信息
-        SharedPreferences.Editor editor = authCache.get().edit();
+        SharedPreferences.Editor editor = authCache.$get().edit();
         editor.putString(cacheName, cacheValue);
         editor.commit();
     }
