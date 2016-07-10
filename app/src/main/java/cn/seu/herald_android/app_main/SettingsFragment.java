@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.fragment_main_my_info, null, false);
+        contentView = inflater.inflate(R.layout.app_main__fragment_settings, null, false);
 
         View check_update = contentView.findViewById(R.id.check_update);
         check_update.setOnClickListener(v -> checkUpdate());
@@ -143,7 +143,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setCustomAccount() {
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_wifi_setauth, null);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_settings__dialog_wifi_setauth, null);
         EditText et = (EditText) v.findViewById(R.id.et_username);
         et.setText(ApiHelper.getWifiUserName());
         EditText pw = (EditText) v.findViewById(R.id.et_pwd);//密码框不设置初始值，防止密码位数泄露

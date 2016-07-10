@@ -7,7 +7,7 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".mod_modulemanager.ModuleManageActivity"
-    tools:showIn="@layout/activity_module_manage">
+    tools:showIn="@layout/mod_mod">
 
     <LinearLayout
         android:layout_width="match_parent"

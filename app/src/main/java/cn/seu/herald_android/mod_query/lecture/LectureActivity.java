@@ -35,7 +35,7 @@ public class LectureActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lecture);
+        setContentView(R.layout.mod_que_lecture);
         init();
         //由于此模块实时性要求较高，每次打开实时刷新
         refreshCache();
@@ -139,7 +139,7 @@ public class LectureActivity extends BaseActivity {
         dialog_lecture_records.show();
         //对话框窗口设置布局文件
         Window window = dialog_lecture_records.getWindow();
-        window.setContentView(R.layout.content_dialog_lecture_record);
+        window.setContentView(R.layout.mod_que_lecture__dialog_lecture_record);
 
         //获取对话窗口中的listview
         list_record = (ListView) window.findViewById(R.id.list_lecture_record);
@@ -173,7 +173,7 @@ public class LectureActivity extends BaseActivity {
                 JSONArray jsonArray = new JSONObject(cache).getJSONObject("content").getJSONArray("detial");
                 list_record.setAdapter(new LectureRecordAdapter(
                         getBaseContext(),
-                        R.layout.listviewitem_lecture_record,
+                        R.layout.mod_que_lecture__dialog_lecture_record__item,
                         LectureRecordItem.transformJSONArrayToArrayList(jsonArray)));
             } catch (JSONException e) {
                 e.printStackTrace();

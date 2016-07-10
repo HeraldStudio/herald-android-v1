@@ -35,7 +35,7 @@ public class ListViewUtils {
     }
 
     public static void addDefaultEmptyTipsView(Context context,ListView listView,String tipString){
-        View view = LayoutInflater.from(context).inflate(R.layout.content_emptytip,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.custom__view_empty_tip,null);
         view.setPadding(0,0,0,0);
         ImageView imgTip = (ImageView)view.findViewById(R.id.img_emptytip);
         TextView textView = (TextView)view.findViewById(R.id.tv_emptytip);

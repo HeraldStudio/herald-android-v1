@@ -26,7 +26,7 @@ public class JwcActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jwc);
+        setContentView(R.layout.mod_que_jwc);
         init();
         loadCache();
     }

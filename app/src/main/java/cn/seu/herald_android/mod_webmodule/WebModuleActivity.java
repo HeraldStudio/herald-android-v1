@@ -40,7 +40,7 @@ public class WebModuleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         beforeCreate();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_module);
+        setContentView(R.layout.mod_web);
         init();
         openUrl();
     }

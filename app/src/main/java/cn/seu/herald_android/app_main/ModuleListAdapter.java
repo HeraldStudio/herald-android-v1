@@ -24,7 +24,7 @@ public class ModuleListAdapter extends ArrayAdapter<AppModule> {
     public View getView(int position, View convertView, ViewGroup parent) {
         AppModule seuModule = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_modules, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_modules__item, null);
         }
 
         TextView tv_header = (TextView) convertView.findViewById(R.id.module_item_header);

@@ -61,7 +61,7 @@ public class Friend implements Serializable{
         public View getView(int position, View convertView, ViewGroup parent) {
             Friend friend = getItem(position);
             if(convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_gym_searchfriend,null);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__search_friend__item,null);
             TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
             TextView tv_department = (TextView)convertView.findViewById(R.id.tv_frienddepartment);
             try{

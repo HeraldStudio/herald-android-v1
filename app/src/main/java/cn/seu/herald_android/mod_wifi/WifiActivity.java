@@ -46,7 +46,7 @@ public class WifiActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wifi);
+        setContentView(R.layout.mod_wifi);
         vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         init();
         setup();

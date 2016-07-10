@@ -49,7 +49,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
     @Override
     public ExamAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.listviewitem_exam, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mod_que_exam__item, parent, false);
         return new ViewHolder(v);
     }
 

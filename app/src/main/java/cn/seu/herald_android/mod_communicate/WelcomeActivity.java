@@ -14,7 +14,7 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.mod_com__welcome);
 
         Handler handler = new Handler();
         handler.post(() -> {

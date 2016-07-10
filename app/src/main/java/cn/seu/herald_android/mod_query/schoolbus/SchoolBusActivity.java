@@ -30,7 +30,7 @@ public class SchoolBusActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_school_bus);
+        setContentView(R.layout.mod_que_schoolbus);
         //初始化函数
         init();
         //加载校车数据

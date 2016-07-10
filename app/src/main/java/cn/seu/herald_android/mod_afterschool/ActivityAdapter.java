@@ -37,7 +37,7 @@ public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter 
 
     @Override
     public RecyclerView.ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recyclerviewitem_afterschoolactivity, parent,false);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.app_main__fragment_activities__item, parent,false);
         return new AfterSchoolActivityViewHolder(view);
     }
 
@@ -48,7 +48,7 @@ public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter 
 
     @Override
     public FooterViewHolder onCreateFooterViewHolder() {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.refresh_recyclerview_footer,null,false);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.custom__view_footer_refresh_recycler,null,false);
         int width = context.getResources().getDisplayMetrics().widthPixels;
         view.setLayoutParams(new RecyclerView.LayoutParams(width, RecyclerView.LayoutParams.WRAP_CONTENT));
         return new FooterViewHolder(view);

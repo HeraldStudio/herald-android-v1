@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.jwc.JwcActivity"
-    tools:showIn="@layout/activity_jwc">
+    tools:showIn="@layout/mod_que_jwc">
 
     <cn.seu.herald_android.custom.CustomExpandableListView
         android:id="@+id/expandableListView"

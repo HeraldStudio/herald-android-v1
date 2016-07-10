@@ -44,7 +44,7 @@ public class ActivityFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.fragment_main_afterschool, container, false);
+        contentView = inflater.inflate(R.layout.app_main__fragment_activities, container, false);
         //加载活动列表
         init();
         loadActivityList();

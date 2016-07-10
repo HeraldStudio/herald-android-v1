@@ -18,7 +18,7 @@ public class ModuleManageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_module_manage);
+        setContentView(R.layout.mod_mod);
         setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         enableSwipeBack();
         init();
@@ -38,7 +38,7 @@ public class ModuleManageActivity extends BaseActivity {
         ListView listView = (ListView) findViewById(R.id.lsit_edit_shortcut);
         if (listView != null) {
             listView.setAdapter(new ShortCutBoxEditAdapter(getBaseContext(),
-                    R.layout.listviewitem_edit_shortcut, seuModuleArrayList));
+                    R.layout.mod_mod__item, seuModuleArrayList));
         }
     }
 }

@@ -30,7 +30,7 @@ public class SportTypeItemRecyclerAdapter extends RecyclerView.Adapter<SportType
 
     @Override
     public GymReserveHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.gridviewitem_gym_reserveitem, null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_gymreserve__cell, null);
         return new GymReserveHolder(view);
     }
 

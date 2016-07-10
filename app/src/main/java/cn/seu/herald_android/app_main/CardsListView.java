@@ -68,13 +68,13 @@ public class CardsListView extends ListView {
 
     public void setupSliderView(){
         ViewGroup vg = (ViewGroup)
-                LayoutInflater.from(getContext()).inflate(R.layout.timeline_shortcut_box, null);
+                LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_shortcut_box, null);
         shortcutBox = (ShortcutBoxView) vg.findViewById(R.id.shorcut_box);
         addHeaderView(vg);
     }
 
     public void setupShortCutBox(){
-        slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.timeline_slider, null);
+        slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_slider, null);
 
         // 轮播图居中变色动效的调用
         fadeContainer = new FadeOutHeaderContainer<SliderView>(getContext())
@@ -331,7 +331,7 @@ public class CardsListView extends ListView {
             CardsModel item = getItem(position);
 
             if(convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.timeline_item, null);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item, null);
 
             TextView name = (TextView) convertView.findViewById(R.id.name);
             TextView content = (TextView) convertView.findViewById(R.id.content);

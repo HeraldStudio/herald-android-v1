@@ -15,7 +15,7 @@ public class ExamBlockLayout extends LinearLayout {
 
     public ExamBlockLayout(Context context, ExamItem item) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);
         TextView title = (TextView) contentView.findViewById(R.id.title);
         TextView subtitle = (TextView) contentView.findViewById(R.id.subtitle);
         TextView content = (TextView) contentView.findViewById(R.id.content);

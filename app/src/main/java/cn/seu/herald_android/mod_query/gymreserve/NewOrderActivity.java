@@ -85,7 +85,7 @@ public class NewOrderActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_order);
+        setContentView(R.layout.mod_que_gymreserve__new_order);
         init();
     }
 
@@ -197,7 +197,7 @@ public class NewOrderActivity extends BaseActivity {
         }else{
             list = new String[]{"全场"};
         }
-        ArrayAdapter<String> spinnerSimpleAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.spinneritem_gym_half, list);
+        ArrayAdapter<String> spinnerSimpleAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.mod_que_gymreserve__new_order__item_spinner_half, list);
 
         spinner.setPrompt("请选择场地类型");
         spinner.setAdapter(spinnerSimpleAdapter);
@@ -323,7 +323,7 @@ public class NewOrderActivity extends BaseActivity {
     void refreshRecentlyFriend(){
         //重新获取最近好友列表
         recentlyFriends = getFriendArrayList();
-        recentlyFriendAdapter = new RecentlyFriendAdapter(getBaseContext(),R.layout.listviewitem_gym_recentlyfriend,recentlyFriends);
+        recentlyFriendAdapter = new RecentlyFriendAdapter(getBaseContext(),R.layout.mod_que_gymreserve__item_recent_friend,recentlyFriends);
         list_recentlyfriend.setAdapter(recentlyFriendAdapter);
         ListViewUtils.setHeightWithContent(list_recentlyfriend);
     }
@@ -331,7 +331,7 @@ public class NewOrderActivity extends BaseActivity {
 
     void refreshInvitedFriend(){
         //适配器数据改变
-        invitedFriendAdapter = new InvitedFriendAdapter(getBaseContext(),R.layout.listviewitem_gym_invitedfriend,invitedFriends);
+        invitedFriendAdapter = new InvitedFriendAdapter(getBaseContext(),R.layout.mod_que_gymreserve__new_order__item_invited_friend,invitedFriends);
         list_invitedfriend.setAdapter(invitedFriendAdapter);
         ListViewUtils.setHeightWithContent(list_invitedfriend);
         refreshTipsOfInvitedNum();
@@ -391,7 +391,7 @@ public class NewOrderActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             Friend friend = getItem(position);
             if(convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_gym_recentlyfriend,null);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__item_recent_friend,null);
 
             TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
             TextView tv_department = (TextView)convertView.findViewById(R.id.tv_frienddepartment);
@@ -434,7 +434,7 @@ public class NewOrderActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             Friend friend = getItem(position);
             if(convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_gym_invitedfriend,null);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__new_order__item_invited_friend,null);
             TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
             tv_name.setText(friend.nameDepartment.split("\\(")[0]);
             ImageView imgv_sub = (ImageView)convertView.findViewById(R.id.ibtn_sub);

@@ -38,7 +38,7 @@ public class CardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card);
+        setContentView(R.layout.mod_que_card);
         init();
 
         String cache = CacheHelper.get("herald_card");

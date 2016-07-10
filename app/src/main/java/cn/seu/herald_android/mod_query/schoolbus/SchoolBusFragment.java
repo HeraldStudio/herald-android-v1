@@ -31,7 +31,7 @@ public class SchoolBusFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_schoolbus, container, false);
+        View view = inflater.inflate(R.layout.mod_que_schoolbus__fragment, container, false);
         //控件初始化
         ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
         //设定适配器

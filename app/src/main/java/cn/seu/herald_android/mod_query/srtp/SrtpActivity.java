@@ -30,7 +30,7 @@ public class SrtpActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_srtp);
+        setContentView(R.layout.mod_que_srtp);
         init();
         loadCache();
     }

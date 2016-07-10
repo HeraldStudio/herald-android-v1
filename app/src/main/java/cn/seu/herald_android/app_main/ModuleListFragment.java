@@ -28,7 +28,7 @@ public class ModuleListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.fragment_main_modules, container, false);
+        contentView = inflater.inflate(R.layout.app_main__fragment_modules, container, false);
         loadModuleList();
         return contentView;
     }
@@ -62,7 +62,7 @@ public class ModuleListFragment extends Fragment {
         ListView listView = (ListView) contentView.findViewById(R.id.list_modules);
 
         if (editButton == null) {
-            editButton = getLayoutInflater(null).inflate(R.layout.fragment_module_edit_button, null);
+            editButton = getLayoutInflater(null).inflate(R.layout.app_main__fragment_modules__item_manage, null);
             editButton.setOnClickListener((v) -> {
                 Intent intent = new Intent(getContext(), ModuleManageActivity.class);
                 startActivity(intent);
@@ -73,7 +73,7 @@ public class ModuleListFragment extends Fragment {
         ListAdapter adapter;
         if ((adapter = listView.getAdapter()) == null) {
             listView.setAdapter(new ModuleListAdapter(getContext(),
-                    R.layout.listviewitem_modules, seuModuleArrayList));
+                    R.layout.app_main__fragment_modules__item, seuModuleArrayList));
         } else {
             while (adapter instanceof HeaderViewListAdapter) {
                 adapter = ((HeaderViewListAdapter) adapter).getWrappedAdapter();

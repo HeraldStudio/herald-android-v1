@@ -17,7 +17,7 @@ public class JwcBlockLayout extends LinearLayout {
 
     public JwcBlockLayout(Context context, JwcItem item) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);
         TextView title = (TextView) contentView.findViewById(R.id.title);
         TextView content = (TextView) contentView.findViewById(R.id.content);
 

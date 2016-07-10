@@ -54,7 +54,7 @@ public class OrderItemTimeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_orderitembytime, container, false);
+        View view = inflater.inflate(R.layout.mod_que_gymreserve__order_time__fragment, container, false);
         //控件初始化
         listView = (ListView) view.findViewById(R.id.listview_orderitembytime);
         progressBar = new ProgressBar(getContext());
@@ -86,7 +86,7 @@ public class OrderItemTimeFragment extends Fragment {
     public void loadOrderItemTimes(String response){
         try {
             ArrayList<OrderItemTime> list = transformJSONtoArrayList(new JSONObject(response).getJSONObject("content").getJSONArray("orderIndexs"));
-            listView.setAdapter(new OrderItemTimeAdapter(getContext(),R.layout.listviewitem_orderitemtime,list));
+            listView.setAdapter(new OrderItemTimeAdapter(getContext(),R.layout.mod_que_gymreserve__order_time__fragment__item,list));
             if (listView.getCount() == 0){
                 ListViewUtils.addDefaultEmptyTipsView(getContext(),listView,"暂无可用预约场地");
             }

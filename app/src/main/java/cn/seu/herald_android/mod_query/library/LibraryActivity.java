@@ -37,7 +37,7 @@ public class LibraryActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library);
+        setContentView(R.layout.mod_que_library);
         init();
     }
 
@@ -109,7 +109,7 @@ public class LibraryActivity extends BaseActivity {
     }
 
     private void loadHotBookList(ArrayList<HotBook> list) {
-        listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.listviewitem_library_hotbook, list));
+        listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.mod_que_library__item, list));
     }
 
     public void refreshBorrowRocord() {
@@ -153,12 +153,12 @@ public class LibraryActivity extends BaseActivity {
         dialog_borrowed_book_records.show();
         //对话框窗口设置布局文件
         Window window = dialog_borrowed_book_records.getWindow();
-        window.setContentView(R.layout.content_dialog_borrowbook_record);
+        window.setContentView(R.layout.mod_que_library__dialog_borrow_record);
 
         //获取对话窗口中的ListView
         ListView list_record = (ListView) window.findViewById(R.id.list_borrowbook_record);
         //设置适配器
-        list_record.setAdapter(new MyBorrowBookAdapter(this, R.layout.listviewitem_library_borrowbook, list));
+        list_record.setAdapter(new MyBorrowBookAdapter(this, R.layout.mod_que_library__dialog_borrow_record__item, list));
 
     }
 

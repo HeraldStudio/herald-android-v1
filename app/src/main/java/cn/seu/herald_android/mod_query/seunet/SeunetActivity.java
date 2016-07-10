@@ -35,7 +35,7 @@ public class SeunetActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seunet);
+        setContentView(R.layout.mod_que_seunet);
         init();
     }
 

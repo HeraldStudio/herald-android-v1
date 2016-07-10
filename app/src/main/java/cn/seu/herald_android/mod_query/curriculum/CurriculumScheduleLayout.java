@@ -227,7 +227,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
         float addition = widenToday ? TODAY_WEIGHT - 1 : 0;
 
         // 绘制星期标题
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.curriculumitem_week_title, null);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_curriculum__cell_week, null);
         TextView week = (TextView) v.findViewById(R.id.week);
         week.setText(WEEK_NUMS_CN[dayIndex]);
         v.setX((dayDelta > 0 ? columnIndex + addition : columnIndex) * width / (columnsCount + addition));

@@ -14,7 +14,7 @@ public class PedetailTimelineBlockLayout extends LinearLayout {
 
     public PedetailTimelineBlockLayout(Context context, int count, int remain, int remainDays) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_pe, null);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_pe, null);
         TextView _count = (TextView) contentView.findViewById(R.id.tv_count);
         TextView _remain = (TextView) contentView.findViewById(R.id.tv_remain);
         TextView _remainDays = (TextView) contentView.findViewById(R.id.tv_remain_days);

@@ -19,7 +19,7 @@ public class CardsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.fragment_main_cards, container, false);
+        View contentView = inflater.inflate(R.layout.app_main__fragment_cards, container, false);
 
         srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
         view = (CardsListView) contentView.findViewById(R.id.timeline);

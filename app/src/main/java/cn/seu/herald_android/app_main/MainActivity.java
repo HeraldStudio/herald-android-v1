@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.app_main);
         init();
     }
 
@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity {
                 wmlp.y = ibtn.getLayoutParams().height;
                 wmlp.width = (int)(140 * dp);
                 window.setAttributes(wmlp);
-                window.setContentView(R.layout.content_dialog_main_more);
+                window.setContentView(R.layout.app_main__dialog_more);
                 //设置点击项
                 window.findViewById(R.id.content_wifi).setOnClickListener(v1 -> {
                     //设置登录校园网

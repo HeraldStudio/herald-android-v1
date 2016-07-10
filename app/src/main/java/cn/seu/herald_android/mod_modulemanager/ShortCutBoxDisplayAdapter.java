@@ -50,7 +50,7 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
         if (position < modules.size()) {// 模块图标
             AppModule seuModule = getItem(position);
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridviewitem_display_shortcut, null);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom__view_shortcut_box, null);
             }
             //快捷方式图标
             ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);
@@ -88,7 +88,7 @@ public class ShortCutBoxDisplayAdapter extends BaseAdapter {
             });
             return convertView;
         } else {// “添加”按钮
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridviewitem_display_shortcut, null);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom__view_shortcut_box, null);
 
             int columnCount = ((GridView)parent).getNumColumns();
 

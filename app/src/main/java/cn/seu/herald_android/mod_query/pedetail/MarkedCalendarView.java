@@ -75,7 +75,7 @@ public class MarkedCalendarView extends FrameLayout {
 
         // 开头按1号的星期数增加空格
         for (int i = Calendar.SUNDAY; i < day; i++) {
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.gridviewitem_pedetail, null);
+            View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_pedetail__cell, null);
             TextView tv = (TextView) v.findViewById(R.id.textView);
             tv.setVisibility(INVISIBLE);
             gv.addView(v);
@@ -86,7 +86,7 @@ public class MarkedCalendarView extends FrameLayout {
             Calendar dt = Calendar.getInstance();
             dt.setFirstDayOfWeek(Calendar.SUNDAY);
             dt.set(year, month, i);
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.gridviewitem_pedetail, null);
+            View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_pedetail__cell, null);
 
             // 当月当天，显示“今天”标记
             int todayYearMonth = today.get(Calendar.YEAR) * 12 + today.get(Calendar.MONTH);

@@ -33,7 +33,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     @Override
     public BookAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerviewitem_library_searchbook, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mod_que_library__search__item, parent, false);
         return new ViewHolder(v);
     }
 

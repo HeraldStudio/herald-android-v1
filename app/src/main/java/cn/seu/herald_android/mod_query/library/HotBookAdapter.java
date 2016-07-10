@@ -21,7 +21,7 @@ class HotBookAdapter extends ArrayAdapter<HotBook> {
     public View getView(int position, View convertView, ViewGroup parent) {
         HotBook hotBook = getItem(position);
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_library_hotbook,null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_library__item,null);
         }
         TextView tv_count = (TextView)convertView.findViewById(R.id.tv_count);
         TextView tv_place = (TextView)convertView.findViewById(R.id.tv_place);

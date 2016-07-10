@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.seunet.SeunetActivity"
-    tools:showIn="@layout/activity_seunet">
+    tools:showIn="@layout/mod_que_seunet">
     <!--流量显示-->
     <RelativeLayout
         android:layout_width="match_parent"

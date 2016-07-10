@@ -33,7 +33,7 @@ public class MyOrderActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_order);
+        setContentView(R.layout.mod_que_gymreserve__my_order);
         init();
     }
 
@@ -105,7 +105,7 @@ public class MyOrderActivity extends BaseActivity {
             try{
                 JSONArray array = new JSONObject(cache).getJSONObject("content").getJSONArray("rows");
                 ArrayList<MyOrder> list = MyOrder.transformJSONtoArrayList(array);
-                listView.setAdapter(new MyOrderAdapter(getBaseContext(),R.layout.listviewitem_gym_myorder,list));
+                listView.setAdapter(new MyOrderAdapter(getBaseContext(),R.layout.mod_que_gymreserve__my_order__item,list));
                 if (listView.getCount() == 0)
                     ListViewUtils.addDefaultEmptyTipsView(getBaseContext(),listView,"暂无场馆预约记录");
             }catch (JSONException e){

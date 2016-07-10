@@ -29,7 +29,7 @@ class MyBorrowBookAdapter extends ArrayAdapter<MyBorrowBook> {
     public View getView(int position, View convertView, ViewGroup parent) {
         MyBorrowBook myBorrowBook = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_library_borrowbook, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_library__dialog_borrow_record__item, null);
         }
 
         TextView tv_title = (TextView) convertView.findViewById(R.id.title);

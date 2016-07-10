@@ -62,7 +62,7 @@ class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String title = (String) getGroup(groupPosition);
-        View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_parentitem_schoolbus, null);
+        View contentView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_schoolbus__fragment__item_parent, null);
         TextView view = (TextView) contentView.findViewById(R.id.tv_direction_bus);
         view.setText(title);
         return contentView;
@@ -72,7 +72,7 @@ class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_childitem_schoolbus, null);
+            convertView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_schoolbus__fragment__item_child, null);
         }
         SchoolBusItem schoolBusItem = (SchoolBusItem) getChild(groupPosition, childPosition);
         TextView tv_period = (TextView) convertView.findViewById(R.id.tv_schoolbusitem_period);

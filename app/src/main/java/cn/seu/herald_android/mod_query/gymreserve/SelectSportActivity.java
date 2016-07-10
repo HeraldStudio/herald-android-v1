@@ -31,7 +31,7 @@ public class SelectSportActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_selectsport);
+        setContentView(R.layout.mod_que_gymreserve);
         init();
     }
 

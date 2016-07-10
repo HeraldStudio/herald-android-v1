@@ -22,7 +22,7 @@ public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdap
 
     @Override
     public LectureRecord onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recyclerviewitem_lecture_notice, null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_lecture__item, null);
         return new LectureRecord(view);
     }
 

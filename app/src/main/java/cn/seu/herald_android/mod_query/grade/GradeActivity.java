@@ -36,7 +36,7 @@ public class GradeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grade);
+        setContentView(R.layout.mod_que_grade);
         init();
         //尝试加载缓存
         loadCache();

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.library.LibraryActivity"
-    tools:showIn="@layout/activity_library">
+    tools:showIn="@layout/mod_que_library">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

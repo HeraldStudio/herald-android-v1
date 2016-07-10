@@ -22,7 +22,7 @@ public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
 
     @Override
     public SrtpHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recyclerviewitem_srtp, null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_srtp__item, null);
         return new SrtpHolder(view);
     }
 

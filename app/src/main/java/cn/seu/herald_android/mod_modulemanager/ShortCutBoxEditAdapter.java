@@ -27,7 +27,7 @@ public class ShortCutBoxEditAdapter extends ArrayAdapter<AppModule> {
         AppModule seuModule = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listviewitem_edit_shortcut, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_mod__item, null);
         }
         //快捷方式图标
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);

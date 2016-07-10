@@ -10,4 +10,4 @@
     android:scrollbarStyle="outsideOverlay"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.srtp.SrtpActivity"
-    tools:showIn="@layout/activity_srtp" />
+    tools:showIn="@layout/mod_que_srtp" />

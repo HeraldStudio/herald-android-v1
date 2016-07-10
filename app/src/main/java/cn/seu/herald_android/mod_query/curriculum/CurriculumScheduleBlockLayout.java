@@ -36,7 +36,7 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
         super(c);
         classInfo = info;
         this.teacherAndGPA = teacherAndGPA;
-        layout = isToday ? R.layout.curriculumitem_today : R.layout.curriculumitem_normal;
+        layout = isToday ? R.layout.mod_que_curriculum__cell_today : R.layout.mod_que_curriculum__cell_normal;
     }
 
     // 要显示在屏幕上时再进行添加view的操作，显著提高应用启动速度

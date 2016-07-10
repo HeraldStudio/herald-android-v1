@@ -4,42 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.mod_query.lecture.LectureActivity">
+    android:fitsSystemWindows="false"
+    tools:context="cn.seu.herald_android.mod_query.srtp.SrtpActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
+        android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapse_toolbar"
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="?attr/actionBarSize"
                 android:minHeight="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/zhiyuzhishan"
+                android:padding="20dp"
                 app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed" />
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="总学分"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_totalcredit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="0.00"
+                    android:textSize="44sp" />
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
-    <include layout="@layout/content_lecture" />
+    <include layout="@layout/mod_que_srtp__content" />
+
 </android.support.design.widget.CoordinatorLayout>

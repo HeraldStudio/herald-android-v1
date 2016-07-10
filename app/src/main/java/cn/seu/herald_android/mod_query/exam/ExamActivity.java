@@ -28,7 +28,7 @@ public class ExamActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exam);
+        setContentView(R.layout.mod_que_exam);
         init();
         loadCache();
     }

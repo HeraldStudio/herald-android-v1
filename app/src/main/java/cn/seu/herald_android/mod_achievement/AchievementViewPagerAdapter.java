@@ -34,7 +34,7 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Achievement achievement = achievementArrayList.get(position);
-        View view = LayoutInflater.from(this.context).inflate(R.layout.viewpager_achievement_experiment, null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__view_pager_achievement, null);
         //设置成就名字
         TextView tv_name = (TextView) view.findViewById(R.id.title);
         tv_name.setText(achievement.getName());

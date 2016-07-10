@@ -15,7 +15,7 @@ public class CurriculumTimelineBlockLayout extends LinearLayout {
 
     public CurriculumTimelineBlockLayout(Context context, ClassInfo item, String teacher) {
         super(context);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.timeline_item_row, null);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);
         TextView content = (TextView) contentView.findViewById(R.id.content);
         TextView title = (TextView) contentView.findViewById(R.id.title);
         TextView subtitle = (TextView) contentView.findViewById(R.id.subtitle);

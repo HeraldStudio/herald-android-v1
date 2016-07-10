@@ -48,7 +48,7 @@ class PagesAdapter extends PagerAdapter {
             List<ExerciseInfo> page = multiMonths.get(k);
 
             // 实例化页面视图
-            View v = LayoutInflater.from(context).inflate(R.layout.viewpager_pedetail, null);
+            View v = LayoutInflater.from(context).inflate(R.layout.mod_que_pedetail__view_pager, null);
 
             // 设置月份标题
             TextView tv = (TextView) v.findViewById(R.id.month_title);

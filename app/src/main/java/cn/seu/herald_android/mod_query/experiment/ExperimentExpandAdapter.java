@@ -60,7 +60,7 @@ class ExperimentExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String title = (String) getGroup(groupPosition);
-        View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_parentitem_experiment, null);
+        View contentView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__item_parent, null);
         TextView view = (TextView) contentView.findViewById(R.id.tv_type_expriment);
         view.setText(title);
         return contentView;
@@ -69,7 +69,7 @@ class ExperimentExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_childitem_experiment, null);
+        View contentView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__item_child, null);
         ExperimentItem experimentItem = (ExperimentItem) getChild(groupPosition, childPosition);
         TextView tv_name = (TextView) contentView.findViewById(R.id.title);
         TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);

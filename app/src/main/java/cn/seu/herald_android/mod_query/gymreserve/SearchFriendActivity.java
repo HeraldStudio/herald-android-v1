@@ -29,7 +29,7 @@ public class SearchFriendActivity extends BaseActivity implements SearchView.OnQ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_friend);
+        setContentView(R.layout.mod_que_gymreserve__search_friend);
         init();
     }
 
@@ -121,7 +121,7 @@ public class SearchFriendActivity extends BaseActivity implements SearchView.OnQ
 
     //根据搜索结果加载展示结果的列表
     private void loadSearchResult(ArrayList<Friend> list) {
-        listView_searchfriendrelust.setAdapter(new Friend.FriendAdapter(getBaseContext(),R.layout.listviewitem_gym_searchfriend,list));
+        listView_searchfriendrelust.setAdapter(new Friend.FriendAdapter(getBaseContext(),R.layout.mod_que_gymreserve__search_friend__item,list));
         listView_searchfriendrelust.setOnItemClickListener((parent, view, position, id) -> {
             Friend friend  =(Friend) parent.getItemAtPosition(position);
             if (!getFriendArrayList().contains(friend))

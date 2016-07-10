@@ -34,7 +34,7 @@ public class LibrarySearchActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_search);
+        setContentView(R.layout.mod_que_library__search);
         init();
     }
 
