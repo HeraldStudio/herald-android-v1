@@ -1,8 +1,6 @@
-package cn.seu.herald_android.mod_achievement;
+package cn.seu.herald_android.mod_query.experiment;
 
 import java.util.ArrayList;
-
-import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
 
 public class AchievementFactory {
     public static ArrayList<Achievement> getExperimentAchievement(ArrayList<ExperimentItem> dataList) {

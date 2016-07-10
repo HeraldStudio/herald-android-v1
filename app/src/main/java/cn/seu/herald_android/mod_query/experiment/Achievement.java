@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_achievement;
+package cn.seu.herald_android.mod_query.experiment;
 
 public class Achievement {
     //成就标题

@@ -20,8 +20,6 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.mod_achievement.Achievement;
-import cn.seu.herald_android.mod_achievement.AchievementFactory;
 import cn.seu.herald_android.mod_achievement.AchievementViewPagerAdapter;
 
 public class ExperimentActivity extends BaseActivity {

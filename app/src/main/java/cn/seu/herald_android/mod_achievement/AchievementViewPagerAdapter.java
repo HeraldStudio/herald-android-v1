@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.mod_query.experiment.Achievement;
 
 public class AchievementViewPagerAdapter extends PagerAdapter {
     private ArrayList<Achievement> achievementArrayList;

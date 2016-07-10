@@ -149,31 +149,32 @@ public class SeunetActivity extends BaseActivity {
                 }).run();
     }
 
-    public static void setupChart(JSONObject json,PieChartView pieChartView) {
+    public static void setupChart(JSONObject json, PieChartView pieChartView) {
         if (json == null)
             return;
         try {
             //seu-wlan
             if (json.getJSONObject("web").getString("state").equals("未开通")) {
-                List<SliceValue> values = new ArrayList<>();
-                //设置饼状图总的值为1，即不分块，因为未开通
-                SliceValue sliceValue = new SliceValue(1f);
-                sliceValue.setLabel("未开通");
-                sliceValue.setColor(Color.rgb(220, 220, 220));
-                values.add(sliceValue);
-                PieChartData pieChartData = new PieChartData(values);
-                //为控件设置数据
-                pieChartView.setPieChartData(pieChartData);
+                setEmptyPie(pieChartView);
             } else {
                 String str_use = json.getJSONObject("web").getString("used");
                 setUsedPercentage(str_use, pieChartView);
             }
-
         } catch (JSONException | NumberFormatException e) {
             e.printStackTrace();
+            setEmptyPie(pieChartView);
         }
     }
 
+    public static void setEmptyPie(PieChartView pieChartView) {
+        List<SliceValue> values = new ArrayList<>();
+        SliceValue sliceValue = new SliceValue(1f);
+        sliceValue.setColor(Color.rgb(220, 220, 220));
+        values.add(sliceValue);
+        PieChartData pieChartData = new PieChartData(values);
+        //为控件设置数据
+        pieChartView.setPieChartData(pieChartData);
+    }
 
     public static void setUsedPercentage(String used_str, PieChartView pieChartView) {
         //根据获取的已用流量加载下面的饼状图，展示已用百分比

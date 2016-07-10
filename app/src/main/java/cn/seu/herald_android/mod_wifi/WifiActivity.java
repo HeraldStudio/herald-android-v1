@@ -163,7 +163,7 @@ public class WifiActivity extends BaseActivity {
             try {
                 JSONObject json_cache = new JSONObject(cache);
                 //设置统计饼状图
-                SeunetActivity.setupChart(json_cache.getJSONObject("content"),pieChartView);
+                SeunetActivity.setupChart(json_cache.getJSONObject("content"), pieChartView);
                 AppContext.showMessage("刷新成功");
             } catch (JSONException e) {
                 e.printStackTrace();
