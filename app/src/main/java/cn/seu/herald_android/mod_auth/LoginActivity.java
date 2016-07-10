@@ -30,7 +30,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mod_auth__a);
+        setContentView(R.layout.mod_auth);
         init();
     }
 
