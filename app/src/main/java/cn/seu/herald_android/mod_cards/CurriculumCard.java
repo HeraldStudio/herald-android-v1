@@ -18,8 +18,8 @@ import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.curriculum.ClassModel;
+import cn.seu.herald_android.mod_query.curriculum.CurriculumBlockLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
-import cn.seu.herald_android.mod_query.curriculum.CurriculumTimelineBlockLayout;
 
 public class CurriculumCard {
 
@@ -107,7 +107,7 @@ public class CurriculumCard {
                             }
                             info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                             Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                            CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(AppContext.currentContext.$get(),
+                            CurriculumBlockLayout block = new CurriculumBlockLayout(AppContext.currentContext.$get(),
                                     info, pair == null ? "获取失败" : pair.first);
                             remainingClasses.add(block);
                         }
@@ -119,7 +119,7 @@ public class CurriculumCard {
                             );
                             info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                             Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                            CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(AppContext.currentContext.$get(),
+                            CurriculumBlockLayout block = new CurriculumBlockLayout(AppContext.currentContext.$get(),
                                     info, pair == null ? "获取失败" : pair.first);
 
                             item.attachedView.add(block);
@@ -131,7 +131,7 @@ public class CurriculumCard {
                             );
                             info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
                             Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                            CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(AppContext.currentContext.$get(),
+                            CurriculumBlockLayout block = new CurriculumBlockLayout(AppContext.currentContext.$get(),
                                     info, pair == null ? "获取失败" : pair.first);
 
                             item.attachedView.add(block);
@@ -176,7 +176,7 @@ public class CurriculumCard {
                     info.weekNum = CurriculumScheduleLayout.WEEK_NUMS_CN[dayOfWeek];
 
                     Pair<String, String> pair = sidebarInfo.get(info.getClassName());
-                    CurriculumTimelineBlockLayout block = new CurriculumTimelineBlockLayout(AppContext.currentContext.$get(),
+                    CurriculumBlockLayout block = new CurriculumBlockLayout(AppContext.currentContext.$get(),
                             info, pair == null ? "获取失败" : pair.first);
                     viewList.add(block);
                 }

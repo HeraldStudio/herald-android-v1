@@ -9,7 +9,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
-public class CardsPedetailRowLayout extends LinearLayout {
+public class PedetailBlockLayout extends LinearLayout {
 
     @BindView(R.id.tv_count)
     TextView count;
@@ -18,7 +18,7 @@ public class CardsPedetailRowLayout extends LinearLayout {
     @BindView(R.id.tv_remain_days)
     TextView remainDays;
 
-    public CardsPedetailRowLayout(Context context, int count, int remain, int remainDays) {
+    public PedetailBlockLayout(Context context, int count, int remain, int remainDays) {
         super(context);
         addView(LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_pe, null));
         ButterKnife.bind(this);

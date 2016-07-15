@@ -10,7 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
-public class CurriculumTimelineBlockLayout extends LinearLayout {
+public class CurriculumBlockLayout extends LinearLayout {
 
     @BindView(R.id.content)
     TextView content;
@@ -19,7 +19,7 @@ public class CurriculumTimelineBlockLayout extends LinearLayout {
     @BindView(R.id.subtitle)
     TextView subtitle;
 
-    public CurriculumTimelineBlockLayout(Context context, ClassModel item, String teacher) {
+    public CurriculumBlockLayout(Context context, ClassModel item, String teacher) {
         super(context);
         addView(LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null));
         ButterKnife.bind(this);

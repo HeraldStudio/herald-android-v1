@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity {
     RelativeLayout mainToolbar;
 
     CardsFragment cardsFragment = new CardsFragment();
-    ActivityFragment afterSchoolFragment = new ActivityFragment();
+    ActivitiesFragment afterSchoolFragment = new ActivitiesFragment();
     ModuleListFragment moduleListFragment = new ModuleListFragment();
     SettingsFragment myInfoFragment = new SettingsFragment();
 

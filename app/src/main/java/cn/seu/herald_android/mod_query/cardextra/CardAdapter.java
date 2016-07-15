@@ -51,7 +51,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             holder.tv_data_total.setVisibility(View.VISIBLE);
             //消费总额计算
             if (totalConsumptions.containsKey(cardRecordModel.getDate())) {
-                holder.tv_data_total.setText(totalConsumptions.get(cardRecordModel.getDate()).toString());
+                holder.tv_data_total.setText(String.format("总收支: %+.2f", totalConsumptions.get(cardRecordModel.getDate())));
             }
         } else {
             holder.tv_date.setVisibility(View.GONE);

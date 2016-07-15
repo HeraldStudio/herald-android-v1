@@ -27,7 +27,7 @@ import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.mod_afterschool.ActivityAdapter;
 import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityItem;
 
-public class ActivityFragment extends Fragment{
+public class ActivitiesFragment extends Fragment {
 
     // 展示活动列表
     @BindView(R.id.recyclerview_afterschoolactivity)
@@ -49,8 +49,8 @@ public class ActivityFragment extends Fragment{
     // 标识刷新状态，如果还在刷新就拒绝刷新请求
     boolean isRefreshing = false;
 
-    public static ActivityFragment getInstance(){
-        return new ActivityFragment();
+    public static ActivitiesFragment getInstance() {
+        return new ActivitiesFragment();
     }
 
     @Nullable
