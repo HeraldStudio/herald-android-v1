@@ -1,7 +1,6 @@
 package cn.seu.herald_android.mod_query.jwc;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,8 +78,7 @@ class JwcExpandAdapter extends BaseExpandableListAdapter {
         tv_date.setText("发布日期：" + jwcNoticeModel.date);
         contentView.setOnClickListener(v -> {
             try {
-                Uri uri = Uri.parse(jwcNoticeModel.href);
-                WebModuleActivity.startWebModuleActivity(context, jwcNoticeModel.title, uri, R.style.JwcTheme);
+                WebModuleActivity.startWebModuleActivity(context, jwcNoticeModel.title, jwcNoticeModel.href, R.style.JwcTheme);
             } catch (Exception e) {
                 e.printStackTrace();
             }

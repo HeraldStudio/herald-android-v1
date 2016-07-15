@@ -10,17 +10,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
+import cn.seu.herald_android.helper.SettingsHelper;
 
 public class WebModuleActivity extends BaseActivity {
     @BindView(R.id.webv_root)
     ProgressWebView webView_root;
 
-
     String tag_url;
     String title;
     int theme;
     public static void startWebModuleActivity(Context context, String title, String url){
-        startWebModuleActivity(context,title,url,R.style.WebShowTheme);
+
+        int theme = R.style.WebShowTheme;
+        if (url.equals(SettingsHelper.Module.schedule.controller)) {
+            theme = R.style.ScheduleTheme;
+        } else if (url.equals(SettingsHelper.Module.quanyi.controller)) {
+            theme = R.style.QuanYiTheme;
+        } else if (url.equals(SettingsHelper.Module.emptyroom.controller)) {
+            theme = R.style.EmptyRoomTheme;
+        }
+
+        startWebModuleActivity(context, title, url, theme);
     }
 
     public static void startWebModuleActivity(Context context, String title, Uri uri, int themeId){
@@ -62,7 +72,8 @@ public class WebModuleActivity extends BaseActivity {
     }
 
     public void openUrl(){
-        if(tag_url!=null)
+        if (tag_url != null) {
             webView_root.loadUrl(tag_url);
+        }
     }
 }

@@ -130,6 +130,20 @@
         <item name="colorAccent">@color/colorScheduleaccent</item>
     </style>
 
+    <style name="EmptyRoomTheme" parent="SubActivityTheme">
+        <!-- 校历风格 -->
+        <item name="colorPrimary">@color/colorEmptyRoomprimary</item>
+        <item name="colorPrimaryDark">@color/colorEmptyRoomprimaryDark</item>
+        <item name="colorAccent">@color/colorEmptyRoomaccent</item>
+    </style>
+
+    <style name="QuanYiTheme" parent="SubActivityTheme">
+        <!-- 校历风格 -->
+        <item name="colorPrimary">@color/colorQuanYiprimary</item>
+        <item name="colorPrimaryDark">@color/colorQuanYiprimaryDark</item>
+        <item name="colorAccent">@color/colorQuanYiaccent</item>
+    </style>
+
     <style name="AfterSchoolActivityTheme" parent="SubActivityTheme">
         <!-- 活动生活风格 -->
         <item name="colorPrimary">@color/colorAfterSchoolPrimary</item>

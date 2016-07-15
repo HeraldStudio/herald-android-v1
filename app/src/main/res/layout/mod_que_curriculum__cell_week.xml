@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="@color/curriculumcolorSubtitle"
-        android:textSize="13sp" />
+        android:textSize="12sp"/>
 
     <View
         android:id="@+id/stripe"

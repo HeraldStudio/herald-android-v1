@@ -68,16 +68,16 @@ class PagesAdapter extends PagerAdapter {
             // 读取开学日期
             int startMonth = content.getJSONObject("startdate").getInt("month");
             int startDate = content.getJSONObject("startdate").getInt("day");
-            Calendar cal = Calendar.getInstance();
-            cal.set(cal.get(Calendar.YEAR), startMonth, startDate);
+            Calendar beginOfTerm = Calendar.getInstance();
+            beginOfTerm.set(beginOfTerm.get(Calendar.YEAR), startMonth, startDate);
 
             // 如果开学日期比今天还晚，则是去年开学的。这里用while保证了thisWeek永远大于零
-            while (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
+            while (beginOfTerm.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
+                beginOfTerm.set(Calendar.YEAR, beginOfTerm.get(Calendar.YEAR) - 1);
             }
 
             // 计算当前周
-            thisWeek = (int) ((Calendar.getInstance().getTimeInMillis() - cal.getTimeInMillis())
+            thisWeek = (int) ((Calendar.getInstance().getTimeInMillis() - beginOfTerm.getTimeInMillis())
                     / (1000 * 60 * 60 * 24 * 7) + 1);
 
             // 实例化各页
@@ -85,13 +85,13 @@ class PagesAdapter extends PagerAdapter {
                 CurriculumScheduleLayout schedule =
                         new CurriculumScheduleLayout(context,
                                 content, sidebarInfo, 1,
-                                false);
+                                false, null);
                 viewList.add(schedule);
             } else for (int i = 1; i <= maxWeek; i++) {
                 CurriculumScheduleLayout schedule =
                         new CurriculumScheduleLayout(context,
                                 content, sidebarInfo, i,
-                                i == thisWeek);
+                                i == thisWeek, beginOfTerm);
                 viewList.add(schedule);
             }
         } catch (JSONException e) {

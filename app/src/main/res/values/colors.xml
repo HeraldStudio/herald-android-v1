@@ -72,9 +72,19 @@
 
 
     <!--校历-->
-    <color name="colorScheduleprimary">#8620bc</color>
-    <color name="colorScheduleprimaryDark">#8620bc</color>
-    <color name="colorScheduleaccent">#8620bc</color>
+    <color name="colorScheduleprimary">#e54f40</color>
+    <color name="colorScheduleprimaryDark">#e54f40</color>
+    <color name="colorScheduleaccent">#e54f40</color>
+
+    <!--空教室-->
+    <color name="colorEmptyRoomprimary">#3188cb</color>
+    <color name="colorEmptyRoomprimaryDark">#3188cb</color>
+    <color name="colorEmptyRoomaccent">#3188cb</color>
+
+    <!--权益服务-->
+    <color name="colorQuanYiprimary">#ed7f0e</color>
+    <color name="colorQuanYiprimaryDark">#ed7f0e</color>
+    <color name="colorQuanYiaccent">#ed7f0e</color>
 
 
     <!--生活服务-->
@@ -111,7 +121,7 @@
     <color name="colorCurriculumAccent">#00abd4</color>
     <color name="curriculumstripeColor">#d8d8d8</color>
     <color name="curriculumtimeHandColor">#c031d7ff</color>
-    <color name="curriculumcolorSubtitle">#333</color>
+    <color name="curriculumcolorSubtitle">#666</color>
     <color name="curriculumbackgroundSubtitle">#fff</color>
     <color name="curriculumcolor1">#f5629a</color>
     <color name="curriculumcolor2">#fe8d3f</color>

@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_framework.UI;
 
 /**
  * 课程表视图的实现
@@ -66,8 +68,6 @@ public class CurriculumScheduleLayout extends FrameLayout {
     private boolean curWeek;
     // 表示当前学期课程信息的JSON对象
     private JSONObject obj;
-    // 表示屏幕缩放率（平均每个dp中px的数量）
-    private float density;
     // 当前时间的指示条（仅当本页为当前周、今天非休息日或有课时才会显示）
     private View timeHand;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
@@ -79,15 +79,18 @@ public class CurriculumScheduleLayout extends FrameLayout {
     // 保存当前学期侧栏的键值对
     private Map<String, Pair<String, String>> sidebar;
 
+    private Calendar beginOfTerm;
+
     // 本视图只需要手动创建，不会从xml中创建
     public CurriculumScheduleLayout(Context context, JSONObject obj,
                                     Map<String, Pair<String, String>> sidebar, int week,
-                                    boolean curWeek) {
+                                    boolean curWeek, Calendar beginOfTerm) {
         super(context);
         this.obj = obj;
         this.sidebar = sidebar;
         this.week = week;
         this.curWeek = curWeek;
+        this.beginOfTerm = beginOfTerm;
     }
 
     // 获取手机状态栏高度
@@ -113,9 +116,8 @@ public class CurriculumScheduleLayout extends FrameLayout {
         try {
             // 获取屏幕缩放率、宽度和高度，并计算页面要占的高度（总高度-标题栏高度-系统顶栏高度）
             DisplayMetrics dm = getResources().getDisplayMetrics();
-            density = dm.density;
             width = dm.widthPixels;
-            height = dm.heightPixels - (int) (48 * density) - getStatusBarHeight(getContext());
+            height = dm.heightPixels - UI.dp2px(48) - getStatusBarHeight(getContext());
 
             // 绘制表示各课时的水平分割线
             for (int i = 0; i < PERIOD_COUNT; i++) {
@@ -227,9 +229,13 @@ public class CurriculumScheduleLayout extends FrameLayout {
         float addition = widenToday ? TODAY_WEIGHT - 1 : 0;
 
         // 绘制星期标题
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(beginOfTerm.getTimeInMillis());
+        cal.roll(Calendar.DATE, (week - 1) * 7 + dayIndex);
+
         View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_curriculum__cell_week, null);
         TextView week = (TextView) v.findViewById(R.id.week);
-        week.setText(WEEK_NUMS_CN[dayIndex]);
+        week.setText(new SimpleDateFormat("M月d日\n").format(cal.getTime()) + WEEK_NUMS_CN[dayIndex]);
         v.setX((dayDelta > 0 ? columnIndex + addition : columnIndex) * width / (columnsCount + addition));
         v.setY(0);
         v.setLayoutParams(new LayoutParams(
@@ -286,7 +292,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
         // 绘制时间指示条
         if (dayDelta == 0 && widenToday) {
             timeHand = new View(getContext());
-            timeHand.setLayoutParams(new LayoutParams((int) (TODAY_WEIGHT * width / (columnsCount + TODAY_WEIGHT - 1)), (int) density * 2));
+            timeHand.setLayoutParams(new LayoutParams((int) (TODAY_WEIGHT * width / (columnsCount + TODAY_WEIGHT - 1)), UI.dp2px(2)));
             timeHand.setX(columnIndex * width / (columnsCount + TODAY_WEIGHT - 1));
             timeHand.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.curriculumtimeHandColor));
             addView(timeHand);
@@ -316,7 +322,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
         // 应用新的位置
         if (timeHand != null && height != 0) {
-            timeHand.setY(height * timeHandPosition - (int) density);
+            timeHand.setY(height * timeHandPosition - UI.dp2px(1));
         }
     }
 
