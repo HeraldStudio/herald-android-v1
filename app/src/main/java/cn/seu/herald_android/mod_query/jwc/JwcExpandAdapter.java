@@ -15,10 +15,10 @@ import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
 
 class JwcExpandAdapter extends BaseExpandableListAdapter {
     private ArrayList<String> parentViews;
-    private ArrayList<ArrayList<JwcItem>> childViews;
+    private ArrayList<ArrayList<JwcNoticeModel>> childViews;
     private Context context;
 
-    public JwcExpandAdapter(Context context, ArrayList<String> parentViews, ArrayList<ArrayList<JwcItem>> childViews) {
+    public JwcExpandAdapter(Context context, ArrayList<String> parentViews, ArrayList<ArrayList<JwcNoticeModel>> childViews) {
         this.parentViews = parentViews;
         this.childViews = childViews;
         this.context = context;
@@ -72,15 +72,15 @@ class JwcExpandAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         View contentView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_jwc__item_child, null);
-        JwcItem jwcItem = (JwcItem) getChild(groupPosition, childPosition);
+        JwcNoticeModel jwcNoticeModel = (JwcNoticeModel) getChild(groupPosition, childPosition);
         TextView tv_name = (TextView) contentView.findViewById(R.id.title);
         TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
-        tv_name.setText(jwcItem.title);
-        tv_date.setText("发布日期：" + jwcItem.date);
+        tv_name.setText(jwcNoticeModel.title);
+        tv_date.setText("发布日期：" + jwcNoticeModel.date);
         contentView.setOnClickListener(v -> {
             try {
-                Uri uri = Uri.parse(jwcItem.href);
-                WebModuleActivity.startWebModuleActivity(context,jwcItem.title,uri,R.style.JwcTheme);
+                Uri uri = Uri.parse(jwcNoticeModel.href);
+                WebModuleActivity.startWebModuleActivity(context, jwcNoticeModel.title, uri, R.style.JwcTheme);
             } catch (Exception e) {
                 e.printStackTrace();
             }

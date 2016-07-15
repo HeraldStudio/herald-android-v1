@@ -12,14 +12,14 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 
-class HotBookAdapter extends ArrayAdapter<HotBook> {
-    public HotBookAdapter(Context context, int resource, List<HotBook> objects) {
+class HotBookAdapter extends ArrayAdapter<HotBookModel> {
+    public HotBookAdapter(Context context, int resource, List<HotBookModel> objects) {
         super(context, resource, objects);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        HotBook hotBook = getItem(position);
+        HotBookModel hotBookModel = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_library__item,null);
         }
@@ -28,14 +28,14 @@ class HotBookAdapter extends ArrayAdapter<HotBook> {
         TextView tv_name = (TextView) convertView.findViewById(R.id.title);
         TextView tv_author = (TextView)convertView.findViewById(R.id.tv_author);
 
-        tv_count.setText(hotBook.getCount()+"");
-        tv_place.setText(hotBook.getPlace());
-        tv_author.setText(hotBook.getAuthor());
-        tv_name.setText(hotBook.getName());
+        tv_count.setText(hotBookModel.getCount() + "");
+        tv_place.setText(hotBookModel.getPlace());
+        tv_author.setText(hotBookModel.getAuthor());
+        tv_name.setText(hotBookModel.getName());
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LibrarySearchActivity.class);
-            intent.putExtra("q", hotBook.getName().split("\\.")[0]);
+            intent.putExtra("q", hotBookModel.getName().split("\\.")[0]);
             getContext().startActivity(intent);
         });
 

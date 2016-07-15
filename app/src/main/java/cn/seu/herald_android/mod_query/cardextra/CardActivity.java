@@ -107,7 +107,7 @@ public class CardActivity extends BaseActivity {
             //尝试加载缓存
             String cache = CacheHelper.get("herald_card");
             String todayCache = CacheHelper.get("herald_card_today");
-            ArrayList<CardItem> list = new ArrayList<>();
+            ArrayList<CardRecordModel> list = new ArrayList<>();
 
             if (!todayCache.equals("")) {
                 JSONObject json_cache = new JSONObject(todayCache).getJSONObject("content");
@@ -117,7 +117,7 @@ public class CardActivity extends BaseActivity {
                 String extra = new JSONObject(todayCache).getJSONObject("content").getString("left");
                 tv_extra.setText(extra);
                 //数据类型转换
-                list.addAll(CardItem.transformJSONArrayToArrayList(jsonArray));
+                list.addAll(CardRecordModel.transformJSONArrayToArrayList(jsonArray));
             }
 
             if (!cache.equals("")) {
@@ -125,7 +125,7 @@ public class CardActivity extends BaseActivity {
                 //获取消费记录
                 JSONArray jsonArray = json_cache.getJSONArray("detial");
                 //数据类型转换
-                list.addAll(CardItem.transformJSONArrayToArrayList(jsonArray));
+                list.addAll(CardRecordModel.transformJSONArrayToArrayList(jsonArray));
             }
 
             CardAdapter cardAdapter = new CardAdapter(getBaseContext(), list);

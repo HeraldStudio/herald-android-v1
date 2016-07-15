@@ -13,7 +13,7 @@ import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.jwc.JwcBlockLayout;
-import cn.seu.herald_android.mod_query.jwc.JwcItem;
+import cn.seu.herald_android.mod_query.jwc.JwcNoticeModel;
 
 public class JwcCard {
 
@@ -35,7 +35,7 @@ public class JwcCard {
 
             for (int i = 0; i < json_content.length(); i++) {
                 JSONObject json_item = json_content.getJSONObject(i);
-                JwcItem item = new JwcItem(
+                JwcNoticeModel item = new JwcNoticeModel(
                         json_item.getString("date"),
                         json_item.getString("href"),
                         json_item.getString("title"));

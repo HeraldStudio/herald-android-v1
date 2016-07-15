@@ -29,9 +29,9 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
+import cn.seu.herald_android.helper.NetworkLoginHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
-import cn.seu.herald_android.helper.NetworkLoginHelper;
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
 import me.majiajie.pagerbottomtabstrip.TabItemBuilder;
@@ -116,15 +116,6 @@ public class MainActivity extends BaseActivity {
 
         //设置右上角加号按钮
         setupMoreButton();
-
-        runMeasurementDependentTask(() -> {
-            //刷新卡片视图
-            cardsFragment.loadTimelineView(true);
-            //刷新模块视图
-            moduleListFragment.loadModuleList();
-        });
-
-
     }
 
     private void setupMoreButton(){
@@ -172,8 +163,6 @@ public class MainActivity extends BaseActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 });
-
-
             });
         }
     }
@@ -280,11 +269,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public static int MAIN_FRAGMENT_CARDS = 0;
-    public static int MAIN_FRAGMENT_ACTIVITYS = 1;
-    public static int MAIN_FRAGMENT_MODULES = 2;
-    public static int MAIN_FRAGMENT_SETTTINGS = 3;
-
     public static void sendChangeMainFragmentBroadcast(Context context,int fragmentCode){
         Intent intent = new Intent();
         intent.putExtra("fragmentCode",fragmentCode);
@@ -305,11 +289,6 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.MAIN.changeMainFragment");
         registerReceiver(changeMainFragmentReceiver,intentFilter);
-    }
-
-    public void syncModuleSettings() {
-        cardsFragment.loadTimelineView(false);
-        moduleListFragment.loadModuleList();
     }
 
     @Override

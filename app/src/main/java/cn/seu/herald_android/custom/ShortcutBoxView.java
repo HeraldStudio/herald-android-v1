@@ -10,7 +10,6 @@ import java.util.List;
 
 import cn.seu.herald_android.helper.AppModule;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_modulemanager.ShortCutBoxDisplayAdapter;
 
 public class ShortcutBoxView extends GridView {
     public ShortcutBoxView(Context c, AttributeSet a) {
@@ -35,7 +34,7 @@ public class ShortcutBoxView extends GridView {
                 enabledShortcutList.add(module);
         }
 
-        ShortCutBoxDisplayAdapter adapter = new ShortCutBoxDisplayAdapter(enabledShortcutList);
+        ShortcutBoxAdapter adapter = new ShortcutBoxAdapter(enabledShortcutList);
 
         //添加并且显示
         setAdapter(adapter);

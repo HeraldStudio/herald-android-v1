@@ -23,6 +23,7 @@ public class CardsFragment extends Fragment {
 
         srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
         view = (CardsListView) contentView.findViewById(R.id.timeline);
+        view.setSrl(srl);
         srl.setOnRefreshListener(() -> view.loadContent(true));
 
         return contentView;
@@ -30,17 +31,7 @@ public class CardsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        // 从模块管理页面返回时,重载卡片和快捷栏
         super.onResume();
-        loadTimelineView(false);
-        view.setSrl(srl);
-    }
-
-    // 刷新时间轴和快捷方式
-    // refresh 是否联网刷新
-    public void loadTimelineView(boolean refresh) {
-        if (refresh && srl != null) srl.setRefreshing(true);
-        //由于此处view经常为空，引发异常，所以先判断
-        if (view!=null)view.loadContent(refresh);
+        if (view != null) view.loadContent(false);
     }
 }

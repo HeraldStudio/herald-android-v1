@@ -144,7 +144,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
             }
 
             // 双重列表，用每个子列表表示一天的课程
-            List<List<ClassInfo>> listOfList = new ArrayList<>();
+            List<List<ClassModel>> listOfList = new ArrayList<>();
 
             // 是否有无法读取的课程, 如辅修课
             boolean hasInvalid = false;
@@ -156,10 +156,10 @@ public class CurriculumScheduleLayout extends FrameLayout {
                 JSONArray array = obj.getJSONArray(WEEK_NUMS[i]);
 
                 // 剔除不属于本周的课程，并将对应的课程添加到对应星期的列表中
-                List<ClassInfo> list = new ArrayList<>();
+                List<ClassModel> list = new ArrayList<>();
                 for (int j = 0; j < array.length(); j++) {
                     try {
-                        ClassInfo info = new ClassInfo(array.getJSONArray(j));
+                        ClassModel info = new ClassModel(array.getJSONArray(j));
                         info.weekNum = WEEK_NUMS_CN[i];
                         int startWeek = info.getStartWeek();
                         int endWeek = info.getEndWeek();
@@ -186,7 +186,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
             // 确定好实际要显示的列数后，将每列数据交给子函数处理
             for (int i = 0, j = 0; i < 7; i++) {
-                List<ClassInfo> list = listOfList.get(i);
+                List<ClassModel> list = listOfList.get(i);
                 if (list.size() != 0 || i < 5) {
 
                     setColumnData(
@@ -217,7 +217,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
     // 绘制某一列的课表
     private void setColumnData(
-            List<ClassInfo> list, // 该列的数据
+            List<ClassModel> list, // 该列的数据
             int columnIndex, // 该列在所有要显示的列中的序号
             int dayIndex, // 该列在所有列中的序号
             int dayDelta, // 该列的星期号与今天星期号之差
@@ -251,7 +251,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
         // 绘制每节课的方块
         for (int i = 0; i < N; i++) {
-            ClassInfo info = list.get(i);
+            ClassModel info = list.get(i);
 
             CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(
                     getContext(), info, sidebar.get(info.getClassName()),

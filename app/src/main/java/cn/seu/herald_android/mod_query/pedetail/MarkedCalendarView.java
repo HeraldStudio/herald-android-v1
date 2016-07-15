@@ -46,7 +46,7 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 初始化月历页面
-    public void initialize(int yearMonth, List<ExerciseInfo> page) {
+    public void initialize(int yearMonth, List<PedetailRecordModel> page) {
 
         Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.SUNDAY);
@@ -118,7 +118,7 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 为特定跑操记录添加标记，同时指定其弹出对话框中显示的数据
-    private void setMarked(ExerciseInfo info) {
+    private void setMarked(PedetailRecordModel info) {
         View v = views.get(info.getDateTime().get(Calendar.DATE) - 1);
         TextView tv = (TextView) v.findViewById(R.id.textView);
         tv.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.pedetail_grid_selector_highlight));

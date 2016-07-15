@@ -16,7 +16,7 @@ import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.lecture.LectureBlockLayout;
-import cn.seu.herald_android.mod_query.lecture.LectureNoticeItem;
+import cn.seu.herald_android.mod_query.lecture.LectureNoticeModel;
 
 public class LectureCard {
 
@@ -49,7 +49,7 @@ public class LectureCard {
                     if (time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) < 19 * 60) {
 
                         LectureBlockLayout block = new LectureBlockLayout(AppContext.currentContext.$get(),
-                                new LectureNoticeItem(
+                                new LectureNoticeModel(
                                         json_item.getString("date"),
                                         json_item.getString("topic"),
                                         json_item.getString("speaker"),

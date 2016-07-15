@@ -245,7 +245,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".mod_query.gymreserve.SelectSportActivity"
+            android:name=".mod_query.gymreserve.GymReserveActivity"
             android:label="@string/title_activity_gymreserve"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -257,24 +257,24 @@
         </activity>
         <!-- 场馆预约项目时间段选择 -->
         <activity
-            android:name=".mod_query.gymreserve.OrderItemActivity"
+            android:name=".mod_query.gymreserve.GymChooseTimeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
         <!-- 场馆预约新增预约 -->
         <activity
-            android:name=".mod_query.gymreserve.NewOrderActivity"
+            android:name=".mod_query.gymreserve.GymNewOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
         <!-- 搜索新好友 -->
         <activity
-            android:name=".mod_query.gymreserve.SearchFriendActivity"
+            android:name=".mod_query.gymreserve.GymAddFriendActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
         <activity
-            android:name=".mod_query.gymreserve.MyOrderActivity"
+            android:name=".mod_query.gymreserve.GymMyOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>

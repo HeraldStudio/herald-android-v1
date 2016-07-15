@@ -76,9 +76,6 @@ public class SettingsFragment extends Fragment {
         //个性化设置
         setupPersonalSettings();
 
-        //刷新用户名
-        refreshUsername();
-
         return contentView;
     }
 
@@ -92,21 +89,12 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-
     private void setupSeuSettings(){
         //seu登录模块设置
         SwitchButton swith_seu = (SwitchButton) contentView.findViewById(R.id.switchseuauto);
         swith_seu.setCheckedImmediately(SettingsHelper.wifiAutoLogin.$get());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) ->
                 SettingsHelper.wifiAutoLogin.$set(isChecked));
-    }
-
-    public void refreshUsername() {
-        // 刷新用户名显示
-        if (contentView != null) {
-            TextView tv_username = (TextView) contentView.findViewById(R.id.tv_username);
-            tv_username.setText(ApiHelper.getAuthCache("name"));
-        }
     }
 
     private void checkUpdate() {

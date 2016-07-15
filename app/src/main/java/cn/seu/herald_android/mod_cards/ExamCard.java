@@ -13,7 +13,7 @@ import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.exam.ExamBlockLayout;
-import cn.seu.herald_android.mod_query.exam.ExamItem;
+import cn.seu.herald_android.mod_query.exam.ExamModel;
 
 public class ExamCard {
 
@@ -34,19 +34,19 @@ public class ExamCard {
             definedcache = "[]";
         }
         try {
-            List<ExamItem> examList = new ArrayList<>();
-            List<ExamItem> temp = ExamItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<ExamItem> defined = ExamItem.transformJSONArrayToArrayList(new JSONArray(definedcache));
+            List<ExamModel> examList = new ArrayList<>();
+            List<ExamModel> temp = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            List<ExamModel> defined = ExamModel.transformJSONArrayToArrayList(new JSONArray(definedcache));
             //加入教务处的考试
-            for (ExamItem examItem : temp) {
-                if (examItem.getRemainingDays() >= 0) {
-                    examList.add(examItem);
+            for (ExamModel examModel : temp) {
+                if (examModel.getRemainingDays() >= 0) {
+                    examList.add(examModel);
                 }
             }
             //加入本地自定义的考试
-            for (ExamItem examItem : defined) {
-                if (examItem.getRemainingDays() >= 0) {
-                    examList.add(examItem);
+            for (ExamModel examModel : defined) {
+                if (examModel.getRemainingDays() >= 0) {
+                    examList.add(examModel);
                 }
             }
 
@@ -70,8 +70,8 @@ public class ExamCard {
                 });
                 CardsModel item = new CardsModel(SettingsHelper.Module.exam,
                         CardsModel.Priority.CONTENT_NOTIFY, "你最近有" + examList.size() + "场考试，抓紧时间复习吧");
-                for (ExamItem examItem : examList) {
-                    item.attachedView.add(new ExamBlockLayout(AppContext.currentContext.$get(), examItem));
+                for (ExamModel examModel : examList) {
+                    item.attachedView.add(new ExamBlockLayout(AppContext.currentContext.$get(), examModel));
                 }
                 return item;
             }

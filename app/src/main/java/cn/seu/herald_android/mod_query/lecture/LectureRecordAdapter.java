@@ -11,17 +11,17 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 
-class LectureRecordAdapter extends ArrayAdapter<LectureRecordItem> {
+class LectureRecordAdapter extends ArrayAdapter<LectureRecordModel> {
     private int resource;
 
-    public LectureRecordAdapter(Context context, int resource, List<LectureRecordItem> objects) {
+    public LectureRecordAdapter(Context context, int resource, List<LectureRecordModel> objects) {
         super(context, resource, objects);
         this.resource = resource;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final LectureRecordItem lectureRecordItem = getItem(position);
+        final LectureRecordModel lectureRecordItem = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(resource, null);
         }

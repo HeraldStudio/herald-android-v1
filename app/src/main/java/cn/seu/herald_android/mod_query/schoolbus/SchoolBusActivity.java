@@ -112,21 +112,21 @@ public class SchoolBusActivity extends BaseActivity {
                 JSONArray weekday_tosubway = cache_json.getJSONObject("weekday").getJSONArray("前往地铁站");
                 JSONArray weekday_toschool = cache_json.getJSONObject("weekday").getJSONArray("返回九龙湖");
                 //生成周末前往地铁站列表
-                ArrayList<SchoolBusItem> list_weekend_tosubway = SchoolBusItem.transformJSONtoArrayList(weekend_toschool);
+                ArrayList<SchoolBusModel> list_weekend_tosubway = SchoolBusModel.transformJSONtoArrayList(weekend_toschool);
                 //生成周末去学校列表
-                ArrayList<SchoolBusItem> list_weekend_toschool = SchoolBusItem.transformJSONtoArrayList(weekend_tosubway);
+                ArrayList<SchoolBusModel> list_weekend_toschool = SchoolBusModel.transformJSONtoArrayList(weekend_tosubway);
                 //平时前往地铁站的列表
-                ArrayList<SchoolBusItem> list_weekday_tosubway = SchoolBusItem.transformJSONtoArrayList(weekday_tosubway);
+                ArrayList<SchoolBusModel> list_weekday_tosubway = SchoolBusModel.transformJSONtoArrayList(weekday_tosubway);
                 //平时前往学校的列表
-                ArrayList<SchoolBusItem> list_weekday_toschool = SchoolBusItem.transformJSONtoArrayList(weekday_toschool);
+                ArrayList<SchoolBusModel> list_weekday_toschool = SchoolBusModel.transformJSONtoArrayList(weekday_toschool);
                 //加载WeekDay，工作日的Fragment
-                ArrayList<ArrayList<SchoolBusItem>> weekdayList = new ArrayList<>();
+                ArrayList<ArrayList<SchoolBusModel>> weekdayList = new ArrayList<>();
                 weekdayList.add(list_weekday_tosubway);
                 weekdayList.add(list_weekday_toschool);
                 SchoolBusFragment weekdayFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekdayList);
 
                 //加载WeekEnd，双休日的Fragment
-                ArrayList<ArrayList<SchoolBusItem>> weekendList = new ArrayList<>();
+                ArrayList<ArrayList<SchoolBusModel>> weekendList = new ArrayList<>();
                 weekendList.add(list_weekend_tosubway);
                 weekendList.add(list_weekend_toschool);
                 SchoolBusFragment weekendFragment = SchoolBusFragment.newInstance(new String[]{"前往地铁站", "返回九龙湖"}, weekendList);

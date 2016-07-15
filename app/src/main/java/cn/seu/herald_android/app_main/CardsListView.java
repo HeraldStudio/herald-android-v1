@@ -24,7 +24,9 @@ import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
+import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.ApiThreadManager;
+import cn.seu.herald_android.helper.AppModule;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
@@ -37,6 +39,10 @@ import cn.seu.herald_android.mod_cards.JwcCard;
 import cn.seu.herald_android.mod_cards.LectureCard;
 import cn.seu.herald_android.mod_cards.PedetailCard;
 import cn.seu.herald_android.mod_cards.ServiceCard;
+import cn.seu.herald_android.mod_query.grade.GradeActivity;
+import cn.seu.herald_android.mod_query.gymreserve.GymReserveActivity;
+import cn.seu.herald_android.mod_query.library.LibraryActivity;
+import cn.seu.herald_android.mod_query.srtp.SrtpActivity;
 
 public class CardsListView extends ListView {
 
@@ -60,10 +66,15 @@ public class CardsListView extends ListView {
     }
 
     public void init(){
-        //加入快捷栏
+        // 加入快捷栏
         setupShortCutBox();
-        //加入轮播栏
+        // 加入轮播栏
         setupSliderView();
+
+        // 监听模块设置改变事件
+        SettingsHelper.addModuleSettingsChangeListener(() -> {
+            loadContent(false);
+        });
     }
 
     public void setupSliderView(){
@@ -135,8 +146,7 @@ public class CardsListView extends ListView {
         //活动这项永远保留在首页，加载并解析活动缓存
         CardsModel activityItem = ActivityCard.getCard();
         //修改默认点击函数，设置为主页滑动至活动页
-        activityItem.setOnClickListener(v ->
-                MainActivity.sendChangeMainFragmentBroadcast(getContext(),MainActivity.MAIN_FRAGMENT_ACTIVITYS));
+        activityItem.setOnClickListener(v -> new AppModule(null, "TAB1").open());
         itemList.add(activityItem);
 
         if (SettingsHelper.Module.lecture.cardEnabled.$get()) {
@@ -250,6 +260,13 @@ public class CardsListView extends ListView {
             // 活动为非模块，永远保持在首页
             manager.add(ActivityCard.getRefresher());
 
+            manager.addAll(new ApiRequest[]{
+                    GymReserveActivity.remoteRefreshNotifyDotState(),
+                    SrtpActivity.remoteRefreshNotifyDotState(),
+                    GradeActivity.remoteRefreshNotifyDotState(),
+                    LibraryActivity.remoteRefreshNotifyDotState()
+            });
+
             /**
              * 结束刷新部分
              * 当最后一个线程结束时调用这一部分，刷新结束
@@ -306,8 +323,6 @@ public class CardsListView extends ListView {
         getContext().unregisterReceiver(timeChangeReceiver);
         super.onDetachedFromWindow();
     }
-
-
 
     public class TimelineAdapter extends BaseAdapter {
 

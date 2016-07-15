@@ -48,7 +48,7 @@ public class FeedbackActivity extends BaseActivity {
             EditText et_contact = (EditText)findViewById(R.id.tv_contact);
             String content = null;
             if (et != null && et_contact != null) {
-                    content = "[来自Android版]" + et.getText().toString() + "[联系方式：" + et_contact.getText() +"]";
+                content = "[来自Android版] " + et.getText().toString() + " [联系方式：" + et_contact.getText() + "]";
             }
 
             showProgressDialog();

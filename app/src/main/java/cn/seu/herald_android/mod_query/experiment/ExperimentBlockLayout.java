@@ -18,7 +18,7 @@ public class ExperimentBlockLayout extends LinearLayout {
 
     String description;
 
-    public ExperimentBlockLayout(Context context, ExperimentItem item) {
+    public ExperimentBlockLayout(Context context, ExperimentModel item) {
         super(context);
         View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);
         TextView content = (TextView) contentView.findViewById(R.id.content);

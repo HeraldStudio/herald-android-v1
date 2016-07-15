@@ -34,7 +34,7 @@ public class ExperimentActivity extends BaseActivity {
     //成就墙展示View
     private ViewPager viewPager;
     //成就列表
-    private ArrayList<Achievement> achievementArrayList;
+    private ArrayList<AchievementModel> achievements;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +96,8 @@ public class ExperimentActivity extends BaseActivity {
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
-                ArrayList<ArrayList<ExperimentItem>> childArray = new ArrayList<>();
-                achievementArrayList = new ArrayList<>();
+                ArrayList<ArrayList<ExperimentModel>> childArray = new ArrayList<>();
+                achievements = new ArrayList<>();
                 //根据每种集合加载不同的子view
                 for (int i = 0; i < json_content.length(); i++) {
                     String jsonArray_str = json_content.getString(json_content.names().getString(i));
@@ -105,12 +105,12 @@ public class ExperimentActivity extends BaseActivity {
                         //如果有实验则加载数据和子项布局
                         JSONArray jsonArray = new JSONArray(jsonArray_str);
                         //根据数组长度获得实验的Item集合
-                        ArrayList<ExperimentItem> item_list = ExperimentItem.transformJSONArrayToArrayList(jsonArray);
+                        ArrayList<ExperimentModel> item_list = ExperimentModel.transformJSONArrayToArrayList(jsonArray);
                         //加入到list中
                         parentArray.add(json_content.names().getString(i));
                         childArray.add(item_list);
                         //加入到成就列表中
-                        achievementArrayList.addAll(AchievementFactory.getExperimentAchievement(item_list));
+                        achievements.addAll(AchievementFactory.getExperimentAchievement(item_list));
                     }
                 }
                 //设置成就列表
@@ -150,14 +150,14 @@ public class ExperimentActivity extends BaseActivity {
         //设置成就数目
         TextView tv_numofAchievement = (TextView) findViewById(R.id.num);
         if (tv_numofAchievement != null) {
-            tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievementArrayList.size(), 20));
+            tv_numofAchievement.setText(String.format("成就墙(%d/%d)", achievements.size(), 20));
         }
-        if(0 == achievementArrayList.size()){
+        if (0 == achievements.size()) {
             //无成就时添加提示
-            Achievement achievementTip = new Achievement("暂无成就","你还没有获得任何实验成就，赶紧参加实验，寻找神秘的成就碎片吧！","");
-            achievementArrayList.add(achievementTip);
+            AchievementModel tipModel = new AchievementModel("暂无成就", "你还没有获得任何实验成就，赶紧参加实验，寻找神秘的成就碎片吧！", "");
+            achievements.add(tipModel);
         }
         //设置适配器
-        viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievementArrayList));
+        viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievements));
     }
 }

@@ -10,20 +10,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_query.experiment.Achievement;
+import cn.seu.herald_android.mod_query.experiment.AchievementModel;
 
 public class AchievementViewPagerAdapter extends PagerAdapter {
-    private ArrayList<Achievement> achievementArrayList;
+    private ArrayList<AchievementModel> achievements;
     private Context context;
 
-    public AchievementViewPagerAdapter(Context context, ArrayList<Achievement> achievementArrayList) {
-        this.achievementArrayList = achievementArrayList;
+    public AchievementViewPagerAdapter(Context context, ArrayList<AchievementModel> achievements) {
+        this.achievements = achievements;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return achievementArrayList.size();
+        return achievements.size();
     }
 
     @Override
@@ -33,14 +33,14 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Achievement achievement = achievementArrayList.get(position);
+        AchievementModel achievementModel = achievements.get(position);
         View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__view_pager_achievement, null);
         //设置成就名字
         TextView tv_name = (TextView) view.findViewById(R.id.title);
-        tv_name.setText(achievement.getName());
+        tv_name.setText(achievementModel.getName());
         //成就描述
         TextView tv_des = (TextView) view.findViewById(R.id.tv_des);
-        tv_des.setText(achievement.getDes());
+        tv_des.setText(achievementModel.getDes());
         container.addView(view);
         return view;
     }

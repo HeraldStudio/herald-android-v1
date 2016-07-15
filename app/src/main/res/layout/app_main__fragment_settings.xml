@@ -17,7 +17,7 @@
             android:paddingBottom="7dp"
             android:paddingLeft="15dp"
             android:paddingTop="20dp"
-            android:text="账户"
+            android:text="我的账户"
             android:textColor="#666"
             android:textSize="12sp" />
 

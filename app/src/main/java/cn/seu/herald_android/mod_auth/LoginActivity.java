@@ -30,7 +30,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mod_auth);
+        setContentView(R.layout.mod_auth__login);
         init();
     }
 
@@ -123,11 +123,25 @@ public class LoginActivity extends BaseActivity {
                 });
     }
 
-
     private void checkUUID() {
         new ApiRequest().api("user").addUUID().toAuthCache("schoolnum", json ->
             json.getJSONObject("content").getString("schoolnum")
         ).onFinish((success, code, response) -> {
+
+            /**
+             * 注意: 学号的获取关系到统计功能和 srtp api 的正常调用, 千万要保证学号正确!
+             *
+             * 若学号没有正确获取, 由于服务端的缓存机制, 已绑定微信的用户仍然可能看到正确的结果,
+             * 所以开发者在日常使用中几乎不可能发现这种错误, 需要经过专门测试才能确定客户端是否正确获取学号!
+             *
+             * 测试方法如下: (注意 postman 使用时应当保证填写的 uuid 与客户端 uuid 相同)
+             *
+             * 1) 使用 postman, 调用 srtp 接口, schoolnum 参数中填写自己的学号, 应当返回自己的 srtp 信息;
+             * 2) 使用 postman, 调用 srtp 接口, schoolnum 参数中填写同学A的学号, 应当返回同学A的 srtp 信息;
+             * 3) 使用 postman, 调用 srtp 接口, 不带 schoolnum 参数, 应当返回同学A的 srtp 信息;
+             * 4) 使用客户端刷新 srtp 模块, 应当返回正确的 srtp 信息;
+             * 5) 使用 postman, 调用 srtp 接口, 不带 schoolnum 参数, 应当返回自己的 srtp 信息;
+             **/
             if (success && ApiHelper.getAuthCache("schoolnum").length() == 8) {
                 hideProgressDialog();
                 AppContext.showMain();

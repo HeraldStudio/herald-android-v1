@@ -25,11 +25,18 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.SettingsHelper;
 
 /**
  * 图书主页面Acvitity
  */
 public class LibraryActivity extends BaseActivity {
+
+    public static ApiRequest remoteRefreshNotifyDotState() {
+        return new ApiRequest().api("library").addUUID()
+                .toCache("herald_library_borrowbook",
+                        /** notifyModuleIfChanged: */SettingsHelper.Module.library);
+    }
 
     //热门书籍展示列表
     private ListView listView_hotbook;
@@ -96,7 +103,7 @@ public class LibraryActivity extends BaseActivity {
                         try {
                             JSONObject json_res = new JSONObject(response);
                             JSONArray jsonArray = json_res.getJSONArray("content");
-                            loadHotBookList(HotBook.transformJSONArrayToArrayList(jsonArray));
+                            loadHotBookList(HotBookModel.transformJSONArrayToArrayList(jsonArray));
                             // showSnackBar("刷新成功");
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -108,14 +115,14 @@ public class LibraryActivity extends BaseActivity {
                 }).run();
     }
 
-    private void loadHotBookList(ArrayList<HotBook> list) {
+    private void loadHotBookList(ArrayList<HotBookModel> list) {
         listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.mod_que_library__item, list));
     }
 
     public void refreshBorrowRocord() {
         //获取最新的已借书记录
         showProgressDialog();
-        new ApiRequest().api("library").addUUID()
+        new ApiRequest().api("library").addUUID().toCache("herald_library_borrowbook")
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
@@ -127,7 +134,7 @@ public class LibraryActivity extends BaseActivity {
                                 showSnackBar("目前尚无在借图书");
                             } else {
                                 //反之打开借书记录对话框
-                                displayBorrowRecordDialog(MyBorrowBook.transformJSONArrayToArrayList(jsonArray));
+                                displayBorrowRecordDialog(BorrowBookModel.transformJSONArrayToArrayList(jsonArray));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -144,7 +151,7 @@ public class LibraryActivity extends BaseActivity {
                 }).run();
     }
 
-    private void displayBorrowRecordDialog(ArrayList<MyBorrowBook> list) {
+    private void displayBorrowRecordDialog(ArrayList<BorrowBookModel> list) {
         //显示已借书记录的对话框,加载list里的项
         //加载借阅记录对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -158,7 +165,7 @@ public class LibraryActivity extends BaseActivity {
         //获取对话窗口中的ListView
         ListView list_record = (ListView) window.findViewById(R.id.list_borrowbook_record);
         //设置适配器
-        list_record.setAdapter(new MyBorrowBookAdapter(this, R.layout.mod_que_library__dialog_borrow_record__item, list));
+        list_record.setAdapter(new BorrowBookAdapter(this, R.layout.mod_que_library__dialog_borrow_record__item, list));
 
     }
 

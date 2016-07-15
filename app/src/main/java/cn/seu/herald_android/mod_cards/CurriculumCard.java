@@ -17,7 +17,7 @@ import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_query.curriculum.ClassInfo;
+import cn.seu.herald_android.mod_query.curriculum.ClassModel;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleLayout;
 import cn.seu.herald_android.mod_query.curriculum.CurriculumTimelineBlockLayout;
 
@@ -83,7 +83,7 @@ public class CurriculumCard {
 
             for (int j = 0; j < array.length(); j++) {
                 try {
-                    ClassInfo info = new ClassInfo(array.getJSONArray(j));
+                    ClassModel info = new ClassModel(array.getJSONArray(j));
                     // 如果该课程本周上课
                     if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                         classCount++;
@@ -169,7 +169,7 @@ public class CurriculumCard {
             classCount = 0;
             ArrayList<View> viewList = new ArrayList<>();
             for (int j = 0; j < array.length(); j++) {
-                ClassInfo info = new ClassInfo(array.getJSONArray(j));
+                ClassModel info = new ClassModel(array.getJSONArray(j));
                 // 如果该课程本周上课
                 if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                     classCount++;

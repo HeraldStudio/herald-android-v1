@@ -13,9 +13,9 @@ import cn.seu.herald_android.R;
 
 public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdapter.LectureRecord> {
     private Context context;
-    private ArrayList<LectureNoticeItem> list;
+    private ArrayList<LectureNoticeModel> list;
 
-    public LectureNoticeAdapter(Context context, ArrayList<LectureNoticeItem> list) {
+    public LectureNoticeAdapter(Context context, ArrayList<LectureNoticeModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -28,11 +28,11 @@ public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdap
 
     @Override
     public void onBindViewHolder(LectureRecord holder, int position) {
-        LectureNoticeItem lectureNoticeItem = list.get(position);
-        holder.tv_location.setText(lectureNoticeItem.getLocation());
-        holder.tv_date.setText(lectureNoticeItem.getDate());
-        holder.tv_speaker.setText(lectureNoticeItem.getSpeaker());
-        holder.tv_topic.setText(lectureNoticeItem.getTopic());
+        LectureNoticeModel lectureNoticeModel = list.get(position);
+        holder.tv_location.setText(lectureNoticeModel.getLocation());
+        holder.tv_date.setText(lectureNoticeModel.getDate());
+        holder.tv_speaker.setText(lectureNoticeModel.getSpeaker());
+        holder.tv_topic.setText(lectureNoticeModel.getTopic());
     }
 
     @Override

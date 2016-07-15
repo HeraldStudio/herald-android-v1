@@ -37,7 +37,7 @@ public class ModuleManageActivity extends BaseActivity {
         //根据模块列表构造列表
         ListView listView = (ListView) findViewById(R.id.lsit_edit_shortcut);
         if (listView != null) {
-            listView.setAdapter(new ShortCutBoxEditAdapter(getBaseContext(),
+            listView.setAdapter(new ModuleManageAdapter(getBaseContext(),
                     R.layout.mod_mod__item, seuModuleArrayList));
         }
     }

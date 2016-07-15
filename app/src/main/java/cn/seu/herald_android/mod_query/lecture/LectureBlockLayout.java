@@ -13,7 +13,7 @@ public class LectureBlockLayout extends LinearLayout {
 
     String description;
 
-    public LectureBlockLayout(Context context, LectureNoticeItem item) {
+    public LectureBlockLayout(Context context, LectureNoticeModel item) {
         super(context);
         View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);
 

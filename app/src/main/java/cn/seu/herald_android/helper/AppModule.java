@@ -2,8 +2,9 @@ package cn.seu.herald_android.helper;
 
 import android.content.Intent;
 
-import cn.seu.herald_android.app_framework.$$;
+import cn.seu.herald_android.app_framework.$;
 import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
 
 /**
@@ -52,10 +53,10 @@ public class AppModule {
     }
 
     /// 卡片是否开启
-    public $$<Boolean> cardEnabled = new $$<>(/** $get = */() -> {
+    public $<Boolean> cardEnabled = new $<>(() -> {
         String cache = SettingsHelper.get("herald_settings_module_cardenabled_" + name);
         return hasCard && !cache.equals("0");
-    }, /** $set = */(value) -> {
+    }, value -> {
         if (!hasCard) {
             return;
         }
@@ -65,7 +66,7 @@ public class AppModule {
     });
 
     /// 快捷方式是否开启
-    public $$<Boolean> shortcutEnabled = new $$<>(() -> {
+    public $<Boolean> shortcutEnabled = new $<>(() -> {
         String cache = SettingsHelper.get("herald_settings_module_shortcutenabled_" + name);
 
         // 默认只开启无卡片的模块
@@ -80,7 +81,7 @@ public class AppModule {
     });
 
     /// 用来标识一个不带卡片的模块数据是否有更新
-    public $$<Boolean> hasUpdates = new $$<>(() -> {
+    public $<Boolean> hasUpdates = new $<>(() -> {
         String cache = SettingsHelper.get("herald_settings_module_hasupdates_" + name);
         return !hasCard && cache.equals("1");
     }, value -> {
@@ -98,9 +99,8 @@ public class AppModule {
         if (controller.startsWith("http")) {
             WebModuleActivity.startWebModuleActivity(AppContext.currentContext.$get(), nameTip, controller);
         } else if (controller.startsWith("TAB")) {
-            Intent intent = new Intent("cn.seu.herald_android.SWITCH_TAB");
-            intent.putExtra("index", Integer.valueOf(controller.replaceAll("TAB", "")));
-            AppContext.currentContext.$get().sendBroadcast(intent);
+            int tab = Integer.valueOf(controller.replaceAll("TAB", ""));
+            MainActivity.sendChangeMainFragmentBroadcast(AppContext.currentContext.$get(), tab);
         } else {
             Intent intent = new Intent();
             intent.setAction("cn.seu.herald_android." + controller);

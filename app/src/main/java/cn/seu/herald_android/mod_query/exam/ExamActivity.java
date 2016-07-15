@@ -85,11 +85,11 @@ public class ExamActivity extends BaseActivity {
         }
 
         try {
-            List<ExamItem> exams = ExamItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<ExamItem> definedexams = ExamItem.transformJSONArrayToArrayList(getDefinedExamsJSONArray());
-            for(ExamItem examItem : definedexams){
-                examItem.isdefined = true;
-                exams.add(examItem);
+            List<ExamModel> exams = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            List<ExamModel> definedexams = ExamModel.transformJSONArrayToArrayList(getDefinedExamsJSONArray());
+            for (ExamModel examModel : definedexams) {
+                examModel.isdefined = true;
+                exams.add(examModel);
             }
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             ExamAdapter adapter = new ExamAdapter(exams);
@@ -139,13 +139,13 @@ public class ExamActivity extends BaseActivity {
         return new JSONArray();
     }
 
-    void deleteDefinedExam(ExamItem item){
+    void deleteDefinedExam(ExamModel item) {
         try{
             JSONArray array_old = getDefinedExamsJSONArray();
             JSONArray array_new = new JSONArray();
             for(int i = 0;i< array_old.length() ; i++){
                 JSONObject obj = array_old.getJSONObject(i);
-                if (item.equals(new ExamItem(obj))) {
+                if (item.equals(new ExamModel(obj))) {
                     continue;
                 }
                 array_new.put(obj);

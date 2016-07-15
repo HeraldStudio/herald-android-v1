@@ -25,15 +25,15 @@ public class UserCache {
         editor.commit();
     }
 
-    public $$<String> forKey(String key) {
-        return new $$<>(
+    public $<String> forKey(String key) {
+        return new $<>(
                 () -> UserCache.this.get(key),
                 (value) -> UserCache.this.set(key, value)
         );
     }
 
-    public $$<Boolean> booleanForKey(String key, Boolean defaultValue) {
-        return new $$<>(/** $get = */() -> {
+    public $<Boolean> booleanForKey(String key, Boolean defaultValue) {
+        return new $<>(/** $get = */() -> {
             if (defaultValue) {
                 return !(UserCache.this.get(key).equals("0"));
             } else {

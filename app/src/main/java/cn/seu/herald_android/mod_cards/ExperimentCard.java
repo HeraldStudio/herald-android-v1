@@ -15,7 +15,7 @@ import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout;
-import cn.seu.herald_android.mod_query.experiment.ExperimentItem;
+import cn.seu.herald_android.mod_query.experiment.ExperimentModel;
 
 public class ExperimentCard {
 
@@ -44,7 +44,7 @@ public class ExperimentCard {
                     JSONArray jsonArray = new JSONArray(jsonArray_str);
                     for (int j = 0; j < jsonArray.length(); j++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(j);
-                        ExperimentItem item = new ExperimentItem(
+                        ExperimentModel item = new ExperimentModel(
                                 jsonObject.getString("name"),
                                 jsonObject.getString("Date"),
                                 jsonObject.getString("Day"),

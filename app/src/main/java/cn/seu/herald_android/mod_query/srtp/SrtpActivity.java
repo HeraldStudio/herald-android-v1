@@ -21,8 +21,15 @@ import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
 
 public class SrtpActivity extends BaseActivity {
+
+    public static ApiRequest remoteRefreshNotifyDotState() {
+        return new ApiRequest().api("srtp").addUUID().post("schoolnum", ApiHelper.getSchoolnum())
+                .toCache("herald_srtp",
+                        /** notifyModuleIfChanged: */SettingsHelper.Module.srtp);
+    }
 
     private RecyclerView recyclerView_srtp;
     private TextView tv_total_credit;
@@ -75,7 +82,7 @@ public class SrtpActivity extends BaseActivity {
                 String total = jsonArray.getJSONObject(0).getString("total");
                 tv_total_credit.setText(total);
                 //加载列表
-                ArrayList<SrtpItem> arrayList = SrtpItem.transformJSONArrayToArrayList(jsonArray);
+                ArrayList<SrtpModel> arrayList = SrtpModel.transformJSONArrayToArrayList(jsonArray);
                 //适配器
                 SrtpAdapter srtpAdapter = new SrtpAdapter(this, arrayList);
                 recyclerView_srtp.setLayoutManager(new LinearLayoutManager(this));

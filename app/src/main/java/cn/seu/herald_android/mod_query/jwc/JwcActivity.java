@@ -74,7 +74,7 @@ public class JwcActivity extends BaseActivity {
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
                 //父view和子view数据集合
                 ArrayList<String> parentArray = new ArrayList<>();
-                ArrayList<ArrayList<JwcItem>> childArray = new ArrayList<>();
+                ArrayList<ArrayList<JwcNoticeModel>> childArray = new ArrayList<>();
                 //根据每种集合加载不同的子view
                 for (int i = 0; i < json_content.length(); i++) {
                     // 跳过最新动态
@@ -85,7 +85,7 @@ public class JwcActivity extends BaseActivity {
                         //如果有教务通知则加载数据和子项布局
                         JSONArray jsonArray = new JSONArray(jsonArray_str);
                         //根据数组长度获得教务通知的Item集合
-                        ArrayList<JwcItem> item_list = JwcItem.transformJSONArrayToArrayList(jsonArray);
+                        ArrayList<JwcNoticeModel> item_list = JwcNoticeModel.transformJSONArrayToArrayList(jsonArray);
                         //加入到list中
                         parentArray.add(json_content.names().getString(i).replace("教务信息", "核心通知"));
                         childArray.add(item_list);

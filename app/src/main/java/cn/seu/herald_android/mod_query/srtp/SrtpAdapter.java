@@ -13,9 +13,9 @@ import cn.seu.herald_android.R;
 
 public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
     private Context context;
-    private ArrayList<SrtpItem> list;
+    private ArrayList<SrtpModel> list;
 
-    public SrtpAdapter(Context context, ArrayList<SrtpItem> list) {
+    public SrtpAdapter(Context context, ArrayList<SrtpModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -28,7 +28,7 @@ public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
 
     @Override
     public void onBindViewHolder(SrtpHolder holder, int position) {
-        SrtpItem srtpItem = list.get(position);
+        SrtpModel srtpItem = list.get(position);
         holder.tv_date.setText(srtpItem.getDate());
         holder.tv_credit.setText(srtpItem.getCredit());
         holder.tv_project.setText(srtpItem.getProject());

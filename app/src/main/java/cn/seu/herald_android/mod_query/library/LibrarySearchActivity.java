@@ -109,8 +109,8 @@ public class LibrarySearchActivity extends BaseActivity
                         showSnackBar("当前书目不存在, 换个关键字试试");
                         return;
                     }
-                    ArrayList<Book> searchResultList =
-                            Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
+                    ArrayList<SearchBookModel> searchResultList =
+                            SearchBookModel.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
                     loadSearchResult(searchResultList);
                     // showSnackBar("刷新成功");
                 } catch (JSONException e) {
@@ -135,8 +135,8 @@ public class LibrarySearchActivity extends BaseActivity
     }
 
     //根据搜索结果加载展示结果的列表
-    private void loadSearchResult(ArrayList<Book> list) {
-        BookAdapter bookAdapter = new BookAdapter(list);
+    private void loadSearchResult(ArrayList<SearchBookModel> list) {
+        SearchBookAdapter bookAdapter = new SearchBookAdapter(list);
         recyclerView_search_result.setAdapter(bookAdapter);
     }
 

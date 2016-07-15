@@ -123,12 +123,12 @@ public class PedetailActivity extends BaseActivity {
             int exerciseCount = 0;
 
             // 创建一个包含所有有效跑操记录的列表（单重列表结构）
-            List<ExerciseInfo> infoList = new ArrayList<>();
+            List<PedetailRecordModel> infoList = new ArrayList<>();
             for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
 
                 // 将跑操数据倾倒到列表
-                ExerciseInfo info = new ExerciseInfo(obj, exerciseCount + 1);
+                PedetailRecordModel info = new PedetailRecordModel(obj, exerciseCount + 1);
                 if (info.getValid()) {
                     infoList.add(info);
                     exerciseCount++;
@@ -138,7 +138,7 @@ public class PedetailActivity extends BaseActivity {
             remain.setText(remainStr);
 
             // 用年月时间戳（年*12+自然月-1）比较器进行排序以防万一
-            Collections.sort(infoList, ExerciseInfo.yearMonthComparator);
+            Collections.sort(infoList, PedetailRecordModel.yearMonthComparator);
 
             // 当前所在月的年月戳
             Calendar cal = Calendar.getInstance();
@@ -152,13 +152,13 @@ public class PedetailActivity extends BaseActivity {
                     Math.max(infoList.get(infoList.size() - 1).getYearMonth(), curMonth) : curMonth;
 
             // 创建一个键值对结构，键为年月戳，值为该月的跑操记录列表
-            Map<Integer, List<ExerciseInfo>> pages = new HashMap<>();
+            Map<Integer, List<PedetailRecordModel>> pages = new HashMap<>();
             for (int i = startMonth; i <= endMonth; i++) {
                 pages.put(i, new ArrayList<>());
             }
 
             // 将单重列表的每个元素倾倒到双重列表中对应的位置
-            for (ExerciseInfo info : infoList) {
+            for (PedetailRecordModel info : infoList) {
                 pages.get(info.getYearMonth()).add(info);
             }
 

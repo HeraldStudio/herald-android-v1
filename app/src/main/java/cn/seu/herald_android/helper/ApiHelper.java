@@ -41,7 +41,7 @@ public class ApiHelper {
             e.printStackTrace();
         }
 
-        return /*"34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
+        return "34cc6df78cfa7cd457284e4fc377559e";// todo*/213151933 appid;
         /**
          * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
          * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -64,10 +64,7 @@ public class ApiHelper {
         setAuthCache("authUser", "");
         setAuthCache("authPwd", "");
         setAuthCache("uuid", "");
-        setAuthCache("cardnum", "");
         setAuthCache("schoolnum", "");
-        setAuthCache("name", "");
-        setAuthCache("sex", "");
 
         //清除模块缓存
         //注意此处的clearAllmoduleCache里的authUser和authPwd与上面清除的是不同的
@@ -153,8 +150,6 @@ public class ApiHelper {
          * uuid         认证用uuid
          * cardnum     一卡通号
          * schoolnum    学号
-         * name         名字
-         * sex          性别
          */
         //获得存储的某项信息
         return authCache.$get().getString(cacheName, "");

@@ -12,9 +12,9 @@ import cn.seu.herald_android.R;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
-    private List<ExamItem> examList;
+    private List<ExamModel> examList;
     public interface onItemClickListner{
-       void onItemClick(ExamItem item,int position);
+        void onItemClick(ExamModel item, int position);
     }
     private onItemClickListner mListner = null;
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -43,7 +43,8 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
     public void setOnItemClickListner(onItemClickListner mlistner){
         this.mListner = mlistner;
     }
-    public ExamAdapter(List<ExamItem> exams) {
+
+    public ExamAdapter(List<ExamModel> exams) {
         this.examList = exams;
     }
 
@@ -55,20 +56,20 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ExamItem examItem = examList.get(position);
-        holder.tv_time.setText("时间：" + examItem.time);
-        holder.tv_course.setText(examItem.course);
-        holder.tv_location.setText("地点：" + examItem.location);
-        holder.tv_teacher.setText("教师：" + examItem.teacher);
-        if (examItem.hour.equals("续一秒") || examItem.hour.equals("+1s") || examItem.teacher.equals("长者")) {
+        ExamModel examModel = examList.get(position);
+        holder.tv_time.setText("时间：" + examModel.time);
+        holder.tv_course.setText(examModel.course);
+        holder.tv_location.setText("地点：" + examModel.location);
+        holder.tv_teacher.setText("教师：" + examModel.teacher);
+        if (examModel.hour.equals("续一秒") || examModel.hour.equals("+1s") || examModel.teacher.equals("长者")) {
             holder.tv_hour.setText("时长：" + "61s");
         } else {
-            holder.tv_hour.setText("时长：" + examItem.hour + "分钟");
+            holder.tv_hour.setText("时长：" + examModel.hour + "分钟");
         }
-        holder.rootView.setOnClickListener(v -> mListner.onItemClick(examItem,position)
+        holder.rootView.setOnClickListener(v -> mListner.onItemClick(examModel, position)
         );
         try {
-            int remainingDays = examItem.getRemainingDays();
+            int remainingDays = examModel.getRemainingDays();
             holder.tv_num.setText(String.valueOf(remainingDays));
             holder.tv_num.setVisibility(View.VISIBLE);
             if (remainingDays < 0) {
@@ -91,7 +92,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         return examList.size();
     }
 
-    public void setList(List<ExamItem> exams) {
+    public void setList(List<ExamModel> exams) {
         this.examList = exams;
     }
 }

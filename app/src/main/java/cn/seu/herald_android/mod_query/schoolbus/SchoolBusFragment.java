@@ -15,13 +15,13 @@ import cn.seu.herald_android.R;
 public class SchoolBusFragment extends Fragment {
     //
     private String[] titles;
-    private ArrayList<ArrayList<SchoolBusItem>> childViews;
+    private ArrayList<ArrayList<SchoolBusModel>> childViews;
 
     public SchoolBusFragment() {
 
     }
 
-    public static SchoolBusFragment newInstance(String[] titles, ArrayList<ArrayList<SchoolBusItem>> childViews) {
+    public static SchoolBusFragment newInstance(String[] titles, ArrayList<ArrayList<SchoolBusModel>> childViews) {
         SchoolBusFragment fragment = new SchoolBusFragment();
         fragment.titles = titles;
         fragment.childViews = childViews;

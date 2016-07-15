@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.$;
-import cn.seu.herald_android.app_framework.$$;
 import cn.seu.herald_android.app_framework.UserCache;
 
 public class SettingsHelper {
@@ -106,7 +105,7 @@ public class SettingsHelper {
         settingsCache.$get().set(key, value);
     }
 
-    public static $$<Integer> launchTimes = new $$<>(() -> {
+    public static $<Integer> launchTimes = new $<>(() -> {
         String times = SettingsHelper.get("herald_settings_launch_time");
         if (times.equals("")) {
             SettingsHelper.set("herald_settings_launch_time", "0");
@@ -118,10 +117,10 @@ public class SettingsHelper {
         SettingsHelper.set("herald_settings_launch_time", String.valueOf(value));
     });
 
-    public static $$<Boolean> wifiAutoLogin =
+    public static $<Boolean> wifiAutoLogin =
             settingsCache.$get().booleanForKey("herald_settings_wifi_autologin", false);
 
-    public static $$<Boolean> bottomTabEnabled =
+    public static $<Boolean> bottomTabEnabled =
             settingsCache.$get().booleanForKey("herald_settings_bottomtabvisible", true);
 
     /** 模块设置变化的监听器 */

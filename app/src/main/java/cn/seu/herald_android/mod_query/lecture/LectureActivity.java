@@ -95,7 +95,7 @@ public class LectureActivity extends BaseActivity {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //json数组转化并且构造adapter
                 LectureNoticeAdapter lectureNoticeAdapter = new LectureNoticeAdapter(getBaseContext(),
-                        LectureNoticeItem.transformJSONArrayToArrayList(jsonArray));
+                        LectureNoticeModel.transformJSONArrayToArrayList(jsonArray));
                 //设置adapter
                 recyclerView_notice.setAdapter(lectureNoticeAdapter);
                 //刷新打卡记录缓存
@@ -174,7 +174,7 @@ public class LectureActivity extends BaseActivity {
                 list_record.setAdapter(new LectureRecordAdapter(
                         getBaseContext(),
                         R.layout.mod_que_lecture__dialog_lecture_record__item,
-                        LectureRecordItem.transformJSONArrayToArrayList(jsonArray)));
+                        LectureRecordModel.transformJSONArrayToArrayList(jsonArray)));
             } catch (JSONException e) {
                 e.printStackTrace();
                 showSnackBar("解析失败，请刷新");

@@ -30,6 +30,11 @@ public class ModuleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.app_main__fragment_modules, container, false);
         loadModuleList();
+
+        // 监听模块设置改变事件
+        SettingsHelper.addModuleSettingsChangeListener(() -> {
+            loadModuleList();
+        });
         return contentView;
     }
 

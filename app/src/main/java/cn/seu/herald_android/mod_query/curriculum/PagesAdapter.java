@@ -44,7 +44,7 @@ class PagesAdapter extends PagerAdapter {
             for (String weekNum : CurriculumScheduleLayout.WEEK_NUMS) {
                 JSONArray arr = content.getJSONArray(weekNum);
                 for (int i = 0; i < arr.length(); i++) {
-                    ClassInfo info = new ClassInfo(arr.getJSONArray(i));
+                    ClassModel info = new ClassModel(arr.getJSONArray(i));
                     if (info.getEndWeek() > maxWeek) maxWeek = info.getEndWeek();
                 }
             }

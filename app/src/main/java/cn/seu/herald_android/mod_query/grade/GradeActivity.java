@@ -19,12 +19,19 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;
 
 public class GradeActivity extends BaseActivity {
 
-    private SortableTableView<GradeItem> tableViewGrade;
+    public static ApiRequest remoteRefreshNotifyDotState() {
+        return new ApiRequest().api("gpa").addUUID()
+                .toCache("herald_grade_gpa",
+                        /** notifyModuleIfChanged: */SettingsHelper.Module.grade);
+    }
+
+    private SortableTableView<GradeModel> tableViewGrade;
     private ProgressDialog progressDialog;
     //展示首修GPA的TV
     private TextView tv_gpa;
@@ -65,7 +72,7 @@ public class GradeActivity extends BaseActivity {
 
         //控件初始化
         //noinspection unchecked
-        tableViewGrade = (SortableTableView<GradeItem>) findViewById(R.id.tableview_grade);
+        tableViewGrade = (SortableTableView<GradeModel>) findViewById(R.id.tableview_grade);
         tv_gpa = (TextView) findViewById(R.id.tv_grade_gpawithoutrevamp);
         tv_gpa2 = (TextView) findViewById(R.id.tv_grade_gpa);
         tv_time = (TextView) findViewById(R.id.tv_grade_time);
@@ -107,11 +114,11 @@ public class GradeActivity extends BaseActivity {
                     tv_time.setText("最后计算时间:" + jsonArray.getJSONObject(0).get("calculate time"));
                 }
                 //数据类型转换
-                GradeItemDataAdapter gradeItemDataAdapter = new GradeItemDataAdapter(this, GradeItem.transformJSONArrayToArrayList(jsonArray));
+                GradeAdapter gradeAdapter = new GradeAdapter(this, GradeModel.transformJSONArrayToArrayList(jsonArray));
                 //设置成绩表单数据
-                tableViewGrade.setDataAdapter(gradeItemDataAdapter);
+                tableViewGrade.setDataAdapter(gradeAdapter);
                 //设置行颜色变化
-                tableViewGrade.setDataRowColoriser(new GradeItemDataAdapter.GradeRowColorizer(getBaseContext()));
+                tableViewGrade.setDataRowColoriser(new GradeAdapter.GradeRowColorizer(getBaseContext()));
             } else {
                 refreshCache();
             }
@@ -138,7 +145,7 @@ public class GradeActivity extends BaseActivity {
     private void refreshCache() {
         progressDialog.show();
         new ApiRequest().api("gpa").addUUID()
-                .toCache("herald_grade_gpa", o -> o)
+                .toCache("herald_grade_gpa")
                 .onFinish((success, code, response) -> {
                     progressDialog.hide();
                     if (success) {
