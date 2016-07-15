@@ -2,15 +2,9 @@ package cn.seu.herald_android.mod_webmodule;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import cn.seu.herald_android.R;
-
-/**
- * Created by heyon on 2016/5/11.
- */
 public class ProgressWebView extends WebView {
 
     private ProgressBar progressbar;

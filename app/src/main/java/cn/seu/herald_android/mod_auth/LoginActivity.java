@@ -1,62 +1,34 @@
 package cn.seu.herald_android.mod_auth;
 
-import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_main.MainActivity;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.ServiceHelper;
-import okhttp3.Call;
+import cn.seu.herald_android.helper.ApiRequest;
 
-public class LoginActivity extends BaseAppCompatActivity {
-    private TextView tv_card;
-    private TextView tv_pwd;
-    private Button btn_login;
-    private ProgressDialog progressDialog;
+public class LoginActivity extends BaseActivity {
+    @BindView(R.id.tv_login_cardnum)
+    TextView tv_card;
+    @BindView(R.id.tv_login_pwd)
+    TextView tv_pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        init();
-    }
-
-
-    private void init() {
-        //空间初始化
-        tv_card = (TextView) findViewById(R.id.tv_login_cardnum);
-        tv_pwd = (TextView) findViewById(R.id.tv_login_pwd);
-
-        //进度进度条
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("登录中");
-
-        //绑定登录按钮点击函数
-        btn_login = (Button) findViewById(R.id.btn_login_login);
-        btn_login.setOnClickListener(v -> {
-            if (tv_card.getText().toString().trim().length() > 0 && tv_pwd.getText().toString().length() > 0) {
-                doLogin();
-            }
-        });
+        setContentView(R.layout.mod_auth__login);
+        ButterKnife.bind(this);
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -69,9 +41,13 @@ public class LoginActivity extends BaseAppCompatActivity {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
+    @OnClick(R.id.btn_login_login)
+    public void loginBtnOnClick() {
+        if (tv_card.getText().toString().trim().equals("") || tv_pwd.getText().toString().equals("")) {
+            return;
+        }
 
-    private void doLogin() {
-        String appid = ApiHelper.getAppId();
+        String appid = ApiHelper.appid.$get();
         String godModePrefix = "IAmTheGodOfHerald|OverrideAppidWith:";
 
         ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -83,98 +59,62 @@ public class LoginActivity extends BaseAppCompatActivity {
             }
         }
 
+        String username = tv_card.getText().toString();
+        String password = tv_pwd.getText().toString();
+
         //登录函数
-        progressDialog.show();
-        btn_login.setEnabled(false);
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.auth_url)
-                .addParams("user", tv_card.getText().toString())
-                .addParams("password", tv_pwd.getText().toString())
-                .addParams("appid", appid)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        e.printStackTrace();
-                        progressDialog.dismiss();
-                        btn_login.setEnabled(true);
-                        //处理Api错误
-                        if (e instanceof SocketTimeoutException) {
-                            showSnackBar("抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
-                        } else if (e instanceof ConnectException) {
-                            showSnackBar("网络连接错误，请检查您的网络连接");
-                        } else if (e.toString().contains("Bad Request")) {
-                            Toast.makeText(LoginActivity.this, "当前客户端版本已过期，请下载最新版本", Toast.LENGTH_LONG).show();
-                            Uri uri = Uri.parse(ServiceHelper.getServiceUrl(ServiceHelper.SERVICE_DOWNLOAD));
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
-                        } else {
-                            showSnackBar("一卡通和统一身份认证密码不匹配，请核对后再试");
-                        }
-                    }
+        showProgressDialog();
+        new ApiRequest().url(ApiHelper.auth_url).noCheck200()
+                .post("user", username)
+                .post("password", password)
+                .post("appid", appid)
+                .onFinish((success, code, response) -> {
 
-                    @Override
-                    public void onResponse(String response) {
-                        //以下两句是登陆时对话框提前消失的罪魁祸首
-                        //progressDialog.dismiss();
-                        //btn_login.setEnabled(true);
-
-                        //showSnackBar("dologin"+response);
-                        getApiHelper().setAuthCache("uuid", response);
-                        //保存用户密码
-                        getApiHelper().setAuth(tv_card.getText().toString(), tv_pwd.getText().toString());
+                    if (response.contains("Unauthorized")) {
+                        hideProgressDialog();
+                        showSnackBar("密码错误，请重试");
+                    } else if (response.contains("Bad Request")) {
+                        Toast.makeText(LoginActivity.this, "当前客户端版本已过期，请下载最新版本", Toast.LENGTH_LONG).show();
+                        Uri uri = Uri.parse("http://android.heraldstudio.com/download");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    } else if (!success) {
+                        hideProgressDialog();
+                        showSnackBar("网络异常，请重试");
+                    } else {
+                        ApiHelper.setAuthCache("uuid", response);
+                        ApiHelper.setAuth(username, password);
                         checkUUID();
                     }
-                });
+                }).run();
     }
 
-
     private void checkUUID() {
-        OkHttpUtils
-                .post()
-                .url(ApiHelper.getQueryApiUrl(ApiHelper.API_USER))
-                .addParams("uuid", getApiHelper().getUUID())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        progressDialog.dismiss();
-                        btn_login.setEnabled(true);
-                        //错误检测
-                        e.printStackTrace();
-                        //showSnackBar("checkuuid+"+e.toString());
-                        if (e instanceof SocketTimeoutException) {
-                            showSnackBar("抱歉，学校服务器又出问题了T.T咱也是无能为力呀");
-                        } else if (e instanceof ConnectException) {
-                            showSnackBar("网络连接错误，请检查您的网络连接");
-                        } else {
-                            showSnackBar("一卡通和统一查询密码不匹配，请核对后再试");
-                        }
-                    }
+        new ApiRequest().api("user").addUUID().toAuthCache("schoolnum", json ->
+            json.getJSONObject("content").getString("schoolnum")
+        ).onFinish((success, code, response) -> {
 
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        btn_login.setEnabled(true);
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 200) {
-                                //如果返回的状态码是200则说明uuid正确，则说明密码正确
-                                startActivity(new Intent(getBaseContext(), MainActivity.class));
-                                finish();
-                            } else {
-                                //如果返回的状态码不是200则说明uuid不对，需要重新输入账号密码
-                                showSnackBar("一卡通和统一查询密码不匹配，请核对后再试");
-                                getApiHelper().doLogout();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showSnackBar("连接登录服务器失败，请检查网络状况，或者核对用户名密码后再试。");
-                            getApiHelper().doLogout();
-                        }
-                    }
-                });
-
+            /**
+             * 注意: 学号的获取关系到统计功能和 srtp api 的正常调用, 千万要保证学号正确!
+             *
+             * 若学号没有正确获取, 由于服务端的缓存机制, 已绑定微信的用户仍然可能看到正确的结果,
+             * 所以开发者在日常使用中几乎不可能发现这种错误, 需要经过专门测试才能确定客户端是否正确获取学号!
+             *
+             * 测试方法如下: (注意 postman 使用时应当保证填写的 uuid 与客户端 uuid 相同)
+             *
+             * 1) 使用 postman, 调用 srtp 接口, schoolnum 参数中填写自己的学号, 应当返回自己的 srtp 信息;
+             * 2) 使用 postman, 调用 srtp 接口, schoolnum 参数中填写同学A的学号, 应当返回同学A的 srtp 信息;
+             * 3) 使用 postman, 调用 srtp 接口, 不带 schoolnum 参数, 应当返回同学A的 srtp 信息;
+             * 4) 使用客户端刷新 srtp 模块, 应当返回正确的 srtp 信息;
+             * 5) 使用 postman, 调用 srtp 接口, 不带 schoolnum 参数, 应当返回自己的 srtp 信息;
+             **/
+            if (success && ApiHelper.getAuthCache("schoolnum").length() == 8) {
+                hideProgressDialog();
+                AppContext.showMain();
+            } else {
+                hideProgressDialog();
+                ApiHelper.doLogout("用户不存在或网络异常, 请重试");
+            }
+        }).run();
     }
 }

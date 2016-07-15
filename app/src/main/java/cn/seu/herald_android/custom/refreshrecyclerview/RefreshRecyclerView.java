@@ -5,26 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.zip.Inflater;
-
-/**
- * Created by heyon on 2016/5/10.
- */
 public class RefreshRecyclerView extends RecyclerView {
-
 
     onFooterListener onFooterListener = null;
     int lastLoadIndex = 0;
     RecyclerView.OnScrollListener scrollListener = new OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-        }
-
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
@@ -60,10 +48,6 @@ public class RefreshRecyclerView extends RecyclerView {
         this.onFooterListener = onFooterListener;
         this.addOnScrollListener(scrollListener);
     }
-
-
-
-
 
     public static abstract class RefreshRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         final static int HEADER = 0;
@@ -154,10 +138,6 @@ public class RefreshRecyclerView extends RecyclerView {
             public HeaderViewHolder(View itemView) {
                 super(itemView);
                 this.itemView = itemView;
-            }
-
-            public View getItemView() {
-                return itemView;
             }
         }
     }

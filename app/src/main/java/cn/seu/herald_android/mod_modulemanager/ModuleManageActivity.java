@@ -1,37 +1,30 @@
 package cn.seu.herald_android.mod_modulemanager;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
+import cn.seu.herald_android.helper.AppModule;
+import cn.seu.herald_android.helper.SettingsHelper;
 
-public class ModuleManageActivity extends BaseAppCompatActivity {
+public class ModuleManageActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_module_manage);
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-        enableSwipeBack();
-        init();
-    }
-
-    private void init() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        setContentView(R.layout.mod_mod);
 
         //获得所有模块列表
-        ArrayList<SeuModule> seuModuleArrayList = getSettingsHelper().getSeuModuleList();
+        List<AppModule> seuModuleArrayList = Arrays.asList(SettingsHelper.Module.array);
         //根据模块列表构造列表
         ListView listView = (ListView) findViewById(R.id.lsit_edit_shortcut);
-        listView.setAdapter(new ShortCutBoxEditAdapter(getBaseContext(),
-                R.layout.listviewitem_edit_shortcut, seuModuleArrayList));
+        if (listView != null) {
+            listView.setAdapter(new ModuleManageAdapter(getBaseContext(),
+                    R.layout.mod_mod__item, seuModuleArrayList));
+        }
     }
 }

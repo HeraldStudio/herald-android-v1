@@ -1,11 +1,8 @@
 package cn.seu.herald_android.mod_query.srtp;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,53 +13,38 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
 
-public class SrtpActivity extends BaseAppCompatActivity {
+public class SrtpActivity extends BaseActivity {
 
-    private RecyclerView recyclerView_srtp;
-    private TextView tv_total_credit;
+    public static ApiRequest remoteRefreshNotifyDotState() {
+        return new ApiRequest().api("srtp").addUUID().post("schoolnum", ApiHelper.getSchoolnum())
+                .toCache("herald_srtp",
+                        /** notifyModuleIfChanged: */SettingsHelper.Module.srtp);
+    }
+
+    @BindView(R.id.recyclerview_srtp)
+    RecyclerView recyclerView_srtp;
+    @BindView(R.id.tv_totalcredit)
+    TextView tv_total_credit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_srtp);
-        init();
+        setContentView(R.layout.mod_que_srtp);
+        ButterKnife.bind(this);
         loadCache();
     }
 
-    private void init() {
-        setupToolBar();
-        //回收列表
-        recyclerView_srtp = (RecyclerView) findViewById(R.id.recyclerview_srtp);
-        //总学分
-        tv_total_credit = (TextView) findViewById(R.id.tv_totalcredit);
-    }
-
-    private void setupToolBar() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-
-
-        //设置伸缩标题禁用
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setTitleEnabled(false);
-        //适配4.4的沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSrtpprimary));
-        enableSwipeBack();
-    }
-
     private void loadCache() {
-        String cache = getCacheHelper().getCache("herald_srtp");
+        String cache = CacheHelper.get("herald_srtp");
         if (!cache.equals("")) {
             try {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
@@ -70,14 +52,14 @@ public class SrtpActivity extends BaseAppCompatActivity {
                 String total = jsonArray.getJSONObject(0).getString("total");
                 tv_total_credit.setText(total);
                 //加载列表
-                ArrayList<SrtpItem> arrayList = SrtpItem.transformJSONArrayToArrayList(jsonArray);
+                ArrayList<SrtpModel> arrayList = SrtpModel.transformJSONArrayToArrayList(jsonArray);
                 //适配器
                 SrtpAdapter srtpAdapter = new SrtpAdapter(this, arrayList);
                 recyclerView_srtp.setLayoutManager(new LinearLayoutManager(this));
                 recyclerView_srtp.setAdapter(srtpAdapter);
             } catch (JSONException e) {
                 e.printStackTrace();
-                showSnackBar("缓存解析失败，请刷新后再试");
+                showSnackBar("解析失败，请刷新");
             }
         } else {
             refreshCache();
@@ -102,19 +84,21 @@ public class SrtpActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_SRTP).addUUID()
-                .post("schoolnum", getApiHelper().getSchoolnum())
+        new ApiRequest().api("srtp").addUUID()
+                .post("schoolnum", ApiHelper.getSchoolnum())
                 .toCache("herald_srtp", o -> {
                     if (o.getJSONArray("content").length() == 1) {
-                        showSnackBar("暂无Srtp信息，赶紧去参加课外研学活动吧");
-                    } else {
-                        showSnackBar("已获取最新srtp信息");
+                        showSnackBar("你还没有参加课外研学项目");
                     }
                     return o;
                 })
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    if (success) loadCache();
+                    if (success) {
+                        loadCache();
+                    } else {
+                        showSnackBar("刷新失败，请重试");
+                    }
                 }).run();
     }
 }

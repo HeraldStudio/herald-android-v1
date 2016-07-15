@@ -24,13 +24,13 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 class PagesAdapter extends PagerAdapter {
 
-    private Map<Integer, List<ExerciseInfo>> multiMonths;
+    private Map<Integer, List<PedetailRecordModel>> multiMonths;
 
     private List<View> viewList;
 
     private List<Integer> subCounts;
 
-    public PagesAdapter(Map<Integer, List<ExerciseInfo>> months, Context context, Runnable refresh) {
+    public PagesAdapter(Map<Integer, List<PedetailRecordModel>> months, Context context, Runnable refresh) {
         // 复制这个键值对
         multiMonths = new HashMap<>(months);
         viewList = new ArrayList<>();
@@ -45,10 +45,10 @@ class PagesAdapter extends PagerAdapter {
 
         for (Integer k : keyList) {
 
-            List<ExerciseInfo> page = multiMonths.get(k);
+            List<PedetailRecordModel> page = multiMonths.get(k);
 
             // 实例化页面视图
-            View v = LayoutInflater.from(context).inflate(R.layout.viewpager_pedetail, null);
+            View v = LayoutInflater.from(context).inflate(R.layout.mod_que_pedetail__view_pager, null);
 
             // 设置月份标题
             TextView tv = (TextView) v.findViewById(R.id.month_title);

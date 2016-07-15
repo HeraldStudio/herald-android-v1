@@ -2,9 +2,7 @@ package cn.seu.herald_android.mod_query.seunet;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,53 +14,32 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
-public class SeunetActivity extends BaseAppCompatActivity {
-    //显示已用流量比例的饼状图
-    private PieChartView pieChartView_wlan;
-    //钱包余额
-    private TextView tv_money_left;
-    //已用流量
-    private TextView tv_used;
+public class SeunetActivity extends BaseActivity {
+
+    @BindView(R.id.chartwlan)
+    PieChartView pieChartView_wlan;
+    @BindView(R.id.tv_extra_money)
+    TextView tv_money_left;
+    @BindView(R.id.tv_used)
+    TextView tv_used;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seunet);
-        init();
-    }
+        setContentView(R.layout.mod_que_seunet);
+        ButterKnife.bind(this);
 
-    private void init() {
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-
-        //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
-        //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorSeuNetprimary));
-        enableSwipeBack();
-        //初始化流量显示饼状图
-        pieChartView_wlan = (PieChartView) findViewById(R.id.chartwlan);
-        //设置饼图不旋转
         pieChartView_wlan.setChartRotationEnabled(false);
-        //余额显示的tv
-        tv_money_left = (TextView) findViewById(R.id.tv_extra_money);
-        //已用流量
-        tv_used = (TextView) findViewById(R.id.tv_used);
 
         //先尝试加载缓存再刷新
         loadCache();
@@ -70,19 +47,14 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_sync, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
             refreshCache();
         }
@@ -92,7 +64,7 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void loadCache() {
         //尝试加载缓存
-        String cache = getCacheHelper().getCache("herald_nic");
+        String cache = CacheHelper.get("herald_nic");
         if (!cache.equals("")) {
             //如果缓存不为空
             try {
@@ -109,10 +81,10 @@ public class SeunetActivity extends BaseAppCompatActivity {
                 }
                 tv_used.setText(used);
                 //设置统计饼状图
-                setupChart(json_cache.getJSONObject("content"));
+                setupChart(json_cache.getJSONObject("content"),pieChartView_wlan);
             } catch (JSONException e) {
                 e.printStackTrace();
-                showSnackBar("缓存解析错误，请重新刷新后再试");
+                showSnackBar("解析失败，请刷新");
             }
         } else {
             List<SliceValue> values = new ArrayList<>();
@@ -130,50 +102,53 @@ public class SeunetActivity extends BaseAppCompatActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_NIC).addUUID()
+        new ApiRequest().api("nic").addUUID()
                 .toCache("herald_nic", o -> o)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
 
-    private void setupChart(JSONObject json) {
+    public static void setupChart(JSONObject json, PieChartView pieChartView) {
         if (json == null)
             return;
         try {
             //seu-wlan
             if (json.getJSONObject("web").getString("state").equals("未开通")) {
-                List<SliceValue> values = new ArrayList<>();
-                //设置饼状图总的值为1，即不分块，因为未开通
-                SliceValue sliceValue = new SliceValue(1f);
-                sliceValue.setLabel("未开通");
-                sliceValue.setColor(Color.rgb(220, 220, 220));
-                values.add(sliceValue);
-                PieChartData pieChartData = new PieChartData(values);
-                //为控件设置数据
-                pieChartView_wlan.setPieChartData(pieChartData);
+                setEmptyPie(pieChartView);
             } else {
                 String str_use = json.getJSONObject("web").getString("used");
-                setUsedPercentage(str_use, pieChartView_wlan);
+                setUsedPercentage(str_use, pieChartView);
             }
-
         } catch (JSONException | NumberFormatException e) {
             e.printStackTrace();
+            setEmptyPie(pieChartView);
         }
     }
 
+    public static void setEmptyPie(PieChartView pieChartView) {
+        List<SliceValue> values = new ArrayList<>();
+        SliceValue sliceValue = new SliceValue(1f);
+        sliceValue.setColor(Color.rgb(220, 220, 220));
+        values.add(sliceValue);
+        PieChartData pieChartData = new PieChartData(values);
+        //为控件设置数据
+        pieChartView.setPieChartData(pieChartData);
+    }
 
-    private void setUsedPercentage(String used_str, PieChartView pieChartView) {
+    public static void setUsedPercentage(String used_str, PieChartView pieChartView) {
         //根据获取的已用流量加载下面的饼状图，展示已用百分比
         double used = Double.parseDouble(used_str.split(" ")[0]);
         String unit = used_str.split(" ")[1];
         if (unit.equals("B")) used = 0d;
         double used_per = 0;
-        //TODO 总流量不要写死
+
         if (unit.equals("KB")) used_per = used / (1024d * 5d * 1024d);
         if (unit.equals("MB")) used_per = used / (1024d * 5d);
         if (unit.equals("GB")) {
@@ -191,11 +166,11 @@ public class SeunetActivity extends BaseAppCompatActivity {
         DecimalFormat df = new DecimalFormat( "#.## ");
         //设置已用的流量部分的颜色
         sliceValue_used.setLabel(df.format(used_per * 100) + "%");
-        sliceValue_used.setColor(ContextCompat.getColor(this, R.color.colorSeuNetaccent));
+        sliceValue_used.setColor(ContextCompat.getColor(pieChartView.getContext(), R.color.colorSeuNetaccent));
         //设置未使用的流量部分的颜色
         sliceValue_left.setLabel(df.format((1f - used_per) * 100) + "%");
         sliceValue_left.setTarget((float)used_per * 100);
-        sliceValue_left.setColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
+        sliceValue_left.setColor(ContextCompat.getColor(pieChartView.getContext(), R.color.colorSeuNetprimary));
         values.add(sliceValue_used);
         values.add(sliceValue_left);
         PieChartData pieChartData = new PieChartData(values);

@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 
 /**
  * MarkedCalendarView | 自定义日历控件
@@ -27,12 +27,9 @@ public class MarkedCalendarView extends FrameLayout {
 
     // 用于保存本页每个日期控件的链表
     private List<View> views;
+
     // 对话框中刷新按钮的点击事件
     public DialogInterface.OnClickListener refreshListener;
-    // 本页和今天的时间
-    private Calendar thisPage;
-    private Calendar today;
-    private int yearMonth;
 
     // Constructor
     public MarkedCalendarView(Context context, AttributeSet attrs) {
@@ -50,12 +47,11 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 初始化月历页面
-    public void initialize(int yearMonth, List<ExerciseInfo> page) {
+    public void initialize(int yearMonth, List<PedetailRecordModel> page) {
 
-        this.yearMonth = yearMonth;
-        today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.SUNDAY);
-        thisPage = Calendar.getInstance();
+        Calendar thisPage = Calendar.getInstance();
         thisPage.setFirstDayOfWeek(Calendar.SUNDAY);
 
         // 首先将本页的日期改为1，防止当天日期超出本页所在月的日期范围造成月份显示错误
@@ -80,7 +76,7 @@ public class MarkedCalendarView extends FrameLayout {
 
         // 开头按1号的星期数增加空格
         for (int i = Calendar.SUNDAY; i < day; i++) {
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.gridviewitem_pedetail, null);
+            View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_pedetail__cell, null);
             TextView tv = (TextView) v.findViewById(R.id.textView);
             tv.setVisibility(INVISIBLE);
             gv.addView(v);
@@ -91,7 +87,7 @@ public class MarkedCalendarView extends FrameLayout {
             Calendar dt = Calendar.getInstance();
             dt.setFirstDayOfWeek(Calendar.SUNDAY);
             dt.set(year, month, i);
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.gridviewitem_pedetail, null);
+            View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_pedetail__cell, null);
 
             // 当月当天，显示“今天”标记
             int todayYearMonth = today.get(Calendar.YEAR) * 12 + today.get(Calendar.MONTH);
@@ -105,8 +101,8 @@ public class MarkedCalendarView extends FrameLayout {
 
             // 将格子添加到容器和链表
             v.setOnClickListener(v1 -> {
-                if (getContext() instanceof BaseAppCompatActivity) {
-                    ((BaseAppCompatActivity) getContext()).showSnackBar("该日无跑操记录");
+                if (getContext() instanceof BaseActivity) {
+                    ((BaseActivity) getContext()).showSnackBar("该日无跑操记录");
                 }
             });
             gv.addView(v);
@@ -123,22 +119,18 @@ public class MarkedCalendarView extends FrameLayout {
     }
 
     // 为特定跑操记录添加标记，同时指定其弹出对话框中显示的数据
-    private void setMarked(ExerciseInfo info) {
+    private void setMarked(PedetailRecordModel info) {
         View v = views.get(info.getDateTime().get(Calendar.DATE) - 1);
         TextView tv = (TextView) v.findViewById(R.id.textView);
         tv.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.pedetail_grid_selector_highlight));
         tv.setTextColor(Color.WHITE);
 
         v.setOnClickListener(view -> {
-            if (getContext() instanceof BaseAppCompatActivity) {
-                ((BaseAppCompatActivity) getContext()).showSnackBar(info.toString());
+            if (getContext() instanceof BaseActivity) {
+                ((BaseActivity) getContext()).showSnackBar(info.toString());
             } else {
                 new AlertDialog.Builder(getContext()).setTitle("跑操记录详情").setMessage(info.toString()).show();
             }
         });
-    }
-
-    public int getYearMonth() {
-        return yearMonth;
     }
 }

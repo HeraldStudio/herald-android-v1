@@ -11,10 +11,6 @@ import java.util.Calendar;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 
-
-/**
- * Created by heyon on 2016/5/9.
- */
 public class AfterSchoolActivityItem {
     String title;
     String introduciton;
@@ -79,13 +75,11 @@ public class AfterSchoolActivityItem {
     }
 
     public Uri getDetailUri(){
-        Uri uri = Uri.parse(this.detail_url);
-        return uri;
+        return Uri.parse(this.detail_url);
     }
 
     public Uri getPicUrl(){
-        Uri uri = Uri.parse(this.pic_url);
-        return uri;
+        return Uri.parse(this.pic_url);
     }
 
     public String getTag(){
@@ -98,7 +92,7 @@ public class AfterSchoolActivityItem {
 
 
 
-    public static ArrayList<AfterSchoolActivityItem> transfromJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<AfterSchoolActivityItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
         ArrayList<AfterSchoolActivityItem> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonItem = jsonArray.getJSONObject(i);

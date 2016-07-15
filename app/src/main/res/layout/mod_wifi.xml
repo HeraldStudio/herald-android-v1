@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorGray"
+    tools:context=".mod_wifi.WifiActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linelayout_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:paddingTop="10dp"
+                    android:text="校园网详情"
+                    android:textColor="@color/colorSeuNetprimary_dark"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:paddingTop="10dp"
+                    android:text="未开通"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:paddingTop="10dp"
+                    android:text="已使用"
+                    android:textColor="@color/colorSeuNetaccent"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:paddingTop="10dp"
+                    android:text="未使用"
+                    android:textColor="@color/colorSeuNetprimary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <lecho.lib.hellocharts.view.PieChartView
+                android:id="@+id/chartwlan"
+                android:padding="20dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_below="@+id/linelayout_tips" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_below="@+id/linelayout_tips"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:weightSum="4"
+                android:id="@+id/layout_info"
+                android:layout_toRightOf="@id/chartwlan">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/tv_user"
+                    android:text="登录用户"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/tv_ip"
+                    android:text="当前ip"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/tv_index"
+                    android:text="登录设备数"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/tv_expire"
+                    android:text="剩余天数"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btn_connect_wifi"
+                android:layout_below="@+id/chartwlan"
+                android:text="连接校园网"
+                android:textColor="@color/white"
+                android:background="@drawable/seunet_btn_primary_selector"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btn_disconnect_wifi"
+                android:layout_below="@+id/btn_connect_wifi"
+                android:text="断开连接"
+                android:textColor="@color/white"
+                android:background="@drawable/seunet_btn_accent_selector"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btn_refresh_wifi"
+                android:layout_below="@+id/btn_disconnect_wifi"
+                android:text="刷新流量使用情况"
+                android:textColor="@color/white"
+                android:background="@drawable/seunet_btn_primary_selector"/>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -9,26 +9,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
     private Context context;
-    private ArrayList<SrtpItem> list;
+    private ArrayList<SrtpModel> list;
 
-    public SrtpAdapter(Context context, ArrayList<SrtpItem> list) {
+    public SrtpAdapter(Context context, ArrayList<SrtpModel> list) {
         this.context = context;
         this.list = list;
     }
 
     @Override
     public SrtpHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.recyclerviewitem_srtp, null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_srtp__item, null);
         return new SrtpHolder(view);
     }
 
     @Override
     public void onBindViewHolder(SrtpHolder holder, int position) {
-        SrtpItem srtpItem = list.get(position);
+        SrtpModel srtpItem = list.get(position);
         holder.tv_date.setText(srtpItem.getDate());
         holder.tv_credit.setText(srtpItem.getCredit());
         holder.tv_project.setText(srtpItem.getProject());
@@ -53,22 +55,22 @@ public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
     }
 
     class SrtpHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.tv_date)
         TextView tv_date;
+        @BindView(R.id.tv_credit)
         TextView tv_credit;
+        @BindView(R.id.tv_project)
         TextView tv_project;
+        @BindView(R.id.tv_department)
         TextView tv_department;
+        @BindView(R.id.tv_type)
         TextView tv_type;
+        @BindView(R.id.tv_totalcredit)
         TextView tv_totalCredit;
 
         public SrtpHolder(View itemView) {
             super(itemView);
-            tv_date = (TextView) itemView.findViewById(R.id.tv_date);
-            tv_credit = (TextView) itemView.findViewById(R.id.tv_credit);
-            tv_project = (TextView) itemView.findViewById(R.id.tv_project);
-            tv_department = (TextView) itemView.findViewById(R.id.tv_department);
-            tv_type = (TextView) itemView.findViewById(R.id.tv_type);
-            tv_totalCredit = (TextView) itemView.findViewById(R.id.tv_totalcredit);
+            ButterKnife.bind(this, itemView);
         }
     }
-
 }

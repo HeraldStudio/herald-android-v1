@@ -9,14 +9,36 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 class ExperimentExpandAdapter extends BaseExpandableListAdapter {
+
+    static class ViewHolder {
+        @BindView(R.id.title)
+        TextView tv_name;
+        @BindView(R.id.tv_date)
+        TextView tv_date;
+        @BindView(R.id.tv_day)
+        TextView tv_day;
+        @BindView(R.id.subtitle)
+        TextView tv_teacher;
+        @BindView(R.id.tv_address)
+        TextView tv_address;
+        @BindView(R.id.tv_grade)
+        TextView tv_grade;
+
+        public ViewHolder(View v) {
+            ButterKnife.bind(this, v);
+        }
+    }
+
     private ArrayList<String> parentViews;
-    private ArrayList<ArrayList<ExperimentItem>> childViews;
+    private ArrayList<ArrayList<ExperimentModel>> childViews;
     private Context context;
 
-    public ExperimentExpandAdapter(Context context, ArrayList<String> parentViews, ArrayList<ArrayList<ExperimentItem>> childViews) {
+    public ExperimentExpandAdapter(Context context, ArrayList<String> parentViews, ArrayList<ArrayList<ExperimentModel>> childViews) {
         this.parentViews = parentViews;
         this.childViews = childViews;
         this.context = context;
@@ -60,7 +82,7 @@ class ExperimentExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String title = (String) getGroup(groupPosition);
-        View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_parentitem_experiment, null);
+        View contentView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__item_parent, null);
         TextView view = (TextView) contentView.findViewById(R.id.tv_type_expriment);
         view.setText(title);
         return contentView;
@@ -69,22 +91,23 @@ class ExperimentExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_childitem_experiment, null);
-        ExperimentItem experimentItem = (ExperimentItem) getChild(groupPosition, childPosition);
-        TextView tv_name = (TextView) contentView.findViewById(R.id.title);
-        TextView tv_date = (TextView) contentView.findViewById(R.id.tv_date);
-        TextView tv_day = (TextView) contentView.findViewById(R.id.tv_day);
-        TextView tv_teacher = (TextView) contentView.findViewById(R.id.subtitle);
-        TextView tv_address = (TextView) contentView.findViewById(R.id.tv_address);
-        TextView tv_grade = (TextView) contentView.findViewById(R.id.tv_grade);
-        tv_name.setText(experimentItem.name);
-        tv_date.setText("实验日期：" + experimentItem.date);
-        tv_day.setText("时间段：" + experimentItem.time);
-        tv_teacher.setText("指导老师：" + experimentItem.teacher);
-        tv_address.setText("实验地点：" + experimentItem.address);
-        experimentItem.grade = experimentItem.grade.replace("null", "");
-        tv_grade.setText(experimentItem.grade);
-        return contentView;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__item_child, null);
+            convertView.setTag(new ViewHolder(convertView));
+        }
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+
+        ExperimentModel experimentModel = (ExperimentModel) getChild(groupPosition, childPosition);
+
+        holder.tv_name.setText(experimentModel.name);
+        holder.tv_date.setText("实验日期：" + experimentModel.date);
+        holder.tv_day.setText("时间段：" + experimentModel.time);
+        holder.tv_teacher.setText("指导老师：" + experimentModel.teacher);
+        holder.tv_address.setText("实验地点：" + experimentModel.address);
+
+        holder.tv_grade.setText(experimentModel.grade.replace("null", ""));
+
+        return convertView;
     }
 
     @Override

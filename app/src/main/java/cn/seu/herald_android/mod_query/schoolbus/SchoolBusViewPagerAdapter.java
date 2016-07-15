@@ -35,4 +35,9 @@ class SchoolBusViewPagerAdapter extends FragmentPagerAdapter {
         fragmentArrayList.add(fragment);
         titleArrayList.add(title);
     }
+
+    public void removeAll(){
+        titleArrayList.clear();
+        fragmentArrayList.clear();
+    }
 }

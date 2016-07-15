@@ -2,33 +2,22 @@ package cn.seu.herald_android.mod_communicate;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.ApiRequest;
 
-public class FeedbackActivity extends BaseAppCompatActivity {
+public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorFeedbackprimary));
-        enableSwipeBack();
+        setContentView(R.layout.mod_com__feedback);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
@@ -44,11 +33,15 @@ public class FeedbackActivity extends BaseAppCompatActivity {
         if (id == R.id.action_send) {
             EditText et = (EditText) findViewById(R.id.editText);
             EditText et_contact = (EditText)findViewById(R.id.tv_contact);
-            String content = "[来自Android版]" + et.getText().toString() + "[联系方式：" + et_contact.getText() +"]";
+            String content = null;
+            if (et != null && et_contact != null) {
+                content = "[来自Android版] " + et.getText().toString() + " [联系方式：" + et_contact.getText() + "]";
+            }
 
             showProgressDialog();
-            new ApiRequest(this).url(ApiHelper.feedback_url)
-                    .post("cardnum", getApiHelper().getUserName(), "content", content)
+            new ApiRequest().url(ApiHelper.feedback_url)
+                    .post("cardnum", ApiHelper.getUserName(),
+                            "content", content)
                     .onFinish((success, code, response) -> {
                         hideProgressDialog();
                         if (success) {
@@ -56,6 +49,8 @@ public class FeedbackActivity extends BaseAppCompatActivity {
                             //延时展示信息然后退出
                             Handler handler = new Handler();
                             handler.postDelayed(this::finish,2000);
+                        } else {
+                            showSnackBar("发送失败，请重试");
                         }
                     }).run();
         }

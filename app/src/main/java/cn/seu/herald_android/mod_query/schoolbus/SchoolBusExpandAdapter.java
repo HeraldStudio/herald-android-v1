@@ -15,10 +15,10 @@ import cn.seu.herald_android.R;
 
 class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
     private String[] titles;
-    private ArrayList<ArrayList<SchoolBusItem>> childViews;
+    private ArrayList<ArrayList<SchoolBusModel>> childViews;
     private Context context;
 
-    public SchoolBusExpandAdapter(Context context, String[] titles, ArrayList<ArrayList<SchoolBusItem>> childViews) {
+    public SchoolBusExpandAdapter(Context context, String[] titles, ArrayList<ArrayList<SchoolBusModel>> childViews) {
         this.titles = titles;
         this.childViews = childViews;
         this.context = context;
@@ -62,7 +62,7 @@ class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String title = (String) getGroup(groupPosition);
-        View contentView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_parentitem_schoolbus, null);
+        View contentView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_schoolbus__fragment__item_parent, null);
         TextView view = (TextView) contentView.findViewById(R.id.tv_direction_bus);
         view.setText(title);
         return contentView;
@@ -72,9 +72,9 @@ class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(this.context).inflate(R.layout.expandablelistview_childitem_schoolbus, null);
+            convertView = LayoutInflater.from(this.context).inflate(R.layout.mod_que_schoolbus__fragment__item_child, null);
         }
-        SchoolBusItem schoolBusItem = (SchoolBusItem) getChild(groupPosition, childPosition);
+        SchoolBusModel schoolBusItem = (SchoolBusModel) getChild(groupPosition, childPosition);
         TextView tv_period = (TextView) convertView.findViewById(R.id.tv_schoolbusitem_period);
         TextView tv_time = (TextView) convertView.findViewById(R.id.tv_schoolbusitem_time);
         //判断是否是当前时间的区间

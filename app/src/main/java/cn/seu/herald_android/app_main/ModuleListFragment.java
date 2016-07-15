@@ -13,11 +13,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.helper.AppModule;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
-import cn.seu.herald_android.mod_modulemanager.SeuModule;
 
 public class ModuleListFragment extends Fragment {
 
@@ -26,14 +29,19 @@ public class ModuleListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.fragment_main_modules, container, false);
+        contentView = inflater.inflate(R.layout.app_main__fragment_modules, container, false);
         loadModuleList();
+
+        // 监听模块设置改变事件
+        SettingsHelper.addModuleSettingsChangeListener(() -> {
+            loadModuleList();
+        });
         return contentView;
     }
 
     //模块管理的按钮
     private View editButton;
-    private ArrayList<SeuModule> seuModuleArrayList = new ArrayList<>();
+    private ArrayList<AppModule> seuModuleArrayList = new ArrayList<>();
 
     @Override
     public void onResume() {
@@ -48,16 +56,19 @@ public class ModuleListFragment extends Fragment {
 
         //获得所有模块列表
         seuModuleArrayList.clear();
-        ArrayList<SeuModule> list = new SettingsHelper(getContext()).getSeuModuleList();
-        for (SeuModule k : list) {
-            if (k.isEnabledShortCut()) seuModuleArrayList.add(k);
+        List<AppModule> list = Arrays.asList(SettingsHelper.Module.array);
+        for (AppModule k : list) {
+            //筛选已开启的模块
+            if (k.cardEnabled.$get() || k.shortcutEnabled.$get()) {
+                seuModuleArrayList.add(k);
+            }
         }
 
         //根据模块列表构造列表
-        ListView listView = (ListView) contentView.findViewById(R.id.list_modules);
+        ListView listView = ButterKnife.findById(contentView, R.id.list_modules);
 
         if (editButton == null) {
-            editButton = getLayoutInflater(null).inflate(R.layout.fragment_module_edit_button, null);
+            editButton = getLayoutInflater(null).inflate(R.layout.app_main__fragment_modules__item_manage, null);
             editButton.setOnClickListener((v) -> {
                 Intent intent = new Intent(getContext(), ModuleManageActivity.class);
                 startActivity(intent);
@@ -68,7 +79,7 @@ public class ModuleListFragment extends Fragment {
         ListAdapter adapter;
         if ((adapter = listView.getAdapter()) == null) {
             listView.setAdapter(new ModuleListAdapter(getContext(),
-                    R.layout.listviewitem_modules, seuModuleArrayList));
+                    R.layout.app_main__fragment_modules__item, seuModuleArrayList));
         } else {
             while (adapter instanceof HeaderViewListAdapter) {
                 adapter = ((HeaderViewListAdapter) adapter).getWrappedAdapter();

@@ -17,8 +17,6 @@ import android.widget.ImageView;
  * Private class created to work around issues with AnimationListeners being
  * called before the animation is actually complete and support shadows on older
  * platforms.
- *
- * @hide
  */
 class CircleImageView extends ImageView {
 
@@ -91,15 +89,6 @@ class CircleImageView extends ImageView {
         if (mListener != null) {
             mListener.onAnimationEnd(getAnimation());
         }
-    }
-
-    /**
-     * Update the background color of the circle image view.
-     *
-     * @param colorRes Id of a color resource.
-     */
-    public void setBackgroundColorRes(int colorRes) {
-        setBackgroundColor(getContext().getResources().getColor(colorRes));
     }
 
     @Override

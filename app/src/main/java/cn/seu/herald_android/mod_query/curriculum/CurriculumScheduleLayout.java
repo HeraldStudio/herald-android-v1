@@ -18,12 +18,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_framework.UI;
 
 /**
  * 课程表视图的实现
@@ -65,8 +68,6 @@ public class CurriculumScheduleLayout extends FrameLayout {
     private boolean curWeek;
     // 表示当前学期课程信息的JSON对象
     private JSONObject obj;
-    // 表示屏幕缩放率（平均每个dp中px的数量）
-    private float density;
     // 当前时间的指示条（仅当本页为当前周、今天非休息日或有课时才会显示）
     private View timeHand;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
@@ -78,15 +79,18 @@ public class CurriculumScheduleLayout extends FrameLayout {
     // 保存当前学期侧栏的键值对
     private Map<String, Pair<String, String>> sidebar;
 
+    private Calendar beginOfTerm;
+
     // 本视图只需要手动创建，不会从xml中创建
     public CurriculumScheduleLayout(Context context, JSONObject obj,
                                     Map<String, Pair<String, String>> sidebar, int week,
-                                    boolean curWeek) {
+                                    boolean curWeek, Calendar beginOfTerm) {
         super(context);
         this.obj = obj;
         this.sidebar = sidebar;
         this.week = week;
         this.curWeek = curWeek;
+        this.beginOfTerm = beginOfTerm;
     }
 
     // 获取手机状态栏高度
@@ -112,9 +116,8 @@ public class CurriculumScheduleLayout extends FrameLayout {
         try {
             // 获取屏幕缩放率、宽度和高度，并计算页面要占的高度（总高度-标题栏高度-系统顶栏高度）
             DisplayMetrics dm = getResources().getDisplayMetrics();
-            density = dm.density;
             width = dm.widthPixels;
-            height = dm.heightPixels - (int) (48 * density) - getStatusBarHeight(getContext());
+            height = dm.heightPixels - UI.dp2px(48) - getStatusBarHeight(getContext());
 
             // 绘制表示各课时的水平分割线
             for (int i = 0; i < PERIOD_COUNT; i++) {
@@ -143,7 +146,10 @@ public class CurriculumScheduleLayout extends FrameLayout {
             }
 
             // 双重列表，用每个子列表表示一天的课程
-            List<List<ClassInfo>> listOfList = new ArrayList<>();
+            List<List<ClassModel>> listOfList = new ArrayList<>();
+
+            // 是否有无法读取的课程, 如辅修课
+            boolean hasInvalid = false;
 
             // 放两个循环是为了先把列数确定下来
             for (int i = 0; i < 7; i++) {
@@ -152,14 +158,18 @@ public class CurriculumScheduleLayout extends FrameLayout {
                 JSONArray array = obj.getJSONArray(WEEK_NUMS[i]);
 
                 // 剔除不属于本周的课程，并将对应的课程添加到对应星期的列表中
-                List<ClassInfo> list = new ArrayList<>();
+                List<ClassModel> list = new ArrayList<>();
                 for (int j = 0; j < array.length(); j++) {
-                    ClassInfo info = new ClassInfo(array.getJSONArray(j));
-                    info.weekNum = WEEK_NUMS_CN[i];
-                    int startWeek = info.getStartWeek();
-                    int endWeek = info.getEndWeek();
-                    if (endWeek >= week && startWeek <= week && info.isFitEvenOrOdd(week))
-                        list.add(info);
+                    try {
+                        ClassModel info = new ClassModel(array.getJSONArray(j));
+                        info.weekNum = WEEK_NUMS_CN[i];
+                        int startWeek = info.getStartWeek();
+                        int endWeek = info.getEndWeek();
+                        if (endWeek >= week && startWeek <= week && info.isFitEvenOrOdd(week))
+                            list.add(info);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        hasInvalid = true;
+                    }
                 }
 
                 // 根据周六或周日无课的天数对列数进行删减
@@ -171,9 +181,14 @@ public class CurriculumScheduleLayout extends FrameLayout {
                 listOfList.add(list);
             }
 
+            // 有无效课程时的提示
+            if (hasInvalid) {
+                AppContext.showMessage("暂不支持导入辅修课，敬请期待后续版本。");
+            }
+
             // 确定好实际要显示的列数后，将每列数据交给子函数处理
             for (int i = 0, j = 0; i < 7; i++) {
-                List<ClassInfo> list = listOfList.get(i);
+                List<ClassModel> list = listOfList.get(i);
                 if (list.size() != 0 || i < 5) {
 
                     setColumnData(
@@ -204,7 +219,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
     // 绘制某一列的课表
     private void setColumnData(
-            List<ClassInfo> list, // 该列的数据
+            List<ClassModel> list, // 该列的数据
             int columnIndex, // 该列在所有要显示的列中的序号
             int dayIndex, // 该列在所有列中的序号
             int dayDelta, // 该列的星期号与今天星期号之差
@@ -214,9 +229,13 @@ public class CurriculumScheduleLayout extends FrameLayout {
         float addition = widenToday ? TODAY_WEIGHT - 1 : 0;
 
         // 绘制星期标题
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.curriculumitem_week_title, null);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(beginOfTerm.getTimeInMillis());
+        cal.roll(Calendar.DATE, (week - 1) * 7 + dayIndex);
+
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_curriculum__cell_week, null);
         TextView week = (TextView) v.findViewById(R.id.week);
-        week.setText(WEEK_NUMS_CN[dayIndex]);
+        week.setText(new SimpleDateFormat("M月d日\n").format(cal.getTime()) + WEEK_NUMS_CN[dayIndex]);
         v.setX((dayDelta > 0 ? columnIndex + addition : columnIndex) * width / (columnsCount + addition));
         v.setY(0);
         v.setLayoutParams(new LayoutParams(
@@ -238,7 +257,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
         // 绘制每节课的方块
         for (int i = 0; i < N; i++) {
-            ClassInfo info = list.get(i);
+            ClassModel info = list.get(i);
 
             CurriculumScheduleBlockLayout block = new CurriculumScheduleBlockLayout(
                     getContext(), info, sidebar.get(info.getClassName()),
@@ -273,7 +292,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
         // 绘制时间指示条
         if (dayDelta == 0 && widenToday) {
             timeHand = new View(getContext());
-            timeHand.setLayoutParams(new LayoutParams((int) (TODAY_WEIGHT * width / (columnsCount + TODAY_WEIGHT - 1)), (int) density * 2));
+            timeHand.setLayoutParams(new LayoutParams((int) (TODAY_WEIGHT * width / (columnsCount + TODAY_WEIGHT - 1)), UI.dp2px(2)));
             timeHand.setX(columnIndex * width / (columnsCount + TODAY_WEIGHT - 1));
             timeHand.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.curriculumtimeHandColor));
             addView(timeHand);
@@ -303,7 +322,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
         // 应用新的位置
         if (timeHand != null && height != 0) {
-            timeHand.setY(height * timeHandPosition - (int) density);
+            timeHand.setY(height * timeHandPosition - UI.dp2px(1));
         }
     }
 

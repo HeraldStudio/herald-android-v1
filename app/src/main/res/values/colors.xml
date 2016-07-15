@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#03A9F4</color>
-    <color name="colorPrimaryDark">#03A9F4</color>
-    <color name="colorAccent">#03A9F4</color>
+    <color name="colorPrimary">#00b4ff</color>
+    <color name="colorPrimaryDark">#00b4ff</color>
+    <color name="colorAccent">#00b4ff</color>
     <color name="colorPrimaryGreenDark">#b4eab3</color>
 
     <!--成绩页面-->
@@ -27,8 +27,8 @@
     <color name="colorExperimentaccent">#607D8B</color>
 
     <!--一卡通-->
-    <color name="colorCardprimary">#03A9F4</color>
-    <color name="colorCardprimary_dark">#03A9F4</color>
+    <color name="colorCardprimary">#00b4ff</color>
+    <color name="colorCardprimary_dark">#00b4ff</color>
     <color name="colorCardaccent">#448AFF</color>
 
     <!--校车查询-->
@@ -72,9 +72,19 @@
 
 
     <!--校历-->
-    <color name="colorScheduleprimary">#8620bc</color>
-    <color name="colorScheduleprimaryDark">#8620bc</color>
-    <color name="colorScheduleaccent">#8620bc</color>
+    <color name="colorScheduleprimary">#e54f40</color>
+    <color name="colorScheduleprimaryDark">#e54f40</color>
+    <color name="colorScheduleaccent">#e54f40</color>
+
+    <!--空教室-->
+    <color name="colorEmptyRoomprimary">#3188cb</color>
+    <color name="colorEmptyRoomprimaryDark">#3188cb</color>
+    <color name="colorEmptyRoomaccent">#3188cb</color>
+
+    <!--权益服务-->
+    <color name="colorQuanYiprimary">#ed7f0e</color>
+    <color name="colorQuanYiprimaryDark">#ed7f0e</color>
+    <color name="colorQuanYiaccent">#ed7f0e</color>
 
 
     <!--生活服务-->
@@ -100,10 +110,10 @@
 
 
     <!--首页四个fragment的主题色-->
-    <color name="colorFragmentCards">#03A9F4</color>
+    <color name="colorFragmentCards">#00b4ff</color>
     <color name="colorFragmentActivitys">#1976d2</color>
     <color name="colorFragmentModules">#1976d2</color>
-    <color name="colorFragmentSettings">#03A9F4</color>
+    <color name="colorFragmentSettings">#00b4ff</color>
 
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
@@ -111,7 +121,7 @@
     <color name="colorCurriculumAccent">#00abd4</color>
     <color name="curriculumstripeColor">#d8d8d8</color>
     <color name="curriculumtimeHandColor">#c031d7ff</color>
-    <color name="curriculumcolorSubtitle">#333</color>
+    <color name="curriculumcolorSubtitle">#666</color>
     <color name="curriculumbackgroundSubtitle">#fff</color>
     <color name="curriculumcolor1">#f5629a</color>
     <color name="curriculumcolor2">#fe8d3f</color>
@@ -128,13 +138,12 @@
     <color name="relaxRed">#FF5252</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
+    <color name="colorAlphawhite">#96ffffff</color>
+    <color name="colorUnenabledGray">#535252</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
     <color name="colorMainPagesBg">#fff</color>
     <color name="colorMainPagesDivider">#eaeaea</color>
-    <color name="colorSwitchOff">#ffffff</color>
-    <color name="colorSwipeRefreshIcon">#ccc</color>
-    <color name="colorSwipeRefreshText">#999</color>
-    <color name="colorSwipeRefreshHeaderBg">#333</color>
-    <color name="colorSwipeRefreshHeaderShadow">#2d2d2d</color>
+
+
 </resources>

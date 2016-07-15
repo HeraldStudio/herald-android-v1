@@ -130,6 +130,20 @@
         <item name="colorAccent">@color/colorScheduleaccent</item>
     </style>
 
+    <style name="EmptyRoomTheme" parent="SubActivityTheme">
+        <!-- 校历风格 -->
+        <item name="colorPrimary">@color/colorEmptyRoomprimary</item>
+        <item name="colorPrimaryDark">@color/colorEmptyRoomprimaryDark</item>
+        <item name="colorAccent">@color/colorEmptyRoomaccent</item>
+    </style>
+
+    <style name="QuanYiTheme" parent="SubActivityTheme">
+        <!-- 校历风格 -->
+        <item name="colorPrimary">@color/colorQuanYiprimary</item>
+        <item name="colorPrimaryDark">@color/colorQuanYiprimaryDark</item>
+        <item name="colorAccent">@color/colorQuanYiaccent</item>
+    </style>
+
     <style name="AfterSchoolActivityTheme" parent="SubActivityTheme">
         <!-- 活动生活风格 -->
         <item name="colorPrimary">@color/colorAfterSchoolPrimary</item>
@@ -156,6 +170,32 @@
         <item name="colorPrimary">@color/colorWebprimary</item>
         <item name="colorPrimaryDark">@color/colorWebprimary_dark</item>
         <item name="colorAccent">@color/colorWebaccent</item>
+    </style>
+
+
+    <style name="WifiAutoLoginTheme" parent="SubActivityTheme">
+        <!-- 校园网自动登录模块 -->
+        <item name="colorPrimary">@color/colorSeuNetprimary</item>
+        <item name="colorPrimaryDark">@color/colorSeuNetprimary_dark</item>
+        <item name="colorAccent">@color/colorSeuNetaccent</item>
+    </style>
+
+
+    <!--自定义tab样式-->
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorAlphawhite</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+
+
+
+    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="AppTheme.Invisible" parent="AppTheme.NoActionBar">

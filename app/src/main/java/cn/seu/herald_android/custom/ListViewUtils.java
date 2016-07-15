@@ -1,7 +1,6 @@
 package cn.seu.herald_android.custom;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import cn.seu.herald_android.R;
 
-/**
- * Created by heyon on 2016/5/14.
- */
 public class ListViewUtils {
     public static void setHeightWithContent(ListView listView){
         //设置高度自适应
@@ -38,31 +34,8 @@ public class ListViewUtils {
         listView.setLayoutParams(params);
     }
 
-    public static void addEmptyTipsView(Context context,ListView listView,int tipImageId,String tipString){
-        View view = LayoutInflater.from(context).inflate(R.layout.content_emptytip,null);
-        int height = listView.getHeight();
-        view.setPadding(0,0,0,0);
-        ImageView imgTip = (ImageView)view.findViewById(R.id.img_emptytip);
-        TextView textView = (TextView)view.findViewById(R.id.tv_emptytip);
-        Picasso.with(context).load(tipImageId).fit().into(imgTip);
-        textView.setText(tipString);
-        listView.addHeaderView(view);
-    }
-
-    public static void addEmptyTipsView(Context context,ListView listView,String tipString){
-        View view = LayoutInflater.from(context).inflate(R.layout.content_emptytip,null);
-        int height = listView.getHeight();
-        view.setPadding(0,0,0,0);
-        ImageView imgTip = (ImageView)view.findViewById(R.id.img_emptytip);
-        TextView textView = (TextView)view.findViewById(R.id.tv_emptytip);
-        imgTip.setVisibility(View.GONE);
-        textView.setText(tipString);
-        listView.addHeaderView(view);
-    }
-
     public static void addDefaultEmptyTipsView(Context context,ListView listView,String tipString){
-        View view = LayoutInflater.from(context).inflate(R.layout.content_emptytip,null);
-        int height = listView.getHeight();
+        View view = LayoutInflater.from(context).inflate(R.layout.custom__view_empty_tip,null);
         view.setPadding(0,0,0,0);
         ImageView imgTip = (ImageView)view.findViewById(R.id.img_emptytip);
         TextView textView = (TextView)view.findViewById(R.id.tv_emptytip);

@@ -2,18 +2,12 @@ package cn.seu.herald_android.mod_query.exam;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,33 +15,37 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.helper.CacheHelper;
 
-public class AddExamActivity extends BaseAppCompatActivity {
+public class AddExamActivity extends BaseActivity {
 
-
-    //选择日期
+    @BindView(R.id.btn_select_date)
     Button btn_select_date;
-    //选择时间
+    @BindView(R.id.btn_select_time)
     Button btn_select_time;
-    //持续时间
+    @BindView(R.id.edit_duratime)
     EditText et_duratime;
-    //考试地点
+    @BindView(R.id.edit_location)
     EditText et_location;
-    //考试名字
+    @BindView(R.id.edit_examname)
     EditText et_examname;
-    //老师姓名
+    @BindView(R.id.edit_teacher)
     EditText et_teacher;
+
     //标识是否日期跟时间已选择
     boolean[] selecteds = new boolean[]{false,false};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_exam);
-        init();
+        setContentView(R.layout.mod_que_exam__add_exam);
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -65,53 +63,30 @@ public class AddExamActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void init(){
-        //toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
+    @OnClick(R.id.btn_select_date)
+    void selectDateOnClick() {
+        Calendar today = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, monthOfYear, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, monthOfYear, dayOfMonth);
+            //判断选择时间是周几
+            String weekday = CalendarUtils.weekdayNames[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+            String date = String.format("%04d-%02d-%02d %s", year, monthOfYear + 1, dayOfMonth, weekday);
+            btn_select_date.setText(date);
+            selecteds[0] = true;
+        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
 
-        setTitle("自定义考试");
-        //沉浸式
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorExamprimary));
-        enableSwipeBack();
-
-        //控件初始化
-        btn_select_date = (Button)findViewById(R.id.btn_select_date);
-        btn_select_time = (Button)findViewById(R.id.btn_select_time);
-        et_duratime = (EditText)findViewById(R.id.edit_duratime);
-        et_location =(EditText)findViewById(R.id.edit_location);
-        et_examname = (EditText)findViewById(R.id.edit_examname);
-        et_teacher = (EditText)findViewById(R.id.edit_teacher);
-
-        //绑定点击事件
-        btn_select_date.setOnClickListener(v -> {
-            Calendar today =  Calendar.getInstance();
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, monthOfYear, dayOfMonth) -> {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year,monthOfYear,dayOfMonth);
-                //判断选择时间是周几
-                String weekday = CalendarUtils.weekdayNames[calendar.get(Calendar.DAY_OF_WEEK)-1];
-                String date = String.format("%04d-%02d-%02d %s",year,monthOfYear+1,dayOfMonth,weekday);
-                btn_select_date.setText(date);
-                selecteds[0] = true;
-            }, today.get(Calendar.YEAR),today.get(Calendar.MONTH),today.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.show();
-        });
-
-        btn_select_time.setOnClickListener(v -> {
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
-                //设定选择时间后的操作
-                String time = String.format("%02d:%02d",hourOfDay,minute);
-                btn_select_time.setText(time);
-                selecteds[1] = true;
-            },0,0,true);
-            timePickerDialog.show();
-        });
+    @OnClick(R.id.btn_select_time)
+    void selectTimeOnClick() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            //设定选择时间后的操作
+            String time = String.format("%02d:%02d", hourOfDay, minute);
+            btn_select_time.setText(time);
+            selecteds[1] = true;
+        }, 0, 0, true);
+        timePickerDialog.show();
     }
 
     void saveDefinedExam(){
@@ -137,14 +112,14 @@ public class AddExamActivity extends BaseAppCompatActivity {
 
         String location = et_location.getText().toString();
         String teacher = et_teacher.getText().toString();
-        if (location.equals(""))location = "暂无地点";
-        try{
-            newexam.put("hour",hour);
-            newexam.put("course",course);
-            newexam.put("time",dateandtime);
-            newexam.put("location",location);
-            newexam.put("teacher",teacher);
-            newexam.put("type","自定义考试");
+        if (location.equals("")) location = "暂无地点";
+        try {
+            newexam.put("hour", hour);
+            newexam.put("course", course);
+            newexam.put("time", dateandtime);
+            newexam.put("location", location);
+            newexam.put("teacher", teacher);
+            newexam.put("type", "自定义考试");
             //获取其他的考试列表
             JSONArray array = getDefinedExamsJSONArray();
             array.put(newexam);
@@ -153,27 +128,25 @@ public class AddExamActivity extends BaseAppCompatActivity {
             showSnackBar("保存成功");
             Handler handler = new Handler();
             //延时0.5秒显示保存成功信息后返回
-            handler.postDelayed((Runnable) () -> finish(), 500);
-        }catch (JSONException e){
+            handler.postDelayed(this::finish, 500);
+        } catch (JSONException e) {
             e.printStackTrace();
             showSnackBar("考试信息不规范，请重新输入");
         }
     }
 
-    JSONArray getDefinedExamsJSONArray(){
-        String cache = getCacheHelper().getCache("herald_exam_definedexam");
-        try{
-            JSONArray array = new JSONArray(cache);
-            return array;
-        }catch (JSONException e){
+    JSONArray getDefinedExamsJSONArray() {
+        String cache = CacheHelper.get("herald_exam_definedexam");
+        try {
+            return new JSONArray(cache);
+        } catch (JSONException e) {
             e.printStackTrace();
-            getCacheHelper().setCache("herald_exam_definedexam",new JSONArray().toString());
+            CacheHelper.set("herald_exam_definedexam", new JSONArray().toString());
         }
         return new JSONArray();
     }
 
     void saveDefinedExamsFromJSONArray(JSONArray array){
-        getCacheHelper().setCache("herald_exam_definedexam",array.toString());
+        CacheHelper.set("herald_exam_definedexam",array.toString());
     }
-
 }

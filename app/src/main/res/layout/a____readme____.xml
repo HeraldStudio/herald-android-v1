@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<!--
+    Layout 资源命名规范自述文件
+    Created by 于海通 2016/7/10
+
+        为方便查找和管理资源, 本项目所有 Layout 资源文件采用自制的命名规范, 希望大家理解, 遵守, 并共同改进该规范.
+    现将命名规范要求说明如下:
+
+    一) 首先引入位置字段的概念.
+
+            每一个 Layout 文件都有其在应用中出现的位置. 我们使用一些具有代表性的标记, 即位置字段, 来表示一个
+        Layout 资源所出现的位置. 每个字段经过各种省略/变换等规则, 最终变换成文件名中的一"段". 规定字段为以下八种:
+        package, activity, fragment, content, dialog, item, cell, view. 我们可以用这八个字段表示所有的
+        Layout 资源文件, 而几乎不会出现歧义. 例如:
+
+        例1) app_main.MainActivity 中的总布局:
+            package app_main -> activity main
+
+        例2) app_main.MainActivity 中出现的 SettingsFragment 的总布局:
+            package app_main -> activity main -> fragment settings
+
+        例3) app_main.MainActivity 中的内容布局:
+            package app_main -> activity main -> content
+
+        例4) app_main.MainActivity 中出现的 SettingsFragment 中打开的 WifiSetAuthDialog 的布局:
+            package app_main -> activity main -> fragment settings -> dialog wifi_set_auth
+
+            item 和 cell 分别表示"一维列表视图的行布局"(例如 ListView 的 item)和"二维表视图的单元格布局"
+        (例如 GridView 的 item).
+
+        例5) app_main.MainActivity 中出现的 ModulesFragment 的列表中表示"模块管理"(manage)的列表项的布局:
+            package app_main -> activity main -> fragment modules -> item manage
+
+        例6) mod_query.pedetail.PedetailActivity 中出现的单元格布局:
+            package mod_query.pedetail -> activity pedetail -> cell
+
+            对于叫不出名字的控件, 一律称为 view. 例如:
+
+        例7) mod_query.pedetail.PedetailActivity 中出现的分页视图(pager)布局:
+            package mod_query.pedetail -> activity pedetail -> view pager
+
+    二) 下面介绍三种省略规则: 单词简写, 惯例省略, 承前省略.
+
+            单词简写是指某些单词我们可以简写, 比如 mod_communicate 可写成 mod_com, mod_modulemanager 可
+        写成 mod_mod 等;
+
+            惯例省略是指, 因为绝大多数布局文件都有 package 和 activity 这两个字段, 故这两个字段的字段名不需
+        写出, 也不会造成歧义. 例如:
+
+        例8) 对 mod_communicate.WelcomeActivity 中的总布局进行单词简写和惯例省略.
+            mod_com -> welcome
+
+        例9) 对例 5 进行惯例省略.
+            app_main -> main -> fragment modules -> item manage
+
+        例10) 对例 6 进行单词简写和惯例省略.
+            mod_que.pedetail -> pedetail -> cell
+
+            承前省略是指, 如果后一个字段与前一个字段内容相似, 前面已经将后面字段内容交代清楚, 像例 9 和
+        例 10 这样, 或者是 mod.auth.LoginActivity 的 auth 和 login, 则后面的字段不需要再重复. 例如:
+
+        例11) 对例 9 进行承前省略.
+            app_main -> fragment modules -> item manage
+
+        例12) 对例 10 进行承前省略.
+            mod_que.pedetail -> cell
+
+            这里 activity 字段被完全省略掉了. 如何快速理解这种写法? 只要从左向右阅读, 发现第一个未被省略的
+        字段名(这里是fragment), 或者碰到文件名结尾, 就意味着你已经进入了前一字段所对应或暗示的activity之内了.
+
+    三) 把上述规则变成文件名, 规定每个字段内用一个下划线代替任何符号, 字段与字段之间用两个下划线隔开.
+
+        例12) 将例 8 表示为 xml 文件名.
+            mod_com__welcome.xml
+
+        例13) 将例 12 表示为 xml 文件名.
+            mod_que_pedetail__cell.xml
+
+    四) 注意: java 代码的 custom 包中应当只放那些已经(或即将)在多处使用的自定义视图. 如果有某个自定义视图
+    只在一处使用, 建议把它的 java 类移至使用它的包内. 对应地, 文件名以 custom__ 开头的布局也应该全都是在多处
+    用到的布局. 这是为了防止同一个布局出现多种可能的命名方法, 导致增加查找文件的难度.
+
+    五) 若某个视图在列表/二维表视图中至多出现一次(例如作为 ListView 的 header 等), 而不会发生复用,
+    建议用 view 字段而不是 item/cell 字段表示.
+
+        按照以上命名规范, 几乎所有的布局都可以用一种不容易产生歧义、可读性强的文件名来表示. 虽然它比以前的命名方式
+    稍长了一些, 但相比之前布局文件命名的乱象, 这种命名方法带来了极大的方便. 希望大家能把这种规范延续下去, 也希望在
+    改进项目可读性的道路上, 能更多地看到大家共同奋斗的身影.
+
+-->
+</View>

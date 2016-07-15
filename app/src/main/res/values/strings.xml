@@ -1,16 +1,12 @@
 <resources>
     <string name="app_name">小猴偷米</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">settings</string>
-    <string name="action_logout">注销登录</string>
 
     <string name="action_search">搜索</string>
     <string name="action_borrowrecord">已借图书</string>
 
     <string name="action_lecturerecord">听讲记录</string>
 
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">登录</string>
 
     <!--首页-->
     <string name="index_title_name">首页</string>
@@ -21,56 +17,27 @@
 
     <!--个人信息相关-->
     <string name="about_us_text">
-        "       东南大学小猴偷米工作室，成立于2016年3月，前身为2001年6月成立的东南大学先声网，代表产品有小猴偷米校园服务微信公众号、东南大学最有影响力毕业生投票网站、东南大学机甲帝国智能体平台等等。\n\n"
+"东南大学小猴偷米工作室，成立于2016年3月，前身为2001年6月成立的东南大学先声网，代表产品有小猴偷米校园服务微信公众号、东南大学最有影响力毕业生投票网站、东南大学机甲帝国智能体平台等等。
 
-        "       作为东大的一份子，我们致力于为东大学子们提供更好的信息平台，涵盖学习、生活、娱乐的服务。\n"
-        "       作为爱好技术的一群人，我们对新的知识，新的世界，始终保持高涨的热情。\n\n"
+作为东大的一份子，我们致力于为东大学子们提供更好的信息平台，涵盖学习、生活、娱乐的服务。
 
-        "       我们为学生社团、组织和各类积极向上、基于学生的活动提供宣传平台，也为有梦想的你，提供成长的平台。\n\n"
+作为爱好技术的一群人，我们对新的知识，新的世界，始终保持高涨的热情。
 
-        "       不论你是热爱技术、擅长设计、精于文编，还是菜鸟小白，只要有兴趣，我们都欢迎你的加入！\n\n"
+我们为学生社团、组织和各类积极向上、基于学生的活动提供宣传平台，也为有梦想的你，提供成长的平台。
+
+不论你是热爱技术、擅长设计、精于文编，还是菜鸟小白，只要有兴趣，我们都欢迎你的加入！"
     </string>
     <string name="contact_us_text">
-        " 如果你需要这样的宣传或是加入我们，请联系：\n"
-        "梁同学   156-5191-8580\n"
-        "如果你对客户端有更好的建议,请联系:\n"
-        "何同学   187-9588-9958\n"
-        "简历投递邮箱：\n"
-        "heraldseu@outlook.com"
+"招新/赞助/合作/活动宣传热线：
+祁同学   151-5187-8798
+
+客户端报障/建议信箱：
+于同学   vhyme@live.cn
+
+简历投递邮箱：
+heraldseu@outlook.com"
     </string>
-    <string name="feedback_text">
-        在这里写下您的珍贵意见~\n\n\n填写联系方式有助于：\n对于您的问题，工作人员会主动联系您，而对于可行性建议，我们会考虑直接投入开发喔~
-    </string>
-    <string name="law_declaration_text">"本软件在许可范围内使用了如下开源框架：
-[Apache 2.0] HelloCharts for Android
-(github.com/lecho/hellocharts-android)
-Copyright 2014 Leszek Wach
-
-[Apache 2.0] OkHttp
-(github.com/square/okhttp)
-
-[Apache 2.0] okhttp-utils
-(github.com/hongyangAndroid/okhttp-utils)
-
-[Apache 2.0] SortableTableView
-(github.com/ISchwarz23/SortableTableView)
-Copyright 2015 Ingo Schwarz
-
-[Apache 2.0] SwitchButton
-(github.com/kyleduo/SwitchButton)
-
-[Apache 2.0] Slidr
-(github.com/r0adkll/Slidr)
-Copyright 2014 Drew Heavner
-
-[Apache 2.0] seismic
-(github.com/square/seismic)
-Copyright 2012 Square, Inc.
-
-[MIT] AndroidImageSlider
-(github.com/daimajia/AndroidImageSlider)
-
-本软件在许可范围内使用了如下设计作品：
+    <string name="law_declaration_text">"本软件在许可范围内使用了如下设计作品：
 [CC-BY] monkey by Zille Sophie Bostinius from the Noun Project
 
 小猴偷米工作室对以上框架和设计作品的作者致以诚挚的感谢。
@@ -84,15 +51,15 @@ Copyright 2012 Square, Inc.
 
     <string name="title_activity_card">一卡通</string>
     <string name="title_activity_experiment">实验助手</string>
-    <string name="title_activity_empty_room">空教室</string>
     <string name="title_activity_seunet">校园网络</string>
     <string name="title_activity_gymreserve">场馆预约</string>
     <string name="title_activity_exam">考试助手</string>
+    <string name="title_activity_add_exam">添加考试</string>
     <string name="title_activity_pedetail">跑操助手</string>
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>
+    <string name="title_activity_webmodule">网页</string>
     <string name="title_activity_srtp">课外研学</string>
-    <string name="title_activity_sys_settings">系统设置</string>
     <string name="title_activity_query">模块管理</string>
     <string name="title_activity_schoolbus">校车助手</string>
     <string name="title_activity_grade">绩点查询</string>
@@ -101,6 +68,9 @@ Copyright 2012 Square, Inc.
     <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>
-    <string name="title_activity_afterschoolactivity">校园生活</string>
+    <string name="title_activity_gym_choose_time">选择时段</string>
+    <string name="title_activity_gym_new_order">新增预约</string>
+    <string name="title_activity_gym_my_order">预约记录</string>
+    <string name="title_activity_gym_add_friend">添加好友</string>
 
 </resources>

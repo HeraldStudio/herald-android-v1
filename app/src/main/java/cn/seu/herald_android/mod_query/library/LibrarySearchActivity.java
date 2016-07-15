@@ -4,11 +4,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,48 +15,33 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
 
 /**
  * Created by corvo on 3/13/16.
  * 图书馆搜书页面Activity
  */
-public class LibrarySearchActivity extends BaseAppCompatActivity
-    implements SearchView.OnQueryTextListener{
+public class LibrarySearchActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+
     // 用于显示搜索结果的列表
-    private RecyclerView recyclerView_search_result;
+    @BindView(R.id.recyclerview_library_searchres)
+    RecyclerView recyclerView_search_result;
     // 搜索框
     private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library_search);
-        init();
-    }
+        setContentView(R.layout.mod_que_library__search);
+        ButterKnife.bind(this);
 
-    private void init() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.libary_toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorLibraryprimary));
-        enableSwipeBack();
-
-
-        //设置展示搜索结果的列表
-        recyclerView_search_result = (RecyclerView)findViewById(R.id.recyclerview_library_searchres);
         recyclerView_search_result.setHasFixedSize(true);
         recyclerView_search_result.setLayoutManager(new LinearLayoutManager(this));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,28 +73,31 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
-
     //搜索按钮点击时运行的函数
     @Override
     public boolean onQueryTextSubmit(String query) {
         //发送搜索请求
         showProgressDialog();
-        new ApiRequest(this).api(ApiHelper.API_LIBRARY_SEARCH).addUUID()
+        new ApiRequest().api("search").addUUID()
                 .post("book", query).onFinish((success, code, response) -> {
             hideProgressDialog();
-            if (success) try {
-                JSONObject json_res = new JSONObject(response);
-                if (json_res.getString("content").equals("[]")) {
-                    showSnackBar("当前书目不存在, 换个关键字试试");
-                    return;
+            if (success) {
+                try {
+                    JSONObject json_res = new JSONObject(response);
+                    if (json_res.getString("content").equals("[]")) {
+                        showSnackBar("当前书目不存在, 换个关键字试试");
+                        return;
+                    }
+                    ArrayList<SearchBookModel> searchResultList =
+                            SearchBookModel.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
+                    loadSearchResult(searchResultList);
+                    // showSnackBar("刷新成功");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    showSnackBar("解析失败，请刷新");
                 }
-                ArrayList<Book> searchResultList =
-                        Book.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
-                loadSearchResult(searchResultList);
-                showSnackBar("刷新成功");
-            } catch (JSONException e) {
-                e.printStackTrace();
-                showSnackBar("数据解析失败，请重试");
+            } else {
+                showSnackBar("刷新失败，请重试");
             }
         }).run();
 
@@ -128,11 +114,9 @@ public class LibrarySearchActivity extends BaseAppCompatActivity
     }
 
     //根据搜索结果加载展示结果的列表
-    private void loadSearchResult(ArrayList<Book> list) {
-        BookAdapter bookAdapter = new BookAdapter(list);
+    private void loadSearchResult(ArrayList<SearchBookModel> list) {
+        SearchBookAdapter bookAdapter = new SearchBookAdapter(list);
         recyclerView_search_result.setAdapter(bookAdapter);
     }
-
-
 }
 

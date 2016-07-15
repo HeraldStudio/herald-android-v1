@@ -1,74 +1,85 @@
 package cn.seu.herald_android.app_main;
 
 import android.animation.ArgbEvaluator;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.widget.ImageButton;
+import android.view.Gravity;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.squareup.seismic.ShakeDetector;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.app_framework.BaseActivity;
+import cn.seu.herald_android.helper.NetworkLoginHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
-import cn.seu.herald_android.mod_wifi.NetworkLoginHelper;
 import me.majiajie.pagerbottomtabstrip.Controller;
 import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
 import me.majiajie.pagerbottomtabstrip.TabItemBuilder;
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
-public class MainActivity extends BaseAppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    @BindView(R.id.main_tabs_pager)
+    ViewPager viewPager;
+    @BindView(R.id.main_tabs)
+    PagerBottomTabLayout pagerBottomTabLayout;
+    @BindView(R.id.main_toptabs)
+    TabLayout topTabLayout;
+    @BindView(R.id.main_toolbar)
+    RelativeLayout mainToolbar;
 
     CardsFragment cardsFragment = new CardsFragment();
-
-    AfterSchoolFragment afterSchoolFragment = new AfterSchoolFragment();
-
+    ActivitiesFragment afterSchoolFragment = new ActivitiesFragment();
     ModuleListFragment moduleListFragment = new ModuleListFragment();
-
-    MyInfoFragment myInfoFragment = new MyInfoFragment();
-
-    //首页tab和viewPager
-    ViewPager viewPager;
-    PagerBottomTabLayout pagerBottomTabLayout;
+    SettingsFragment myInfoFragment = new SettingsFragment();
 
     //用来接收需要切换首页fragment的广播
     BroadcastReceiver changeMainFragmentReceiver;
 
-    //首页的假toolbar
-    RelativeLayout main_toolbar = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        init();
+        setContentView(R.layout.app_main);
+        ButterKnife.bind(this);
+
+        setupPagerBottomTabLayout();
+
+        //放置三个Tab页面
+        attachFragments();
+
+        //注册主页页面变化广播接收器
+        setupChangeMainFragmentReceiver();
     }
 
     private boolean preventShake = false;
 
     private ShakeDetector shakeDetector = new ShakeDetector(() -> {
         //摇一摇自动登陆
-        if (getSettingsHelper().getWifiAutoLogin() && !preventShake) {
+        if (SettingsHelper.wifiAutoLogin.$get() && !preventShake) {
             preventShake = true;
-            new NetworkLoginHelper(this, true).checkAndLogin();
+            new NetworkLoginHelper(this).checkAndLogin();
             new Handler().postDelayed(() -> preventShake = false, 2000);
         }
     });
@@ -84,73 +95,67 @@ public class MainActivity extends BaseAppCompatActivity {
         super.onResume();
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         //设置摇晃力度检测阈值
-        shakeDetector.setSensitivity(20);
+        shakeDetector.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT);
         shakeDetector.start(sensorManager);
     }
 
-    private void init() {
-        //Toolbar初始化
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        setTitle(" " + getTitle().toString().trim());
+    @OnClick(R.id.ibtn_add)
+    void setupMoreButton(View btn) {
+        float dp = getResources().getDisplayMetrics().density;
 
-        //设置状态栏颜色
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
-        //检查个人信息
-        checkAuth();
+        // 快捷方式
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        AlertDialog dialog_more = builder.setCancelable(true).create();
 
-        //控件初始化
-        viewPager = (ViewPager) findViewById(R.id.main_tabs_pager);
-        pagerBottomTabLayout = (PagerBottomTabLayout)findViewById(R.id.main_tabs);
-
-        //放置三个Tab页面
-        attachFragments();
-
-        //注册主页页面变化广播接收器
-        setupChangeMainFragmentReceiver();
-
-
-        runMeasurementDependentTask(() -> {
-            //刷新卡片视图
-            cardsFragment.loadTimelineView(true);
-            //刷新模块视图
-            moduleListFragment.loadModuleList();
+        // 点击外部时关闭
+        dialog_more.setCanceledOnTouchOutside(true);
+        // show函数需要在getWindow前调用
+        dialog_more.show();
+        // 对话框窗口设置布局文件
+        Window window = dialog_more.getWindow();
+        // 自定义背景半透明深度
+        window.setDimAmount(0.25f);
+        // 防止某些机型对话框显示背景色
+        window.setBackgroundDrawable(null);
+        WindowManager.LayoutParams wmlp = window.getAttributes();
+        wmlp.gravity = Gravity.RIGHT | Gravity.TOP;
+        // 此处容易引发布局的ClassCastException，需要注意
+        // 所有写死的尺寸一定要乘以dp，否则会出现兼容问题
+        wmlp.x = (int) (3 * dp);
+        wmlp.y = btn.getLayoutParams().height;
+        wmlp.width = (int) (140 * dp);
+        window.setAttributes(wmlp);
+        window.setContentView(R.layout.app_main__dialog_more);
+        //设置点击项
+        window.findViewById(R.id.content_wifi).setOnClickListener(v1 -> {
+            //设置登录校园网
+            new NetworkLoginHelper(this).checkAndLogin();
         });
-
-        ImageButton ibtn = (ImageButton)findViewById(R.id.ibtn_add);
-        if (ibtn!=null)
-            ibtn.setOnClickListener(o->startActivity(new Intent(MainActivity.this, ModuleManageActivity.class)));
+        window.findViewById(R.id.content_module_manage).setOnClickListener(v1 -> {
+            //设置打开模块管理
+            startActivity(new Intent(MainActivity.this, ModuleManageActivity.class));
+        });
+        window.findViewById(R.id.content_charge).setOnClickListener(v1 -> {
+            //打开充值页面
+            Uri uri = Uri.parse("http://58.192.115.47:8088/wechat-web/login/initlogin.html");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
     }
 
-
-    private void checkAuth() {
-        new ApiRequest(this).api(ApiHelper.API_USER).addUUID().onFinish((success, code, response) -> {
-            if (success) {
-                if (code == 200) try {
-                    JSONObject json_res = new JSONObject(response);
-                    //如果返回的状态码是200则说明uuid正确，则更新各类个人信息
-                    //更新首页欢迎信息和侧边栏信息
-                    JSONObject json_content = json_res.getJSONObject("content");
-                    getApiHelper().setAuthCache("name", json_content.getString("name"));
-                    getApiHelper().setAuthCache("sex", json_content.getString("sex"));
-                    getApiHelper().setAuthCache("cardnum", json_content.getString("cardnum"));
-                    getApiHelper().setAuthCache("schoolnum", json_content.getString("schoolnum"));
-                    myInfoFragment.refreshUsername();
-                } catch (JSONException e) {
-                    getApiHelper().dealApiException(e);
-                }
-                else {
-                    //如果返回的状态码不是200则说明uuid不对，需要重新授权,则注销当前登录
-                    showSnackBar("登录信息已失效，请重新登录");
-                    getApiHelper().doLogout();
-                }
-            }
-        }).run();
+    private void setupPagerBottomTabLayout() {
+        if (SettingsHelper.bottomTabEnabled.$get()) {
+            pagerBottomTabLayout.setVisibility(View.VISIBLE);
+            topTabLayout.setVisibility(View.GONE);
+        } else {
+            pagerBottomTabLayout.setVisibility(View.GONE);
+            topTabLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
         List<Fragment> fragments = Arrays.asList(
-                cardsFragment,afterSchoolFragment,moduleListFragment, myInfoFragment
+                cardsFragment, afterSchoolFragment, moduleListFragment, myInfoFragment
         );
 
         @Override
@@ -165,10 +170,8 @@ public class MainActivity extends BaseAppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return new String[]{"首页","发现","模块", "我的"}[position];
+            return "";
         }
-
-
     };
 
     private void attachFragments() {
@@ -176,12 +179,15 @@ public class MainActivity extends BaseAppCompatActivity {
         viewPager.setAdapter(adapter);
         viewPager.setPageMargin((int) (3 * getResources().getDisplayMetrics().density));
 
+        topTabLayout.setupWithViewPager(viewPager);
+
+
         //各碎片设置状态栏颜色渐变
         int[] statusColors = new int[]{
-                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentCards),
-                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentActivitys),
-                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentModules),
-                ContextCompat.getColor(getBaseContext(),R.color.colorFragmentSettings)};
+                ContextCompat.getColor(getBaseContext(), R.color.colorFragmentCards),
+                ContextCompat.getColor(getBaseContext(), R.color.colorFragmentActivitys),
+                ContextCompat.getColor(getBaseContext(), R.color.colorFragmentModules),
+                ContextCompat.getColor(getBaseContext(), R.color.colorFragmentSettings)};
 
 
         //各页面Tab设置
@@ -206,7 +212,7 @@ public class MainActivity extends BaseAppCompatActivity {
         controller.addTabItemClickListener(new OnTabItemSelectListener() {
             @Override
             public void onSelected(int index, Object tag) {
-                viewPager.setCurrentItem(index,true);
+                viewPager.setCurrentItem(index, true);
             }
 
             @Override
@@ -221,10 +227,10 @@ public class MainActivity extends BaseAppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 //设置滑动时状态栏颜色渐变
                 ArgbEvaluator evaluator = new ArgbEvaluator();
-                int colorOld= statusColors[position];
-                int colorNew = statusColors[(position+1)%statusColors.length];
-                int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld,colorNew);
-                changeStatusBarColor(evaluate);
+                int colorOld = statusColors[position];
+                int colorNew = statusColors[(position + 1) % statusColors.length];
+                int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld, colorNew);
+                setNavigationColor(evaluate);
             }
 
             @Override
@@ -239,38 +245,27 @@ public class MainActivity extends BaseAppCompatActivity {
         });
     }
 
-    public static int MAIN_FRAGMENT_CARDS = 0;
-    public static int MAIN_FRAGMENT_ACTIVITYS = 1;
-    public static int MAIN_FRAGMENT_MODULES = 2;
-    public static int MAIN_FRAGMENT_SETTTINGS = 3;
-
-    public static void sendChangeMainFragmentBroadcast(Context context,int fragmentCode){
+    public static void sendChangeMainFragmentBroadcast(Context context, int fragmentCode) {
         Intent intent = new Intent();
-        intent.putExtra("fragmentCode",fragmentCode);
+        intent.putExtra("fragmentCode", fragmentCode);
         intent.setAction("android.intent.action.MAIN.changeMainFragment");
         context.sendBroadcast(intent);
     }
 
-    public void setupChangeMainFragmentReceiver(){
+    public void setupChangeMainFragmentReceiver() {
         changeMainFragmentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals("android.intent.action.MAIN.changeMainFragment")){
-                    int page = intent.getIntExtra("fragmentCode",0);
-                    viewPager.setCurrentItem(page,true);
+                if (intent.getAction().equals("android.intent.action.MAIN.changeMainFragment")) {
+                    int page = intent.getIntExtra("fragmentCode", 0);
+                    viewPager.setCurrentItem(page, true);
                 }
             }
         };
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.MAIN.changeMainFragment");
-        registerReceiver(changeMainFragmentReceiver,intentFilter);
+        registerReceiver(changeMainFragmentReceiver, intentFilter);
     }
-
-    public void syncModuleSettings() {
-        cardsFragment.loadTimelineView(false);
-        moduleListFragment.loadModuleList();
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -278,17 +273,8 @@ public class MainActivity extends BaseAppCompatActivity {
         unregisterReceiver(changeMainFragmentReceiver);
     }
 
-
-    @Override
-    protected void setStatusBarColor(Activity activity, int color) {
-        //效率比change低，一般先set,之后的颜色用change来做变换
-        super.setStatusBarColor(activity, color);
-        main_toolbar = (RelativeLayout)findViewById(R.id.main_toolbar);
-    }
-
-    @Override
-    protected void changeStatusBarColor(int color) {
-        super.changeStatusBarColor(color);
-        if (main_toolbar!=null) main_toolbar.setBackgroundColor(color);
+    protected void setNavigationColor(int color) {
+        setStatusBarColor(color);
+        mainToolbar.setBackgroundColor(color);
     }
 }

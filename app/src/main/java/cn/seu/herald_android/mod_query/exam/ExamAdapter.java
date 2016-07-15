@@ -8,72 +8,78 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_query.gymreserve.SportTypeItemRecyclerAdapter;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
-    private List<ExamItem> examList;
-    public static interface onItemClickListner{
-       void onItemClick(ExamItem item,int position);
+    private List<ExamModel> examList;
+
+    public interface onItemClickListener {
+        void onItemClick(ExamModel item, int position);
     }
-    private onItemClickListner mListner = null;
+
+    private onItemClickListener mListener = null;
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_time;
-        public TextView tv_course;
-        public TextView tv_location;
-        public TextView tv_teacher;
-        public TextView tv_hour;
-        public TextView tv_numtitle;
-        public TextView tv_num;
+        @BindView(R.id.content)
+        TextView tv_time;
+        @BindView(R.id.title)
+        TextView tv_course;
+        @BindView(R.id.tv_location)
+        TextView tv_location;
+        @BindView(R.id.subtitle)
+        TextView tv_teacher;
+        @BindView(R.id.tv_hour)
+        TextView tv_hour;
+        @BindView(R.id.tv_numtitle)
+        TextView tv_numtitle;
+        @BindView(R.id.num)
+        TextView tv_num;
         public View rootView;
 
         public ViewHolder(View v) {
             super(v);
-            rootView = v;
-            tv_time = (TextView) v.findViewById(R.id.content);
-            tv_course = (TextView) v.findViewById(R.id.title);
-            tv_location = (TextView) v.findViewById(R.id.tv_location);
-            tv_teacher = (TextView) v.findViewById(R.id.subtitle);
-            tv_hour = (TextView) v.findViewById(R.id.tv_hour);
-            tv_numtitle = (TextView) v.findViewById(R.id.tv_numtitle);
-            tv_num = (TextView) v.findViewById(R.id.num);
+            ButterKnife.bind(this, rootView = v);
         }
     }
 
-    public void setOnItemClickListner(onItemClickListner mlistner){
-        this.mListner = mlistner;
+    public void setOnItemClickListener(onItemClickListener mlistner) {
+        this.mListener = mlistner;
     }
-    public ExamAdapter(List<ExamItem> exams) {
+
+    public ExamAdapter(List<ExamModel> exams) {
         this.examList = exams;
     }
 
     @Override
     public ExamAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.listviewitem_exam, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mod_que_exam__item, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ExamItem examItem = examList.get(position);
-        holder.tv_time.setText("时间：" + examItem.time);
-        holder.tv_course.setText(examItem.course);
-        holder.tv_location.setText("地点：" + examItem.location);
-        holder.tv_teacher.setText("教师：" + examItem.teacher);
-        if (examItem.hour.equals("续一秒") || examItem.hour.equals("+1s") || examItem.teacher.equals("长者")) {
+        ExamModel examModel = examList.get(position);
+        holder.tv_time.setText("时间：" + examModel.time);
+        holder.tv_course.setText(examModel.course);
+        holder.tv_location.setText("地点：" + examModel.location);
+        holder.tv_teacher.setText("教师：" + examModel.teacher);
+        if (examModel.hour.equals("续一秒") || examModel.hour.equals("+1s") || examModel.teacher.equals("长者")) {
             holder.tv_hour.setText("时长：" + "61s");
         } else {
-            holder.tv_hour.setText("时长：" + examItem.hour + "分钟");
+            holder.tv_hour.setText("时长：" + examModel.hour + "分钟");
         }
-        holder.rootView.setOnClickListener(v -> mListner.onItemClick(examItem,position)
+        holder.rootView.setOnClickListener(v -> mListener.onItemClick(examModel, position)
         );
         try {
-            int remainingDays = examItem.getRemainingDays();
+            int remainingDays = examModel.getRemainingDays();
             holder.tv_num.setText(String.valueOf(remainingDays));
-
+            holder.tv_num.setVisibility(View.VISIBLE);
             if (remainingDays < 0) {
-                holder.tv_numtitle.setText("已结束天数");
+                //如果考试已经结束就标识已结束
+                holder.tv_numtitle.setText("已结束");
+                holder.tv_num.setVisibility(View.GONE);
             } else if (remainingDays == 0) {
                 holder.tv_numtitle.setText("今天考试");
             } else {
@@ -90,7 +96,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         return examList.size();
     }
 
-    public void setList(List<ExamItem> exams) {
+    public void setList(List<ExamModel> exams) {
         this.examList = exams;
     }
 }

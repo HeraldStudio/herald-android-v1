@@ -1,10 +1,7 @@
 package cn.seu.herald_android.mod_query.grade;
 
-
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,57 +13,38 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.BaseAppCompatActivity;
-import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;
 
-public class GradeActivity extends BaseAppCompatActivity {
+public class GradeActivity extends BaseActivity {
 
-    private SortableTableView<GradeItem> tableViewGrade;
-    private ProgressDialog progressDialog;
-    //展示首修GPA的TV
-    private TextView tv_gpa;
-    //展示非首修GPA的TV
-    private TextView tv_gpa2;
-    //展示最后计算时间的TV
-    private TextView tv_time;
+    public static ApiRequest remoteRefreshNotifyDotState() {
+        return new ApiRequest().api("gpa").addUUID()
+                .toCache("herald_grade_gpa",
+                        /** notifyModuleIfChanged: */SettingsHelper.Module.grade);
+    }
+
+    @BindView(R.id.tableview_grade)
+    SortableTableView<GradeModel> tableViewGrade;
+    @BindView(R.id.tv_grade_gpawithoutrevamp)
+    TextView tv_gpa;
+    @BindView(R.id.tv_grade_gpa)
+    TextView tv_gpa2;
+    @BindView(R.id.tv_grade_time)
+    TextView tv_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grade);
-        init();
-        //尝试加载缓存
-        loadCache();
-    }
-
-    private void init() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("成绩查询");
-        setSupportActionBar(toolbar);
-        //设置点击函数
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-        toolbar.setNavigationOnClickListener(v -> {
-            onBackPressed();
-            finish();
-        });
-        //沉浸式状态栏颜色
-        setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorGradeprimary));
-        enableSwipeBack();
-
-        //设置collapsingToolbarLayout标题禁用
-//        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapse_toolbar);
-//        collapsingToolbarLayout.setTitleEnabled(false);
-
-        //控件初始化
-        tableViewGrade = (SortableTableView<GradeItem>) findViewById(R.id.tableview_grade);
-        tv_gpa = (TextView) findViewById(R.id.tv_grade_gpawithoutrevamp);
-        tv_gpa2 = (TextView) findViewById(R.id.tv_grade_gpa);
-        tv_time = (TextView) findViewById(R.id.tv_grade_time);
+        setContentView(R.layout.mod_que_grade);
+        ButterKnife.bind(this);
 
         //设置表头
         TableHeaderAdapter tableHeaderAdapter = new TableHeaderAdapter(this) {
@@ -84,19 +62,14 @@ public class GradeActivity extends BaseAppCompatActivity {
         tableViewGrade.setHeaderBackgroundColor(ContextCompat.getColor(GradeActivity.this, R.color.colorGradeprimary));
         tableViewGrade.setHeaderAdapter(tableHeaderAdapter);
 
-
-        //刷新时的进度对话框
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setTitle("获取成绩中");
-        progressDialog.setMessage("由于教务处网站访问速度较慢，可能有一定延迟，请耐心等待~");
+        loadCache();
     }
 
 
     private void loadCache() {
         try {
             //测试数据测试
-            String cache = getCacheHelper().getCache("herald_grade_gpa");
+            String cache = CacheHelper.get("herald_grade_gpa");
             if (!cache.equals("")) {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 //获取计算后的绩点
@@ -106,11 +79,11 @@ public class GradeActivity extends BaseAppCompatActivity {
                     tv_time.setText("最后计算时间:" + jsonArray.getJSONObject(0).get("calculate time"));
                 }
                 //数据类型转换
-                GradeItemDataAdapter gradeItemDataAdapter = new GradeItemDataAdapter(this, GradeItem.transformJSONArrayToArrayList(jsonArray));
+                GradeAdapter gradeAdapter = new GradeAdapter(this, GradeModel.transformJSONArrayToArrayList(jsonArray));
                 //设置成绩表单数据
-                tableViewGrade.setDataAdapter(gradeItemDataAdapter);
+                tableViewGrade.setDataAdapter(gradeAdapter);
                 //设置行颜色变化
-                tableViewGrade.setDataRowColoriser(new GradeItemDataAdapter.GradeRowColorizer(getBaseContext()));
+                tableViewGrade.setDataRowColoriser(new GradeAdapter.GradeRowColorizer(getBaseContext()));
             } else {
                 refreshCache();
             }
@@ -135,18 +108,18 @@ public class GradeActivity extends BaseAppCompatActivity {
     }
 
     private void refreshCache() {
-        progressDialog.show();
-        new ApiRequest(this).api(ApiHelper.API_GPA).addUUID()
-                .toCache("herald_grade_gpa", o -> o)
+        showProgressDialog();
+        new ApiRequest().api("gpa").addUUID()
+                .toCache("herald_grade_gpa")
                 .onFinish((success, code, response) -> {
-                    progressDialog.hide();
+                    hideProgressDialog();
                     if (success) {
                         loadCache();
-                        showSnackBar("刷新成功");
+                        // showSnackBar("刷新成功");
+                    } else {
+                        showSnackBar("刷新失败，请重试");
                     }
                 }).run();
     }
-
-
 }
 
