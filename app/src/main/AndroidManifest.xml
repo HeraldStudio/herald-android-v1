@@ -93,18 +93,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".mod_query.schedule.SchoolScheduleActivity"
-            android:label="@string/title_activity_schedule"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ScheduleTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHEDULE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".mod_query.library.LibrarySearchActivity"
             android:label="@string/title_activity_library_search"
             android:launchMode="singleTask"
@@ -173,6 +161,7 @@
         <!-- 自定义考试 -->
         <activity
             android:name=".mod_query.exam.AddExamActivity"
+            android:label="@string/title_activity_add_exam"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/ExamTheme" />
@@ -202,6 +191,7 @@
         </activity>
         <activity
             android:name=".mod_webmodule.WebModuleActivity"
+            android:label="@string/title_activity_webmodule"
             android:screenOrientation="portrait"
             android:theme="@style/WebShowTheme">
 
@@ -255,39 +245,30 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- 场馆预约项目时间段选择 -->
         <activity
             android:name=".mod_query.gymreserve.GymChooseTimeActivity"
+            android:label="@string/title_activity_gym_choose_time"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
-        <!-- 场馆预约新增预约 -->
         <activity
             android:name=".mod_query.gymreserve.GymNewOrderActivity"
+            android:label="@string/title_activity_gym_new_order"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
-        <!-- 搜索新好友 -->
         <activity
             android:name=".mod_query.gymreserve.GymAddFriendActivity"
+            android:label="@string/title_activity_gym_add_friend"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
         <activity
             android:name=".mod_query.gymreserve.GymMyOrderActivity"
+            android:label="@string/title_activity_gym_my_order"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
-        <activity android:name=".mod_wifi.WifiActivity"
-            android:theme="@style/WifiAutoLoginTheme"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.WIFI_AUTOLOGIN_ACTIVITY" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

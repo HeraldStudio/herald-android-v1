@@ -55,8 +55,6 @@ public class GymMyOrderActivity extends BaseActivity {
     }
 
     private void init() {
-        setTitle("我的预约");
-
         //列表初始化
         listView = (ListView) findViewById(R.id.listview_gym_myorder);
 

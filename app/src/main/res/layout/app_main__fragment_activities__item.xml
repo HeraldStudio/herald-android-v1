@@ -3,11 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorDivider"
-    android:paddingTop="10dp"
-    android:paddingRight="10dp"
-    android:paddingLeft="10dp"
-    >
+    android:paddingTop="8dp"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,19 +13,17 @@
         android:paddingTop="10dp"
         android:id="@+id/layout_card"
         android:orientation="vertical"
-        android:elevation="4dp"
-        android:background="@drawable/selectable_item_background_white">
+        android:background="@drawable/selectable_item_background_white_round">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:id="@+id/tv_tag"
-                android:minEms="4"
                 android:textSize="12sp"
                 android:text="即将开始"
                 android:textColor="@color/colorSecondaryText"/>
@@ -48,7 +44,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_association"
             android:layout_marginBottom="10dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:textSize="12sp"
             android:text="活动主办方"
             android:textColor="@color/colorSecondaryText"/>
@@ -62,7 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="15dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:textSize="12sp"
             android:text="时间 :\n地点 :"
             android:textColor="@color/colorSecondaryText"
@@ -70,8 +68,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:text="介绍"
@@ -80,8 +78,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="5dp"
             android:textSize="12sp"
             android:text="查看详情"

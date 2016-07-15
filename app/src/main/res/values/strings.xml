@@ -6,7 +6,7 @@
 
     <string name="action_lecturerecord">听讲记录</string>
 
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">登录</string>
 
     <!--首页-->
     <string name="index_title_name">首页</string>
@@ -54,9 +54,11 @@ heraldseu@outlook.com"
     <string name="title_activity_seunet">校园网络</string>
     <string name="title_activity_gymreserve">场馆预约</string>
     <string name="title_activity_exam">考试助手</string>
+    <string name="title_activity_add_exam">添加考试</string>
     <string name="title_activity_pedetail">跑操助手</string>
     <string name="title_activity_curriculum">课表助手</string>
     <string name="title_activity_aboutus">关于我们</string>
+    <string name="title_activity_webmodule">网页</string>
     <string name="title_activity_srtp">课外研学</string>
     <string name="title_activity_query">模块管理</string>
     <string name="title_activity_schoolbus">校车助手</string>
@@ -66,5 +68,9 @@ heraldseu@outlook.com"
     <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>
+    <string name="title_activity_gym_choose_time">选择时段</string>
+    <string name="title_activity_gym_new_order">新增预约</string>
+    <string name="title_activity_gym_my_order">预约记录</string>
+    <string name="title_activity_gym_add_friend">添加好友</string>
 
 </resources>

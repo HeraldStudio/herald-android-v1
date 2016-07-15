@@ -46,7 +46,6 @@ public class AddExamActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_exam__add_exam);
         ButterKnife.bind(this);
-        setTitle("自定义考试");
     }
 
     @Override

@@ -123,7 +123,7 @@ public class CardActivity extends BaseActivity {
         // 如果今天还没刷新过,加入刷新流水的请求,默认刷新14天防止丢失数据
         if (!todayHasRefreshed()) {
             manager.add(new ApiRequest().api("card").addUUID()
-                    .post("timedelta", "14").toCache("herald_card", o -> o));
+                    .post("timedelta", "31").toCache("herald_card", o -> o));
         }
 
         // 刷新完毕后登记刷新日期

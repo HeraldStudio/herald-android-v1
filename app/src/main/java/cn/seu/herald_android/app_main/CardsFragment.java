@@ -1,6 +1,7 @@
 package cn.seu.herald_android.app_main;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,6 +33,11 @@ public class CardsFragment extends Fragment {
         view.setSrl(srl);
         srl.setOnRefreshListener(() -> view.loadContent(true));
 
+        new Handler().postDelayed(() -> {
+            view.loadContent(true);
+            srl.setRefreshing(true);
+        }, 500);
+
         return contentView;
     }
 
@@ -44,6 +50,5 @@ public class CardsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (view != null) view.loadContent(false);
     }
 }
