@@ -12,6 +12,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class GymReserveSportAdapter extends RecyclerView.Adapter<GymReserveSportAdapter.GymReserveHolder> {
@@ -55,14 +57,14 @@ public class GymReserveSportAdapter extends RecyclerView.Adapter<GymReserveSport
     }
 
     public static class GymReserveHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.tv_itemname)
         TextView tv_name;
+        @BindView(R.id.img_sportitem)
         ImageView img_sport;
         View rootView;
         public GymReserveHolder(View itemView) {
             super(itemView);
-            rootView = itemView;
-            tv_name = (TextView)itemView.findViewById(R.id.tv_itemname);
-            img_sport = (ImageView)itemView.findViewById(R.id.img_sportitem);
+            ButterKnife.bind(this, rootView = itemView);
         }
     }
 }

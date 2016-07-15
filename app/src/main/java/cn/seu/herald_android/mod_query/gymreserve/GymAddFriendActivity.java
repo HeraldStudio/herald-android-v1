@@ -3,9 +3,7 @@ package cn.seu.herald_android.mod_query.gymreserve;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -16,6 +14,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -23,38 +23,16 @@ import cn.seu.herald_android.helper.CacheHelper;
 
 public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
+    @BindView(R.id.listview_searchfriendsresult)
     ListView listView_searchfriendrelust;
     SearchView searchView;
-    public static int RESULT_CODE_CANCEL = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_gymreserve__search_friend);
-        init();
+        ButterKnife.bind(this);
     }
-
-    private void init() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.libary_toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                //如果是返回则设置result为CANCEL
-                onBackPressed();
-                setResult(RESULT_CODE_CANCEL);
-                finish();
-            });
-        }
-
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
-        enableSwipeBack();
-
-        //设置展示搜索结果的列表
-        listView_searchfriendrelust = (ListView) findViewById(R.id.listview_searchfriendsresult);
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,7 +57,6 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
         return super.onCreateOptionsMenu(menu);
     }
 
-
     //搜索按钮点击时运行的函数
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -87,22 +64,22 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
         showProgressDialog();
         new ApiRequest().api("yuyue")
                 .addUUID()
-                .post("method","getFriendList")
-                .post("cardNo",query)
+                .post("method", "getFriendList")
+                .post("cardNo", query)
                 .onFinish((success, code, response) -> {
-                    if (success){
-                        try{
+                    if (success) {
+                        try {
                             JSONArray array = new JSONObject(response).getJSONArray("content");
                             ArrayList<FriendModel> list = new ArrayList<>();
-                            for (int i= 0;i<array.length();i++){
+                            for (int i = 0; i < array.length(); i++) {
                                 list.add(new FriendModel(array.getJSONObject(i)));
                             }
                             //加载搜索结果
                             loadSearchResult(list);
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    }else {
+                    } else {
                         showSnackBar("查询失败，请重试");
                     }
                 }).run();
@@ -132,14 +109,14 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
     }
 
     public ArrayList<FriendModel> getFriendArrayList() {
-        try{
+        try {
             JSONArray array = getFriendJSONArray();
             ArrayList<FriendModel> list = new ArrayList<>();
-            for(int i=0;i<array.length();i++){
+            for (int i = 0; i < array.length(); i++) {
                 list.add(new FriendModel(array.getJSONObject(i)));
             }
             return list;
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -165,6 +142,4 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
             e.printStackTrace();
         }
     }
-
-
 }

@@ -2,11 +2,8 @@ package cn.seu.herald_android.mod_query.lecture;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -17,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -26,48 +25,18 @@ import cn.seu.herald_android.helper.CacheHelper;
 public class LectureActivity extends BaseActivity {
 
     //容纳讲座预告卡片布局的RecyclerView
-    private RecyclerView recyclerView_notice;
-    //打卡记录列表
-    private ListView list_record;
-    //打卡记录次数
-    private TextView tv_count;
+    @BindView(R.id.recyclerview_lecture_notice)
+    RecyclerView recyclerView_notice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_lecture);
-        init();
-        //由于此模块实时性要求较高，每次打开实时刷新
-        refreshCache();
-    }
+        ButterKnife.bind(this);
 
-    private void init() {
-        //设置工具栏
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-
-        //沉浸式工具栏
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorLectureprimary));
-        enableSwipeBack();
-
-        //设置伸缩标题禁用
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-
-
-        //RecyclerView加载
-        recyclerView_notice = (RecyclerView) findViewById(R.id.recyclerview_lecture_notice);
         recyclerView_notice.setLayoutManager(new LinearLayoutManager(this));
+
+        refreshCache();
     }
 
     @Override
@@ -142,9 +111,9 @@ public class LectureActivity extends BaseActivity {
         window.setContentView(R.layout.mod_que_lecture__dialog_lecture_record);
 
         //获取对话窗口中的listview
-        list_record = (ListView) window.findViewById(R.id.list_lecture_record);
+        ListView list_record = (ListView) window.findViewById(R.id.list_lecture_record);
         //获得对话框中的打卡次数textview
-        tv_count = (TextView) window.findViewById(R.id.tv_recordcount);
+        TextView tv_count = (TextView) window.findViewById(R.id.tv_recordcount);
 
         //加载讲座记录时显示刷新框
         showProgressDialog();
@@ -154,31 +123,27 @@ public class LectureActivity extends BaseActivity {
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
                     if (success) {
-                        loadRecordCache();
+                        String cache = CacheHelper.get("herald_lecture_records");
+                        if (!cache.equals("")) {
+                            try {
+                                //设置打卡次数
+                                int count = new JSONObject(cache).getJSONObject("content").getInt("count");
+                                tv_count.setText(count + "");
+                                //设置列表
+                                JSONArray jsonArray = new JSONObject(cache).getJSONObject("content").getJSONArray("detial");
+                                list_record.setAdapter(new LectureRecordAdapter(
+                                        getBaseContext(),
+                                        R.layout.mod_que_lecture__dialog_lecture_record__item,
+                                        LectureRecordModel.transformJSONArrayToArrayList(jsonArray)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                showSnackBar("解析失败，请刷新");
+                            }
+                        }
                         // showSnackBar("获取讲座记录成功");
                     } else {
                         showSnackBar("刷新失败，请重试");
                     }
                 }).run();
-    }
-
-    private void loadRecordCache() {
-        String cache = CacheHelper.get("herald_lecture_records");
-        if (!cache.equals("")) {
-            try {
-                //设置打卡次数
-                int count = new JSONObject(cache).getJSONObject("content").getInt("count");
-                tv_count.setText(count + "");
-                //设置列表
-                JSONArray jsonArray = new JSONObject(cache).getJSONObject("content").getJSONArray("detial");
-                list_record.setAdapter(new LectureRecordAdapter(
-                        getBaseContext(),
-                        R.layout.mod_que_lecture__dialog_lecture_record__item,
-                        LectureRecordModel.transformJSONArrayToArrayList(jsonArray)));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                showSnackBar("解析失败，请刷新");
-            }
-        }
     }
 }

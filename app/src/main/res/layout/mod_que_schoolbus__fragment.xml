@@ -10,7 +10,5 @@
         android:layout_height="match_parent"
         android:divider="@color/colorDivider"
         android:dividerHeight="@dimen/divider_height"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:scrollbarStyle="outsideOverlay" />
 </LinearLayout>

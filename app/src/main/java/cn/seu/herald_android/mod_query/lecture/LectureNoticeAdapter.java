@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdapter.LectureRecord> {
@@ -41,20 +43,20 @@ public class LectureNoticeAdapter extends RecyclerView.Adapter<LectureNoticeAdap
     }
 
     class LectureRecord extends RecyclerView.ViewHolder {
+        @BindView(R.id.tv_date)
         TextView tv_date;
+        @BindView(R.id.tv_location)
         TextView tv_location;
+        @BindView(R.id.tv_speaker)
         TextView tv_speaker;
+        @BindView(R.id.tv_topic)
         TextView tv_topic;
 
         public LectureRecord(View itemView) {
             super(itemView);
-            tv_date = (TextView) itemView.findViewById(R.id.tv_date);
-            tv_location = (TextView) itemView.findViewById(R.id.tv_location);
-            tv_speaker = (TextView) itemView.findViewById(R.id.tv_speaker);
-            tv_topic = (TextView) itemView.findViewById(R.id.tv_topic);
+            ButterKnife.bind(this, itemView);
         }
     }
-
 }
 
 

@@ -1,10 +1,7 @@
 package cn.seu.herald_android.mod_query.experiment;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -16,23 +13,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.mod_achievement.AchievementViewPagerAdapter;
 
 public class ExperimentActivity extends BaseActivity {
+
+    @BindView(R.id.expandableListView)
+    ExpandableListView expandableListView;
+    @BindView(R.id.chengjiu_viewpager)
+    ViewPager viewPager;
 
     // 每节实验开始的时间，以(Hour * 60 + Minute)形式表示
     // 本程序假定每节实验都是3小时
     public static final int[] EXPERIMENT_BEGIN_TIME = {
             9 * 60 + 45, 13 * 60 + 45, 18 * 60 + 15
     };
-    //实验类型列表
-    private ExpandableListView expandableListView;
-    //成就墙展示View
-    private ViewPager viewPager;
+
     //成就列表
     private ArrayList<AchievementModel> achievements;
 
@@ -40,37 +40,8 @@ public class ExperimentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_experiment);
-        init();
+        ButterKnife.bind(this);
         loadCache();
-    }
-
-    private void init() {
-        //toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorExperimentprimary));
-        enableSwipeBack();
-
-        //实验类型列表加载
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-
-        //成就墙viewPager
-        viewPager = (ViewPager) findViewById(R.id.chengjiu_viewpager);
     }
 
     @Override

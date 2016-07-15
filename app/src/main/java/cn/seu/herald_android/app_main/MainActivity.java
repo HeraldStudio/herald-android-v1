@@ -64,9 +64,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.app_main);
         ButterKnife.bind(this);
 
-        //设置状态栏颜色
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
         setupPagerBottomTabLayout();
 
         //放置三个Tab页面

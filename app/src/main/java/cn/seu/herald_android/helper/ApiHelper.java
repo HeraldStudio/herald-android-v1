@@ -41,7 +41,7 @@ public class ApiHelper {
             e.printStackTrace();
         }
 
-        return "34cc6df78cfa7cd457284e4fc377559e";// todo*/213151933 appid;
+        return /*"34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
         /**
          * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
          * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

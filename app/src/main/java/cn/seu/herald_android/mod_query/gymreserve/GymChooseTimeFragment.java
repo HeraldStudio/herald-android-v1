@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.ListViewUtils;
@@ -56,17 +58,16 @@ public class GymChooseTimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mod_que_gymreserve__order_time__fragment, container, false);
         //控件初始化
-        listView = (ListView) view.findViewById(R.id.listview_orderitembytime);
+        listView = ButterKnife.findById(view, R.id.listview_orderitembytime);
         progressBar = new ProgressBar(getContext());
         //设定适配器
         refreshOrderItem();
         return view;
     }
 
-    public void refreshOrderItem(){
+    public void refreshOrderItem() {
         baseActivity.showProgressDialog();
-        ApiRequest apiRequest = new ApiRequest();
-        apiRequest
+        new ApiRequest()
                 .api("yuyue")
                 .addUUID()
                 .post("method", "getOrder")
@@ -83,21 +84,21 @@ public class GymChooseTimeFragment extends Fragment {
     }
 
     //根据数据来刷新当前项目在当天的各个时间段可预约情况
-    public void loadOrderItemTimes(String response){
+    public void loadOrderItemTimes(String response) {
         try {
             ArrayList<OrderItemTime> list = transformJSONtoArrayList(new JSONObject(response).getJSONObject("content").getJSONArray("orderIndexs"));
-            listView.setAdapter(new OrderItemTimeAdapter(getContext(),R.layout.mod_que_gymreserve__order_time__fragment__item,list));
-            if (listView.getCount() == 0){
-                ListViewUtils.addDefaultEmptyTipsView(getContext(),listView,"暂无可用预约场地");
+            listView.setAdapter(new OrderItemTimeAdapter(getContext(), R.layout.mod_que_gymreserve__order_time__fragment__item, list));
+            if (listView.getCount() == 0) {
+                ListViewUtils.addDefaultEmptyTipsView(getContext(), listView, "暂无可用预约场地");
             }
             baseActivity.hideProgressDialog();
-        }catch (JSONException e){
+        } catch (JSONException e) {
             //数据解析错误
             baseActivity.showSnackBar("数据解析错误，请稍后再试");
         }
     }
 
-    public void judgeOrder(OrderItemTime time){
+    public void judgeOrder(OrderItemTime time) {
         if (isJudging)
             return;
         //判断是否可以预约，如果可以则打开预约界面
@@ -106,25 +107,25 @@ public class GymChooseTimeFragment extends Fragment {
                 .addUUID()
                 .post("method", "judgeOrder")
                 .post("itemId", gymSportModel.sportId + "")
-                .post("dayInfo",dayInfo)
-                .post("time",time.avaliableTime)
+                .post("dayInfo", dayInfo)
+                .post("time", time.availableTime)
                 .onFinish((success, code, response) -> {
                     isJudging = false;
-                    try{
+                    try {
                         String judgeRes = "获取失败，请重试";
-                        if (success){
+                        if (success) {
                             String rescode = new JSONObject(response).getJSONObject("content").getString("code");
                             String msg = new JSONObject(response).getJSONObject("content").getString("msg");
-                            if (rescode.equals("0")){
+                            if (rescode.equals("0")) {
                                 //可以进行预约
-                                GymNewOrderActivity.startNewOrderActivity(baseActivity, gymSportModel, dayInfo, time.avaliableTime);
-                            }else {
+                                GymNewOrderActivity.startWithData(gymSportModel, dayInfo, time.availableTime);
+                            } else {
                                 judgeRes = msg;
                                 baseActivity.showSnackBar(judgeRes);
                             }
                         }
 
-                    }catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                         baseActivity.showSnackBar("预约失败");
                     }
@@ -138,18 +139,18 @@ public class GymChooseTimeFragment extends Fragment {
         //剩余可预约数量
         int surplus;
         //可用时间段
-        String avaliableTime;
+        String availableTime;
 
-        public OrderItemTime(boolean enable, int surplus, String avaliableTime) {
+        public OrderItemTime(boolean enable, int surplus, String availableTime) {
             this.enable = enable;
             this.surplus = surplus;
-            this.avaliableTime = avaliableTime;
+            this.availableTime = availableTime;
         }
     }
 
-    public ArrayList<OrderItemTime> transformJSONtoArrayList(JSONArray array)throws JSONException{
+    public ArrayList<OrderItemTime> transformJSONtoArrayList(JSONArray array) throws JSONException {
         ArrayList<OrderItemTime> list = new ArrayList<>();
-        for(int i = 0;i<array.length();i++){
+        for (int i = 0; i < array.length(); i++) {
             JSONObject obj = array.getJSONObject(i);
             list.add(new OrderItemTime(
                     obj.getBoolean("enable"),
@@ -160,27 +161,44 @@ public class GymChooseTimeFragment extends Fragment {
         return list;
     }
 
-    class OrderItemTimeAdapter extends ArrayAdapter<OrderItemTime>{
-        int resoure;
+    class OrderItemTimeAdapter extends ArrayAdapter<OrderItemTime> {
+
+        class ViewHolder {
+            @BindView(R.id.availableTime)
+            TextView availableTime;
+            @BindView(R.id.surplus)
+            TextView surplus;
+            @BindView(R.id.btn)
+            Button btn;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+        }
+
+        int resource;
+
         public OrderItemTimeAdapter(Context context, int resource, List<OrderItemTime> objects) {
             super(context, resource, objects);
-            this.resoure = resource;
+            this.resource = resource;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(resoure,null);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(resource, null);
+                convertView.setTag(new ViewHolder(convertView));
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+
             final OrderItemTime time = getItem(position);
-            TextView tv_avaliabletime = (TextView)convertView.findViewById(R.id.tv_avaliableyime);
-            TextView tv_surplus = (TextView)convertView.findViewById(R.id.tv_surplus);
-            Button btn = (Button) convertView.findViewById(R.id.btn_order);
-            tv_avaliabletime.setText(time.avaliableTime);
-            tv_surplus.setText("" + time.surplus);
-            btn.setEnabled(time.enable);
+
+            holder.availableTime.setText(time.availableTime);
+            holder.surplus.setText(String.valueOf(time.surplus));
+            holder.btn.setEnabled(time.enable);
 
             //为预约按钮设定点击事件
-            btn.setOnClickListener(o->{
+            holder.btn.setOnClickListener(o -> {
                 if (!isJudging)//如果没有处于判断状态则开始判断
                     judgeOrder(time);
             });

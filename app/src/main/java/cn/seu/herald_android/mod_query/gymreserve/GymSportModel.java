@@ -72,9 +72,6 @@ public class GymSportModel implements Serializable {
         }
         return items;
     }
-
-
-
 }
 
 

@@ -3,7 +3,6 @@ package cn.seu.herald_android.mod_query.gymreserve;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +20,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.ListViewUtils;
@@ -39,19 +40,14 @@ public class GymMyOrderActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_sync, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
             refreshMyOrder();
         }
@@ -59,27 +55,13 @@ public class GymMyOrderActivity extends BaseActivity {
     }
 
     private void init() {
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
         setTitle("我的预约");
 
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
-        enableSwipeBack();
         //列表初始化
         listView = (ListView) findViewById(R.id.listview_gym_myorder);
 
         refreshMyOrder();
     }
-
 
     private void refreshMyOrder() {
         showProgressDialog();
@@ -193,7 +175,28 @@ public class GymMyOrderActivity extends BaseActivity {
     }
 
     public class MyOrderAdapter extends ArrayAdapter<MyOrder>{
+
+        class ViewHolder {
+            @BindView(R.id.tv_name_and_floor)
+            TextView tv_nameandfloor;
+            @BindView(R.id.tv_usedate)
+            TextView tv_useDate;
+            @BindView(R.id.tv_usetime)
+            TextView tv_useTime;
+            @BindView(R.id.tv_usepeoplenum)
+            TextView tv_peoplenum;
+            @BindView(R.id.tv_state)
+            TextView tv_state;
+            @BindView(R.id.btn_cancelorder)
+            Button btn_cancleorder;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+        }
+
         int resource;
+
         public MyOrderAdapter(Context context, int resource, List<MyOrder> objects) {
             super(context, resource,objects);
             this.resource = resource;
@@ -201,46 +204,43 @@ public class GymMyOrderActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            MyOrder item = getItem(position);
-            if (convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(resource,null);
-            TextView tv_nameandfloor = (TextView)convertView.findViewById(R.id.tv_name_and_floor);
-            TextView tv_useDate = (TextView)convertView.findViewById(R.id.tv_usedate);
-            TextView tv_useTime = (TextView)convertView.findViewById(R.id.tv_usetime);
-            TextView tv_peoplenum = (TextView)convertView.findViewById(R.id.tv_usepeoplenum);
-            TextView tv_state = (TextView)convertView.findViewById(R.id.tv_state);
-            Button btn_cancleorder = (Button) convertView.findViewById(R.id.btn_cancelorder);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(resource, null);
+                convertView.setTag(new ViewHolder(convertView));
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
 
-            tv_nameandfloor.setText(String.format("%s (%s)",item.itemName,item.floorName));
-            tv_useDate.setText(item.useDate);
-            tv_useTime.setText(String.format("%s-%s",item.startTime,item.endTime));
-            tv_peoplenum.setText(item.peoplenum + "人");
+            MyOrder item = getItem(position);
+            holder.tv_nameandfloor.setText(String.format("%s (%s)", item.itemName, item.floorName));
+            holder.tv_useDate.setText(item.useDate);
+            holder.tv_useTime.setText(String.format("%s-%s", item.startTime, item.endTime));
+            holder.tv_peoplenum.setText(item.peoplenum + "人");
 
             switch (item.state){
                 case MyOrder.STATE_SUCCESS:
-                    btn_cancleorder.setVisibility(View.VISIBLE);
-                    btn_cancleorder.setOnClickListener(v -> {
+                    holder.btn_cancleorder.setVisibility(View.VISIBLE);
+                    holder.btn_cancleorder.setOnClickListener(v -> {
                         //取消预约
                         cancelOrder(item.id);
                     });
-                    tv_state.setText("已通过");
-                    tv_state.setTextColor(ContextCompat.getColor(getContext(),R.color.relaxGreen));
+                    holder.tv_state.setText("已通过");
+                    holder.tv_state.setTextColor(ContextCompat.getColor(getContext(), R.color.relaxGreen));
                     break;
                 case MyOrder.STATE_BREAK:
-                    btn_cancleorder.setVisibility(View.INVISIBLE);
-                    tv_state.setTextColor(ContextCompat.getColor(getContext(),R.color.colorSecondaryText));
-                    tv_state.setText("失约");
+                    holder.btn_cancleorder.setVisibility(View.INVISIBLE);
+                    holder.tv_state.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
+                    holder.tv_state.setText("失约");
                     break;
                 case MyOrder.STATE_FINISHED:
-                    btn_cancleorder.setVisibility(View.INVISIBLE);
-                    tv_state.setTextColor(ContextCompat.getColor(getContext(),R.color.colorSecondaryText));
-                    tv_state.setText("已完成");
+                    holder.btn_cancleorder.setVisibility(View.INVISIBLE);
+                    holder.tv_state.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
+                    holder.tv_state.setText("已完成");
                     break;
                 default:
                 case MyOrder.STATE_CANCEL:
-                    btn_cancleorder.setVisibility(View.INVISIBLE);
-                    tv_state.setTextColor(ContextCompat.getColor(getContext(),R.color.colorSecondaryText));
-                    tv_state.setText("已取消");
+                    holder.btn_cancleorder.setVisibility(View.INVISIBLE);
+                    holder.tv_state.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
+                    holder.tv_state.setText("已取消");
             }
             return convertView;
         }

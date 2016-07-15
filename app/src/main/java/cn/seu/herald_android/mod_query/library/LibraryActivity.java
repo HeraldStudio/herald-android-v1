@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +19,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -39,32 +39,15 @@ public class LibraryActivity extends BaseActivity {
     }
 
     //热门书籍展示列表
-    private ListView listView_hotbook;
+    @BindView(R.id.list_library_hotbook)
+    ListView listView_hotbook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_library);
-        init();
-    }
+        ButterKnife.bind(this);
 
-    private void init() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorLibraryprimary));
-        enableSwipeBack();
-
-
-        //加载最热门图书，初始化列表控件
-        listView_hotbook = (ListView) findViewById(R.id.list_library_hotbook);
         //取消滑动条
         if (listView_hotbook != null) {
             listView_hotbook.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
@@ -166,7 +149,6 @@ public class LibraryActivity extends BaseActivity {
         ListView list_record = (ListView) window.findViewById(R.id.list_borrowbook_record);
         //设置适配器
         list_record.setAdapter(new BorrowBookAdapter(this, R.layout.mod_que_library__dialog_borrow_record__item, list));
-
     }
 
     private void displayLibraryAuthDialog() {
@@ -187,7 +169,6 @@ public class LibraryActivity extends BaseActivity {
                 })
                 .setNegativeButton("取消", null).show();
     }
-
 
     /**
      * @param password 图书馆密码

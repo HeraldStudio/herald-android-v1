@@ -8,40 +8,44 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
 
     private List<ExamModel> examList;
-    public interface onItemClickListner{
+
+    public interface onItemClickListener {
         void onItemClick(ExamModel item, int position);
     }
-    private onItemClickListner mListner = null;
+
+    private onItemClickListener mListener = null;
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_time;
-        public TextView tv_course;
-        public TextView tv_location;
-        public TextView tv_teacher;
-        public TextView tv_hour;
-        public TextView tv_numtitle;
-        public TextView tv_num;
+        @BindView(R.id.content)
+        TextView tv_time;
+        @BindView(R.id.title)
+        TextView tv_course;
+        @BindView(R.id.tv_location)
+        TextView tv_location;
+        @BindView(R.id.subtitle)
+        TextView tv_teacher;
+        @BindView(R.id.tv_hour)
+        TextView tv_hour;
+        @BindView(R.id.tv_numtitle)
+        TextView tv_numtitle;
+        @BindView(R.id.num)
+        TextView tv_num;
         public View rootView;
 
         public ViewHolder(View v) {
             super(v);
-            rootView = v;
-            tv_time = (TextView) v.findViewById(R.id.content);
-            tv_course = (TextView) v.findViewById(R.id.title);
-            tv_location = (TextView) v.findViewById(R.id.tv_location);
-            tv_teacher = (TextView) v.findViewById(R.id.subtitle);
-            tv_hour = (TextView) v.findViewById(R.id.tv_hour);
-            tv_numtitle = (TextView) v.findViewById(R.id.tv_numtitle);
-            tv_num = (TextView) v.findViewById(R.id.num);
+            ButterKnife.bind(this, rootView = v);
         }
     }
 
-    public void setOnItemClickListner(onItemClickListner mlistner){
-        this.mListner = mlistner;
+    public void setOnItemClickListener(onItemClickListener mlistner) {
+        this.mListener = mlistner;
     }
 
     public ExamAdapter(List<ExamModel> exams) {
@@ -66,7 +70,7 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
         } else {
             holder.tv_hour.setText("时长：" + examModel.hour + "分钟");
         }
-        holder.rootView.setOnClickListener(v -> mListner.onItemClick(examModel, position)
+        holder.rootView.setOnClickListener(v -> mListener.onItemClick(examModel, position)
         );
         try {
             int remainingDays = examModel.getRemainingDays();

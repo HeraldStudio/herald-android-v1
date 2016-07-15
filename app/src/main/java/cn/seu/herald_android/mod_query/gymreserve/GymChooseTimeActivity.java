@@ -1,65 +1,64 @@
 package cn.seu.herald_android.mod_query.gymreserve;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.app_framework.BaseActivity;
 
 public class GymChooseTimeActivity extends BaseActivity {
 
-    public static void startOrderItemActivity(Activity activity, GymSportModel item, String[] dayInfos) {
-        Intent intent = new Intent(activity, GymChooseTimeActivity.class);
+    public static void startWithData(GymSportModel item, String[] dayInfos) {
+        Intent intent = new Intent(AppContext.currentContext.$get(), GymChooseTimeActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("gymItem",item);
         bundle.putStringArray("dayInfos",dayInfos);
         intent.putExtras(bundle);
-        activity.startActivity(intent);
+        AppContext.currentContext.$get().startActivity(intent);
     }
 
-    //预约的体育项目
     GymSportModel gymItem;
-    //可预约的时间
     String[] dayinfos;
 
-    //Tab
+    @BindView(R.id.tablayout_orderitem)
     TabLayout tabLayout;
+    @BindView(R.id.viewpager_orderitem)
     ViewPager viewPager;
 
-    //适配器
     GymChooseTimeAdapter gymChooseTimeAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_gymreserve__order_time);
-        init();
+        ButterKnife.bind(this);
+
+        Bundle bundle = getIntent().getExtras();
+        gymItem = (GymSportModel) bundle.getSerializable("gymItem");
+        dayinfos = bundle.getStringArray("dayInfos");
+        setTitle(gymItem.name + "场馆预约");
+
+        if (viewPager != null) viewPager.setOffscreenPageLimit(1);
         loadOrderItemByTime();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_sync, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
             GymChooseTimeFragment fragment = (GymChooseTimeFragment) gymChooseTimeAdapter.getItem(viewPager.getCurrentItem());
             fragment.refreshOrderItem();
@@ -67,47 +66,14 @@ public class GymChooseTimeActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void init(){
-        Bundle bundle = getIntent().getExtras();
-        gymItem = (GymSportModel) bundle.getSerializable("gymItem");
-        dayinfos = bundle.getStringArray("dayInfos");
-
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
-        enableSwipeBack();
-
-        //设置标题
-        setTitle(gymItem.name + "场馆预约");
-
-        //初始化
-        tabLayout = (TabLayout)findViewById(R.id.tablayout_orderitem);
-        viewPager = (ViewPager)findViewById(R.id.viewpager_orderitem);
-        //设置只存在一页缓存
-        if (viewPager!=null)viewPager.setOffscreenPageLimit(1);
-
-    }
-
     public void loadOrderItemByTime(){
         gymChooseTimeAdapter = new GymChooseTimeAdapter(getSupportFragmentManager());
         for(String dayinfo : dayinfos){
-            //只保留日期的月份和日期、周数
             String timeTitle = dayinfo.split("-")[1] + "-" + dayinfo.split("-")[2];
             GymChooseTimeFragment fragment = GymChooseTimeFragment.newInstance(dayinfo, gymItem, this);
             gymChooseTimeAdapter.add(fragment, timeTitle);
         }
         viewPager.setAdapter(gymChooseTimeAdapter);
-        //关联tablayout和viewpager
         tabLayout.setupWithViewPager(viewPager);
     }
 }

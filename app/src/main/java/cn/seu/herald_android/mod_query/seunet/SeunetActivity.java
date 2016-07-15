@@ -2,9 +2,7 @@ package cn.seu.herald_android.mod_query.seunet;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,6 +14,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -25,50 +25,21 @@ import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
 public class SeunetActivity extends BaseActivity {
-    //显示已用流量比例的饼状图
-    private PieChartView pieChartView_wlan;
-    //钱包余额
-    private TextView tv_money_left;
-    //已用流量
-    private TextView tv_used;
+
+    @BindView(R.id.chartwlan)
+    PieChartView pieChartView_wlan;
+    @BindView(R.id.tv_extra_money)
+    TextView tv_money_left;
+    @BindView(R.id.tv_used)
+    TextView tv_used;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_seunet);
-        init();
-    }
+        ButterKnife.bind(this);
 
-    private void init() {
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorSeuNetprimary));
-        enableSwipeBack();
-        //初始化流量显示饼状图
-        pieChartView_wlan = (PieChartView) findViewById(R.id.chartwlan);
-        //设置饼图不旋转
-        if (pieChartView_wlan != null) {
-            pieChartView_wlan.setChartRotationEnabled(false);
-        }
-        //余额显示的tv
-        tv_money_left = (TextView) findViewById(R.id.tv_extra_money);
-        //已用流量
-        tv_used = (TextView) findViewById(R.id.tv_used);
+        pieChartView_wlan.setChartRotationEnabled(false);
 
         //先尝试加载缓存再刷新
         loadCache();
@@ -76,19 +47,14 @@ public class SeunetActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_sync, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
             refreshCache();
         }

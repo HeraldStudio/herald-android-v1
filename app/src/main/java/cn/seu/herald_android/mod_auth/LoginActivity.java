@@ -41,7 +41,6 @@ public class LoginActivity extends BaseActivity {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-
     @OnClick(R.id.btn_login_login)
     public void loginBtnOnClick() {
         if (tv_card.getText().toString().trim().equals("") || tv_pwd.getText().toString().equals("")) {
@@ -70,6 +69,7 @@ public class LoginActivity extends BaseActivity {
                 .post("password", password)
                 .post("appid", appid)
                 .onFinish((success, code, response) -> {
+
                     if (response.contains("Unauthorized")) {
                         hideProgressDialog();
                         showSnackBar("密码错误，请重试");

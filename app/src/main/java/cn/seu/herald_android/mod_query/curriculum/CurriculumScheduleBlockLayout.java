@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 
@@ -29,6 +31,11 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
     private ClassModel classModel;
     private int layout;
     private Pair<String, String> teacherAndGPA;
+
+    @BindView(R.id.className)
+    TextView className;
+    @BindView(R.id.classPlace)
+    TextView classPlace;
 
     public CurriculumScheduleBlockLayout(Context c, ClassModel info,
                                          Pair<String, String> teacherAndGPA,
@@ -53,9 +60,9 @@ public class CurriculumScheduleBlockLayout extends FrameLayout implements View.O
                 color[(classModel.getClassName().getBytes().length * 2 + classModel.getClassName().length()) % 8]));
         addView(v);
 
-        TextView className = (TextView) findViewById(R.id.className);
+        ButterKnife.bind(this);
+
         className.setText(classModel.getClassName());
-        TextView classPlace = (TextView) findViewById(R.id.classPlace);
         classPlace.setText(classModel.getPlace());
 
         setOnClickListener(this);

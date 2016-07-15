@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapse_toolbar"
+        <cn.seu.herald_android.custom.CustomCollapsingToolbarLayout
+
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:fitsSystemWindows="true"
@@ -96,7 +96,7 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </cn.seu.herald_android.custom.CustomCollapsingToolbarLayout>
 
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 

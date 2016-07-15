@@ -9,13 +9,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/tv_avaliableyime"/>
+        android:id="@+id/availableTime" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_weight="1"
-        android:id="@+id/tv_surplus"/>
+        android:id="@+id/surplus" />
     <Button
         android:layout_width="0dp"
         android:layout_height="30dp"
@@ -24,5 +24,5 @@
         android:background="@drawable/gymreserve_bg_orderbtn"
         android:text="预约"
         android:textColor="@color/colorIcons"
-        android:id="@+id/btn_order"/>
+        android:id="@+id/btn" />
 </LinearLayout>

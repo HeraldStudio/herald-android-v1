@@ -81,27 +81,27 @@ public class ApiRequest {
 
         @Override
         public void onResponse(String response) {
-            try {
-                JSONObject json_res = new JSONObject(response);
-                int code = json_res.getInt("code");
                 if (noCheck200) {
                     for (OnFinishListener onFinishListener : onFinishListeners) {
-                        onFinishListener.onFinish(true, code, response);
+                        onFinishListener.onFinish(true, 200, response);
                     }
                 } else {
-                    if (code == 400) {
-                        ApiHelper.doLogout("用户身份已过期,请重新登录");
-                    }
-                    for (OnFinishListener onFinishListener : onFinishListeners) {
-                        onFinishListener.onFinish(code == 200, code, response);
+                    try {
+                        JSONObject json_res = new JSONObject(response);
+                        int code = json_res.getInt("code");
+                        if (code == 400) {
+                            ApiHelper.doLogout("用户身份已过期,请重新登录");
+                        }
+                        for (OnFinishListener onFinishListener : onFinishListeners) {
+                            onFinishListener.onFinish(code == 200, code, response);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        for (OnFinishListener onFinishListener : onFinishListeners) {
+                            onFinishListener.onFinish(false, -1, response);
+                        }
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                for (OnFinishListener onFinishListener : onFinishListeners) {
-                    onFinishListener.onFinish(false, -1, response);
-                }
-            }
         }
 
         @Override

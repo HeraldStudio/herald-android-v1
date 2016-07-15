@@ -10,9 +10,27 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 class HotBookAdapter extends ArrayAdapter<HotBookModel> {
+
+    static class ViewHolder {
+        @BindView(R.id.tv_count)
+        TextView tv_count;
+        @BindView(R.id.tv_place)
+        TextView tv_place;
+        @BindView(R.id.title)
+        TextView tv_name;
+        @BindView(R.id.tv_author)
+        TextView tv_author;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
     public HotBookAdapter(Context context, int resource, List<HotBookModel> objects) {
         super(context, resource, objects);
     }
@@ -22,16 +40,14 @@ class HotBookAdapter extends ArrayAdapter<HotBookModel> {
         HotBookModel hotBookModel = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_library__item,null);
+            convertView.setTag(new ViewHolder(convertView));
         }
-        TextView tv_count = (TextView)convertView.findViewById(R.id.tv_count);
-        TextView tv_place = (TextView)convertView.findViewById(R.id.tv_place);
-        TextView tv_name = (TextView) convertView.findViewById(R.id.title);
-        TextView tv_author = (TextView)convertView.findViewById(R.id.tv_author);
+        ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        tv_count.setText(hotBookModel.getCount() + "");
-        tv_place.setText(hotBookModel.getPlace());
-        tv_author.setText(hotBookModel.getAuthor());
-        tv_name.setText(hotBookModel.getName());
+        holder.tv_count.setText(hotBookModel.getCount() + "");
+        holder.tv_place.setText(hotBookModel.getPlace());
+        holder.tv_author.setText(hotBookModel.getAuthor());
+        holder.tv_name.setText(hotBookModel.getName());
 
         convertView.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LibrarySearchActivity.class);
@@ -41,5 +57,4 @@ class HotBookAdapter extends ArrayAdapter<HotBookModel> {
 
         return convertView;
     }
-
 }

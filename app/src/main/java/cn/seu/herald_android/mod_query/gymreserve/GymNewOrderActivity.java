@@ -1,12 +1,9 @@
 package cn.seu.herald_android.mod_query.gymreserve;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,7 +24,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.custom.ListViewUtils;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -36,14 +36,15 @@ import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
 
 public class GymNewOrderActivity extends BaseActivity {
-    public static void startNewOrderActivity(Activity activity, GymSportModel item, String dayInfo, String avaliableTime) {
-        Intent intent = new Intent(activity, GymNewOrderActivity.class);
+
+    public static void startWithData(GymSportModel item, String dayInfo, String availableTime) {
+        Intent intent = new Intent(AppContext.currentContext.$get(), GymNewOrderActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("gymItem",item);
         bundle.putString("dayInfo",dayInfo);
-        bundle.putString("avaliableTime",avaliableTime);
+        bundle.putString("availableTime", availableTime);
         intent.putExtras(bundle);
-        activity.startActivity(intent);
+        AppContext.currentContext.$get().startActivity(intent);
     }
 
     //预约的体育项目
@@ -56,36 +57,75 @@ public class GymNewOrderActivity extends BaseActivity {
     boolean half = false;
 
     //使用时间
+    @BindView(R.id.tv_time)
     TextView tv_time;
     //使用类型
+    @BindView(R.id.spiner_type)
     Spinner spinner;
     //联系电话
+    @BindView(R.id.et_phone)
     EditText et_phone;
     //已邀请的好友列表
+    @BindView(R.id.listview_recentlyfriend)
+    ListView list_recentlyfriend;
+    //最近联系人列表
+    @BindView(R.id.listview_invitedfriend)
     ListView list_invitedfriend;
+    //已邀请好友数标签提示
+    @BindView(R.id.tv_tipofinvitedfriends)
+    TextView tv_tipsOfInvitedNums;
+
+    @OnClick(R.id.btn_add_friend)
+    void addFriendOnClick() {
+        startActivity(new Intent(GymNewOrderActivity.this, GymAddFriendActivity.class));
+    }
+
     //适配器
     InvitedFriendAdapter invitedFriendAdapter;
     //已邀请的好友数组
     ArrayList<FriendModel> invitedFriends;
-    //最近联系人列表
-    ListView list_recentlyfriend;
     //适配器
     RecentlyFriendAdapter recentlyFriendAdapter;
     //最近联系人数组
     ArrayList<FriendModel> recentlyFriends;
-    //添加近联系人按钮
-    Button btn_addfriend;
-    //已邀请好友数标签提示
-    TextView tv_tipsOfInvitedNums;
 
-    boolean isOrdeing = false;
+    boolean isOrdering = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_gymreserve__new_order);
+        ButterKnife.bind(this);
         init();
+    }
+
+    public void init() {
+        Bundle bundle = getIntent().getExtras();
+        gymItem = (GymSportModel) bundle.getSerializable("gymItem");
+        dayinfo = bundle.getString("dayInfo");
+        avaliableTime = bundle.getString("availableTime");
+
+        //设置标题
+        setTitle(gymItem.name + "新增预约");
+
+        //初始化
+        if (list_recentlyfriend != null) {
+            list_recentlyfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+        }
+        list_invitedfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+
+        //初始化数组
+        invitedFriends = new ArrayList<>();
+        recentlyFriends = new ArrayList<>();
+
+        //加载跟所选项目和用户有关的、一般不变的信息
+        setupItemInfo();
+        //加载全场半场使用的下拉框，并设置提示信息
+        setupSpinner();
+
+        //加载最近邀请的好友
+        refreshRecentlyFriend();
     }
 
     @Override
@@ -117,66 +157,6 @@ public class GymNewOrderActivity extends BaseActivity {
             sendNewOrder();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void init(){
-        Bundle bundle = getIntent().getExtras();
-        gymItem = (GymSportModel) bundle.getSerializable("gymItem");
-        dayinfo = bundle.getString("dayInfo");
-        avaliableTime = bundle.getString("avaliableTime");
-
-
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
-        enableSwipeBack();
-
-        //设置标题
-        setTitle(gymItem.name + "新增预约");
-
-        //初始化
-        tv_time = (TextView)findViewById(R.id.tv_time);
-        spinner = (Spinner)findViewById(R.id.spiner_type);
-        et_phone = (EditText)findViewById(R.id.et_phone);
-        tv_tipsOfInvitedNums = (TextView)findViewById(R.id.tv_tipofinvitedfriends);
-
-        //列表初始化
-        list_invitedfriend = (ListView) findViewById(R.id.listview_invitedfriend);
-        list_recentlyfriend = (ListView) findViewById(R.id.listview_recentlyfriend);
-        if (list_recentlyfriend != null) {
-            list_recentlyfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        }
-        list_invitedfriend.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-
-        //初始化数组
-        invitedFriends = new ArrayList<>();
-        recentlyFriends = new ArrayList<>();
-
-        //初始化添加新朋友按钮
-        btn_addfriend = (Button)findViewById(R.id.btn_add_friend);
-        if (btn_addfriend != null) {
-            btn_addfriend.setOnClickListener(
-                    o -> startActivity(new Intent(GymNewOrderActivity.this, GymAddFriendActivity.class)));
-        }
-
-        //加载跟所选项目和用户有关的、一般不变的信息
-        setupItemInfo();
-        //加载全场半场使用的下拉框，并设置提示信息
-        setupSpinner();
-
-        //加载最近邀请的好友
-        refreshRecentlyFriend();
-
     }
 
     private void setupItemInfo(){
@@ -232,9 +212,9 @@ public class GymNewOrderActivity extends BaseActivity {
     void sendNewOrder(){
         //发起新预约
         //检查自己的userId是否为空
-        if (isOrdeing)
+        if (isOrdering)
             return;
-        isOrdeing = true;
+        isOrdering = true;
         showProgressDialog();
         String userId = CacheHelper.get("herald_gymreserve_userid");
         //如果为空则需要继续获取userId
@@ -246,7 +226,7 @@ public class GymNewOrderActivity extends BaseActivity {
                     .post("cardNo", ApiHelper.getUserName())
                     .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
                     .onFinish((success, code, response) -> {
-                        isOrdeing = false;
+                        isOrdering = false;
                         if (success){
                             //如果成功获取了自己的userId后继续尝试发送
                             sendNewOrder();
@@ -280,11 +260,11 @@ public class GymNewOrderActivity extends BaseActivity {
                 .post("orderVO.useTime",useTime)
                 .post("orderVO.useMode",useMode)
                 .post("orderVO.phone",phone)
-                .post("orderVO.remark","remark")//随便评论点内容
+                .post("orderVO.remark", useTime)//随便评论点内容
                 .post("useUserIds",useUserIds)
                 .onFinish((success, code, response) -> {
                     hideProgressDialog();
-                    isOrdeing = true;
+                    isOrdering = true;
                     Handler handler = new Handler();
                     try {
                         if (success){
@@ -446,7 +426,4 @@ public class GymNewOrderActivity extends BaseActivity {
             return convertView;
         }
     }
-
-
-
 }

@@ -3,10 +3,8 @@ package cn.seu.herald_android.mod_query.exam;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,6 +14,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -23,34 +23,15 @@ import cn.seu.herald_android.helper.CacheHelper;
 
 public class ExamActivity extends BaseActivity {
 
-    private RecyclerView recyclerView;
+    @BindView(R.id.recyclerview_exam)
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_exam);
-        init();
+        ButterKnife.bind(this);
         loadCache();
-    }
-
-    private void init() {
-        //toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorExamprimary));
-        enableSwipeBack();
-
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_exam);
     }
 
     @Override
@@ -94,7 +75,7 @@ public class ExamActivity extends BaseActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             ExamAdapter adapter = new ExamAdapter(exams);
             //绑定自定义考试可以删除的响应函数
-            adapter.setOnItemClickListner((item, position) -> {
+            adapter.setOnItemClickListener((item, position) -> {
                 if (item.isdefined){
                     //如果是自定义的考试就弹出删除询问
                     new AlertDialog.Builder(this)

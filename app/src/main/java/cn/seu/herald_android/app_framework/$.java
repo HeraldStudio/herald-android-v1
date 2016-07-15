@@ -1,7 +1,7 @@
 package cn.seu.herald_android.app_framework;
 
 /**
- * 模拟动态语言中的 Property.
+ * 模拟其它语言中的 Property.
  *
  *  Property 本身不存储数据, 却包含了一个 get 函数和一个 set 函数(可选), 对外显示成变量的形态.
  * 定义一个 Property 变量之后, "取它的值", 即可自动调用预设的 get 函数; 给它"赋值", 即可自动调用预设的 set 函数.

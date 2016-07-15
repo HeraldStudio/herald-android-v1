@@ -2,9 +2,7 @@ package cn.seu.herald_android.mod_query.schoolbus;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,6 +12,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -24,37 +24,20 @@ import cn.seu.herald_android.helper.CacheHelper;
  * 校车时刻表查询
  */
 public class SchoolBusActivity extends BaseActivity {
+
     //适配器
+    @BindView(R.id.tablayout_schoolbus)
+    TabLayout tabLayout;
+    @BindView(R.id.schoolbus_viewpager)
+    ViewPager viewPager;
+
     private SchoolBusViewPagerAdapter schoolBusViewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_schoolbus);
-        //初始化函数
-        init();
-        //加载校车数据
-        loadListWithCache();
-    }
-
-    private void init() {
-        //沉浸式布局
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorSchoolBusprimary));
-        enableSwipeBack();
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //初始化控件
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout_schoolbus);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.schoolbus_viewpager);
+        ButterKnife.bind(this);
 
         //适配器初始化
         //添加到viewpager中
@@ -68,7 +51,8 @@ public class SchoolBusActivity extends BaseActivity {
                 tabLayout.setupWithViewPager(viewPager);
             }
         }
-//        tabLayout.setTabsFromPagerAdapter(schoolBusViewPagerAdapter);
+        //加载校车数据
+        loadListWithCache();
     }
 
     @Override

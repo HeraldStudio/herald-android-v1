@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -24,7 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.custom.CustomSnackBar;
+import cn.seu.herald_android.mod_auth.LoginActivity;
 
 /**
  * 应用程序中所有 Activity 必须继承此类, 以保证能够正常使用静态化的工具函数和工具类.
@@ -57,6 +60,25 @@ public class BaseActivity extends AppCompatActivity {
             ViewGroup rootView = (ViewGroup) contentView.getChildAt(0);
 
             rootView.setBackgroundColor(Color.WHITE);
+        }
+
+        // Toolbar初始化
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
+            toolbar.setNavigationOnClickListener(v -> {
+                onBackPressed();
+                finish();
+            });
+        }
+
+        // 滑动返回和状态栏沉浸
+        if (!(this instanceof MainActivity) && !(this instanceof LoginActivity)) {
+            setStatusBarColor(ContextCompat.getColor(this, AppContext.getColorPrimary()));
+            Slidr.attach(this, new SlidrConfig.Builder().edge(true).edgeSize(.05f).build());
+        } else if (this instanceof MainActivity) {
+            setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
     }
 
@@ -108,11 +130,6 @@ public class BaseActivity extends AppCompatActivity {
         }
         firstCreate = false;
     }
-
-    /**
-     * 注意！！！！！！
-     * 继承自此类的Activity务必运行一次enableSwipeBack，否则根布局将全透明
-     */
 
     /**
      * 生成一个和状态栏大小相同的矩形条
@@ -173,7 +190,7 @@ public class BaseActivity extends AppCompatActivity {
             // 设置状态栏透明
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-            // 判断版本低于 6.0, 否则用新方法
+            // 判断版本低于 5.0, 否则用新方法
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 
                 // 生成一个状态栏大小的矩形
@@ -183,8 +200,7 @@ public class BaseActivity extends AppCompatActivity {
                 ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
                 decorView.addView(statusView);
             } else {
-
-                // 6.0 以上通过window来设置颜色
+                // 5.0 以上通过window来设置颜色
                 Window window = getWindow();
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -196,17 +212,12 @@ public class BaseActivity extends AppCompatActivity {
             if (contentView != null) {
                 ViewGroup rootView = (ViewGroup) contentView.getChildAt(0);
 
-                // 6.0以上有伸缩布局和伸缩视差的地方必须在xml文件里设置根布局 FitsSystemWindows 为 false，
+                // 5.0以上有伸缩布局和伸缩视差的地方必须在xml文件里设置根布局 FitsSystemWindows 为 false，
                 // 其他的地方依然为 true
                 rootView.setFitsSystemWindows(true);
                 rootView.setClipToPadding(true);
             }
         }
-    }
-
-    protected void enableSwipeBack() {
-        // 设置根布局的参数
-        Slidr.attach(this, new SlidrConfig.Builder().edge(true).edgeSize(.05f).build());
     }
 
     // 显示一个SnackBar

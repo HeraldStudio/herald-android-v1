@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_achievement;
+package cn.seu.herald_android.mod_query.experiment;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_query.experiment.AchievementModel;
 
 public class AchievementViewPagerAdapter extends PagerAdapter {
 
@@ -48,8 +47,8 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         AchievementModel achievementModel = achievements.get(position);
-        View view = LayoutInflater.from(this.context)
-                .inflate(R.layout.mod_que_experiment__view_pager_achievement, null);
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.mod_que_experiment__view_pager_achievement__item, null);
 
         ViewHolder holder = new ViewHolder(view);
 
@@ -57,6 +56,7 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
         holder.title.setText(achievementModel.getName());
         //成就描述
         holder.desc.setText(achievementModel.getDes());
+        container.addView(view);
         return view;
     }
 

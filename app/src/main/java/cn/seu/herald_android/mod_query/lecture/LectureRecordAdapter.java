@@ -9,9 +9,23 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 class LectureRecordAdapter extends ArrayAdapter<LectureRecordModel> {
+
+    static class ViewHolder {
+        @BindView(R.id.content)
+        TextView tv_time;
+        @BindView(R.id.tv_place)
+        TextView tv_place;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
     private int resource;
 
     public LectureRecordAdapter(Context context, int resource, List<LectureRecordModel> objects) {
@@ -24,13 +38,12 @@ class LectureRecordAdapter extends ArrayAdapter<LectureRecordModel> {
         final LectureRecordModel lectureRecordItem = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(resource, null);
+            convertView.setTag(new ViewHolder(convertView));
         }
-        //设置列表每项的时间控件
-        TextView tv_time = (TextView) convertView.findViewById(R.id.content);
-        //设置列表每项的地点控件
-        TextView tv_place = (TextView) convertView.findViewById(R.id.tv_place);
-        tv_time.setText(lectureRecordItem.time);
-        tv_place.setText(lectureRecordItem.place);
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+
+        holder.tv_time.setText(lectureRecordItem.time);
+        holder.tv_place.setText(lectureRecordItem.place);
         return convertView;
     }
 }

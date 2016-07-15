@@ -4,11 +4,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -25,43 +25,23 @@ import cn.seu.herald_android.helper.ApiRequest;
  * Created by corvo on 3/13/16.
  * 图书馆搜书页面Activity
  */
-public class LibrarySearchActivity extends BaseActivity
-    implements SearchView.OnQueryTextListener{
+public class LibrarySearchActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+
     // 用于显示搜索结果的列表
-    private RecyclerView recyclerView_search_result;
+    @BindView(R.id.recyclerview_library_searchres)
+    RecyclerView recyclerView_search_result;
     // 搜索框
     private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_library__search);
-        init();
+        ButterKnife.bind(this);
+
+        recyclerView_search_result.setHasFixedSize(true);
+        recyclerView_search_result.setLayoutManager(new LinearLayoutManager(this));
     }
-
-    private void init() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.libary_toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorLibraryprimary));
-        enableSwipeBack();
-
-
-        //设置展示搜索结果的列表
-        recyclerView_search_result = (RecyclerView)findViewById(R.id.recyclerview_library_searchres);
-        if (recyclerView_search_result != null) {
-            recyclerView_search_result.setHasFixedSize(true);
-            recyclerView_search_result.setLayoutManager(new LinearLayoutManager(this));
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,7 +72,6 @@ public class LibrarySearchActivity extends BaseActivity
 
         return super.onCreateOptionsMenu(menu);
     }
-
 
     //搜索按钮点击时运行的函数
     @Override
@@ -139,7 +118,5 @@ public class LibrarySearchActivity extends BaseActivity
         SearchBookAdapter bookAdapter = new SearchBookAdapter(list);
         recyclerView_search_result.setAdapter(bookAdapter);
     }
-
-
 }
 

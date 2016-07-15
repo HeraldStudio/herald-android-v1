@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
@@ -53,22 +55,22 @@ public class SrtpAdapter extends RecyclerView.Adapter<SrtpAdapter.SrtpHolder> {
     }
 
     class SrtpHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.tv_date)
         TextView tv_date;
+        @BindView(R.id.tv_credit)
         TextView tv_credit;
+        @BindView(R.id.tv_project)
         TextView tv_project;
+        @BindView(R.id.tv_department)
         TextView tv_department;
+        @BindView(R.id.tv_type)
         TextView tv_type;
+        @BindView(R.id.tv_totalcredit)
         TextView tv_totalCredit;
 
         public SrtpHolder(View itemView) {
             super(itemView);
-            tv_date = (TextView) itemView.findViewById(R.id.tv_date);
-            tv_credit = (TextView) itemView.findViewById(R.id.tv_credit);
-            tv_project = (TextView) itemView.findViewById(R.id.tv_project);
-            tv_department = (TextView) itemView.findViewById(R.id.tv_department);
-            tv_type = (TextView) itemView.findViewById(R.id.tv_type);
-            tv_totalCredit = (TextView) itemView.findViewById(R.id.tv_totalcredit);
+            ButterKnife.bind(this, itemView);
         }
     }
-
 }

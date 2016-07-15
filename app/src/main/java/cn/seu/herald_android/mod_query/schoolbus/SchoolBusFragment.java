@@ -10,6 +10,7 @@ import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class SchoolBusFragment extends Fragment {
@@ -33,7 +34,7 @@ public class SchoolBusFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mod_que_schoolbus__fragment, container, false);
         //控件初始化
-        ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+        ExpandableListView expandableListView = ButterKnife.findById(view, R.id.expandableListView);
         //设定适配器
         SchoolBusExpandAdapter adapter = new SchoolBusExpandAdapter(getContext(), titles, childViews);
         expandableListView.setAdapter(adapter);

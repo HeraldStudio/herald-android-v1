@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -46,4 +48,5 @@
         android:layout_gravity="center_vertical|right"
         android:paddingLeft="15dp"
         android:paddingRight="15dp" />
+
 </LinearLayout>

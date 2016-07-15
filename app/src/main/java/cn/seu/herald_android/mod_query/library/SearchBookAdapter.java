@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.ViewHolder> {
@@ -15,17 +17,18 @@ public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.Vi
     private List<SearchBookModel> bookModelList;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView booksName;
-        public TextView booksPosition;
-        public TextView booksLeft;
-        public TextView pubWithAuthor;
+        @BindView(R.id.books_name)
+        TextView booksName;
+        @BindView(R.id.books_position)
+        TextView booksPosition;
+        @BindView(R.id.books_left)
+        TextView booksLeft;
+        @BindView(R.id.pub_author)
+        TextView pubWithAuthor;
 
         public ViewHolder(View v) {
             super(v);
-            booksName = (TextView)v.findViewById(R.id.books_name);
-            booksPosition = (TextView)v.findViewById(R.id.books_position);
-            booksLeft = (TextView)v.findViewById(R.id.books_left);
-            pubWithAuthor = (TextView)v.findViewById(R.id.pub_author);
+            ButterKnife.bind(this, v);
         }
     }
 
@@ -53,7 +56,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.Vi
         return bookModelList.size();
     }
 
-    public void setList(List<SearchBookModel> bookses) {
-        this.bookModelList = bookses;
+    public void setList(List<SearchBookModel> books) {
+        this.bookModelList = books;
     }
 }

@@ -2,11 +2,8 @@ package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -19,6 +16,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -34,41 +33,19 @@ public class GymReserveActivity extends BaseActivity {
                         /** notifyModuleIfChanged: */SettingsHelper.Module.gymreserve);
     }
 
+    @BindView(R.id.recyclerview_reserve)
     RecyclerView recyclerView;
+    @BindView(R.id.img_gymindex)
+    ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_gymreserve);
-        init();
-    }
+        ButterKnife.bind(this);
 
-    private void init() {
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //设置伸缩标题栏禁用
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-
-        //设置时差图
-        ImageView imageView = (ImageView)findViewById(R.id.img_gymindex);
+        //设置视差图
         Picasso.with(getBaseContext()).load(R.drawable.changguanyuyue).into(imageView);
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorGymReserveprimary));
-        enableSwipeBack();
-        //列表初始化
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerview_reserve);
 
         //启用刷新
         refreshItemListAndTimeList();
@@ -76,22 +53,18 @@ public class GymReserveActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_record, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_record) {
             startActivity(new Intent(GymReserveActivity.this, GymMyOrderActivity.class));
-        }else if (id == R.id.action_sync){
+        } else if (id == R.id.action_sync) {
             refreshItemListAndTimeList();
         }
         return super.onOptionsItemSelected(item);
@@ -143,7 +116,7 @@ public class GymReserveActivity extends BaseActivity {
             //点击时创建相应运动预约界面
             adapter.setItemClickListener((view, item) -> {
                 //打开相对应的预约界面
-                GymChooseTimeActivity.startOrderItemActivity(GymReserveActivity.this, item, dayInfos);
+                GymChooseTimeActivity.startWithData(item, dayInfos);
             });
             recyclerView.setAdapter(adapter);
             //设置布局管理器

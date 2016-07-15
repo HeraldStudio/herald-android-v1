@@ -13,8 +13,8 @@
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapse_toolbar"
+        <cn.seu.herald_android.custom.CustomCollapsingToolbarLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -38,7 +38,7 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </cn.seu.herald_android.custom.CustomCollapsingToolbarLayout>
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
     <include layout="@layout/mod_que_lecture__content" />

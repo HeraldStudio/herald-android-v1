@@ -1,8 +1,6 @@
 package cn.seu.herald_android.mod_query.jwc;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -13,6 +11,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -21,34 +21,15 @@ import cn.seu.herald_android.helper.CacheHelper;
 public class JwcActivity extends BaseActivity {
 
     //教务通知类型列表
-    private ExpandableListView expandableListView;
+    @BindView(R.id.expandableListView)
+    ExpandableListView expandableListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_jwc);
-        init();
+        ButterKnife.bind(this);
         loadCache();
-    }
-
-    private void init() {
-        //toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorJwcprimary));
-        enableSwipeBack();
-
-        //教务通知类型列表加载
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
     }
 
     @Override

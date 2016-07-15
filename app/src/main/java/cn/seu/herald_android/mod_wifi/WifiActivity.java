@@ -2,9 +2,8 @@ package cn.seu.herald_android.mod_wifi;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Vibrator;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,6 +18,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.app_framework.BaseActivity;
@@ -34,45 +36,38 @@ import okhttp3.Call;
 
 public class WifiActivity extends BaseActivity {
     Vibrator vibrator;
+    @BindView(R.id.btn_connect_wifi)
     Button btnConnect;
+    @BindView(R.id.btn_disconnect_wifi)
     Button btnDisconnect;
+    @BindView(R.id.btn_refresh_wifi)
     Button btnRefresh;
+    @BindView(R.id.chartwlan)
     PieChartView pieChartView;
+    @BindView(R.id.tv_user)
     TextView tv_user;//用户一卡通
+    @BindView(R.id.tv_ip)
     TextView tv_ip;//用户ip显示
+    @BindView(R.id.tv_index)
     TextView tv_index;//用户已登录设备数
+    @BindView(R.id.tv_expire)
     TextView tv_expire;//剩余天数
+    @BindView(R.id.layout_info)
     LinearLayout info_layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_wifi);
+        ButterKnife.bind(this);
         vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-        init();
-        setup();
+
         //打开后自动连接
         loginToService();
     }
-    private void init(){
-        setStatusBarColor(ContextCompat.getColor(this,R.color.colorGray));
-        btnConnect = (Button) findViewById(R.id.btn_connect_wifi);
-        btnDisconnect = (Button) findViewById(R.id.btn_disconnect_wifi);
-        btnRefresh = (Button) findViewById(R.id.btn_refresh_wifi);
-        pieChartView = (PieChartView)findViewById(R.id.chartwlan);
-        tv_user = (TextView)findViewById(R.id.tv_user);
-        tv_ip = (TextView)findViewById(R.id.tv_ip);
-        tv_index = (TextView)findViewById(R.id.tv_index);
-        tv_expire = (TextView)findViewById(R.id.tv_expire);
-        info_layout = (LinearLayout)findViewById(R.id.layout_info);
-    }
 
-    private void setup(){
-        btnConnect.setOnClickListener(v -> loginToService());
-        btnDisconnect.setOnClickListener(v -> logoutFromService());
-        btnRefresh.setOnClickListener(v -> refreshCache());
-    }
-
-    private void loginToService(){
+    @OnClick(R.id.btn_connect_wifi)
+    void loginToService() {
         btnConnect.setEnabled(false);
         btnConnect.setText("正在登录中");
         AppContext.showMessage("正在登录校园网");
@@ -131,7 +126,8 @@ public class WifiActivity extends BaseActivity {
         });
     }
 
-    private void logoutFromService() {
+    @OnClick(R.id.btn_disconnect_wifi)
+    void logoutFromService() {
         btnDisconnect.setEnabled(false);
         btnDisconnect.setText("正在断开连接");
         OkHttpUtils.post().url("http://w.seu.edu.cn/portal/logout.php").build()
@@ -182,7 +178,8 @@ public class WifiActivity extends BaseActivity {
         }
     }
 
-    private void refreshCache() {
+    @OnClick(R.id.btn_refresh_wifi)
+    void refreshCache() {
         btnRefresh.setEnabled(false);
         btnRefresh.setText("正在刷新流量使用情况");
         new ApiRequest().api("nic").addUUID()
@@ -197,6 +194,4 @@ public class WifiActivity extends BaseActivity {
                     }
                 }).run();
     }
-
-
 }

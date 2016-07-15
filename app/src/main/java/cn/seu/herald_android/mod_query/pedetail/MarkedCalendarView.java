@@ -27,6 +27,7 @@ public class MarkedCalendarView extends FrameLayout {
 
     // 用于保存本页每个日期控件的链表
     private List<View> views;
+
     // 对话框中刷新按钮的点击事件
     public DialogInterface.OnClickListener refreshListener;
 

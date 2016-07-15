@@ -1,11 +1,8 @@
 package cn.seu.herald_android.mod_query.srtp;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,6 +13,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -31,46 +30,17 @@ public class SrtpActivity extends BaseActivity {
                         /** notifyModuleIfChanged: */SettingsHelper.Module.srtp);
     }
 
-    private RecyclerView recyclerView_srtp;
-    private TextView tv_total_credit;
+    @BindView(R.id.recyclerview_srtp)
+    RecyclerView recyclerView_srtp;
+    @BindView(R.id.tv_totalcredit)
+    TextView tv_total_credit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_srtp);
-        init();
+        ButterKnife.bind(this);
         loadCache();
-    }
-
-    private void init() {
-        setupToolBar();
-        //回收列表
-        recyclerView_srtp = (RecyclerView) findViewById(R.id.recyclerview_srtp);
-        //总学分
-        tv_total_credit = (TextView) findViewById(R.id.tv_totalcredit);
-    }
-
-    private void setupToolBar() {
-        //设置toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-
-        //设置伸缩标题禁用
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-        //适配4.4的沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorSrtpprimary));
-        enableSwipeBack();
     }
 
     private void loadCache() {

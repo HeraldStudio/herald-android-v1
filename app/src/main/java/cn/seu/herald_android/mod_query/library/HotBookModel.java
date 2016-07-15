@@ -27,7 +27,6 @@ class HotBookModel {
         return count;
     }
 
-
     public String getPlace() {
         return place;
     }

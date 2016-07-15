@@ -60,9 +60,9 @@
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="@dimen/divider_height"
             android:background="@color/colorDivider"
-            android:layout_below="@id/main_tabs_pager">
+            android:layout_above="@id/main_tabs">
         </View>
         <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
             android:id="@+id/main_tabs"

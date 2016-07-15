@@ -4,11 +4,8 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -21,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -29,52 +28,27 @@ import cn.seu.herald_android.helper.CacheHelper;
 
 public class CardActivity extends BaseActivity {
 
+    @BindView(R.id.recyclerview_card)
+    RecyclerView recyclerViewCard;
 
-    //消费记录详情列表
-    private RecyclerView recyclerViewCard;
-    //余额
-    private TextView tv_extra;
+    @BindView(R.id.tv_extra)
+    TextView tv_extra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_card);
-        init();
+        ButterKnife.bind(this);
+
+        //设置布局
+        recyclerViewCard.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCard.setHasFixedSize(true);
 
         String cache = CacheHelper.get("herald_card");
         if (!cache.equals("")) {
             loadCache();
         }
         refreshCache();
-    }
-
-    private void init() {
-        //Toolbar初始化
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorCardprimary));
-        enableSwipeBack();
-        //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-
-        //RecyclerView初始化
-        recyclerViewCard = (RecyclerView) findViewById(R.id.recyclerview_card);
-        //设置布局
-        recyclerViewCard.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewCard.setHasFixedSize(true);
-        tv_extra = (TextView) findViewById(R.id.tv_extra);
     }
 
     @Override

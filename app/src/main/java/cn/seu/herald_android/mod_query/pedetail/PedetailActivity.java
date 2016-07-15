@@ -1,10 +1,7 @@
 package cn.seu.herald_android.mod_query.pedetail;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -19,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiThreadManager;
@@ -31,39 +30,19 @@ public class PedetailActivity extends BaseActivity {
             6 * 60 + 20, 7 * 60 + 20
     };
     // 左右滑动分页的日历容器
-    private ViewPager pager;
+    @BindView(R.id.calendarPager)
+    ViewPager pager;
     // 跑操次数数字
-    private TextView count, remain;
+    @BindView(R.id.tv_count)
+    TextView count;
+    @BindView(R.id.tv_remain)
+    TextView remain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_pedetail);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_24dp);
-            toolbar.setNavigationOnClickListener(v -> {
-                onBackPressed();
-                finish();
-            });
-        }
-
-        //禁用collapsingToolbarLayout的伸缩标题
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
-        if (collapsingToolbarLayout != null) {
-            collapsingToolbarLayout.setTitleEnabled(false);
-        }
-        //沉浸式
-        setStatusBarColor(ContextCompat.getColor(this, R.color.colorPedetailprimary));
-        enableSwipeBack();
-
-        pager = (ViewPager) findViewById(R.id.calendarPager);
-
-        // 设置下拉刷新控件的进度条颜色
-        count = (TextView) findViewById(R.id.tv_count);
-        remain = (TextView) findViewById(R.id.tv_remain);
+        ButterKnife.bind(this);
 
         // 首先加载一次缓存数据（如未登录则弹出登陆窗口）
         readLocal();

@@ -22,38 +22,13 @@ class GradeAdapter extends TableDataAdapter<GradeModel> {
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         //返回一行中各列的view
         GradeModel gradeModel = getRowData(rowIndex);
-        View renderedView = null;
-        switch (columnIndex) {
-            case 0:
-                //课程名称
-                renderedView = renderSimpleTextView(gradeModel.getName());
-                break;
-            case 1:
-                //课程学期
-                renderedView = renderSimpleTextView(gradeModel.getSemester().semester);
-                break;
-            case 2:
-                //课程成绩
-                renderedView = renderSimpleTextView(gradeModel.getScore());
-                break;
-            case 3:
-                //课程类型
-                renderedView = renderSimpleTextView(gradeModel.getType());
-                break;
-            case 4:
-                //课程学分
-                renderedView = renderSimpleTextView(gradeModel.getCredit() + "");
-                break;
-        }
-        return renderedView;
+        return renderSimpleTextView(new String[]{
+                gradeModel.getName(), gradeModel.getSemester().semester, gradeModel.getScore(),
+                gradeModel.getType(), String.valueOf(gradeModel.getCredit())
+        }[columnIndex]);
     }
 
-
     private View renderSimpleTextView(String text) {
-        //为子项加载布局
-//        View view = LayoutInflater.from(getContext()).inflate(R.layout.tableviewitem_grade, null);
-//        TextView tv_cell =(TextView)view.findViewById(R.id.tv_gradetableitem);
-//        tv_cell.setText(text);
         TextView tv_cell = new TextView(getContext());
         tv_cell.setText(text);
         tv_cell.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
