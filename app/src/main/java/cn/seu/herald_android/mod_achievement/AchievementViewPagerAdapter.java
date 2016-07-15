@@ -9,10 +9,24 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.mod_query.experiment.AchievementModel;
 
 public class AchievementViewPagerAdapter extends PagerAdapter {
+
+    static class ViewHolder {
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.tv_des)
+        TextView desc;
+
+        public ViewHolder(View v) {
+            ButterKnife.bind(this, v);
+        }
+    }
+
     private ArrayList<AchievementModel> achievements;
     private Context context;
 
@@ -34,14 +48,15 @@ public class AchievementViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         AchievementModel achievementModel = achievements.get(position);
-        View view = LayoutInflater.from(this.context).inflate(R.layout.mod_que_experiment__view_pager_achievement, null);
+        View view = LayoutInflater.from(this.context)
+                .inflate(R.layout.mod_que_experiment__view_pager_achievement, null);
+
+        ViewHolder holder = new ViewHolder(view);
+
         //设置成就名字
-        TextView tv_name = (TextView) view.findViewById(R.id.title);
-        tv_name.setText(achievementModel.getName());
+        holder.title.setText(achievementModel.getName());
         //成就描述
-        TextView tv_des = (TextView) view.findViewById(R.id.tv_des);
-        tv_des.setText(achievementModel.getDes());
-        container.addView(view);
+        holder.desc.setText(achievementModel.getDes());
         return view;
     }
 

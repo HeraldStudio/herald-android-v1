@@ -19,18 +19,13 @@ public class AfterSchoolActivityBlockLayout extends LinearLayout {
         this.item = item;
         View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);
         TextView title = (TextView) contentView.findViewById(R.id.title);
-        //TextView subtitle = (TextView) contentView.findViewById(R.id.subtitle);
         TextView content = (TextView) contentView.findViewById(R.id.content);
 
         title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAfterSchoolPrimary));
         title.setText(item.title);
         title.setEllipsize(TextUtils.TruncateAt.END);
 
-
         content.setText(item.activity_time + " @ " + item.location);
-
-        //子标题为活动是否开始
-        //subtitle.setText(item.getTag());
 
         addView(contentView);
 

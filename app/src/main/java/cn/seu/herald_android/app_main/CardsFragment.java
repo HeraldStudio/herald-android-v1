@@ -7,26 +7,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
 
 public class CardsFragment extends Fragment {
 
-    private CustomSwipeRefreshLayout srl;
+    @BindView(R.id.swipe_container)
+    CustomSwipeRefreshLayout srl;
 
-    private CardsListView view;
+    @BindView(R.id.timeline)
+    CardsListView view;
+
+    private Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.app_main__fragment_cards, container, false);
+        unbinder = ButterKnife.bind(this, contentView);
 
-        srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
-        view = (CardsListView) contentView.findViewById(R.id.timeline);
         view.setSrl(srl);
         srl.setOnRefreshListener(() -> view.loadContent(true));
 
         return contentView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override

@@ -13,6 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
@@ -122,33 +124,29 @@ public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter 
         return list.size();
     }
 
-    public static class AfterSchoolActivityViewHolder extends RecyclerView.ViewHolder{
-        //活动缩略图
-        ImageView  imgv_activity;
-        //活动标题
-        TextView tv_title;
-        //活动时间和地点
-        TextView tv_time_and_location;
-        //活动介绍
-        TextView tv_introduction;
-        //标识活动是否开始
-        TextView tv_tag;
-        //活动主办方
-        TextView tv_association;
-        //可点击的卡片区域
+    public static class AfterSchoolActivityViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.layout_card)
         View cardview;
-        //详情
+        @BindView(R.id.imgv_activity)
+        ImageView imgv_activity;
+        @BindView(R.id.tv_title)
+        TextView tv_title;
+        @BindView(R.id.tv_time_and_location)
+        TextView tv_time_and_location;
+        @BindView(R.id.tv_introduction)
+        TextView tv_introduction;
+        @BindView(R.id.tv_tag)
+        TextView tv_tag;
+        @BindView(R.id.tv_association)
+        TextView tv_association;
+        @BindView(R.id.tv_details)
         TextView tv_details;
+
         public AfterSchoolActivityViewHolder(View itemView) {
             super(itemView);
-            cardview = itemView.findViewById(R.id.layout_card);
-            imgv_activity = (ImageView)itemView.findViewById(R.id.imgv_activity);
-            tv_title = (TextView)itemView.findViewById(R.id.tv_title);
-            tv_time_and_location = (TextView)itemView.findViewById(R.id.tv_time_and_location);
-            tv_introduction = (TextView)itemView.findViewById(R.id.tv_introduction);
-            tv_tag = (TextView)itemView.findViewById(R.id.tv_tag);
-            tv_association = (TextView)itemView.findViewById(R.id.tv_association);
-            tv_details = (TextView)itemView.findViewById(R.id.tv_details);
+            ButterKnife.bind(this, itemView);
+
             float resolution = 5f/2f;
             imgv_activity.post(()->{
                 int weight = imgv_activity.getWidth();
@@ -158,10 +156,5 @@ public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter 
             });
             imgv_activity.measure(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-
     }
-
-
-
-
 }

@@ -13,6 +13,7 @@
         android:paddingTop="27dp"
         android:paddingBottom="7dp"
         android:textSize="12sp"
+        android:text="已启用的模块"
         android:textColor="#666" />
 
     <View

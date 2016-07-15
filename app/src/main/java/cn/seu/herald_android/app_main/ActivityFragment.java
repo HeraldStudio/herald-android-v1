@@ -14,6 +14,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.custom.CustomDividerItemDecoration;
@@ -25,16 +28,25 @@ import cn.seu.herald_android.mod_afterschool.ActivityAdapter;
 import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityItem;
 
 public class ActivityFragment extends Fragment{
-    private View contentView;
-    //展示活动列表
+
+    // 展示活动列表
+    @BindView(R.id.recyclerview_afterschoolactivity)
     RefreshRecyclerView recyclerView;
-    //适配器
-    ActivityAdapter activityAdapter;
-    //当前展示的页
-    int page = 1;
-    //下拉刷新控件
+
+    // 下拉刷新控件
+    @BindView(R.id.swipe_container)
     CustomSwipeRefreshLayout srl;
-    //标识刷新状态，如果还在刷新就拒绝刷新请求
+
+    // ButterKnife 所需
+    private Unbinder unbinder;
+
+    // 适配器
+    ActivityAdapter activityAdapter;
+
+    // 当前展示的页
+    int page = 1;
+
+    // 标识刷新状态，如果还在刷新就拒绝刷新请求
     boolean isRefreshing = false;
 
     public static ActivityFragment getInstance(){
@@ -44,11 +56,54 @@ public class ActivityFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        contentView = inflater.inflate(R.layout.app_main__fragment_activities, container, false);
-        //加载活动列表
+        View contentView = inflater.inflate(R.layout.app_main__fragment_activities, container, false);
+        unbinder = ButterKnife.bind(this, contentView);
+        return contentView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // 加载活动列表
         init();
         loadActivityList();
-        return contentView;
+    }
+
+    private void init() {
+        // 活动列表初始化
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new CustomDividerItemDecoration(getContext()));
+
+        // 初始化适配器
+        activityAdapter = new ActivityAdapter(
+                getContext(),
+                new ArrayList<>());
+
+        // 绑定适配器跟上拉加载监听函数
+        recyclerView.setAdapter(activityAdapter);
+        recyclerView.setOnFooterListener((footerposition) -> new ApiRequest()
+                .url("http://115.28.27.150/herald/api/v1/huodong/get?page=" + (page + 1))
+                .get()
+                .onFinish((success, code, response) -> {
+                    if (success) {
+                        //每次上拉记载时，页数都加1
+                        page += 1;
+                        addNewItemWithData(response);
+                    } else {
+                        AppContext.showMessage("加载失败，请重试");
+                    }
+                }).run());
+
+        // 设置下拉刷新
+        srl.setOnRefreshListener(this::refreshCache);
     }
 
     public void loadActivityList(){
@@ -83,38 +138,6 @@ public class ActivityFragment extends Fragment{
                         AppContext.showMessage("刷新失败，请重试");
                     }
                 }).run();
-    }
-
-
-    private void init(){
-        //活动列表初始化
-        recyclerView = (RefreshRecyclerView) contentView.findViewById(R.id.recyclerview_afterschoolactivity);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new CustomDividerItemDecoration(
-                getContext()));
-
-        //初始化适配器
-        activityAdapter = new ActivityAdapter(
-                getContext(),
-                new ArrayList<>());
-        //绑定适配器跟上拉加载监听函数
-        recyclerView.setAdapter(activityAdapter);
-        recyclerView.setOnFooterListener((footerposition)-> new ApiRequest()
-                .url("http://115.28.27.150/herald/api/v1/huodong/get?page="+(page+1))
-                .get()
-                .onFinish((success, code, response) -> {
-                    if (success){
-                        //每次上拉记载时，页数都加1
-                        page += 1;
-                        addNewItemWithData(response);
-                    } else {
-                        AppContext.showMessage("加载失败，请重试");
-                    }
-                }).run());
-        //设置下拉刷新
-        srl = (CustomSwipeRefreshLayout) contentView.findViewById(R.id.swipe_container);
-        srl.setOnRefreshListener(this::refreshCache);
     }
 
     public void addNewItemWithData(String data){

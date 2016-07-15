@@ -15,6 +15,10 @@ import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.app_framework.SystemUtil;
@@ -27,61 +31,35 @@ import cn.seu.herald_android.mod_communicate.FeedbackActivity;
 
 public class SettingsFragment extends Fragment {
 
-    private View contentView;
+    @BindView(R.id.tv_now_version)
+    TextView nowVersion;
+
+    View contentView;
+
+    Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.app_main__fragment_settings, null, false);
-
-        View check_update = contentView.findViewById(R.id.check_update);
-        check_update.setOnClickListener(v -> checkUpdate());
-
-        View custom_account = contentView.findViewById(R.id.custom_account);
-        custom_account.setOnClickListener(v -> setCustomAccount());
-
-        TextView tv_nowversion = (TextView) contentView.findViewById(R.id.tv_now_version);
-        tv_nowversion.setText("当前版本： " + SystemUtil.getAppVersionName());
-
-        contentView.findViewById(R.id.tv_aboutus).setOnClickListener((v) ->
-                startActivity(new Intent(getContext(), AboutusActivity.class)));
-
-        contentView.findViewById(R.id.tv_feedback).setOnClickListener((v) ->
-                startActivity(new Intent(getContext(), FeedbackActivity.class)));
-
-        contentView.findViewById(R.id.tv_logout).setOnClickListener((v) ->
-                new AlertDialog.Builder(getContext()).setMessage("退出后将自动清除模块缓存，确定退出吗？")
-                .setPositiveButton("退出", (d, w) -> ApiHelper.doLogout(null))
-                .setNegativeButton("取消", null)
-                .show());
-
-        contentView.findViewById(R.id.create_shortcut_wifi).setOnClickListener(v -> {
-            //创捷快捷方式的Intent
-            Intent addIntent=new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-            Parcelable icon=Intent.ShortcutIconResource.fromContext(getContext(), R.mipmap.ic_wifi); //获取快捷键的图标
-            //用于触发自动登录服务的Intent
-            Intent seuloginIntent = new Intent();
-            seuloginIntent.setAction("cn.seu.herald_android.WIFI_AUTOLOGIN_ACTIVITY");
-            addIntent.putExtra("duplicate", false);
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "SEU快捷登录");//快捷方式的标题
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);//快捷方式的图标
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, seuloginIntent);//快捷方式的动作
-            getContext().sendBroadcast(addIntent);//发送广播
-            AppContext.showMessage("已将快捷方式放置至桌面");
-        });
-
-        //seu登录模块设置
+        unbinder = ButterKnife.bind(this, contentView);
+        nowVersion.setText("当前版本： " + SystemUtil.getAppVersionName());
+        // seu登录模块设置
         setupSeuSettings();
-
-        //个性化设置
+        // 个性化设置
         setupPersonalSettings();
-
         return contentView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     private void setupPersonalSettings(){
         //底部菜单设置
-        SwitchButton swith_bottomtab = (SwitchButton) contentView.findViewById(R.id.switchbottomtab);
+        SwitchButton swith_bottomtab = ButterKnife.findById(contentView, R.id.switchbottomtab);
         swith_bottomtab.setCheckedImmediately(!SettingsHelper.bottomTabEnabled.$get());
         swith_bottomtab.setOnCheckedChangeListener((buttonView, isChecked) -> {
             SettingsHelper.bottomTabEnabled.$set(!isChecked);
@@ -91,13 +69,48 @@ public class SettingsFragment extends Fragment {
 
     private void setupSeuSettings(){
         //seu登录模块设置
-        SwitchButton swith_seu = (SwitchButton) contentView.findViewById(R.id.switchseuauto);
+        SwitchButton swith_seu = ButterKnife.findById(contentView, R.id.switchseuauto);
         swith_seu.setCheckedImmediately(SettingsHelper.wifiAutoLogin.$get());
         swith_seu.setOnCheckedChangeListener((buttonView, isChecked) ->
                 SettingsHelper.wifiAutoLogin.$set(isChecked));
     }
 
-    private void checkUpdate() {
+    @OnClick(R.id.tv_aboutus)
+    void aboutUs() {
+        startActivity(new Intent(getContext(), AboutusActivity.class));
+    }
+
+    @OnClick(R.id.tv_feedback)
+    void feedback() {
+        startActivity(new Intent(getContext(), FeedbackActivity.class));
+    }
+
+    @OnClick(R.id.tv_logout)
+    void logout() {
+        new AlertDialog.Builder(getContext()).setMessage("退出后将自动清除模块缓存，确定退出吗？")
+                .setPositiveButton("退出", (d, w) -> ApiHelper.doLogout(null))
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    @OnClick(R.id.create_shortcut_wifi)
+    void createShortcut() {
+        //创捷快捷方式的Intent
+        Intent addIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getContext(), R.mipmap.ic_wifi); //获取快捷键的图标
+        //用于触发自动登录服务的Intent
+        Intent seuloginIntent = new Intent();
+        seuloginIntent.setAction("cn.seu.herald_android.WIFI_AUTOLOGIN_ACTIVITY");
+        addIntent.putExtra("duplicate", false);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "SEU快捷登录");//快捷方式的标题
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);//快捷方式的图标
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, seuloginIntent);//快捷方式的动作
+        getContext().sendBroadcast(addIntent);//发送广播
+        AppContext.showMessage("已将快捷方式放置至桌面");
+    }
+
+    @OnClick(R.id.check_update)
+    void checkUpdate() {
         //如果版本有更新则提示更新版本
         int versionCode = SystemUtil.getAppVersionCode();
         int newestCode = ServiceHelper.getNewestVersionCode();
@@ -130,7 +143,8 @@ public class SettingsFragment extends Fragment {
         }
     }
 
-    private void setCustomAccount() {
+    @OnClick(R.id.custom_account)
+    void setCustomAccount() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_settings__dialog_wifi_set_auth, null);
         EditText et = (EditText) v.findViewById(R.id.et_username);
         et.setText(ApiHelper.getWifiUserName());

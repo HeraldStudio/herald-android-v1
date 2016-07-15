@@ -18,6 +18,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
@@ -62,29 +64,8 @@ public class CardsListView extends ListView {
     public CardsListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setVerticalScrollBarEnabled(false);
-        init();
-    }
 
-    public void init(){
-        // 加入快捷栏
-        setupShortCutBox();
-        // 加入轮播栏
-        setupSliderView();
-
-        // 监听模块设置改变事件
-        SettingsHelper.addModuleSettingsChangeListener(() -> {
-            loadContent(false);
-        });
-    }
-
-    public void setupSliderView(){
-        ViewGroup vg = (ViewGroup)
-                LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_shortcut_box, null);
-        shortcutBox = (ShortcutBoxView) vg.findViewById(R.id.shorcut_box);
-        addHeaderView(vg);
-    }
-
-    public void setupShortCutBox(){
+        // 实例化轮播图
         slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_slider, null);
 
         // 轮播图居中变色动效的调用
@@ -98,6 +79,17 @@ public class CardsListView extends ListView {
         slider.setLayoutParams(new FadeOutHeaderContainer.LayoutParams(-1, height));
 
         addHeaderView(fadeContainer);
+
+        // 实例化快捷栏
+        ViewGroup vg = (ViewGroup)
+                LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_shortcut_box, null);
+        shortcutBox = ButterKnife.findById(vg, R.id.shorcut_box);
+        addHeaderView(vg);
+
+        // 监听模块设置改变事件
+        SettingsHelper.addModuleSettingsChangeListener(() -> {
+            loadContent(false);
+        });
     }
 
     public void setSrl(CustomSwipeRefreshLayout srl) {
@@ -326,6 +318,25 @@ public class CardsListView extends ListView {
 
     public class TimelineAdapter extends BaseAdapter {
 
+        class ViewHolder {
+            @BindView(R.id.name)
+            TextView name;
+            @BindView(R.id.content)
+            TextView content;
+            @BindView(R.id.avatar)
+            ImageView avatar;
+            @BindView(R.id.attachedContainer)
+            LinearLayout attachedContainer;
+            @BindView(R.id.header)
+            View header;
+            @BindView(R.id.notify_dot)
+            View notifyDot;
+
+            public ViewHolder(View v) {
+                ButterKnife.bind(this, v);
+            }
+        }
+
         @Override
         public int getCount() {
             return itemList.size();
@@ -345,32 +356,27 @@ public class CardsListView extends ListView {
         public View getView(int position, View convertView, ViewGroup parent) {
             CardsModel item = getItem(position);
 
-            if(convertView == null)
+            if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item, null);
+                convertView.setTag(new ViewHolder(convertView));
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
 
-            TextView name = (TextView) convertView.findViewById(R.id.name);
-            TextView content = (TextView) convertView.findViewById(R.id.content);
-            ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
-            LinearLayout attachedContainer = (LinearLayout) convertView.findViewById(R.id.attachedContainer);
-            View header = convertView.findViewById(R.id.header);
-
-            View notifyDot = convertView.findViewById(R.id.notify_dot);
-
-            name.setText(item.getName());
-            content.setText(item.getInfo());
+            holder.name.setText(item.getName());
+            holder.content.setText(item.getInfo());
 
             //标识已读消息和未读消息的小点
-            notifyDot.setVisibility(item.getDisplayPriority() == CardsModel.Priority.CONTENT_NOTIFY ? VISIBLE : GONE);
+            holder.notifyDot.setVisibility(item.getDisplayPriority() == CardsModel.Priority.CONTENT_NOTIFY ? VISIBLE : GONE);
 
-            avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
+            holder.avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
-            header.setOnClickListener((v) -> {
+            holder.header.setOnClickListener((v) -> {
                 item.markAsRead();
                 item.getOnClickListener().onClick(v);
                 loadContent(false);
             });
 
-            attachedContainer.removeAllViews();
+            holder.attachedContainer.removeAllViews();
 
             if (item.attachedView.size() != 0) {
                 for (View k : item.attachedView) {
@@ -380,11 +386,7 @@ public class CardsListView extends ListView {
                     }
                     k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
 
-                    // 默认的点击事件
-                    /*if (!k.hasOnClickListeners()) {
-                        k.setOnClickListener(item.getOnClickListener());
-                    }*/
-                    attachedContainer.addView(k);
+                    holder.attachedContainer.addView(k);
                 }
             }
 

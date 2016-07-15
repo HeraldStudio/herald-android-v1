@@ -21,7 +21,6 @@ public class ModuleManageAdapter extends ArrayAdapter<AppModule> {
         super(context, resource, objects);
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         AppModule seuModule = getItem(position);

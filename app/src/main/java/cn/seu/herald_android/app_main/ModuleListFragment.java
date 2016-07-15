@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.helper.AppModule;
 import cn.seu.herald_android.helper.SettingsHelper;
@@ -64,7 +65,7 @@ public class ModuleListFragment extends Fragment {
         }
 
         //根据模块列表构造列表
-        ListView listView = (ListView) contentView.findViewById(R.id.list_modules);
+        ListView listView = ButterKnife.findById(contentView, R.id.list_modules);
 
         if (editButton == null) {
             editButton = getLayoutInflater(null).inflate(R.layout.app_main__fragment_modules__item_manage, null);

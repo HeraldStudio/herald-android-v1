@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 public class RefreshRecyclerView extends RecyclerView {
 
-
     onFooterListener onFooterListener = null;
     int lastLoadIndex = 0;
     RecyclerView.OnScrollListener scrollListener = new OnScrollListener() {
@@ -140,7 +139,6 @@ public class RefreshRecyclerView extends RecyclerView {
                 super(itemView);
                 this.itemView = itemView;
             }
-
         }
     }
 }
