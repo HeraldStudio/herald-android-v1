@@ -43,7 +43,7 @@ public class GymReserveSportAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.mod_que_gymreserve__cell, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.mod_que_gymreserve__item, null);
             convertView.setTag(new ViewHolder(convertView));
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();

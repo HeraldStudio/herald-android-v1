@@ -161,9 +161,9 @@ public class BaseActivity extends AppCompatActivity {
         progressDialog.dismiss();
     }
 
-    static View statusView;
+    private View statusView;
 
-    static Window window;
+    private Window window;
 
     /**
      * 设置状态栏颜色
@@ -175,12 +175,14 @@ public class BaseActivity extends AppCompatActivity {
         /// 若已经设置过 4.4 ~< 6.0 的沉浸, 直接改变颜色
         if (statusView!=null) {
             statusView.setBackgroundColor(color);
+            return;
         }
 
         /// 若已经设置过 6.0 ~ 的沉浸, 直接改变颜色
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (window != null) {
                 window.setStatusBarColor(color);
+                return;
             }
         }
 
@@ -194,14 +196,14 @@ public class BaseActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 
                 // 生成一个状态栏大小的矩形
-                View statusView = createStatusView(this, color);
+                statusView = createStatusView(this, color);
 
                 // 添加 statusView 到布局中
                 ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
                 decorView.addView(statusView);
             } else {
                 // 5.0 以上通过window来设置颜色
-                Window window = getWindow();
+                window = getWindow();
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(color);
