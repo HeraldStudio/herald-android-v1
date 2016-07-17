@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="发布日期"
-            android:textSize="12sp" />
+            android:textSize="13sp"/>
 
     </LinearLayout>
 

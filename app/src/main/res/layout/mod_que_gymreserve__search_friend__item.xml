@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_friendname"
-        android:textSize="12sp"
+        android:textSize="13sp"
         android:id="@+id/tv_frienddepartment"
         android:text="院系"/>
 </LinearLayout>

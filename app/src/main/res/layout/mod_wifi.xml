@@ -48,7 +48,7 @@
                     android:paddingTop="10dp"
                     android:text="未开通"
                     android:textColor="@color/colorSecondaryText"
-                    android:textSize="12sp" />
+                    android:textSize="13sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
                     android:paddingTop="10dp"
                     android:text="已使用"
                     android:textColor="@color/colorSeuNetaccent"
-                    android:textSize="12sp" />
+                    android:textSize="13sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                     android:paddingTop="10dp"
                     android:text="未使用"
                     android:textColor="@color/colorSeuNetprimary"
-                    android:textSize="12sp" />
+                    android:textSize="13sp"/>
             </LinearLayout>
 
             <lecho.lib.hellocharts.view.PieChartView

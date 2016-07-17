@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="模块"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:layout_margin="10dp"
             android:layout_weight="1" />
 
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="卡片"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:layout_margin="10dp" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="快捷栏"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:layout_margin="10dp" />
     </LinearLayout>
 

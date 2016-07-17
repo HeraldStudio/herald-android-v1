@@ -90,8 +90,8 @@
                     android:paddingRight="5dp"
                     android:paddingTop="3dp"
                     android:text="在小猴主界面摇一摇自动登录seu-wlan/dorm"
-                    android:textColor="#888"
-                    android:textSize="12sp" />
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="13sp"/>
 
             </LinearLayout>
 
@@ -147,8 +147,8 @@
                 android:paddingRight="5dp"
                 android:paddingTop="3dp"
                 android:text="用独立账号登陆校园网，校园网查询模块不受此设置影响"
-                android:textColor="#888"
-                android:textSize="12sp" />
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="13sp"/>
 
         </LinearLayout>
 
@@ -218,8 +218,8 @@
                     android:paddingRight="5dp"
                     android:paddingTop="3dp"
                     android:text="可隐藏首页Tab栏以兼容某些屏幕空间小的设备"
-                    android:textColor="#888"
-                    android:textSize="12sp" />
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="13sp"/>
 
             </LinearLayout>
 
@@ -306,8 +306,8 @@
                 android:paddingRight="5dp"
                 android:paddingTop="3dp"
                 android:text="如果某些模块无法连接或无数据，属于学校网络设施故障，小猴也无能为力，等一等就好啦~"
-                android:textColor="#888"
-                android:textSize="12sp" />
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="13sp"/>
 
         </LinearLayout>
 
@@ -351,8 +351,8 @@
                 android:paddingRight="5dp"
                 android:paddingTop="3dp"
                 android:text="当前版本"
-                android:textColor="#888"
-                android:textSize="12sp" />
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="13sp"/>
 
         </LinearLayout>
 

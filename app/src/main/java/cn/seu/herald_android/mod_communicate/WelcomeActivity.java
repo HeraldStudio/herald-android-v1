@@ -28,6 +28,8 @@ public class WelcomeActivity extends Activity {
             } else {
                 AppContext.showLogin();
             }
+
+            finish();
         });
     }
 }

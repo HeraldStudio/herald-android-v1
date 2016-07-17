@@ -108,7 +108,7 @@ public class AddExamActivity extends BaseActivity {
 
         String date = btn_select_date.getText().toString();
         String time = btn_select_time.getText().toString();
-        String dateandtime = String.format("%s %s(%s)",date.split(" ")[0],time,date.split(" ")[1]);//转化为2016-06-13 09:00(星期一)的形式
+        String dateandtime = String.format("%s %s", date.split(" ")[0], time);//转化为2016-06-13 09:00的形式
 
         String location = et_location.getText().toString();
         String teacher = et_teacher.getText().toString();

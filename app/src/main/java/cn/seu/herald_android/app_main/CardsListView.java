@@ -53,7 +53,7 @@ public class CardsListView extends ListView {
     private ShortcutBoxView shortcutBox;
     private SliderView slider;
     private FadeOutHeaderContainer fadeContainer;
-    private TimelineAdapter adapter;
+    private CardsAdapter adapter;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -167,7 +167,7 @@ public class CardsListView extends ListView {
 
         // 更新适配器，结束刷新
         if (adapter == null) {
-            setAdapter(adapter = new TimelineAdapter());
+            setAdapter(adapter = new CardsAdapter());
         } else {
             adapter.notifyDataSetChanged();
         }
@@ -316,7 +316,7 @@ public class CardsListView extends ListView {
         super.onDetachedFromWindow();
     }
 
-    public class TimelineAdapter extends BaseAdapter {
+    public class CardsAdapter extends BaseAdapter {
 
         class ViewHolder {
             @BindView(R.id.name)
