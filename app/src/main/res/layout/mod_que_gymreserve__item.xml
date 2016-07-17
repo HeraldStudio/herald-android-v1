@@ -6,26 +6,19 @@
     android:background="@drawable/selectable_item_background_white"
     android:gravity="center|left"
     android:orientation="horizontal"
-    android:paddingBottom="10dp"
+    android:paddingBottom="12dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingTop="10dp">
-
-    <ImageView
-        android:id="@+id/img_sportitem"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:tint="?attr/colorPrimary"/>
+    android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/tv_itemname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_margin="10dp"
         android:text="运动名"
-        android:textSize="15sp"
-        android:textColor="#5e5e5e"/>
+        android:textSize="16sp"
+        android:textColor="?attr/colorPrimary"/>
 
     <TextView
         android:layout_width="wrap_content"

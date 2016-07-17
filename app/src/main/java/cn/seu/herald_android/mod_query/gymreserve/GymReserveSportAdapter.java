@@ -5,10 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -50,8 +47,6 @@ public class GymReserveSportAdapter extends BaseAdapter {
 
         GymSportModel item = list.get(position);
 
-        //根据运动名设置图标
-        Picasso.with(this.context).load(item.ic_maps.get(item.name)).into(holder.img_sport);
         holder.tv_name.setText(item.name);
 
         return convertView;
@@ -60,8 +55,6 @@ public class GymReserveSportAdapter extends BaseAdapter {
     static class ViewHolder {
         @BindView(R.id.tv_itemname)
         TextView tv_name;
-        @BindView(R.id.img_sportitem)
-        ImageView img_sport;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
