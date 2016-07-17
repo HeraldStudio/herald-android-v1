@@ -1,6 +1,7 @@
 package cn.seu.herald_android.mod_query.jwc;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
@@ -75,6 +76,7 @@ public class JwcActivity extends BaseActivity {
                 //设置伸缩列表
                 JwcExpandAdapter jwcExpandAdapter = new JwcExpandAdapter(getBaseContext(), parentArray, childArray);
                 expandableListView.setAdapter(jwcExpandAdapter);
+                expandableListView.setDivider(ContextCompat.getDrawable(this, R.drawable.line_divider));
 
                 if (jwcExpandAdapter.getGroupCount() > 0)
                     expandableListView.expandGroup(0);

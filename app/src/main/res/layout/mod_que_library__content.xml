@@ -8,10 +8,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.mod_query.library.LibraryActivity"
     tools:showIn="@layout/mod_que_library">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="#fafafa"
         android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
@@ -34,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/colorDivider"
-        android:dividerHeight="@dimen/divider_height">
+        android:dividerHeight="@dimen/divider_height"
+        android:scrollbarStyle="outsideOverlay">
     </ListView>
 </LinearLayout>

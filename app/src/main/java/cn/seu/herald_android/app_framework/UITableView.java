@@ -2,14 +2,21 @@ package cn.seu.herald_android.app_framework;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+
+import java.util.LinkedList;
 
 public class UITableView extends FrameLayout {
 
     private ListView mListView;
 
     private boolean mIsGrouped;
+
+    private LinkedList<View> reusableCellQueue = new LinkedList<>();
 
     /**
      * 暂时只有 DataSource, 里面自带了 Delegate 中的点击事件
@@ -24,7 +31,51 @@ public class UITableView extends FrameLayout {
         mIsGrouped = attrs.getAttributeBooleanValue("app", "grouped", false);
         mListView = new ListView(context);
         mListView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
+        mListView.setAdapter(mAdapter);
         addView(mListView);
+        reloadData();
+    }
+
+    public void reloadData() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private BaseAdapter mAdapter = new BaseAdapter() {
+        @Override
+        public int getCount() {
+            return numberOfRawItemsInListView();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
+        }
+    };
+
+    /**
+     * 计算转换成 Android ListView 的总条目数
+     */
+    public int numberOfRawItemsInListView() {
+        int numberOfRawItems = 0;
+        for (int i = 0; i < numberOfSectionsInTableView(); i++) {
+            if (mIsGrouped) {
+                /** 若分区, 要算上 Header, Header 下面的分割线, 以及 Footer */
+                numberOfRawItems += 3;
+            }
+            /** 每一个 cell 及其下面的分割线 */
+            numberOfRawItems += numberOfRowsInSection(i) * 2;
+        }
+        return numberOfRawItems;
     }
 
     /**

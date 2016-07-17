@@ -167,36 +167,6 @@
 
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/create_shortcut_wifi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selectable_item_background_white"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="快捷登录校园网"
-                android:textColor="#333"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="3dp"
-                android:text="在桌面创建校园网自动登录快捷方式"
-                android:textColor="#888"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
         <!--个性设置-->
         <View
             android:layout_width="match_parent"

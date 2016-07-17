@@ -5,4 +5,9 @@ public class UI {
         float density = AppContext.currentContext.$get().getResources().getDisplayMetrics().density;
         return ((int) density * dp);
     }
+
+    public static float dp2px(float dp) {
+        float density = AppContext.currentContext.$get().getResources().getDisplayMetrics().density;
+        return density * dp;
+    }
 }

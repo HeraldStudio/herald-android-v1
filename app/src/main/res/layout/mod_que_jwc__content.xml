@@ -11,10 +11,5 @@
     <cn.seu.herald_android.custom.CustomExpandableListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/colorDivider"
-        android:dividerHeight="@dimen/divider_height"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:scrollbarStyle="outsideOverlay" />
+        android:layout_height="match_parent"/>
 </android.support.v4.widget.NestedScrollView>

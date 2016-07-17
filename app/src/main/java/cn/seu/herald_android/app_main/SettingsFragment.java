@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -91,22 +90,6 @@ public class SettingsFragment extends Fragment {
                 .setPositiveButton("退出", (d, w) -> ApiHelper.doLogout(null))
                 .setNegativeButton("取消", null)
                 .show();
-    }
-
-    @OnClick(R.id.create_shortcut_wifi)
-    void createShortcut() {
-        //创捷快捷方式的Intent
-        Intent addIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-        Parcelable icon = Intent.ShortcutIconResource.fromContext(getContext(), R.mipmap.ic_wifi); //获取快捷键的图标
-        //用于触发自动登录服务的Intent
-        Intent seuloginIntent = new Intent();
-        seuloginIntent.setAction("cn.seu.herald_android.WIFI_AUTOLOGIN_ACTIVITY");
-        addIntent.putExtra("duplicate", false);
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "SEU快捷登录");//快捷方式的标题
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);//快捷方式的图标
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, seuloginIntent);//快捷方式的动作
-        getContext().sendBroadcast(addIntent);//发送广播
-        AppContext.showMessage("已将快捷方式放置至桌面");
     }
 
     @OnClick(R.id.check_update)

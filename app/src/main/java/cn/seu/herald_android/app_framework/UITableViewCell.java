@@ -10,4 +10,8 @@ public class UITableViewCell extends FrameLayout {
         super(AppContext.currentContext.$get());
         this.resId = resId;
     }
+
+    public int getResId() {
+        return resId;
+    }
 }

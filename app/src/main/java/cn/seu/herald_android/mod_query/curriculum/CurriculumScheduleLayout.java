@@ -229,13 +229,15 @@ public class CurriculumScheduleLayout extends FrameLayout {
         float addition = widenToday ? TODAY_WEIGHT - 1 : 0;
 
         // 绘制星期标题
+        long numberOfDayAfterTermBegins = (week - 1) * 7 + dayIndex;
+        long timeMillisAfterTermBegins = numberOfDayAfterTermBegins * 1000 * 60 * 60 * 24;
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(beginOfTerm.getTimeInMillis());
-        cal.roll(Calendar.DATE, (week - 1) * 7 + dayIndex);
+        cal.setTimeInMillis(beginOfTerm.getTimeInMillis() + timeMillisAfterTermBegins);
 
         View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_curriculum__cell_week, null);
         TextView week = (TextView) v.findViewById(R.id.week);
         week.setText(new SimpleDateFormat("M月d日\n").format(cal.getTime()) + WEEK_NUMS_CN[dayIndex]);
+
         v.setX((dayDelta > 0 ? columnIndex + addition : columnIndex) * width / (columnsCount + addition));
         v.setY(0);
         v.setLayoutParams(new LayoutParams(
