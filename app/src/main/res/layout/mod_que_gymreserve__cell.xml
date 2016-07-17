@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/selectable_item_background_white"
-    android:gravity="center"
-    android:padding="15dp">
+    android:gravity="center|left"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp">
+
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
         android:id="@+id/img_sportitem"
-        />
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:tint="?attr/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/tv_itemname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:text="运动名"
+        android:textSize="15sp"
+        android:textColor="?attr/colorPrimary"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_itemname"
-        android:textSize="13sp"
-        android:text="运动名"/>
+        android:text="进入预约 >"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="14sp"/>
 </LinearLayout>

@@ -42,9 +42,9 @@
     <color name="colorSeuNetaccent">#e57373</color>
 
     <!--场馆预约-->
-    <color name="colorGymReserveprimary">#00abf1</color>
-    <color name="colorGymReserveprimary_dark">#00abf1</color>
-    <color name="colorGymReserveaccent">#6980de</color>
+    <color name="colorGymReserveprimary">#0082f1</color>
+    <color name="colorGymReserveprimary_dark">#0082f1</color>
+    <color name="colorGymReserveaccent">#80c5ff</color>
 
     <!--考试助手-->
     <color name="colorExamprimary">#FF4081</color>

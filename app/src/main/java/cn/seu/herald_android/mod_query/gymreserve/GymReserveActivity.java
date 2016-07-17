@@ -2,13 +2,9 @@ package cn.seu.herald_android.mod_query.gymreserve;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,19 +29,14 @@ public class GymReserveActivity extends BaseActivity {
                         /** notifyModuleIfChanged: */SettingsHelper.Module.gymreserve);
     }
 
-    @BindView(R.id.recyclerview_reserve)
-    RecyclerView recyclerView;
-    @BindView(R.id.img_gymindex)
-    ImageView imageView;
+    @BindView(R.id.listview_reserve)
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_gymreserve);
         ButterKnife.bind(this);
-
-        //设置视差图
-        Picasso.with(getBaseContext()).load(R.drawable.changguanyuyue).into(imageView);
 
         //启用刷新
         refreshItemListAndTimeList();
@@ -91,7 +82,7 @@ public class GymReserveActivity extends BaseActivity {
                 .addUUID().post("method", "getPhone")
                 .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
                 .run();
-        
+
         //如果用户自己的信息未完善，则同时预查询自己的ID
         if(CacheHelper.get("herald_gymreserve_userid").equals("")){
             new ApiRequest().api("yuyue")
@@ -114,13 +105,11 @@ public class GymReserveActivity extends BaseActivity {
             //设置适配器同时设置点击函数
             GymReserveSportAdapter adapter = new GymReserveSportAdapter(getBaseContext(), list);
             //点击时创建相应运动预约界面
-            adapter.setItemClickListener((view, item) -> {
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
                 //打开相对应的预约界面
-                GymChooseTimeActivity.startWithData(item, dayInfos);
+                GymChooseTimeActivity.startWithData(list.get(position), dayInfos);
             });
-            recyclerView.setAdapter(adapter);
-            //设置布局管理器
-            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
 
             hideProgressDialog();
         } catch (JSONException e) {
