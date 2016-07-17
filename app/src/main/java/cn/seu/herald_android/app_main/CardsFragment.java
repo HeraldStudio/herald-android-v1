@@ -50,5 +50,6 @@ public class CardsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        view.loadContent(false);
     }
 }

@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
-import cn.seu.herald_android.custom.CustomDividerItemDecoration;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.helper.ApiRequest;
@@ -80,7 +79,6 @@ public class ActivitiesFragment extends Fragment {
         // 活动列表初始化
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new CustomDividerItemDecoration(getContext()));
 
         // 初始化适配器
         activityAdapter = new ActivityAdapter(

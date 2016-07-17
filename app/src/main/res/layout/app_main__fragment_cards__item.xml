@@ -7,8 +7,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="13dp"
-        android:background="#eee" />
+        android:layout_height="12dp"
+        android:background="@color/colorMainPagesBg"/>
 
     <View
         android:layout_width="match_parent"
