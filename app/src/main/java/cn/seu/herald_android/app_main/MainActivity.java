@@ -45,6 +45,8 @@ public class MainActivity extends BaseActivity {
     ViewPager viewPager;
     @BindView(R.id.main_tabs)
     PagerBottomTabLayout pagerBottomTabLayout;
+    @BindView(R.id.main_tabs_divider)
+    View tabDivider;
     @BindView(R.id.main_toptabs)
     TabLayout topTabLayout;
     @BindView(R.id.main_toolbar)
@@ -147,9 +149,11 @@ public class MainActivity extends BaseActivity {
         if (SettingsHelper.bottomTabEnabled.$get()) {
             pagerBottomTabLayout.setVisibility(View.VISIBLE);
             topTabLayout.setVisibility(View.GONE);
+            tabDivider.setVisibility(View.VISIBLE);
         } else {
             pagerBottomTabLayout.setVisibility(View.GONE);
             topTabLayout.setVisibility(View.VISIBLE);
+            tabDivider.setVisibility(View.GONE);
         }
     }
 
