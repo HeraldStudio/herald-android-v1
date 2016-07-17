@@ -101,18 +101,14 @@ public class AddExamActivity extends BaseActivity {
         JSONObject newexam = new JSONObject();
 
         String hour = et_duratime.getText().toString();
-        if (hour.equals(""))hour = "?";
-
         String course = et_examname.getText().toString();
-        if (course.equals(""))course = "暂无考试名";
-
         String date = btn_select_date.getText().toString();
         String time = btn_select_time.getText().toString();
         String dateandtime = String.format("%s %s", date.split(" ")[0], time);//转化为2016-06-13 09:00的形式
 
         String location = et_location.getText().toString();
         String teacher = et_teacher.getText().toString();
-        if (location.equals("")) location = "暂无地点";
+
         try {
             newexam.put("hour", hour);
             newexam.put("course", course);

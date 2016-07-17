@@ -62,14 +62,15 @@ public class ExamAdapter extends RecyclerView.Adapter<ExamAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         ExamModel examModel = examList.get(position);
         holder.tv_time.setText("时间：" + examModel.time);
-        holder.tv_course.setText(examModel.course);
-        holder.tv_location.setText("地点：" + examModel.location);
-        holder.tv_teacher.setText("教师：" + examModel.teacher);
+
+        String undefinedText = "未知";
         if (examModel.hour.equals("续一秒") || examModel.hour.equals("+1s") || examModel.teacher.equals("长者")) {
-            holder.tv_hour.setText("时长：" + "61s");
-        } else {
-            holder.tv_hour.setText("时长：" + examModel.hour + "分钟");
+            undefinedText = "无可奉告";
         }
+        holder.tv_course.setText(examModel.course.equals("") ? "未命名" : examModel.course);
+        holder.tv_hour.setText("时长：" + (examModel.hour.equals("") ? undefinedText : examModel.hour + "分钟"));
+        holder.tv_location.setText("地点：" + (examModel.location.equals("") ? undefinedText : examModel.location));
+        holder.tv_teacher.setText("教师：" + (examModel.teacher.equals("") ? undefinedText : examModel.teacher));
         holder.rootView.setOnClickListener(v -> mListener.onItemClick(examModel, position)
         );
         try {

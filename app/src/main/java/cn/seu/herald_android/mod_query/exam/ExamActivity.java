@@ -45,8 +45,8 @@ public class ExamActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == R.id.action_sync) {
             refreshCache();
-        }else if (id == R.id.action_add){
-            startActivity(new Intent(ExamActivity.this,AddExamActivity.class));
+        } else if (id == R.id.action_add) {
+            startActivity(new Intent(ExamActivity.this, AddExamActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -76,7 +76,7 @@ public class ExamActivity extends BaseActivity {
             ExamAdapter adapter = new ExamAdapter(exams);
             //绑定自定义考试可以删除的响应函数
             adapter.setOnItemClickListener((item, position) -> {
-                if (item.isdefined){
+                if (item.isdefined) {
                     //如果是自定义的考试就弹出删除询问
                     new AlertDialog.Builder(this)
                             .setMessage("确定删除这个自定义考试吗？")
@@ -109,35 +109,36 @@ public class ExamActivity extends BaseActivity {
                 }).run();
     }
 
-    JSONArray getDefinedExamsJSONArray(){
+    JSONArray getDefinedExamsJSONArray() {
         String cache = CacheHelper.get("herald_exam_definedexam");
-        try{
+        try {
             return new JSONArray(cache);
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
-            CacheHelper.set("herald_exam_definedexam",new JSONArray().toString());
+            CacheHelper.set("herald_exam_definedexam", new JSONArray().toString());
         }
         return new JSONArray();
     }
 
     void deleteDefinedExam(ExamModel item) {
-        try{
+        try {
             JSONArray array_old = getDefinedExamsJSONArray();
             JSONArray array_new = new JSONArray();
-            for(int i = 0;i< array_old.length() ; i++){
+            boolean deleted = false;
+            for (int i = 0; i < array_old.length(); i++) {
                 JSONObject obj = array_old.getJSONObject(i);
-                if (item.equals(new ExamModel(obj))) {
+                if (item.equals(new ExamModel(obj)) && !deleted) {
+                    deleted = true;
                     continue;
                 }
                 array_new.put(obj);
             }
-            CacheHelper.set("herald_exam_definedexam",array_new.toString());
+            CacheHelper.set("herald_exam_definedexam", array_new.toString());
             showSnackBar("删除成功");
             loadCache();
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
             showSnackBar("删除失败");
         }
-
     }
 }
