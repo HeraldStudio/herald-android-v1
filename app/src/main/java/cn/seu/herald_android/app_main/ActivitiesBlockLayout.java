@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_afterschool;
+package cn.seu.herald_android.app_main;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import cn.seu.herald_android.R;
 
-public class AfterSchoolActivityBlockLayout extends LinearLayout {
+public class ActivitiesBlockLayout extends LinearLayout {
     String description;
-    AfterSchoolActivityItem item;
+    ActivitiesItem item;
 
-    public AfterSchoolActivityBlockLayout(Context context, AfterSchoolActivityItem item) {
+    public ActivitiesBlockLayout(Context context, ActivitiesItem item) {
         super(context);
         this.item = item;
         View contentView = LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null);

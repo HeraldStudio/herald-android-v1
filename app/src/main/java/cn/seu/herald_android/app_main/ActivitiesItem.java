@@ -1,17 +1,18 @@
-package cn.seu.herald_android.mod_afterschool;
+package cn.seu.herald_android.app_main;
 
 import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 
-public class AfterSchoolActivityItem {
+public class ActivitiesItem {
     String title;
     String introduciton;
     String start_time;
@@ -25,7 +26,8 @@ public class AfterSchoolActivityItem {
     String tag;
     //标识活动开始信息的颜色
     int tagColorID;
-    public AfterSchoolActivityItem(String title, String introduciton, String start_time, String end_time, String activity_time, String detail_url, String assiciation, String location,String pic_url) {
+
+    public ActivitiesItem(String title, String introduciton, String start_time, String end_time, String activity_time, String detail_url, String assiciation, String location, String pic_url) {
         this.title = title;
         this.introduciton = introduciton;
         this.start_time = start_time;
@@ -90,13 +92,11 @@ public class AfterSchoolActivityItem {
         return tagColorID;
     }
 
-
-
-    public static ArrayList<AfterSchoolActivityItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
-        ArrayList<AfterSchoolActivityItem> list = new ArrayList<>();
+    public static ArrayList<ActivitiesItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+        ArrayList<ActivitiesItem> list = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonItem = jsonArray.getJSONObject(i);
-            list.add(new AfterSchoolActivityItem(
+            list.add(new ActivitiesItem(
                     jsonItem.getString("title"),
                     jsonItem.getString("introduction"),
                     jsonItem.getString("start_time"),

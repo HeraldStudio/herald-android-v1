@@ -6,11 +6,11 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_main.ActivitiesBlockLayout;
+import cn.seu.herald_android.app_main.ActivitiesItem;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityBlockLayout;
-import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityItem;
 
 public class ActivityCard {
 
@@ -28,14 +28,14 @@ public class ActivityCard {
     public static CardsModel getCard() {
         String cache = CacheHelper.get("herald_afterschoolschool_hot");
         try {
-            List<AfterSchoolActivityItem> afterSchoolActivityItems = AfterSchoolActivityItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            if (afterSchoolActivityItems.size() == 0) {
+            List<ActivitiesItem> activitiesItems = ActivitiesItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            if (activitiesItems.size() == 0) {
                 return new CardsModel("校园活动","最近没有新的热门校园活动", CardsModel.Priority.NO_CONTENT, R.mipmap.ic_activity);
             } else {
                 CardsModel item  = new CardsModel("校园活动","最近有新的热门校园活动，欢迎来参加~",
                         CardsModel.Priority.CONTENT_NOTIFY,R.mipmap.ic_activity);
-                for (AfterSchoolActivityItem afterSchoolActivityItem : afterSchoolActivityItems) {
-                    item.attachedView.add(new AfterSchoolActivityBlockLayout(AppContext.currentContext.$get(), afterSchoolActivityItem));
+                for (ActivitiesItem activitiesItem : activitiesItems) {
+                    item.attachedView.add(new ActivitiesBlockLayout(AppContext.currentContext.$get(), activitiesItem));
                 }
                 return item;
             }

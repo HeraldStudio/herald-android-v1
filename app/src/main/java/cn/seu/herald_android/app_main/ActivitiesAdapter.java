@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_afterschool;
+package cn.seu.herald_android.app_main;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +19,11 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
 
-public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter {
-    ArrayList<AfterSchoolActivityItem> list;
+public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter {
+    ArrayList<ActivitiesItem> list;
     boolean loadFinished = false;
-    public ActivityAdapter(android.content.Context context, ArrayList<AfterSchoolActivityItem> list) {
+
+    public ActivitiesAdapter(android.content.Context context, ArrayList<ActivitiesItem> list) {
         super(context);
         this.list = list;
     }
@@ -31,7 +32,7 @@ public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter 
         this.loadFinished = loadFinished;
     }
 
-    public void addItem(AfterSchoolActivityItem content) {
+    public void addItem(ActivitiesItem content) {
         list.add(content);
     }
 
@@ -59,7 +60,7 @@ public class ActivityAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter 
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         AfterSchoolActivityViewHolder viewHolder = (AfterSchoolActivityViewHolder) holder;
-        final AfterSchoolActivityItem item = list.get(position);
+        final ActivitiesItem item = list.get(position);
         //设置缩略图
         try{
             if (item.pic_url.equals(""))

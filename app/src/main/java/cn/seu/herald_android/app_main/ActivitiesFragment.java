@@ -23,8 +23,6 @@ import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.helper.ApiRequest;
 import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.mod_afterschool.ActivityAdapter;
-import cn.seu.herald_android.mod_afterschool.AfterSchoolActivityItem;
 
 public class ActivitiesFragment extends Fragment {
 
@@ -40,7 +38,7 @@ public class ActivitiesFragment extends Fragment {
     private Unbinder unbinder;
 
     // 适配器
-    ActivityAdapter activityAdapter;
+    ActivitiesAdapter activitiesAdapter;
 
     // 当前展示的页
     int page = 1;
@@ -81,12 +79,12 @@ public class ActivitiesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // 初始化适配器
-        activityAdapter = new ActivityAdapter(
+        activitiesAdapter = new ActivitiesAdapter(
                 getContext(),
                 new ArrayList<>());
 
         // 绑定适配器跟上拉加载监听函数
-        recyclerView.setAdapter(activityAdapter);
+        recyclerView.setAdapter(activitiesAdapter);
         recyclerView.setOnFooterListener((footerposition) -> new ApiRequest()
                 .url("http://115.28.27.150/herald/api/v1/huodong/get?page=" + (page + 1))
                 .get()
@@ -130,7 +128,7 @@ public class ActivitiesFragment extends Fragment {
                     if ( srl != null) srl.setRefreshing(false);
                     //成功则
                     if (success){
-                        activityAdapter.removeAll();
+                        activitiesAdapter.removeAll();
                         addNewItemWithData(response);
                     } else {
                         AppContext.showMessage("刷新失败，请重试");
@@ -143,18 +141,18 @@ public class ActivitiesFragment extends Fragment {
         try {
             JSONArray array = new JSONObject(data).getJSONArray("content");
             if(array.length() == 0) {
-                activityAdapter.setLoadFinished(true);
+                activitiesAdapter.setLoadFinished(true);
                 AppContext.showMessage("没有更多数据");
             } else {
                 //新一页的内容
-                ArrayList<AfterSchoolActivityItem> newcontent =
-                        AfterSchoolActivityItem.transformJSONArrayToArrayList(array);
-                for(AfterSchoolActivityItem item : newcontent){
+                ArrayList<ActivitiesItem> newcontent =
+                        ActivitiesItem.transformJSONArrayToArrayList(array);
+                for (ActivitiesItem item : newcontent) {
                     //逐项加入列表中
-                    activityAdapter.addItem(item);
+                    activitiesAdapter.addItem(item);
                 }
             }
-            activityAdapter.notifyDataSetChanged();
+            activitiesAdapter.notifyDataSetChanged();
         }catch (JSONException e){
             AppContext.showMessage("解析失败，请刷新");
             e.printStackTrace();
