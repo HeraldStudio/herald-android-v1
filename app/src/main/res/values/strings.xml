@@ -72,5 +72,7 @@ heraldseu@outlook.com"
     <string name="title_activity_gym_new_order">新增预约</string>
     <string name="title_activity_gym_my_order">预约记录</string>
     <string name="title_activity_gym_add_friend">添加好友</string>
+    <string name="title_activity_topic">校园话题</string>
+    <string name="title_activity_express">快递代取</string>
 
 </resources>

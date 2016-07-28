@@ -92,6 +92,12 @@
     <color name="colorAfterSchoolDark">#1976d2</color>
     <color name="colorAfterSchoolAccent">#1976d2</color>
 
+
+    <!--快递代取-->
+    <color name="colorExpressPrimary">#ffe082</color>
+    <color name="colorExpressDark">#ffca28</color>
+    <color name="colorExpressAccent">#ffd54f</color>
+
     <!--关于我们-->
     <color name="colorAboutusprimary">#57b3ff</color>
     <color name="colorAboutusprimaryDark">#57b3ff</color>

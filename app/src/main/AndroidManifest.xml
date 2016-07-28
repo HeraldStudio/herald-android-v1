@@ -269,6 +269,31 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
+
+        <activity android:name=".mod_topic.TopicActivity"
+            android:label="@string/title_activity_topic"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TopicTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_TOPIC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mod_query.express.ExpressActivity"
+            android:label="@string/title_activity_express"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExpressActivityTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_EXPRESS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
     </application>
 
 </manifest>

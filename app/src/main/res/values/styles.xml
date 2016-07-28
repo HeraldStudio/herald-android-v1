@@ -151,6 +151,15 @@
         <item name="colorAccent">@color/colorAfterSchoolAccent</item>
     </style>
 
+    <style name="ExpressActivityTheme" parent="SubActivityTheme">
+        <!-- 活动生活风格 -->
+        <item name="colorPrimary">@color/colorExpressPrimary</item>
+        <item name="colorPrimaryDark">@color/colorExpressDark</item>
+        <item name="colorAccent">@color/colorExpressAccent</item>
+    </style>
+
+
+
     <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->
         <item name="colorPrimary">@color/colorAboutusprimary</item>
@@ -179,6 +188,14 @@
         <item name="colorPrimaryDark">@color/colorSeuNetprimary_dark</item>
         <item name="colorAccent">@color/colorSeuNetaccent</item>
     </style>
+
+    <style name="TopicTheme" parent="SubActivityTheme">
+        <!-- 话题模块 -->
+        <item name="colorPrimary">@color/colorCurriculumPrimary</item>
+        <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
+        <item name="colorAccent">@color/colorCurriculumAccent</item>
+    </style>
+
 
 
     <!--自定义tab样式-->

@@ -42,6 +42,7 @@ public class SettingsHelper {
                 "考试助手", "查询个人考试安排，提供考试倒计时提醒服务",
                 "MODULE_QUERY_EXAM", R.mipmap.ic_exam, true);
 
+
         // 无卡片的模块
         public static AppModule seunet = new AppModule(7, "seunet",
                 "校园网络", "显示校园网使用情况及校园网账户余额信息",
@@ -79,9 +80,18 @@ public class SettingsHelper {
                 "空教室 Web", "提供指定时间内的空教室信息查询服务",
                 "http://115.28.27.150/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false);
 
+        public static AppModule express = new AppModule(17, "express",
+                "快递代收", "快递代取",
+                "MODULE_EXPRESS", R.drawable.ic_build_purple_a700_24dp, false);
+
+//        public static AppModule topic = new AppModule(17, "topic",
+//                "校园话题", "校园话题参与讨论",
+//                "MODULE_TOPIC", R.drawable.ic_build_purple_a700_24dp, false);
+
         //public static AppModule deskgame = new AppModule(16, "deskgame",
         //      "桌游助手", "方便大家娱乐的小猴桌游发牌器",
         //      "MODULE_DESKGAME", R.mipmap.ic_emptyroom, false);
+
 
         // 特殊的模块，模块管理
         public static AppModule moduleManager = new AppModule(-1, "",
@@ -91,6 +101,7 @@ public class SettingsHelper {
         public static AppModule[] array = new AppModule[]{
                 card, pedetail, curriculum, experiment, lecture, jwc, exam,
                 seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom//, deskgame
+                ,express
         };
     }
 
