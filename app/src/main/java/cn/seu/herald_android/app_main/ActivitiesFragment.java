@@ -72,6 +72,7 @@ public class ActivitiesFragment extends Fragment {
         // 加载活动列表
         init();
         loadCache();
+        refreshCache();
     }
 
     private void init() {
