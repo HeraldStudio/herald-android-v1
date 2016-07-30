@@ -3,6 +3,7 @@ package cn.seu.herald_android.custom;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.ViewParent;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -12,8 +13,7 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
-
+import cn.seu.herald_android.framework.AppModule;
 
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
@@ -36,16 +36,16 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         }
         itemList = sliderViewItemArrayList;
 
-        //利用arraylist进行初始化
+        // 利用 ArrayList 进行初始化
         try {
             removeAllSliders();
             for (SliderViewItem sliderViewItem : sliderViewItemArrayList) {
-                addSlider(getDefultSliderViewWithUrl(
+                addSlider(getDefaultSliderViewWithUrl(
                         sliderViewItem.getTitle(),
                         sliderViewItem.getImageUrl(),
                         sliderViewItem.getUrl()));
             }
-            //加载图片
+            // 加载图片
         } catch (Exception e) {
             e.printStackTrace();
             DefaultSliderView sliderView = new DefaultSliderView(getContext());
@@ -57,13 +57,14 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
             addSlider(sliderView);
         }
 
-        //设置轮播选项
+        addOnPageChangeListener(this);
+        // 设置轮播选项
         setPresetTransformer(SliderLayout.Transformer.Default);
-        //圆点位置
+        // 圆点位置
         setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
-        //描述动画
-        //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-        //切换间隔
+        // 描述动画
+        // sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        // 切换间隔
         setDuration(5000);
     }
 
@@ -73,23 +74,23 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         stopAutoCycle();
     }
 
-    private DefaultSliderView getDefultSliderViewWithUrl(String title, String imageUrl, String url) {
+    private DefaultSliderView getDefaultSliderViewWithUrl(String title, String imageUrl, String url) {
         DefaultSliderView sliderView = new DefaultSliderView(getContext());
         // initialize a SliderLayout
         if (!imageUrl.equals("")) {
-            //如果图片url不为空的操作
+            // 如果图片url不为空的操作
             sliderView
                     .image(imageUrl)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
         } else {
-            //为空则避免出现参数错误，返回默认的图片
+            // 为空则避免出现参数错误，返回默认的图片
             sliderView
                     .image(R.drawable.default_herald)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
         }
-        //add your extra information
+        // add your extra information
         sliderView.bundle(new Bundle());
         sliderView.getBundle()
                 .putString("title", title);
@@ -106,18 +107,49 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
     public void onPageSelected(int position) {
     }
 
+    /**
+     * 当滑动时，禁止下拉刷新控件触发
+     */
     @Override
     public void onPageScrollStateChanged(int state) {
+        if (findSrl() != null) {
+            srl.innerScrolling = state == ViewPagerEx.SCROLL_STATE_DRAGGING;
+        }
+    }
 
+    private CustomSwipeRefreshLayout srl = null;
+
+    private CustomSwipeRefreshLayout findSrl() {
+
+        // 如果先前已经找到，直接返回找到的引用
+        if (srl != null) return srl;
+
+        // 如果先前没找到，沿视图树向上查找
+        ViewParent parent = getParent();
+        while (parent != null) {
+
+            // 找到了，暂存起来并返回
+            if (parent instanceof CustomSwipeRefreshLayout) {
+                srl = (CustomSwipeRefreshLayout) parent;
+                return srl;
+            }
+
+            // 还没找到，继续向上找
+            parent = parent.getParent();
+        }
+
+        // 最终没找到，不找了
+        srl = null;
+        return null;
     }
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-        //点击时如果url不为空则打开图片所代表的网页
+        // 点击时如果url不为空则打开图片所代表的网页
         String url = slider.getBundle().getString("url");
         if (url != null && !url.equals("")) {
             String title = slider.getBundle().getString("title");
-            WebModuleActivity.startWebModuleActivity(getContext(), title, url, R.style.WebShowTheme);
+            new AppModule(title, url).open();
         }
     }
 

@@ -9,13 +9,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:id="@+id/tv_friendname"
-        android:textColor="@color/colorGymReserveprimary"
+        android:textColor="@color/colorGymReservePrimary"
         android:text="姓名"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_friendname"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:id="@+id/tv_frienddepartment"
         android:text="院系"/>
 </LinearLayout>

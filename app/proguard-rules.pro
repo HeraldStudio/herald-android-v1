@@ -37,17 +37,8 @@
 #混淆前后的映射
 -printmapping mapping.txt
 #自己项目特殊处理代码
--keep class android.support.**{*;}
--keep public class * extends cn.seu.herald_android.custom.BaseActivity {*;}
--keep class cn.seu.herald_android.mod_timeline.TimelineView {*;}
--keep class cn.seu.herald_android.mod_query.pedetail.PedetailBlockLayout {*;}
--keep class cn.seu.herald_android.mod_query.lecture.LectureBlockLayout {*;}
--keep class cn.seu.herald_android.mod_query.exam.ExamBlockLayout {*;}
--keep class cn.seu.herald_android.mod_query.jwc.JwcBlockLayout {*;}
--keep class cn.seu.herald_android.mod_query.experiment.ExperimentBlockLayout {*;}
--keep class cn.seu.herald_android.mod_query.curriculum.CurriculumScheduleBlockLayout {*;}
--keep class cn.seu.herald_android.mod_query.curriculum.CurriculumTimelineBlockLayout {*;}
--keep class cn.seu.herald_android.custom.* {*;}
+-keep class android.support.** {*;}
+-keep class cn.seu.herald_android.custom.** {*;}
 #如果引用了v4或者v7包
 #-dontwarn android.support.**
 #混淆保护自己项目的部分代码以及引用的第三方jar包library-end#

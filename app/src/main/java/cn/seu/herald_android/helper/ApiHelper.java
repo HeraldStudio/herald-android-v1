@@ -1,14 +1,14 @@
 package cn.seu.herald_android.helper;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.LinkedList;
 
-import cn.seu.herald_android.app_framework.$;
-import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.UserCache;
 
 public class ApiHelper {
     // heraldstudio.com 主站API
@@ -22,8 +22,8 @@ public class ApiHelper {
 
     private ApiHelper() {}
 
-    public static $<String> appid = new $<>(() -> {
-        Context context = AppContext.currentContext.$get();
+    public static String getAppid() {
+        Context context = AppContext.instance;
         InputStream fis;
         byte[] buffer = new byte[1024];
         int numRead;
@@ -48,66 +48,60 @@ public class ApiHelper {
          * 其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
          * 该后门实现见LoginActivity.java
          **/
-    });
-
-    public static $<SharedPreferences> authCache = new $<>(() -> {
-        Context context = AppContext.currentContext.$get();
-        return context.getSharedPreferences("herald_auth", Context.MODE_PRIVATE);
-    });
+    }
 
     public static String getApiUrl(String api) {
         return API_ROOT + api;
     }
 
-    public static void doLogout(String message) {
-        //清除授权信息
-        setAuthCache("authUser", "");
-        setAuthCache("authPwd", "");
-        setAuthCache("uuid", "");
-        setAuthCache("schoolnum", "");
+    private static LinkedList<Runnable> userChangedListeners = new LinkedList<>();
 
-        //清除模块缓存
-        //注意此处的clearAllmoduleCache里的authUser和authPwd与上面清除的是不同的
-        CacheHelper.clearAllModuleCache();
+    public static void addUserChangedListener(Runnable listener) {
+        userChangedListeners.add(listener);
+    }
 
-        //跳转到登录页
-        //如果activity为空会抛出异常
-        AppContext.showLogin();
-
-        if(message != null) {
-            AppContext.showMessage(message);
+    public static void notifyUserChanged() {
+        for (Runnable function : userChangedListeners) {
+            function.run();
         }
+    }
+
+    public static void notifyUserIdentityExpired() {
+        doLogout("用户身份已过期，请重新登录");
+    }
+
+    /**
+     * 当前用户，可以直接调用 $set() 来切换用户
+     */
+    public static User getCurrentUser() {
+        return new User(get("currentUser"));
+    }
+
+    public static void setCurrentUser(User newValue) {
+        set("currentUser", newValue.toJsonString());
+        notifyUserChanged();
+    }
+
+    public static void doLogout(String message) {
+        if (isLogin()) {
+            setCurrentUser(User.trialUser);
+
+            AppContext.showLogin();
+
+            if (message != null) {
+                AppContext.showMessage(message);
+            }
+        }
+    }
+
+    // 显示一个提示用户处于未登录模式，不能使用此功能的对话框
+    public static void showTrialFunctionLimitMessage() {
+        AppContext.showMessage("该功能需要登录使用", "立即登录", () -> doLogout(null));
     }
 
     public static boolean isLogin() {
-        //判断是否已登录
-        String uuid = authCache.$get().getString("uuid", "");
-        return !uuid.equals("");
-    }
-
-    public static String getUUID() {
-        //获得存储的uuid
-        return authCache.$get().getString("uuid", "");
-    }
-
-    public static void setAuth(String username, String password) {
-        try {
-            String encrypted = new EncryptHelper(username).encrypt(password);
-            CacheHelper.set("authUser", username);
-            CacheHelper.set("authPwd", encrypted);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static String getUserName() {
-        return CacheHelper.get("authUser");
-    }
-
-    public static String getPassword() {
-        String username = getUserName();
-        EncryptHelper helper1 = new EncryptHelper(username);
-        return helper1.decrypt(CacheHelper.get("authPwd"));
+        // 判断是否已登录
+        return !getCurrentUser().toJsonString().equals(User.trialUser.toJsonString());
     }
 
     // 单独更新校园网登陆账户
@@ -125,7 +119,7 @@ public class ApiHelper {
         String cacheUser = CacheHelper.get("wifiAuthUser");
 
         // 若无校园网独立用户缓存，则使用登陆应用的账户
-        if (cacheUser.equals("")) return getUserName();
+        if (cacheUser.equals("")) return getCurrentUser().userName;
         return cacheUser;
     }
 
@@ -135,7 +129,9 @@ public class ApiHelper {
         String cachePwd = CacheHelper.get("wifiAuthPwd");
 
         // 若无校园网独立用户缓存，则使用登陆应用的账户
-        if (cachePwd.equals("") || helper1.decrypt(cachePwd).equals("")) return getPassword();
+        if (cachePwd.equals("") || helper1.decrypt(cachePwd).equals("")) {
+            return getCurrentUser().password;
+        }
         return helper1.decrypt(cachePwd);
     }
 
@@ -144,25 +140,15 @@ public class ApiHelper {
         CacheHelper.set("wifiAuthPwd", "");
     }
 
-    public static String getAuthCache(String cacheName) {
-        //可用
-        /**
-         * uuid         认证用uuid
-         * cardnum     一卡通号
-         * schoolnum    学号
-         */
-        //获得存储的某项信息
-        return authCache.$get().getString(cacheName, "");
+    public static UserCache getAuthCache() {
+        return new UserCache("auth");
     }
 
-    public static void setAuthCache(String cacheName, String cacheValue) {
-        //用于更新存储的某项信息
-        SharedPreferences.Editor editor = authCache.$get().edit();
-        editor.putString(cacheName, cacheValue);
-        editor.commit();
+    private static String get(String key) {
+        return getAuthCache().get(key);
     }
 
-    public static String getSchoolnum() {
-        return getAuthCache("schoolnum");
+    private static void set(String key, String value) {
+        getAuthCache().set(key, value);
     }
 }

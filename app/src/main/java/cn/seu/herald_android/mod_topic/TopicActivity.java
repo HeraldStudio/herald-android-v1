@@ -4,7 +4,7 @@ package cn.seu.herald_android.mod_topic;
 import android.os.Bundle;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_framework.BaseActivity;
+import cn.seu.herald_android.framework.BaseActivity;
 
 /**
  * Created by corvo on 7/21/16.

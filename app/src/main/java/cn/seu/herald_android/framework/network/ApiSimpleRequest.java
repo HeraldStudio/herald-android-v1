@@ -1,0 +1,239 @@
+package cn.seu.herald_android.framework.network;
+
+import android.os.Handler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+
+import cn.seu.herald_android.framework.AppModule;
+import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.helper.ServiceHelper;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+/**
+ * ApiSimpleRequest | 简单请求
+ * 网络请求的一个基本单元，包含一次请求和一次回调。
+ **/
+public class ApiSimpleRequest implements ApiRequest {
+
+    private Method method;
+
+    /**
+     * 构造部分
+     **/
+    public ApiSimpleRequest(Method method) {
+        this.method = method;
+    }
+
+    private String url;
+
+    public ApiSimpleRequest url(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public ApiSimpleRequest api(String name) {
+        return url(ApiHelper.getApiUrl(name));
+    }
+
+    /**
+     * 联网设置部分
+     * builder  参数表
+     **/
+    private FormBody.Builder body = new FormBody.Builder();
+
+    public ApiSimpleRequest addUuid() {
+        body.add("uuid", ApiHelper.getCurrentUser().uuid);
+        return this;
+    }
+
+    public ApiSimpleRequest post(String... map) {
+        for (int i = 0; i < map.length / 2; i++) {
+            String key = map[2 * i];
+            String value = map[2 * i + 1];
+            this.body.add(key, value);
+        }
+        return this;
+    }
+
+    /**
+     * 一级回调设置部分
+     * 一级回调只是跟OkHttpUtils框架之间的交互，并在此交互过程中为二级回调提供接口
+     * 从此类外面看，不存在一级回调，只有二级回调和三级回调
+     * <p>
+     * callback     默认的Callback（自动调用二级回调，若出错还会执行错误处理）
+     **/
+    private Callback callback = new Callback() {
+
+        @Override
+        public void onResponse(Call call, Response response) {
+            try {
+                // 解析错误码（这里指的是 HTTP Response Status Code，不考虑 JSON 中返回的 code）
+                int code = response.code();
+
+                // 按照错误码判断是否成功
+                boolean success = code < 300;
+
+                // 取返回的字符串值
+                String responseString = response.body().string();
+
+                // 触发回调
+                uiThreadHandler.post(() -> {
+                    for (OnResponseListener listener : onResponseListeners) {
+                        listener.processResponse(success, code, responseString);
+                    }
+                });
+            } catch (IOException e) {
+                onFailure(call, e);
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            uiThreadHandler.post(() -> {
+                for (OnResponseListener listener : onResponseListeners) {
+                    listener.processResponse(false, 500, "I/O Error");
+                }
+            });
+        }
+    };
+
+    private Handler uiThreadHandler = new Handler();
+
+    /**
+     * 二级回调设置部分
+     * 二级回调是对返回状态和返回数据处理方式的定义，相当于重写Callback，
+     * 但这里允许多个二级回调策略进行叠加，因此比Callback更灵活
+     * <p>
+     * onFinishListeners    二级回调接口，内含一个默认的回调操作，该操作仅在设置了三级回调策略时有效
+     **/
+
+    private LinkedList<OnResponseListener> onResponseListeners = new LinkedList<>();
+
+    public ApiRequest onResponse(OnResponseListener listener) {
+        onResponseListeners.add(listener);
+        return this;
+    }
+
+    public ApiRequest onFinish(OnFinishListener listener) {
+        return onResponse((success, code, response) -> listener.parseFinish(success, code));
+    }
+
+    /**
+     * 三级回调设置部分
+     * 三级回调是对一些比较典型的回调策略的包装，此处暂时只实现了将数据存入缓存这一种三级回调策略
+     * <p>
+     * JSONParser   将原始数据转换为要存入缓存的目标数据的中转过程
+     * toCache      将目标数据存入缓存的回调策略
+     * toCache()    用于设置三级回调策略的函数
+     **/
+
+    public interface JSONParser {
+        Object parse(JSONObject src) throws JSONException;
+    }
+
+    public ApiSimpleRequest toCache(String key) {
+        return toCache(key, src -> src, null);
+    }
+
+    public ApiSimpleRequest toCache(String key, JSONParser parser) {
+        return toCache(key, parser, null);
+    }
+
+    public ApiSimpleRequest toCache(String key, AppModule notifyModuleIfChanged) {
+        return toCache(key, o -> o, notifyModuleIfChanged);
+    }
+
+    // 若对应的缓存发生了改变, 向对应的模块缓存中保存"已改动"的标记
+    // 目前暂时只有CacheHelper有更新检测机制，如果另外两个也需要该机制，请修改对应的Helper的setCache函数
+    public ApiSimpleRequest toCache(String key, JSONParser parser, AppModule notifyModuleIfChanged) {
+        onResponse((success, code, response) -> {
+            if (success) {
+                try {
+                    String cache = parser.parse(new JSONObject(response)).toString();
+                    if (CacheHelper.set(key, cache) && notifyModuleIfChanged != null) {
+                        notifyModuleIfChanged.setHasUpdates(true);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    for (OnResponseListener onResponseListener : onResponseListeners) {
+                        onResponseListener.processResponse(false, 0, "");
+                    }
+                }
+            }
+        });
+        return this;
+    }
+
+    public ApiSimpleRequest toServiceCache(String key) {
+        return toServiceCache(key, o -> o);
+    }
+
+    public ApiSimpleRequest toServiceCache(String key, JSONParser parser) {
+        onResponse((success, code, response) -> {
+            if (success) {
+                try {
+                    String cache = parser.parse(new JSONObject(response)).toString();
+                    ServiceHelper.set(key, cache);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    for (OnResponseListener onResponseListener : onResponseListeners) {
+                        onResponseListener.processResponse(false, 0, "");
+                    }
+                }
+            }
+        });
+        return this;
+    }
+
+    public ApiRequest chain(ApiRequest nextRequest) {
+        return new ApiChainRequest(this, nextRequest);
+    }
+
+    public ApiRequest parallel(ApiRequest anotherRequest) {
+        return new ApiParallelRequest(this, anotherRequest);
+    }
+
+    /**
+     * 执行部分
+     **/
+    public void runWithoutFatalListener() {
+        switch (method) {
+            case GET:
+                getClientInstance().newCall(
+                        new Request.Builder().url(url).build()
+                ).enqueue(callback);
+                break;
+            case POST:
+                getClientInstance().newCall(
+                        new Request.Builder().url(url).post(body.build()).build()
+                ).enqueue(callback);
+                break;
+        }
+    }
+
+    public void run() {
+        NetworkUtil.addFatalErrorListenerInOnResponseList(onResponseListeners);
+        runWithoutFatalListener();
+    }
+
+    private static OkHttpClient clientInstance = null;
+
+    public static OkHttpClient getClientInstance() {
+        if (clientInstance == null) {
+            clientInstance = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS).readTimeout(5, TimeUnit.SECONDS).build();
+        }
+        return clientInstance;
+    }
+}

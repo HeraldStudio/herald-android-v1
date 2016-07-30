@@ -13,7 +13,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.helper.AppModule;
+import cn.seu.herald_android.framework.AppModule;
 
 public class ModuleListAdapter extends ArrayAdapter<AppModule> {
 

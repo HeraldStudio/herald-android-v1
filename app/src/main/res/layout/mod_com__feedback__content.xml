@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
-    tools:context="cn.seu.herald_android.mod_communicate.FeedbackActivity"
-    tools:showIn="@layout/mod_com__feedback">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="?attr/actionBarSize"
+                tools:context=".app_secondary.FeedbackActivity"
+                tools:showIn="@layout/mod_com__feedback">
 
     <EditText
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:padding="15dp"
         android:scrollbarStyle="outsideOverlay"
         android:hint="在这里写下您的宝贵意见~"
-        android:textSize="14sp" />
+        android:textSize="13sp"/>
 
     <View
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
         android:gravity="left"
         android:hint="您的联系方式(可不填)"
         android:layout_centerInParent="true"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:id="@+id/tv_contact"/>
 
     <View

@@ -15,7 +15,7 @@ import cn.seu.herald_android.R;
 
 public class ListViewUtils {
     public static void setHeightWithContent(ListView listView){
-        //设置高度自适应
+        // 设置高度自适应
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;

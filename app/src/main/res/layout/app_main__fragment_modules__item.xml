@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left|center"
                 android:textColor="#333"
-                android:textSize="15sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/tv_desc"
@@ -64,7 +64,7 @@
                 android:layout_marginTop="3dp"
                 android:gravity="left|center"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="13sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

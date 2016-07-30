@@ -13,7 +13,7 @@
         android:gravity="left"
         android:text="时间"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="15sp" />
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/tv_place"
@@ -23,5 +23,5 @@
         android:gravity="right"
         android:text="地点"
         android:textColor="@color/colorSecondaryText"
-        android:textSize="13sp"/>
+        android:textSize="12sp"/>
 </LinearLayout>

@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mod_query.express.ExpressActivity"
+    tools:context=".app_module.express.ExpressActivity"
     >
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
