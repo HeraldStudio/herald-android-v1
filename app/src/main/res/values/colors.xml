@@ -8,7 +8,7 @@
     <color name="colorGradePrimary">#4CAF50</color>
     <color name="colorGradePrimaryDark">#4CAF50</color>
     <color name="colorGradeAccent">#4CAF50</color>
-    <color name="colorGradeLight">#e7ffe7</color>
+    <color name="colorGradeLight">#fafafa</color>
 
     <!--教务信息-->
     <color name="colorJwcPrimary">#1976d2</color>
@@ -93,9 +93,9 @@
     <color name="colorActivitiesAccent">#1976d2</color>
 
     <!--关于我们-->
-    <color name="colorAboutusPrimary">#57b3ff</color>
-    <color name="colorAboutusprimaryDark">#57b3ff</color>
-    <color name="colorAboutusprimaryAccent">#57b3ff</color>
+    <color name="colorAboutusPrimary">#00b4ff</color>
+    <color name="colorAboutusprimaryDark">#00b4ff</color>
+    <color name="colorAboutusprimaryAccent">#00b4ff</color>
 
 
     <!--意见反馈-->
