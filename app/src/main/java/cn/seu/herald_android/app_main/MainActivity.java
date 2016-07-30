@@ -9,8 +9,11 @@ import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
@@ -219,7 +222,7 @@ public class MainActivity extends BaseActivity {
             @Override public void onPageSelected(int position) {
                 bottomTabLayout.setCurrentTab(position);
 
-                MainActivity.this.setNavigationColor(
+                MainActivity.this.setNavigationColorRes(
                         position == 1 ? R.color.colorPrimary : R.color.colorActivitiesPrimary);
             }
 
@@ -265,8 +268,12 @@ public class MainActivity extends BaseActivity {
         unregisterReceiver(changeMainFragmentReceiver);
     }
 
-    protected void setNavigationColor(int color) {
+    protected void setNavigationColor(@ColorInt int color) {
         setStatusBarColor(color);
         mainToolbar.setBackgroundColor(color);
+    }
+
+    protected void setNavigationColorRes(@ColorRes int color) {
+        setNavigationColor(ContextCompat.getColor(this, color));
     }
 }
