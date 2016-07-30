@@ -112,7 +112,7 @@
     <!--首页四个fragment的主题色-->
     <color name="colorFragmentCards">#00b4ff</color>
     <color name="colorFragmentActivitys">#1976d2</color>
-    <color name="colorFragmentModules">#1976d2</color>
+    <color name="colorFragmentModules">#00b4ff</color>
     <color name="colorFragmentSettings">#00b4ff</color>
 
     <!--课表-->

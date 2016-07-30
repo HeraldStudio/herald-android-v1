@@ -1,5 +1,6 @@
 package cn.seu.herald_android.app_main;
 
+import android.animation.ArgbEvaluator;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -199,6 +200,12 @@ public class MainActivity extends BaseActivity {
                 R.drawable.ic_person_unselected
         };
 
+        int[] statusColors = new int[]{
+                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentCards),
+                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentActivitys),
+                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentModules),
+                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentSettings)};
+
         ArrayList<CustomTabEntity> tabEntities = new ArrayList<>();
         for (int i = 0; i < adapter.getCount(); i++) {
             tabEntities.add(new TabEntity(null, selectedIcons[i], unselectedIcons[i]));
@@ -217,13 +224,16 @@ public class MainActivity extends BaseActivity {
         });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                ArgbEvaluator evaluator = new ArgbEvaluator();
+                int colorOld = statusColors[position];
+                int colorNew = statusColors[(position + 1) % statusColors.length];
+                int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld, colorNew);
+                setNavigationColor(evaluate);
+            }
 
             @Override public void onPageSelected(int position) {
                 bottomTabLayout.setCurrentTab(position);
-
-                MainActivity.this.setNavigationColorRes(
-                        position == 1 ? R.color.colorActivitiesPrimary : R.color.colorPrimary);
             }
 
             @Override public void onPageScrollStateChanged(int state) {}
