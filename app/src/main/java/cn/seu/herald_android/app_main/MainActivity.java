@@ -223,7 +223,7 @@ public class MainActivity extends BaseActivity {
                 bottomTabLayout.setCurrentTab(position);
 
                 MainActivity.this.setNavigationColorRes(
-                        position == 1 ? R.color.colorPrimary : R.color.colorActivitiesPrimary);
+                        position == 1 ? R.color.colorActivitiesPrimary : R.color.colorPrimary);
             }
 
             @Override public void onPageScrollStateChanged(int state) {}
