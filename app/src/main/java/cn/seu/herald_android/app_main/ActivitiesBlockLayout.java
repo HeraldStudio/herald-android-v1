@@ -21,17 +21,17 @@ public class ActivitiesBlockLayout extends LinearLayout {
         TextView title = (TextView) contentView.findViewById(R.id.title);
         TextView content = (TextView) contentView.findViewById(R.id.content);
 
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAfterSchoolPrimary));
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorActivitiesPrimary));
         title.setText(item.title);
         title.setEllipsize(TextUtils.TruncateAt.END);
 
-        content.setText(item.activity_time + " @ " + item.location);
+        content.setText(item.activityTime + " @ " + item.location);
 
         addView(contentView);
 
         description = item.title + "|"
                 + item.getTag() + "|"
-                + item.introduciton + "|";
+                + item.desc + "|";
     }
 
     @Override

@@ -1,7 +1,5 @@
 package cn.seu.herald_android.app_main;
 
-import android.net.Uri;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,41 +12,41 @@ import cn.seu.herald_android.custom.CalendarUtils;
 
 public class ActivitiesItem {
     String title;
-    String introduciton;
-    String start_time;
-    String end_time;
-    String activity_time;
-    String assiciation;
+    String desc;
+    String startTime;
+    String endTime;
+    String activityTime;
+    String assoc;
     String location;
-    String detail_url;
-    String pic_url;
-    //标识活动是否已开始等信息
+    String detailUrl;
+    String picUrl;
+    // 标识活动是否已开始等信息
     String tag;
-    //标识活动开始信息的颜色
+    // 标识活动开始信息的颜色
     int tagColorID;
 
-    public ActivitiesItem(String title, String introduciton, String start_time, String end_time, String activity_time, String detail_url, String assiciation, String location, String pic_url) {
+    public ActivitiesItem(String title, String desc, String startTime, String endTime, String activityTime, String detailUrl, String assoc, String location, String picUrl) {
         this.title = title;
-        this.introduciton = introduciton;
-        this.start_time = start_time;
-        this.end_time = end_time;
-        this.activity_time = activity_time;
-        this.detail_url = detail_url;
-        this.assiciation = assiciation;
+        this.desc = desc;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.activityTime = activityTime;
+        this.detailUrl = detailUrl;
+        this.assoc = assoc;
         this.location = location;
-        this.pic_url = pic_url;
+        this.picUrl = picUrl;
 
-        //判断活动是否开始
+        // 判断活动是否开始
         long now_time = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
         long start_time_value = getStartCalendar().getTimeInMillis();
         long end_time_value = getEndCalendar().getTimeInMillis();
-        if(now_time < start_time_value){
+        if (now_time < start_time_value){
             tag = "即将开始";
             tagColorID =  R.color.colorSecondaryText;
         } else if (now_time > end_time_value) {
             tag = "已结束";
             tagColorID =  R.color.colorSecondaryText;
-        }else {
+        } else {
             tag = "进行中";
             tagColorID =  R.color.relaxGreen;
         }
@@ -57,9 +55,9 @@ public class ActivitiesItem {
     public Calendar getStartCalendar(){
         Calendar dst = Calendar.getInstance();
         dst.set(
-                Integer.parseInt(start_time.split("-")[0]),
-                Integer.parseInt(start_time.split("-")[1])-1,
-                Integer.parseInt(start_time.split("-")[2])
+                Integer.parseInt(startTime.split("-")[0]),
+                Integer.parseInt(startTime.split("-")[1])-1,
+                Integer.parseInt(startTime.split("-")[2])
                 );
         return CalendarUtils.toSharpDay(dst);
     }
@@ -69,19 +67,19 @@ public class ActivitiesItem {
     public Calendar getEndCalendar(){
         Calendar dst = Calendar.getInstance();
         dst.set(
-                Integer.parseInt(end_time.split("-")[0]),
-                Integer.parseInt(end_time.split("-")[1])-1,
-                Integer.parseInt(end_time.split("-")[2])
+                Integer.parseInt(endTime.split("-")[0]),
+                Integer.parseInt(endTime.split("-")[1])-1,
+                Integer.parseInt(endTime.split("-")[2])
         );
         return CalendarUtils.toSharpDay(dst);
     }
 
-    public Uri getDetailUri(){
-        return Uri.parse(this.detail_url);
+    public String getDetailUrl(){
+        return detailUrl;
     }
 
-    public Uri getPicUrl(){
-        return Uri.parse(this.pic_url);
+    public String getPicUrl(){
+        return picUrl;
     }
 
     public String getTag(){

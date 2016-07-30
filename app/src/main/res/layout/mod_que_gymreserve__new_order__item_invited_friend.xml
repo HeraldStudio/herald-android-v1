@@ -9,8 +9,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:id="@+id/tv_friendname"
-        android:textSize="15sp"
-        android:textColor="@color/colorGymReserveprimary"
+        android:textSize="14sp"
+        android:textColor="@color/colorGymReservePrimary"
         android:text="姓名"/>
     <ImageView
         android:layout_margin="5dp"

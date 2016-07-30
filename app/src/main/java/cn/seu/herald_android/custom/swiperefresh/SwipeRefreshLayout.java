@@ -977,11 +977,11 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
                 final float y = MotionEventCompat.getY(ev, pointerIndex);
                 final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
                 if (mIsBeingDragged) {
-                    //if (overscrollTop >= 0) {
+                    // if (overscrollTop >= 0) {
                     moveSpinner(Math.max(0, overscrollTop));
-                    //} else {
+                    // } else {
                     //    return false;
-                    //}
+                    // }
                 }
                 break;
             }

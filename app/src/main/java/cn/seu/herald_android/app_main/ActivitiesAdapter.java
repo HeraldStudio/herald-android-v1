@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_secondary.WebModuleActivity;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
-import cn.seu.herald_android.mod_webmodule.WebModuleActivity;
 
 public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapter {
     ArrayList<ActivitiesItem> list;
@@ -41,7 +41,7 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
     @Override
     public RecyclerView.ViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(this.context).inflate(R.layout.app_main__fragment_activities__item, parent,false);
-        return new AfterSchoolActivityViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
 
     @Override
     public FooterViewHolder onCreateFooterViewHolder() {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.custom__view_footer_refresh_recycler,null,false);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.app_main__fragment_activities__item_footer, null, false);
         int width = context.getResources().getDisplayMetrics().widthPixels;
         view.setLayoutParams(new RecyclerView.LayoutParams(width, RecyclerView.LayoutParams.WRAP_CONTENT));
         return new FooterViewHolder(view);
@@ -59,49 +59,49 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
 
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
-        AfterSchoolActivityViewHolder viewHolder = (AfterSchoolActivityViewHolder) holder;
+        ViewHolder viewHolder = (ViewHolder) holder;
         final ActivitiesItem item = list.get(position);
-        //设置缩略图
-        try{
-            if (item.pic_url.equals(""))
-                Picasso.with(context).load(R.drawable.default_herald).into(viewHolder.imgv_activity);
+        // 设置缩略图
+        try {
+            if (item.picUrl.equals(""))
+                Picasso.with(context).load(R.drawable.default_herald).into(viewHolder.image);
             else
-                Picasso.with(context).load(item.getPicUrl()).into(viewHolder.imgv_activity);
-        }catch (Exception e){
-            //若url出错则捕获异常
-            Picasso.with(context).load(R.drawable.default_herald).into(viewHolder.imgv_activity);
+                Picasso.with(context).load(item.getPicUrl()).into(viewHolder.image);
+        } catch (Exception e) {
+            // 若url出错则捕获异常
+            Picasso.with(context).load(R.drawable.default_herald).into(viewHolder.image);
             e.printStackTrace();
         }
 
 
-        //链接不为空则显示“详情按钮”
-        if(!item.detail_url.equals("")){
-            viewHolder.tv_details.setVisibility(View.VISIBLE);
-        }else {
-            viewHolder.tv_details.setVisibility(View.GONE);
+        // 链接不为空则显示“详情按钮”
+        if (!item.detailUrl.equals("")) {
+            viewHolder.detail.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.detail.setVisibility(View.GONE);
         }
 
 
-        //点击相应函数
-        viewHolder.cardview.setOnClickListener(o->{
-            //链接不为空则打开
-            if(!item.detail_url.equals(""))
-                WebModuleActivity.startWebModuleActivity(getContext(),item.title,item.getDetailUri(),R.style.AfterSchoolActivityTheme);
+        // 点击相应函数
+        viewHolder.cardView.setOnClickListener(o -> {
+            // 链接不为空则打开
+            if (!item.detailUrl.equals(""))
+                WebModuleActivity.startWebModuleActivity(item.title, item.getDetailUrl(), R.style.ActivitiesTheme);
         });
-        //判断活动是否开始
-        viewHolder.tv_tag.setText(item.getTag());
-        viewHolder.tv_tag.setTextColor( ContextCompat.getColor(getContext(), item.getTagColorId()));
+        // 判断活动是否开始
+        viewHolder.tag.setText(item.getTag());
+        viewHolder.tag.setTextColor(ContextCompat.getColor(getContext(), item.getTagColorId()));
 
-        //设置活动时间和地点
-        viewHolder.tv_time_and_location.setText(
-                String.format("活动时间: %s\n活动地点: %s",item.activity_time,item.location)
+        // 设置活动时间和地点
+        viewHolder.timeAndPlace.setText(
+                String.format("活动时间: %s\n活动地点: %s", item.activityTime, item.location)
         );
-        //设置活动主办方
-        viewHolder.tv_association.setText(item.assiciation);
-        //设置活动标题
-        viewHolder.tv_title.setText(item.title);
-        //设置活动简介
-        viewHolder.tv_introduction.setText(item.introduciton);
+        // 设置活动主办方
+        viewHolder.assoc.setText(item.assoc);
+        // 设置活动标题
+        viewHolder.title.setText(item.title);
+        // 设置活动简介
+        viewHolder.desc.setText(item.desc);
     }
 
     @Override
@@ -114,10 +114,10 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
     public void onBindFooterViewHolder(RecyclerView.ViewHolder holder, int position) {
         FooterViewHolder viewHolder = (FooterViewHolder) holder;
         TextView tv_tip = (TextView) viewHolder.getItemView().findViewById(R.id.tv_tip);
-        if(loadFinished)
-            tv_tip.setText("已无更多内容");
+        if (loadFinished)
+            tv_tip.setText("没有更多数据");
         else
-            tv_tip.setText("Loading");
+            tv_tip.setText("上拉加载");
     }
 
     @Override
@@ -125,37 +125,37 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
         return list.size();
     }
 
-    public static class AfterSchoolActivityViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.layout_card)
-        View cardview;
-        @BindView(R.id.imgv_activity)
-        ImageView imgv_activity;
-        @BindView(R.id.tv_title)
-        TextView tv_title;
-        @BindView(R.id.tv_time_and_location)
-        TextView tv_time_and_location;
-        @BindView(R.id.tv_introduction)
-        TextView tv_introduction;
-        @BindView(R.id.tv_tag)
-        TextView tv_tag;
-        @BindView(R.id.tv_association)
-        TextView tv_association;
-        @BindView(R.id.tv_details)
-        TextView tv_details;
+        @BindView(R.id.cardView)
+        View cardView;
+        @BindView(R.id.image)
+        ImageView image;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.timeAndPlace)
+        TextView timeAndPlace;
+        @BindView(R.id.desc)
+        TextView desc;
+        @BindView(R.id.tag)
+        TextView tag;
+        @BindView(R.id.assoc)
+        TextView assoc;
+        @BindView(R.id.detail)
+        TextView detail;
 
-        public AfterSchoolActivityViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             float resolution = 5f/2f;
-            imgv_activity.post(()->{
-                int weight = imgv_activity.getWidth();
-                int height = (int) ( weight / resolution);
+            image.post(() -> {
+                int weight = image.getWidth();
+                int height = (int) (weight / resolution);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(weight,height);
-                imgv_activity.setLayoutParams(params);
+                image.setLayoutParams(params);
             });
-            imgv_activity.measure(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            image.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 }

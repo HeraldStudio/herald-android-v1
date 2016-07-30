@@ -23,14 +23,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="实验日期"
-            android:textSize="13sp"/>
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="实验名字"
-            android:textColor="@color/colorExperimentprimary_dark"
+            android:textColor="@color/colorExperimentPrimaryDark"
             android:textSize="17sp" />
 
         <TextView

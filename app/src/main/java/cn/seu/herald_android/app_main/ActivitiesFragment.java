@@ -18,10 +18,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_framework.AppContext;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
-import cn.seu.herald_android.helper.ApiRequest;
+import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.network.ApiSimpleRequest;
+import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.CacheHelper;
 
 public class ActivitiesFragment extends Fragment {
@@ -70,7 +71,7 @@ public class ActivitiesFragment extends Fragment {
 
         // 加载活动列表
         init();
-        loadActivityList();
+        loadCache();
     }
 
     private void init() {
@@ -85,77 +86,94 @@ public class ActivitiesFragment extends Fragment {
 
         // 绑定适配器跟上拉加载监听函数
         recyclerView.setAdapter(activitiesAdapter);
-        recyclerView.setOnFooterListener((footerposition) -> new ApiRequest()
-                .url("http://115.28.27.150/herald/api/v1/huodong/get?page=" + (page + 1))
-                .get()
-                .onFinish((success, code, response) -> {
-                    if (success) {
-                        //每次上拉记载时，页数都加1
-                        page += 1;
-                        addNewItemWithData(response);
-                    } else {
-                        AppContext.showMessage("加载失败，请重试");
-                    }
-                }).run());
+        recyclerView.setOnFooterListener((footerPos) -> loadNextPage());
 
         // 设置下拉刷新
         srl.setOnRefreshListener(this::refreshCache);
     }
 
-    public void loadActivityList(){
-        //如果缓存不为空的话先加载第一页的缓存
-        String cache = CacheHelper.get("herald_afterschoolactivity");
-        if (!cache.equals("")) {
-            addNewItemWithData(cache);
-        }
-        //同时刷新第一页的缓存,刷新后载入最新的第一页，同时重置page为第一页
-        refreshCache();
-    }
-
     public void refreshCache(){
-        //刷新第一页的缓存,刷新后载入最新的第一页，同时重置page为第一页
+        // 刷新第一页的缓存,刷新后载入最新的第一页，同时重置page为第一页
         if (isRefreshing)
             return;
         isRefreshing = true;
-        page = 1;
-        new ApiRequest()
-                .get()
-                .url("http://115.28.27.150/herald/api/v1/huodong/get?page="+page)
-                .toCache("herald_afterschoolschool", o -> o)
-                .onFinish((success, code, response) -> {
-                    // AppContext.showMessage("刷新成功");
-                    isRefreshing = false;
-                    if ( srl != null) srl.setRefreshing(false);
-                    //成功则
-                    if (success){
-                        activitiesAdapter.removeAll();
-                        addNewItemWithData(response);
-                    } else {
+        new ApiSimpleRequest(Method.GET)
+                .url("http://115.28.27.150/herald/api/v1/huodong/get")
+                .toCache("herald_activities")
+                .onResponse((success, code, response) -> {
+                    if (srl != null) srl.setRefreshing(false);
+                    loadCache();
+
+                    if (!success) {
                         AppContext.showMessage("刷新失败，请重试");
                     }
+                    isRefreshing = false;
                 }).run();
     }
 
-    public void addNewItemWithData(String data){
-        //根据所给数据(格式为服务器中返回的数据格式)将活动添加到列表中
+    // 载入缓存内容
+    public void loadCache() {
+
+        // 首先清空数据
+        activitiesAdapter.removeAll();
+
+        // 设置当前页数为0，以便在没有得到数据时，上拉加载仍加载第1页内容而不是第2页
+        page = 0;
+
         try {
-            JSONArray array = new JSONObject(data).getJSONArray("content");
-            if(array.length() == 0) {
-                activitiesAdapter.setLoadFinished(true);
-                AppContext.showMessage("没有更多数据");
-            } else {
-                //新一页的内容
-                ArrayList<ActivitiesItem> newcontent =
+            JSONArray array = new JSONObject(CacheHelper.get("herald_activity")).getJSONArray("content");
+
+            // 新一页的内容
+            ArrayList<ActivitiesItem> newContent =
                         ActivitiesItem.transformJSONArrayToArrayList(array);
-                for (ActivitiesItem item : newcontent) {
-                    //逐项加入列表中
-                    activitiesAdapter.addItem(item);
-                }
+
+            // 如果有数据，逐条添加数据，并设置当前页数为1
+            for (ActivitiesItem item : newContent) {
+                // 逐项加入列表中
+                activitiesAdapter.addItem(item);
+                page = 1;
             }
+
+            // 恢复上拉加载控件的可用性
+            activitiesAdapter.setLoadFinished(false);
+
+            // 显式重载列表内容
             activitiesAdapter.notifyDataSetChanged();
-        }catch (JSONException e){
+
+        } catch (JSONException e) {
             AppContext.showMessage("解析失败，请刷新");
             e.printStackTrace();
         }
+    }
+
+    // 联网加载下一页内容，若成功，加入列表并自增一页；否则显示错误信息
+    public void loadNextPage() {
+        new ApiSimpleRequest(Method.GET).url("http://115.28.27.150/herald/api/v1/huodong/get?page=" + (page + 1))
+                .onResponse((success, code, response) -> {
+                    if (srl != null) srl.setRefreshing(false);
+
+                    if (success) {
+                        page++;
+
+                        try {
+                            JSONArray array = new JSONObject(response).getJSONArray("content");
+                            if (array.length() == 0) {
+                                activitiesAdapter.setLoadFinished(true);
+                            } else {
+                                // 新一页的内容
+                                ArrayList<ActivitiesItem> newContent =
+                                        ActivitiesItem.transformJSONArrayToArrayList(array);
+                                for (ActivitiesItem item : newContent) {
+                                    // 逐项加入列表中
+                                    activitiesAdapter.addItem(item);
+                                }
+                            }
+                            activitiesAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            AppContext.showMessage("解析失败，请刷新");
+                            e.printStackTrace();
+                        }
+                    }
+                }).run();
     }
 }

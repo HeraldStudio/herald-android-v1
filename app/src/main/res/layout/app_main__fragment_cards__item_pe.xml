@@ -32,7 +32,7 @@
                 android:id="@+id/tv_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPedetailprimary"
+                android:textColor="@color/colorPedetailPrimary"
                 android:textSize="24sp"/>
 
             <TextView
@@ -55,7 +55,7 @@
                 android:id="@+id/tv_remain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPedetailprimary"
+                android:textColor="@color/colorPedetailPrimary"
                 android:textSize="24sp"/>
 
             <TextView
@@ -78,7 +78,7 @@
                 android:id="@+id/tv_remain_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPedetailprimary"
+                android:textColor="@color/colorPedetailPrimary"
                 android:textSize="24sp"/>
 
             <TextView

@@ -1,8 +1,6 @@
 package cn.seu.herald_android.app_main;
 
 import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,19 +17,22 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_framework.AppContext;
-import cn.seu.herald_android.app_framework.SystemUtil;
+import cn.seu.herald_android.app_secondary.AboutUsActivity;
+import cn.seu.herald_android.app_secondary.FeedbackActivity;
+import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.SystemUtil;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_communicate.AboutusActivity;
-import cn.seu.herald_android.mod_communicate.FeedbackActivity;
 
 public class SettingsFragment extends Fragment {
 
     @BindView(R.id.tv_now_version)
     TextView nowVersion;
+
+    @BindView(R.id.tv_login_or_logout)
+    TextView loginOrLogoutText;
 
     View contentView;
 
@@ -43,10 +44,11 @@ public class SettingsFragment extends Fragment {
         contentView = inflater.inflate(R.layout.app_main__fragment_settings, null, false);
         unbinder = ButterKnife.bind(this, contentView);
         nowVersion.setText("当前版本： " + SystemUtil.getAppVersionName());
-        // seu登录模块设置
-        setupSeuSettings();
-        // 个性化设置
-        setupPersonalSettings();
+
+        loadData();
+
+        // 当用户改变时重新加载
+        ApiHelper.addUserChangedListener(this::loadData);
         return contentView;
     }
 
@@ -56,71 +58,64 @@ public class SettingsFragment extends Fragment {
         unbinder.unbind();
     }
 
-    private void setupPersonalSettings(){
-        //底部菜单设置
-        SwitchButton swith_bottomtab = ButterKnife.findById(contentView, R.id.switchbottomtab);
-        swith_bottomtab.setCheckedImmediately(!SettingsHelper.bottomTabEnabled.$get());
-        swith_bottomtab.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            SettingsHelper.bottomTabEnabled.$set(!isChecked);
-            getActivity().recreate();
-        });
-    }
+    private void loadData(){
 
-    private void setupSeuSettings(){
-        //seu登录模块设置
-        SwitchButton swith_seu = ButterKnife.findById(contentView, R.id.switchseuauto);
-        swith_seu.setCheckedImmediately(SettingsHelper.wifiAutoLogin.$get());
-        swith_seu.setOnCheckedChangeListener((buttonView, isChecked) ->
-                SettingsHelper.wifiAutoLogin.$set(isChecked));
+        // 初始化登录按钮文字
+        loginOrLogoutText.setText(ApiHelper.isLogin() ? "退出登录" : "登录");
+
+        SwitchButton switch_seu = ButterKnife.findById(contentView, R.id.switchseuauto);
+        switch_seu.setCheckedImmediately(SettingsHelper.getWifiAutoLogin());
+        switch_seu.setOnCheckedChangeListener((buttonView, isChecked) ->
+                SettingsHelper.setWifiAutoLogin(isChecked));
     }
 
     @OnClick(R.id.tv_aboutus)
     void aboutUs() {
-        startActivity(new Intent(getContext(), AboutusActivity.class));
+        AppContext.startActivitySafely(AboutUsActivity.class);
     }
 
     @OnClick(R.id.tv_feedback)
     void feedback() {
-        startActivity(new Intent(getContext(), FeedbackActivity.class));
+        AppContext.startActivitySafely(FeedbackActivity.class);
     }
 
-    @OnClick(R.id.tv_logout)
-    void logout() {
-        new AlertDialog.Builder(getContext()).setMessage("退出后将自动清除模块缓存，确定退出吗？")
-                .setPositiveButton("退出", (d, w) -> ApiHelper.doLogout(null))
-                .setNegativeButton("取消", null)
-                .show();
+    @OnClick(R.id.tv_login_or_logout)
+    void loginOrLogout() {
+        if (ApiHelper.isLogin()) {
+
+            // 退出登录
+            new AlertDialog.Builder(getContext()).setMessage("确定要退出登录吗？")
+                    .setPositiveButton("退出", (d, w) -> ApiHelper.doLogout(null))
+                    .setNegativeButton("取消", null)
+                    .show();
+        } else {
+
+            // 登录
+            AppContext.showLogin();
+        }
     }
 
     @OnClick(R.id.check_update)
     void checkUpdate() {
-        //如果版本有更新则提示更新版本
+        // 如果版本有更新则提示更新版本
         int versionCode = SystemUtil.getAppVersionCode();
         int newestCode = ServiceHelper.getNewestVersionCode();
 
         if (versionCode < newestCode) {
             CacheHelper.set("herald_new_version_ignored", "");
 
-            //如果当前版本号小于最新版本，则提示更新
+            // 如果当前版本号小于最新版本，则提示更新
             String tip = "小猴偷米" + ServiceHelper.getNewestVersionName() + "更新说明\n"
                     + ServiceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n");
 
-            //显示对话框
+            // 显示对话框
             new AlertDialog.Builder(getContext())
                     .setTitle("发现新版本")
                     .setMessage(tip)
                     .setPositiveButton("赶紧下载", (dialog, which) -> {
-                        try {
-                            Uri uri = Uri.parse("http://android.heraldstudio.com/download");
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            AppContext.showMessage("打开下载页失败，请联系管理员~");
-                            e.printStackTrace();
-                        }
+                        AppContext.openUrlInBrowser("http://android.heraldstudio.com/download");
                     })
-                    .setNegativeButton("残忍拒绝", (dialog, which) -> {
-                    }).show();
+                    .setNegativeButton("残忍拒绝", (dialog, which) -> {}).show();
         } else {
             AppContext.showMessage("当前版本已经是最新版本");
         }
@@ -138,7 +133,7 @@ public class SettingsFragment extends Fragment {
                 .setPositiveButton("保存", (dialog, which) -> {
                     if (!et.getText().toString().equals("") && !pw.getText().toString().equals("")) {
                         ApiHelper.setWifiAuth(et.getText().toString(), pw.getText().toString());
-                        AppContext.showMessage("已保存为校园网独立账号，建议手动摇一摇测试账号是否有效~");
+                        AppContext.showMessage("已保存为校园网独立账号，建议手动测试账号是否有效~");
                     } else {
                         AppContext.showMessage("你没有更改设置");
                     }

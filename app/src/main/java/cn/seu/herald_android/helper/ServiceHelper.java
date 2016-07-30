@@ -6,8 +6,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import cn.seu.herald_android.app_framework.UserCache;
 import cn.seu.herald_android.custom.SliderView;
+import cn.seu.herald_android.framework.UserCache;
 
 public class ServiceHelper {
 
@@ -24,7 +24,7 @@ public class ServiceHelper {
     }
 
     public static ArrayList<SliderView.SliderViewItem> getSliderViewItemArray() {
-        //获得服务器端的推送内容，这里是获得轮播栏各项设置并且返回数组
+        // 获得服务器端的推送内容，这里是获得轮播栏各项设置并且返回数组
         String cache = get("versioncheck_cache");
         ArrayList<SliderView.SliderViewItem> list = new ArrayList<>();
         try {
@@ -83,9 +83,9 @@ public class ServiceHelper {
     /*
     private Context context;
     private ApiHelper apiHelper;
-    //安卓服务端的接口
+    // 安卓服务端的接口
     private static String android_service_url = "http://android.heraldstudio.com/";
-    //public static String android_service_url = "http://192.168.1.109:3000/";
+    // public static String android_service_url = "http://192.168.1.109:3000/";
     private static final int SERVICE_VERSION = 0;
     public static final int SERVICE_DOWNLOAD = 1;
     private static String[] serviceNames = new String[]{
@@ -103,7 +103,7 @@ public class ServiceHelper {
     }
 
     public String getPushMessageContent() {
-        //获得服务器端的推送消息
+        // 获得服务器端的推送消息
         String cache = getServiceCache("versioncheck_cache");
         String message;
         try {
@@ -117,14 +117,14 @@ public class ServiceHelper {
     }
 
     public String getPushMessageUrl() {
-        //获得服务器端的推送消息链接
+        // 获得服务器端的推送消息链接
         String cache = getServiceCache("versioncheck_cache");
         String messageUrl;
         try {
             JSONObject jsonObject = new JSONObject(cache).getJSONObject("content").getJSONObject("message");
             messageUrl = jsonObject.getString("url");
         } catch (JSONException e) {
-            //如果异常则指调为空
+            // 如果异常则指调为空
             messageUrl = "";
         }
         return messageUrl;
@@ -134,7 +134,7 @@ public class ServiceHelper {
 
 
     private String getServiceCache(String cacheName) {
-        //可用
+        // 可用
         /
          * uuid         认证用uuid
          * cardnuim     一卡通号
@@ -142,13 +142,13 @@ public class ServiceHelper {
          * name         名字
          * sex          性别
 
-        //获得存储的某项信息
+        // 获得存储的某项信息
         SharedPreferences pref = context.getSharedPreferences("herald_service", Context.MODE_PRIVATE);
         return pref.getString(cacheName, "");
     }
 
     public void setServiceCache(String cacheName, String cacheValue) {
-        //用于更新存储的某项信息
+        // 用于更新存储的某项信息
         SharedPreferences.Editor editor = context.getSharedPreferences("herald_service", Context.MODE_PRIVATE).edit();
         editor.putString(cacheName, cacheValue);
         editor.apply();

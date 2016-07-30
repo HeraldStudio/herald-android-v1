@@ -31,8 +31,8 @@
                     android:layout_weight="1"
                     android:paddingTop="10dp"
                     android:text="校园网详情"
-                    android:textColor="@color/colorSeuNetprimary_dark"
-                    android:textSize="15sp" />
+                    android:textColor="@color/colorSeuNetPrimaryDark"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                     android:paddingTop="10dp"
                     android:text="未开通"
                     android:textColor="@color/colorSecondaryText"
-                    android:textSize="13sp"/>
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -58,8 +58,8 @@
                     android:layout_weight="1"
                     android:paddingTop="10dp"
                     android:text="已使用"
-                    android:textColor="@color/colorSeuNetaccent"
-                    android:textSize="13sp"/>
+                    android:textColor="@color/colorSeuNetAccent"
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -69,8 +69,8 @@
                     android:layout_weight="1"
                     android:paddingTop="10dp"
                     android:text="未使用"
-                    android:textColor="@color/colorSeuNetprimary"
-                    android:textSize="13sp"/>
+                    android:textColor="@color/colorSeuNetPrimary"
+                    android:textSize="12sp"/>
             </LinearLayout>
 
             <lecho.lib.hellocharts.view.PieChartView

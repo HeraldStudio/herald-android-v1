@@ -7,7 +7,7 @@
                                         android:layout_height="match_parent"
                                         android:scrollbarStyle="outsideOverlay"
                                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                                        tools:context="cn.seu.herald_android.mod_query.exam.ExamActivity"
+                                        tools:context="cn.seu.herald_android.app_module.exam.ExamActivity"
                                         tools:showIn="@layout/mod_que_exam" />
 
 

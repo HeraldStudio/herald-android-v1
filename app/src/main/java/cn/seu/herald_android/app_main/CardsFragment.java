@@ -35,7 +35,6 @@ public class CardsFragment extends Fragment {
 
         new Handler().postDelayed(() -> {
             view.loadContent(true);
-            srl.setRefreshing(true);
         }, 500);
 
         return contentView;
