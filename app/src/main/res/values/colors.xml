@@ -29,7 +29,7 @@
     <!--一卡通-->
     <color name="colorCardPrimary">#00b4ff</color>
     <color name="colorCardPrimaryDark">#00b4ff</color>
-    <color name="colorCardAccent">#448AFF</color>
+    <color name="colorCardAccent">#00b4ff</color>
 
     <!--校车查询-->
     <color name="colorSchoolBusPrimary">#009688</color>

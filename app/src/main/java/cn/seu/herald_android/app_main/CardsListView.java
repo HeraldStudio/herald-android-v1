@@ -125,79 +125,86 @@ public class CardsListView extends ListView {
         refreshShortcutBox();
 
         // 丢你拉姆
-        // new Thread(() -> {
+        new Thread(() -> {
 
             // 防止多个刷新请求同时执行导致混乱
-            // synchronized (this) {
+            synchronized (this) {
+
+                ArrayList<CardsModel> newItemList = new ArrayList<>();
 
                 // 清空卡片列表，等待载入
-                itemList.clear();
+                newItemList.clear();
 
                 // 加载版本更新缓存
                 CardsModel item1 = ServiceCard.getCheckVersionCard();
-                if (item1 != null) itemList.add(item1);
+                if (item1 != null) newItemList.add(item1);
 
                 // 加载推送缓存
                 CardsModel item = ServiceCard.getPushMessageCard();
-                if (item != null) itemList.add(item);
+                if (item != null) newItemList.add(item);
 
                 // 判断各模块是否开启并加载对应数据
                 if (Module.card.getCardEnabled()) {
                     // 加载并解析一卡通缓存
-                    itemList.add(CardCard.getCard());
+                    newItemList.add(CardCard.getCard());
                 }
 
                 if (Module.pedetail.getCardEnabled()) {
                     // 加载并解析跑操预报缓存
-                    itemList.add(PedetailCard.getCard());
+                    newItemList.add(PedetailCard.getCard());
                 }
 
                 if (Module.curriculum.getCardEnabled()) {
                     // 加载并解析课表缓存
-                    itemList.add(CurriculumCard.getCard());
+                    newItemList.add(CurriculumCard.getCard());
                 }
 
                 if (Module.experiment.getCardEnabled()) {
                     // 加载并解析实验缓存
-                    itemList.add(ExperimentCard.getCard());
+                    newItemList.add(ExperimentCard.getCard());
                 }
 
                 if (Module.exam.getCardEnabled()) {
                     // 加载并解析考试缓存
-                    itemList.add(ExamCard.getCard());
+                    newItemList.add(ExamCard.getCard());
                 }
 
                 // 活动这项永远保留在首页，加载并解析活动缓存
                 CardsModel activityItem = ActivityCard.getCard();
                 // 修改默认点击函数，设置为主页滑动至活动页
                 activityItem.setOnClickListener(v -> new AppModule(null, "TAB1").open());
-                itemList.add(activityItem);
+                newItemList.add(activityItem);
 
                 if (Module.lecture.getCardEnabled()) {
                     // 加载并解析人文讲座预告缓存
-                    itemList.add(LectureCard.getCard());
+                    newItemList.add(LectureCard.getCard());
                 }
 
                 if (Module.jwc.getCardEnabled()) {
                     // 加载并解析教务处缓存
-                    itemList.add(JwcCard.getCard());
+                    newItemList.add(JwcCard.getCard());
                 }
 
                 // 有消息的排在前面，没消息的排在后面
-                Collections.sort(itemList, (p1, p2) ->
+                Collections.sort(newItemList, (p1, p2) ->
                         p1.getDisplayPriority().ordinal() - p2.getDisplayPriority().ordinal());
 
                 // 丢你雷姆
-                // uiThreadHandler.post(() -> {
+                uiThreadHandler.post(() -> {
+                    // 深复制，注意这里不能改变 itemList 的地址，因为列表视图已经绑定了原地址上的 itemList
+                    itemList.clear();
+                    for (CardsModel model : newItemList) {
+                        itemList.add(model);
+                    }
                     // 更新适配器，结束刷新
                     if (adapter == null) {
                         setAdapter(adapter = new CardsAdapter(itemList));
                     } else {
                         adapter.notifyDataSetChanged();
                     }
-                // });
-            // }
-        // }).start();
+                });
+            }
+        }).start();
 
 
         /**
@@ -211,7 +218,7 @@ public class CardsListView extends ListView {
             return;
         }
 
-        if (srl != null) srl.setRefreshing(true);
+        if (srl != null && !srl.isRefreshing()) srl.setRefreshing(true);
 
         ApiRequest request = new ApiEmptyRequest();
 

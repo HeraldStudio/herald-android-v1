@@ -130,8 +130,8 @@ public class CardActivity extends BaseActivity {
         // 刷新完毕后登记刷新日期
         request.onFinish((success, code) -> {
             hideProgressDialog();
+            loadCache();
             if (success) {
-                loadCache();
                 // showSnackBar("刷新成功");
                 CacheHelper.set("herald_card_date", getDayStamp());
             } else {
