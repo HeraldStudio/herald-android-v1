@@ -116,8 +116,8 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
         TextView tv_tip = (TextView) viewHolder.getItemView().findViewById(R.id.tv_tip);
         if (loadFinished)
             tv_tip.setText("没有更多数据");
-        else
-            tv_tip.setText("上拉加载");
+        else // 如果没加载到数据，此处文字将显示在最上面，会让用户感觉困惑，因此去掉
+            tv_tip.setText("");
     }
 
     @Override

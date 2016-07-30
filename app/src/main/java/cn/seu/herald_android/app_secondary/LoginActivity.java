@@ -44,8 +44,9 @@ public class LoginActivity extends BaseActivity {
         tv_pwd.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 loginBtnOnClick();
+                return true;
             }
-            return true;
+            return false;
         });
     }
 
@@ -82,6 +83,7 @@ public class LoginActivity extends BaseActivity {
                         hideProgressDialog();
                         showSnackBar("密码错误，请重试");
                     } else if (response.contains("Bad Request")) {
+                        hideProgressDialog();
                         AppContext.showToast("当前客户端版本已过期，请下载最新版本");
                         AppContext.openUrlInBrowser("http://android.heraldstudio.com/download");
                     } else if (!success) {
@@ -125,6 +127,7 @@ public class LoginActivity extends BaseActivity {
 
                         if (success && user.schoolNum.length() == 8) {
                             hideProgressDialog();
+                            ApiHelper.setCurrentUser(user);
                             finish();
                             new AppModule("跳转到首页", "TAB0").open();
                         } else {

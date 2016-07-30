@@ -78,6 +78,7 @@ public class GymReserveActivity extends BaseActivity {
                         hideProgressDialog();
                     }
                 }).run();
+
         // 如果用户手机号为空时，同时预获取用户手机号
         new ApiSimpleRequest(Method.POST).api("yuyue")
                 .addUuid().post("method", "getPhone")
