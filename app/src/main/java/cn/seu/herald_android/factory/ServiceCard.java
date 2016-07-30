@@ -42,9 +42,12 @@ public class ServiceCard {
             CardsModel item = new CardsModel("小猴提示", pushMessage,
                     CardsModel.Priority.CONTENT_NOTIFY, R.mipmap.ic_pushmsg);
 
-            if (!pushMessageUrl.equals("") && !pushMessageUrl.equals("null")) {
-                new AppModule("小猴提示", pushMessageUrl).open();
-            }
+            final String finalUrl = pushMessageUrl;
+            item.setOnClickListener(v -> {
+                if (!finalUrl.equals("") && !finalUrl.equals("null")) {
+                    new AppModule("小猴提示", finalUrl).open();
+                }
+            });
             return item;
         }
 
