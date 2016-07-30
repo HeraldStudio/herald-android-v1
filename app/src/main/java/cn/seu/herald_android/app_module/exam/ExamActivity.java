@@ -68,7 +68,7 @@ public class ExamActivity extends BaseActivity {
 
         try {
             List<ExamModel> exams = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<ExamModel> customExams = ExamModel.transformJSONArrayToArrayList(getDefinedExamsJSONArray());
+            List<ExamModel> customExams = ExamModel.transformJSONArrayToArrayList(AddExamActivity.getCustomExamJSONArray());
             for (ExamModel examModel : customExams) {
                 examModel.isCustom = true;
                 exams.add(examModel);
@@ -110,20 +110,9 @@ public class ExamActivity extends BaseActivity {
                 }).run();
     }
 
-    JSONArray getDefinedExamsJSONArray() {
-        String cache = CacheHelper.get("herald_exam_custom");
-        try {
-            return new JSONArray(cache);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            CacheHelper.set("herald_exam_custom", new JSONArray().toString());
-        }
-        return new JSONArray();
-    }
-
     void deleteDefinedExam(ExamModel item) {
         try {
-            JSONArray array_old = getDefinedExamsJSONArray();
+            JSONArray array_old = AddExamActivity.getCustomExamJSONArray();
             JSONArray array_new = new JSONArray();
             boolean deleted = false;
             for (int i = 0; i < array_old.length(); i++) {

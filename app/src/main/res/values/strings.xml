@@ -50,7 +50,6 @@ monkey by Zille Sophie Bostinius from the Noun Project
     </string>
 
 
-    <string name="title_activity_lecture">东南大学人文讲堂</string>
 
 
     <string name="title_activity_card">一卡通</string>
@@ -61,6 +60,7 @@ monkey by Zille Sophie Bostinius from the Noun Project
     <string name="title_activity_add_exam">添加考试</string>
     <string name="title_activity_pedetail">跑操助手</string>
     <string name="title_activity_curriculum">课表助手</string>
+    <string name="title_activity_lecture">人文讲座</string>
     <string name="title_activity_aboutus">关于我们</string>
     <string name="title_activity_webmodule">网页</string>
     <string name="title_activity_srtp">课外研学</string>

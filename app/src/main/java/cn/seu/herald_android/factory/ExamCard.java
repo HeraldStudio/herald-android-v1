@@ -1,6 +1,5 @@
 package cn.seu.herald_android.factory;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.seu.herald_android.app_main.CardsModel;
+import cn.seu.herald_android.app_module.exam.AddExamActivity;
 import cn.seu.herald_android.app_module.exam.ExamBlockLayout;
 import cn.seu.herald_android.app_module.exam.ExamModel;
 import cn.seu.herald_android.consts.Module;
@@ -37,15 +37,11 @@ public class ExamCard {
 
         // 教务处考试缓存
         String cache = CacheHelper.get("herald_exam");
-        // 自定义考试缓存
-        String custom = CacheHelper.get("herald_exam_custom");
-        if (custom.equals("")) {
-            custom = "[]";
-        }
         try {
             List<ExamModel> examList = new ArrayList<>();
             List<ExamModel> temp = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<ExamModel> defined = ExamModel.transformJSONArrayToArrayList(new JSONArray(custom));
+            List<ExamModel> defined = ExamModel.transformJSONArrayToArrayList(AddExamActivity.getCustomExamJSONArray());
+
             // 加入教务处的考试
             for (ExamModel examModel : temp) {
                 if (examModel.getRemainingDays() >= 0) {
@@ -87,6 +83,7 @@ public class ExamCard {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新考试
+            e.printStackTrace();
             CacheHelper.set("herald_exam", "");
             return new CardsModel(Module.exam,
                     CardsModel.Priority.CONTENT_NOTIFY, "考试数据为空，请尝试刷新"

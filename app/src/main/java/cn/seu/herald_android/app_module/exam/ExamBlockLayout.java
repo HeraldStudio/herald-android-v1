@@ -30,13 +30,19 @@ public class ExamBlockLayout extends LinearLayout {
         title.setMaxEms(10);
         count.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExamPrimary));
 
-        content.setText(item.time + " @ " + item.location);
-        title.setText(item.course);
-        if (item.hour.equals("续一秒") || item.hour.equals("+1s") || item.teacher.equals("长者")) {
-            subtitle.setText("时长：" + "61s");
-        } else {
-            subtitle.setText(item.hour + "分钟");
+        String location = "";
+        if (!item.location.trim().equals("")) {
+            location = " @ " + item.location;
         }
+
+        content.setText(item.time + location);
+        title.setText(item.course);
+
+        String hour = "";
+        if (!item.hour.trim().equals("")) {
+            hour = " @ " + item.hour;
+        }
+        subtitle.setText(hour);
 
         try {
             int remainingDays = item.getRemainingDays();

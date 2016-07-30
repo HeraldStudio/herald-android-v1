@@ -117,7 +117,7 @@ public class AddExamActivity extends BaseActivity {
             newExam.put("teacher", teacher);
             newExam.put("type", "自定义考试");
             // 获取其他的考试列表
-            JSONArray array = getDefinedExamsJSONArray();
+            JSONArray array = getCustomExamJSONArray();
             array.put(newExam);
             // 保存新的自定义考试
             saveDefinedExamsFromJSONArray(array);
@@ -131,7 +131,7 @@ public class AddExamActivity extends BaseActivity {
         }
     }
 
-    JSONArray getDefinedExamsJSONArray() {
+    public static JSONArray getCustomExamJSONArray() {
         String cache = CacheHelper.get("herald_exam_custom");
         try {
             return new JSONArray(cache);

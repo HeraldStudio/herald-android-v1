@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
+import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 
 public class CardsFragment extends Fragment {
 

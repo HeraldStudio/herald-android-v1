@@ -3,6 +3,7 @@ package cn.seu.herald_android.custom;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.ViewParent;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -57,6 +58,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
             addSlider(sliderView);
         }
 
+        addOnPageChangeListener(this);
         // 设置轮播选项
         setPresetTransformer(SliderLayout.Transformer.Default);
         // 圆点位置
@@ -106,9 +108,40 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
     public void onPageSelected(int position) {
     }
 
+    /**
+     * 当滑动时，禁止下拉刷新控件触发
+     */
     @Override
     public void onPageScrollStateChanged(int state) {
+        if (findSrl() != null) {
+            srl.innerScrolling = state == ViewPagerEx.SCROLL_STATE_DRAGGING;
+        }
+    }
 
+    private CustomSwipeRefreshLayout srl = null;
+
+    private CustomSwipeRefreshLayout findSrl() {
+
+        // 如果先前已经找到，直接返回找到的引用
+        if (srl != null) return srl;
+
+        // 如果先前没找到，沿视图树向上查找
+        ViewParent parent = getParent();
+        while (parent != null) {
+
+            // 找到了，暂存起来并返回
+            if (parent instanceof CustomSwipeRefreshLayout) {
+                srl = (CustomSwipeRefreshLayout) parent;
+                return srl;
+            }
+
+            // 还没找到，继续向上找
+            parent = parent.getParent();
+        }
+
+        // 最终没找到，不找了
+        srl = null;
+        return null;
     }
 
     @Override
