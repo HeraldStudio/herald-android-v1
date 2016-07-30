@@ -13,8 +13,7 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import java.util.ArrayList;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_secondary.WebModuleActivity;
-
+import cn.seu.herald_android.framework.AppModule;
 
 public class SliderView extends SliderLayout implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
 
@@ -150,7 +149,7 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         String url = slider.getBundle().getString("url");
         if (url != null && !url.equals("")) {
             String title = slider.getBundle().getString("title");
-            WebModuleActivity.startWebModuleActivity(title, url, R.style.WebShowTheme);
+            new AppModule(title, url).open();
         }
     }
 
