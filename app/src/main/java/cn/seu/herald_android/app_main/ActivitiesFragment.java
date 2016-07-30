@@ -121,7 +121,7 @@ public class ActivitiesFragment extends Fragment {
         page = 0;
 
         try {
-            JSONArray array = new JSONObject(CacheHelper.get("herald_activity")).getJSONArray("content");
+            JSONArray array = new JSONObject(CacheHelper.get("herald_activities")).getJSONArray("content");
 
             // 新一页的内容
             ArrayList<ActivitiesItem> newContent =
