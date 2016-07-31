@@ -20,6 +20,11 @@ import cn.seu.herald_android.framework.AppModule;
 
 public class ModuleManageAdapter extends ArrayAdapter<AppModule> {
 
+    /** 为了避免卡顿，模块管理列表已停用视图回收，改用 ScrollView 嵌套无滚动的 ListView 实现 */
+    /**
+     * 详情请见 mod_mod__content.xml
+     */
+
     static class ViewHolder {
         @BindView(R.id.ic_shortcut)
         ImageView icon;

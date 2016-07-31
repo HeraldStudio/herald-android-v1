@@ -12,49 +12,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#eee"
         android:descendantFocusability="blocksDescendants"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="13dp"
-        android:paddingRight="13dp"
-        android:background="#eee">
+        android:paddingRight="13dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="模块"
-            android:textSize="12sp"
             android:layout_margin="10dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="模块"
+            android:textSize="12sp"/>
 
         <TextView
             android:layout_width="45dp"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:gravity="center"
             android:text="卡片"
-            android:textSize="12sp"
-            android:layout_margin="10dp" />
+            android:textSize="12sp"/>
 
         <TextView
             android:layout_width="45dp"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:gravity="center"
             android:text="快捷栏"
-            android:textSize="12sp"
-            android:layout_margin="10dp" />
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorDivider" />
+        android:background="@color/colorDivider"/>
 
-    <ListView
-        android:id="@+id/lsit_edit_shortcut"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/colorDivider"
-        android:dividerHeight="@dimen/divider_height"
-        android:scrollbarStyle="outsideOverlay"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent">
+
+        <cn.seu.herald_android.custom.NoScrollListView
+            android:id="@+id/list_edit_shortcut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/colorDivider"
+            android:dividerHeight="@dimen/divider_height"
+            android:scrollbarStyle="outsideOverlay"/>
+
+    </ScrollView>
+
 </LinearLayout>
