@@ -48,7 +48,7 @@ import cn.seu.herald_android.helper.WifiLoginHelper;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ApiHelper.OnUserChangeListener {
 
     @BindView(R.id.main_tabs_pager)
     ViewPager viewPager;
@@ -82,7 +82,21 @@ public class MainActivity extends BaseActivity {
         setupChangeMainFragmentReceiver();
 
         loadLoginButton();
-        ApiHelper.addUserChangedListener(this::loadLoginButton);
+
+        // 监听用户变化
+        ApiHelper.registerOnUserChangeListener(this);
+    }
+
+    @Override
+    public void finish() {
+        // 防泄漏
+        ApiHelper.unregisterOnUserChangeListener(this);
+        super.finish();
+    }
+
+    @Override
+    public void onUserChange() {
+        loadLoginButton();
     }
 
     private void loadLoginButton() {

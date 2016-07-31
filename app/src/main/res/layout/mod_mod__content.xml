@@ -52,8 +52,9 @@
     <ListView
         android:id="@+id/lsit_edit_shortcut"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:divider="@color/colorDivider"
         android:dividerHeight="@dimen/divider_height"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        android:layout_weight="1"/>
 </LinearLayout>

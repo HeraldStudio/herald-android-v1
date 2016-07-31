@@ -32,16 +32,26 @@ public class SettingsHelper {
         getSettingsCache().set("herald_settings_wifi_auto_login", newValue ? "1" : "0");
     }
 
-    /** 模块设置变化的监听器 */
-    private static Vector<Runnable> moduleSettingsChangeListeners = new Vector<>();
+    public interface OnModuleSettingsChangeListener {
+        void onModuleSettingsChange();
+    }
 
-    public static void addModuleSettingsChangeListener (Runnable listener) {
+    /** 模块设置变化的监听器 */
+    private static Vector<OnModuleSettingsChangeListener> moduleSettingsChangeListeners = new Vector<>();
+
+    public static void registerOnModuleSettingsChangeListener(OnModuleSettingsChangeListener listener) {
         moduleSettingsChangeListeners.add(listener);
     }
 
+    public static void unregisterOnModuleSettingsChangeListener(OnModuleSettingsChangeListener listener) {
+        moduleSettingsChangeListeners.remove(listener);
+    }
+
     public static void notifyModuleSettingsChanged () {
-        for (Runnable listener : moduleSettingsChangeListeners) {
-            listener.run();
+        for (OnModuleSettingsChangeListener listener : moduleSettingsChangeListeners) {
+            if (listener != null) {
+                listener.onModuleSettingsChange();
+            }
         }
     }
 }

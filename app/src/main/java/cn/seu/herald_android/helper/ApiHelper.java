@@ -1,6 +1,7 @@
 package cn.seu.herald_android.helper;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ public class ApiHelper {
 
     private ApiHelper() {}
 
+    @NonNull
     public static String getAppid() {
         Context context = AppContext.instance;
         InputStream fis;
@@ -41,7 +43,7 @@ public class ApiHelper {
             e.printStackTrace();
         }
 
-        return /*"34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
+        return "34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
         /**
          * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
          * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -50,19 +52,30 @@ public class ApiHelper {
          **/
     }
 
+    @NonNull
     public static String getApiUrl(String api) {
         return API_ROOT + api;
     }
 
-    private static LinkedList<Runnable> userChangedListeners = new LinkedList<>();
+    public interface OnUserChangeListener {
+        void onUserChange();
+    }
 
-    public static void addUserChangedListener(Runnable listener) {
+    private static LinkedList<OnUserChangeListener> userChangedListeners = new LinkedList<>();
+
+    public static void registerOnUserChangeListener(OnUserChangeListener listener) {
         userChangedListeners.add(listener);
     }
 
+    public static void unregisterOnUserChangeListener(OnUserChangeListener listener) {
+        userChangedListeners.remove(listener);
+    }
+
     public static void notifyUserChanged() {
-        for (Runnable function : userChangedListeners) {
-            function.run();
+        for (OnUserChangeListener listener : userChangedListeners) {
+            if (listener != null) {
+                listener.onUserChange();
+            }
         }
     }
 
@@ -73,6 +86,7 @@ public class ApiHelper {
     /**
      * 当前用户，可以直接调用 $set() 来切换用户
      */
+    @NonNull
     public static User getCurrentUser() {
         return new User(get("currentUser"));
     }
@@ -115,6 +129,7 @@ public class ApiHelper {
         }
     }
 
+    @NonNull
     public static String getWifiUserName() {
         String cacheUser = CacheHelper.get("wifiAuthUser");
 
@@ -123,6 +138,7 @@ public class ApiHelper {
         return cacheUser;
     }
 
+    @NonNull
     public static String getWifiPassword() {
         String username = getWifiUserName();
         EncryptHelper helper1 = new EncryptHelper(username);
@@ -140,10 +156,12 @@ public class ApiHelper {
         CacheHelper.set("wifiAuthPwd", "");
     }
 
+    @NonNull
     public static UserCache getAuthCache() {
         return new UserCache("auth");
     }
 
+    @NonNull
     private static String get(String key) {
         return getAuthCache().get(key);
     }

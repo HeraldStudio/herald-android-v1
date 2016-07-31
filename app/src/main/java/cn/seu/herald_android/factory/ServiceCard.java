@@ -43,11 +43,9 @@ public class ServiceCard {
                     CardsModel.Priority.CONTENT_NOTIFY, R.mipmap.ic_pushmsg);
 
             final String finalUrl = pushMessageUrl;
-            item.setOnClickListener(v -> {
-                if (!finalUrl.equals("") && !finalUrl.equals("null")) {
-                    new AppModule("小猴提示", finalUrl).open();
-                }
-            });
+            if (!finalUrl.equals("") && !finalUrl.equals("null")) {
+                item.setOnClickListener(v -> new AppModule("小猴提示", finalUrl).open());
+            }
             return item;
         }
 

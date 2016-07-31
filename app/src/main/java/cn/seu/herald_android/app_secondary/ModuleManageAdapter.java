@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class ModuleManageAdapter extends ArrayAdapter<AppModule> {
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        holder.icon.setImageResource(seuModule.icon);
+        holder.icon.setImageDrawable(null);
+        Picasso.with(getContext()).load(seuModule.icon).into(holder.icon);
         holder.title.setText(seuModule.nameTip);
 
         // 表示卡片是否显示在主页的开关
