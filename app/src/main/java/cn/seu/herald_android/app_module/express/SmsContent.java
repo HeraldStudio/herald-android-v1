@@ -2,8 +2,11 @@ package cn.seu.herald_android.app_module.express;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.sql.Time;
@@ -34,6 +37,11 @@ public class SmsContent {
     public List<SmsInfo> getInfos() {
         String[] projection = new String[] {"_id", "address", "person", "body", "date", "type"};
 
+
+        if(ContextCompat.checkSelfPermission(mContext, "android.permission.READ_SMS") != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity)mContext, new String[]{"android.permission.READ_SMS"}, 124);
+        }
+
         Log.d(TAG, "In Func getInfos");
         Cursor cursor = null;
         try {
@@ -48,7 +56,8 @@ public class SmsContent {
 
             Log.d(TAG, "before 24 hours, time is " + String.valueOf(last));
 
-            String filter = "date > " + String.valueOf(last);   // 查询中的where语句, date > 1469839964323
+            //String filter = "date > " + String.valueOf(last);   // 查询中的where语句, date > 1469839964323
+            String filter = null;   // 查询中的where语句, date > 1469839964323
 
             cursor = mContext.getContentResolver().query(mUri, projection, filter, null, "date desc");
 
@@ -84,7 +93,8 @@ public class SmsContent {
             Log.d(TAG, "Failed in query");
             e.printStackTrace();
         } finally {
-            cursor.close();
+            if (cursor!= null)
+                cursor.close();
         }
 
         return infos;

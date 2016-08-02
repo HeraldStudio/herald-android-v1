@@ -1,4 +1,4 @@
-package cn.seu.herald_android.mod_topic;
+package cn.seu.herald_android.app_module.topic;
 
 
 import android.os.Bundle;

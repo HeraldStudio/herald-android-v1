@@ -8,7 +8,8 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
 
     <application
         android:name=".framework.AppContext"
@@ -263,7 +264,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
 
-        <activity android:name=".mod_topic.TopicActivity"
+        <activity android:name=".app_module.topic.TopicActivity"
             android:label="@string/title_activity_topic"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
