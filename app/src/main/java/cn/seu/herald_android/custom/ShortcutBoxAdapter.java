@@ -72,7 +72,12 @@ public class ShortcutBoxAdapter extends BaseAdapter {
                     module.getHasUpdates() ? View.VISIBLE : View.GONE
             );
 
-            convertView.setOnClickListener((v) -> module.open());
+            convertView.setOnClickListener((v) -> {
+                if (module.getHasUpdates()) {
+                    module.setHasUpdates(false);
+                }
+                module.open();
+            });
 
             convertView.setOnLongClickListener((v) -> {
                 new AlertDialog.Builder(parent.getContext())
