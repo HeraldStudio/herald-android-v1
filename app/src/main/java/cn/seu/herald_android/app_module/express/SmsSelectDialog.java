@@ -67,23 +67,13 @@ public class SmsSelectDialog extends DialogFragment{
         smsInfoList.add(info);
 
         Log.d(TAG, "setAdapter");
-        adapter = new SmsInfoAdapter(smsInfoList);
+        adapter = new SmsInfoAdapter(smsInfoList, this, listener);
         smsRecyclerView.setAdapter(adapter);
         smsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         builder.setView(view);
         return builder.create();
     }
-
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        Log.d(TAG, "OnDismiss");
-        listener.refreshSmsText("不知道这个短信是否合适");
-        super.onDismiss(dialog);
-    }
-
-
 
     /**
      * 主Activity将会实现一个该接口的对象,

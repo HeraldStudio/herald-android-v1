@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:weightSum="1">
 
     <LinearLayout
@@ -14,30 +13,34 @@
         <TextView
             android:id="@+id/express_txt_sms_date"
             android:text="当前日期"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="5dp"
         android:layout_height="match_parent">
 
-        <TextView
+        <Button
             android:id="@+id/express_txt_sms_body"
+            android:textSize="18sp"
             android:text="这是一条测试短信, 在需要的时候会进行替换, 还可以吗"
-            android:layout_width="200dp"
-            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
             android:gravity="left"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="?android:borderlessButtonStyle"
+            />
 
-        <RadioButton
-            android:id="@+id/express_button_radio_select"
-            android:layout_marginLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
+        <!--<RadioButton-->
+            <!--android:visibility="invisible"-->
+            <!--android:id="@+id/express_button_radio_select"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
     </LinearLayout>
+
 </LinearLayout>

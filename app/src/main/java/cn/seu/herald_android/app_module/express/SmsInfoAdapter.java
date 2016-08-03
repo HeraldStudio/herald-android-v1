@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.util.List;
 
@@ -18,8 +20,23 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
 
     private static String TAG = "SmsInfoAdapter";
     private List<SmsInfo> smsList;
-    public SmsInfoAdapter(List<SmsInfo> smsList) {
+
+    private SmsSelectDialog handler;        // 主动调用dismiss 触发onDismiss
+    private SmsSelectDialog.DialogRefresh listener;
+
+    /**
+     *
+     * @param smsList 包含短信的数组
+     * @param context   dialog, 在此类中会调用dismiss
+     * @param listener  作为接口(在Activity中实现一个该对象, 一直传递到次), 监听选择的短信, 并进行刷新.
+     */
+    public SmsInfoAdapter(List<SmsInfo> smsList,
+                          SmsSelectDialog context,
+                          SmsSelectDialog.DialogRefresh listener
+                        ) {
         this.smsList = smsList;
+        this.listener = listener;
+        this.handler = context;
     }
 
     @Override
@@ -41,5 +58,14 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
         SmsInfo info = smsList.get(position);
         holder.smsBody.setText(info.getSmsbody());
         holder.smsDate.setText(info.getDate());
+
+        holder.smsBody.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Click" + info.getSmsbody());
+                listener.refreshSmsText(info.getSmsbody());
+                handler.dismiss();
+            }
+        });
     }
 }
