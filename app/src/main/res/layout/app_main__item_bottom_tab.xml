@@ -9,6 +9,5 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/bottom_tab_item_icon"
-        android:layout_gravity="center"
-        android:tint="@color/bottom_tab_selector"/>
+        android:layout_gravity="center"/>
 </FrameLayout>
