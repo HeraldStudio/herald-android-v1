@@ -8,6 +8,8 @@ import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +42,8 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         progressDialog.setCancelable(false);
         setStatusBarColor(Color.BLACK);
+
+        Picasso.with(this).load(R.drawable.login_bg).into(loginBg);
 
         tv_pwd.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
