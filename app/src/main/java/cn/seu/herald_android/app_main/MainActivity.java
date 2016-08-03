@@ -229,6 +229,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         for (int i = 0; i < adapter.getCount(); i++) {
             bottomTabLayout.getTitleView(i).setVisibility(View.GONE);
         }
+
         bottomTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override public void onTabSelect(int position) {
                 viewPager.setCurrentItem(position);
