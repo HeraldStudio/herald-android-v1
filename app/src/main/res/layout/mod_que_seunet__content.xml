@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cn.seu.herald_android.mod_query.seunet.SeunetActivity"
-    tools:showIn="@layout/mod_que_seunet">
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:id="@+id/swipe_container"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                            tools:context="cn.seu.herald_android.app_module.seunet.SeunetActivity"
+                                            tools:showIn="@layout/mod_que_seunet">
     <!--流量显示-->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,8 +28,8 @@
                 android:layout_weight="1"
                 android:paddingTop="10dp"
                 android:text="套餐余量"
-                android:textColor="@color/colorSeuNetprimary_dark"
-                android:textSize="15sp" />
+                android:textColor="@color/colorSeuNetPrimaryDark"
+                android:textSize="14sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                 android:paddingTop="10dp"
                 android:text="未开通"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,8 +55,8 @@
                 android:layout_weight="1"
                 android:paddingTop="10dp"
                 android:text="已使用"
-                android:textColor="@color/colorSeuNetaccent"
-                android:textSize="12sp" />
+                android:textColor="@color/colorSeuNetAccent"
+                android:textSize="12sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,8 +66,8 @@
                 android:layout_weight="1"
                 android:paddingTop="10dp"
                 android:text="未使用"
-                android:textColor="@color/colorSeuNetprimary"
-                android:textSize="12sp" />
+                android:textColor="@color/colorSeuNetPrimary"
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <lecho.lib.hellocharts.view.PieChartView

@@ -19,7 +19,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="7dp"
-        android:paddingBottom="5dp">
+        android:paddingBottom="3dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -32,14 +32,15 @@
                 android:id="@+id/tv_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPedetailprimary"
-                android:textSize="22sp" />
+                android:textColor="@color/colorPedetailPrimary"
+                android:textSize="24sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已跑次数"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@color/colorSecondaryText"/>
 
         </LinearLayout>
 
@@ -54,14 +55,15 @@
                 android:id="@+id/tv_remain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPedetailprimary"
-                android:textSize="22sp" />
+                android:textColor="@color/colorPedetailPrimary"
+                android:textSize="24sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="剩余次数"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@color/colorSecondaryText"/>
 
         </LinearLayout>
 
@@ -76,14 +78,15 @@
                 android:id="@+id/tv_remain_days"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPedetailprimary"
-                android:textSize="22sp" />
+                android:textColor="@color/colorPedetailPrimary"
+                android:textSize="24sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="剩余天数"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@color/colorSecondaryText"/>
 
         </LinearLayout>
 

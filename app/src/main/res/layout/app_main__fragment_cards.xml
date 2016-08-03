@@ -9,7 +9,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".app_main.MainActivity">
 
-    <cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout
+    <cn.seu.herald_android.custom.CustomSwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,13 +18,12 @@
             android:id="@+id/timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#eee"
             android:divider="#00000000"
             android:dividerHeight="0dp"
             android:listSelector="@drawable/null_selector"
             android:headerDividersEnabled="false">
         </cn.seu.herald_android.app_main.CardsListView>
 
-    </cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout>
+    </cn.seu.herald_android.custom.CustomSwipeRefreshLayout>
 
 </LinearLayout>

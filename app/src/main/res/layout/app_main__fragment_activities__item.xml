@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:id="@+id/layout_card"
+        android:id="@+id/cardView"
         android:orientation="vertical"
         android:background="@drawable/selectable_item_background_white_round">
         <RelativeLayout
@@ -23,26 +23,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:id="@+id/tv_tag"
+                android:id="@+id/tag"
                 android:textSize="12sp"
                 android:text="即将开始"
                 android:textColor="@color/colorSecondaryText"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/tv_tag"
+                android:layout_toLeftOf="@+id/tag"
                 android:layout_alignParentLeft="true"
                 android:text="活动标题"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:id="@+id/tv_title"
+                android:id="@+id/title"
                 android:textSize="14sp"
-                android:textColor="@color/colorAfterSchoolPrimary"/>
+                android:textColor="@color/colorActivitiesPrimary"/>
         </RelativeLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_association"
+            android:id="@+id/assoc"
             android:layout_marginBottom="10dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:scaleType="fitXY"
-            android:id="@+id/imgv_activity"
+            android:id="@+id/image"
             android:src="@drawable/default_herald"/>
         <TextView
             android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
             android:textSize="12sp"
             android:text="时间 :\n地点 :"
             android:textColor="@color/colorSecondaryText"
-            android:id="@+id/tv_time_and_location"/>
+            android:id="@+id/timeAndPlace"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             android:textSize="12sp"
             android:text="介绍"
             android:textColor="@color/colorSecondaryText"
-            android:id="@+id/tv_introduction"/>
+            android:id="@+id/desc"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,8 +82,8 @@
             android:paddingRight="15dp"
             android:paddingTop="5dp"
             android:textSize="12sp"
-            android:text="查看详情"
-            android:textColor="@color/colorAfterSchoolPrimary"
-            android:id="@+id/tv_details"/>
+            android:text="查看详情 >"
+            android:textColor="@color/colorActivitiesPrimary"
+            android:id="@+id/detail"/>
     </LinearLayout>
 </RelativeLayout>

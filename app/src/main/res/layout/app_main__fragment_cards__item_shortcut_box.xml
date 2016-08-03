@@ -21,6 +21,8 @@
         android:verticalSpacing="@dimen/divider_height"
         android:stretchMode="columnWidth" />
 
+    <!-- 这里放两个，因为一个莫名其妙会被吞掉，看不到效果 -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"

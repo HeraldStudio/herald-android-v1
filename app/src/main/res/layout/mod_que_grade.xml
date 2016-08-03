@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context="cn.seu.herald_android.mod_query.grade.GradeActivity">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="true"
+                                                 android:orientation="vertical"
+                                                 tools:context="cn.seu.herald_android.app_module.grade.GradeActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="总绩点"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_grade_gpa"
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="首修绩点"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/tv_grade_gpawithoutrevamp"
@@ -70,7 +70,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_gravity="bottom"
                     android:text="4.0"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
             </RelativeLayout>
 
             <TextView
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="时间"
-                android:textSize="13sp" />
+                android:textSize="12sp"/>
         </LinearLayout>
     </cn.seu.herald_android.custom.CustomAppBarLayout>
 
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:columnCount="5"
-            app:headerColor="@color/colorGradeaccent"
+            app:headerColor="@color/colorGradeAccent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

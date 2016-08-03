@@ -11,4 +11,5 @@
         android:divider="@color/colorDivider"
         android:dividerHeight="@dimen/divider_height"
         android:scrollbarStyle="outsideOverlay" />
+
 </LinearLayout>

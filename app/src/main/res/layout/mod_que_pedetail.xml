@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    tools:context=".mod_query.pedetail.PedetailActivity">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="false"
+                                                 tools:context=".app_module.pedetail.PedetailActivity">
 
     <cn.seu.herald_android.custom.CustomAppBarLayout
         android:layout_width="match_parent"
@@ -42,13 +42,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:text="总跑操次数"
-                        android:textSize="13sp" />
+                        android:textSize="12sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="剩余可跑操天数（仅供参考）"
-                        android:textSize="13sp" />
+                        android:textSize="12sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textSize="13sp" />
+                        android:textSize="12sp"/>
                 </LinearLayout>
 
                 <TextView
@@ -84,7 +84,7 @@
                     android:paddingTop="15dp"
                     android:text="活跃度走势"
                     android:textColor="#ffffff"
-                    android:textSize="13sp" />
+                    android:textSize="12sp"/>
 
             </RelativeLayout>
 

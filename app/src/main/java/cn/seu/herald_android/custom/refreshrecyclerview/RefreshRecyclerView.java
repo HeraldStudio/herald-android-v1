@@ -16,13 +16,13 @@ public class RefreshRecyclerView extends RecyclerView {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            if(onFooterListener!=null){
+            if (onFooterListener != null) {
                 LayoutManager layoutManager = recyclerView.getLayoutManager();
                 if (layoutManager instanceof LinearLayoutManager){
-                    //获得最后可见的一项的位置
+                    // 获得最后可见的一项的位置
                     int index = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-                    if(recyclerView.getAdapter().getItemViewType(index) == RefreshRecyclerAdapter.FOOTER && index != lastLoadIndex){
-                        //如果是Footer则运行响应函数,同一位置只会运行一次
+                    if (recyclerView.getAdapter().getItemViewType(index) == RefreshRecyclerAdapter.FOOTER && index != lastLoadIndex) {
+                        // 如果是Footer则运行响应函数,同一位置只会运行一次
                         lastLoadIndex = index;
                         onFooterListener.footerListener(index);
                     }
@@ -71,9 +71,9 @@ public class RefreshRecyclerView extends RecyclerView {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == HEADER){
                 return headerViewHolder;
-            }else if(viewType == FOOTER){
+            } else if (viewType == FOOTER) {
                 return footerViewHolder;
-            }else{
+            } else {
                 return onCreateItemViewHolder(parent,viewType);
             }
         }
@@ -92,7 +92,7 @@ public class RefreshRecyclerView extends RecyclerView {
                     onBindFooterViewHolder(holder,position);
                     break;
                 default:
-                    if( headerViewHolder!= null)position--;
+                    if (headerViewHolder != null) position--;
                     onBindItemViewHolder(holder,position);
             }
         }
@@ -104,8 +104,8 @@ public class RefreshRecyclerView extends RecyclerView {
         @Override
         public int getItemCount() {
             int count = getItemTotalCount();
-            if(headerViewHolder != null)count++;
-            if(footerViewHolder != null)count++;
+            if (headerViewHolder != null) count++;
+            if (footerViewHolder != null) count++;
             return count;
         }
 
@@ -113,9 +113,9 @@ public class RefreshRecyclerView extends RecyclerView {
 
         @Override
         public int getItemViewType(int position) {
-            if(position == 0 && headerViewHolder!= null)
+            if (position == 0 && headerViewHolder != null)
                 return HEADER;
-            if(position == getItemCount() -1  && footerViewHolder != null){
+            if (position == getItemCount() - 1 && footerViewHolder != null) {
                 return FOOTER;
             }
             return ITEM;

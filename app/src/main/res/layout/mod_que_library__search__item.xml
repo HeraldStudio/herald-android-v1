@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/selectable_item_background"
-    android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/selectable_item_background"
+              android:clickable="true"
+              android:focusable="true"
+              android:orientation="vertical"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp">
     <TextView
         android:id="@+id/books_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="书名"
-        android:textColor="@color/colorLibraryprimary"
-        android:textSize="16sp" />
+        android:textColor="@color/colorLibraryPrimary"
+        android:textSize="15sp"/>
     <TextView
         android:id="@+id/pub_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="出版社作者"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,13 +32,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="索引"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
         <TextView
             android:id="@+id/books_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="剩余数目"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

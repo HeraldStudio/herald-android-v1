@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/colorDivider"
+        android:layout_alignParentTop="true"/>
 
     <TextView
         android:id="@+id/tv_schoolbusitem_period"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:text="时间段" />
 
     <TextView
         android:id="@+id/tv_schoolbusitem_time"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:layout_alignParentRight="true"
         android:text="班次间隔" />
+
 </RelativeLayout>

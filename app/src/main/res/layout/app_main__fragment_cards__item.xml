@@ -7,8 +7,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#eee" />
+        android:layout_height="11dp"
+        android:background="@color/colorMainPagesBg"/>
 
     <View
         android:layout_width="match_parent"
@@ -38,14 +38,14 @@
 
                 <ImageView
                     android:id="@+id/avatar"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true" />
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="21dp"
+                    android:layout_height="42dp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:id="@+id/img_header_bg"
@@ -67,6 +67,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toLeftOf="@+id/img_header_bg"
                     android:layout_toRightOf="@+id/avatar"
+                    android:minHeight="42dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
@@ -75,14 +76,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#333"
-                        android:textSize="15sp" />
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#666"
+                        android:textColor="@color/colorSecondaryText"
                         android:textSize="12sp"
+                        android:layout_marginTop="2dp"
                         android:layout_marginRight="15dp" />
 
                 </LinearLayout>
@@ -98,6 +100,8 @@
             android:orientation="vertical" />
 
     </LinearLayout>
+
+    <!-- 这里放两个，因为一个莫名其妙会被吞掉，看不到效果 -->
 
     <View
         android:layout_width="match_parent"

@@ -8,16 +8,18 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cn.seu.herald_android.app_main.MainActivity">
 
-    <cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout
+    <cn.seu.herald_android.custom.CustomSwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorDivider"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/recyclerview_afterschoolactivity">
         </cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView>
-    </cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout>
+
+    </cn.seu.herald_android.custom.CustomSwipeRefreshLayout>
+
 </RelativeLayout>

@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
+import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 
 public class CardsFragment extends Fragment {
 
@@ -35,7 +35,6 @@ public class CardsFragment extends Fragment {
 
         new Handler().postDelayed(() -> {
             view.loadContent(true);
-            srl.setRefreshing(true);
         }, 500);
 
         return contentView;
@@ -50,5 +49,6 @@ public class CardsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        view.loadContent(false);
     }
 }

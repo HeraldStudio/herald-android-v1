@@ -1,76 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="cn.seu.herald_android.mod_query.grade.GradeActivity">
+    tools:context=".app_main.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:fitsSystemWindows="true"
-        tools:context=".app_main.MainActivity">
-        <android.support.v4.view.ViewPager
-            android:id="@+id/main_tabs_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/main_toolbar"
-            android:layout_above="@+id/main_tabs"
-            android:background="@color/colorMainPagesDivider" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <RelativeLayout
+            android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/main_toolbar"
-            android:background="@color/colorPrimary"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:background="@color/colorPrimary">
+
             <RelativeLayout
+                android:id="@+id/toolcontent"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/toolcontent">
+                android:layout_height="?attr/actionBarSize">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textSize="17sp"
+                    android:text="@string/app_name"
                     android:textColor="@color/colorIcons"
-                    android:text="@string/app_name"/>
+                    android:textSize="18sp"/>
+
                 <ImageButton
+                    android:id="@+id/ibtn_add"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:padding="15dp"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/home_add_btn"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/selectable_item_background"
+                    android:padding="15dp"
                     android:scaleType="fitCenter"
-                    android:id="@+id/ibtn_add"
-                    android:background="@drawable/selectable_item_background"/>
+                    android:src="@drawable/home_add_btn"/>
+
+                <TextView
+                    android:id="@+id/tv_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="登录"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#ffffff"
+                    android:textSize="17sp"/>
             </RelativeLayout>
-            <android.support.design.widget.TabLayout
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                style="@style/MyCustomTabLayout"
-                android:background="@null"
-                android:layout_below="@id/toolcontent"
-                android:id="@+id/main_toptabs">
-            </android.support.design.widget.TabLayout>
+
         </RelativeLayout>
-        <View
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/main_tabs_pager"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/colorDivider"
-            android:layout_above="@id/main_tabs">
-        </View>
-        <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
-            android:id="@+id/main_tabs"
-            app:elevation="8dp"
-            android:visibility="gone"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/main_toolbar"
+            android:background="@color/colorMainPagesDivider"/>
+
+        <eightbitlab.com.blurview.BlurView
+            android:id="@+id/blurView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true">
+
+            <com.flyco.tablayout.CommonTabLayout
+                android:id="@+id/main_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bottom_tab_height"
+                android:background="#d0fcfcfc"
+                app:tl_indicator_height="0dp"
+                app:tl_iconHeight="38dp"
+                app:tl_iconMargin="0dp"
+                app:tl_iconWidth="38dp"/>
+
+        </eightbitlab.com.blurview.BlurView>
+
     </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>
 

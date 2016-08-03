@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorDivider"
     android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.mod_webmodule.WebModuleActivity">
+    tools:context=".app_secondary.WebModuleActivity">
     <cn.seu.herald_android.custom.CustomAppBarLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,7 +20,8 @@
         app:layout_collapseMode="pin"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
     </cn.seu.herald_android.custom.CustomAppBarLayout>
-    <cn.seu.herald_android.mod_webmodule.ProgressWebView
+
+    <cn.seu.herald_android.custom.ProgressWebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
