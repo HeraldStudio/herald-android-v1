@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -56,6 +57,12 @@ public class SmsSelectDialog extends DialogFragment{
 
         smsInfoList = new ArrayList<>();
 
+        Uri uri = Uri.parse("content://sms/inbox");
+        SmsContent smsContent = new SmsContent(this.getActivity(), uri);
+        smsInfoList = smsContent.getInfos();
+
+
+        /*
         SmsInfo info = new SmsInfo();
         info.setSmsbody("这是一条测试短信, 可以看得到吗?");
         info.setDate("2016-05-15");
@@ -65,6 +72,7 @@ public class SmsSelectDialog extends DialogFragment{
         info.setSmsbody("这是第二条测试短信, 如果选择这条短信会发生什么呢?");
         info.setDate("2016-05-17");
         smsInfoList.add(info);
+        */
 
         Log.d(TAG, "setAdapter");
         adapter = new SmsInfoAdapter(smsInfoList, this, listener);

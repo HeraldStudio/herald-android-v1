@@ -18,15 +18,19 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 
-public class ModuleListFragment extends Fragment {
+public class ModuleListFragment extends Fragment implements ApiHelper.OnUserChangeListener,
+        SettingsHelper.OnModuleSettingsChangeListener {
 
     private View contentView;
+
+    private Unbinder unbinder;
 
     @BindView(R.id.list_modules)
     public ListView listView;
@@ -35,7 +39,7 @@ public class ModuleListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.app_main__fragment_modules, container, false);
-        ButterKnife.bind(this, contentView);
+        unbinder = ButterKnife.bind(this, contentView);
 
         // 添加页脚以防止被透明Tab挡住
         View footer = new View(getContext());
@@ -44,13 +48,33 @@ public class ModuleListFragment extends Fragment {
 
         loadModuleList();
 
-        // 监听模块设置改变事件
-        SettingsHelper.addModuleSettingsChangeListener(this::loadModuleList);
-
         // 监听用户改变事件
-        ApiHelper.addUserChangedListener(this::loadModuleList);
+        ApiHelper.registerOnUserChangeListener(this);
+        // 监听模块设置改变事件
+        SettingsHelper.registerOnModuleSettingsChangeListener(this);
 
         return contentView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // 防泄漏
+        ApiHelper.unregisterOnUserChangeListener(this);
+        SettingsHelper.unregisterOnModuleSettingsChangeListener(this);
+
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onUserChange() {
+        loadModuleList();
+    }
+
+    @Override
+    public void onModuleSettingsChange() {
+        loadModuleList();
     }
 
     // 模块管理的按钮

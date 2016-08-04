@@ -1,5 +1,6 @@
 package cn.seu.herald_android.app_main;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -25,8 +26,7 @@ public class CardsModel {
     private String name;
     private String info;
     private Priority contentPriority;
-    private View.OnClickListener onClickListener = v -> {
-    };
+    private View.OnClickListener onClickListener = null;
     private int iconRes;
 
     public CardsModel(String name, String info, Priority contentPriority, int iconRes) {
@@ -63,6 +63,7 @@ public class CardsModel {
         return iconRes;
     }
 
+    @Nullable
     public View.OnClickListener getOnClickListener() {
         return onClickListener;
     }

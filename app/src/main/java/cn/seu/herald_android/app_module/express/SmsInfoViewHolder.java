@@ -24,6 +24,5 @@ public class SmsInfoViewHolder extends RecyclerView.ViewHolder {
         Log.d(TAG, "In Create");
         smsDate = (TextView)v.findViewById(R.id.express_txt_sms_date);
         smsBody = (Button) v.findViewById(R.id.express_txt_sms_body);
-//        smsSelect = (RadioButton)v.findViewById(R.id.express_button_radio_select);
     }
 }

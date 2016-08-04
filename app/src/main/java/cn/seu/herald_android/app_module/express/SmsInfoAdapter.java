@@ -3,40 +3,48 @@ package cn.seu.herald_android.app_module.express;
 import android.provider.Telephony;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.seu.herald_android.R;
+
+import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
+import static cn.seu.herald_android.helper.LogUtils.LOGD;
 
 /**
  * Created by corvo on 8/2/16.
  */
 public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
 
-    private static String TAG = "SmsInfoAdapter";
+    private static String TAG = makeLogTag(SmsInfo.class);
     private List<SmsInfo> smsList;
 
-    private SmsSelectDialog handler;        // 主动调用dismiss 触发onDismiss
+    private SmsSelectDialog handler;        // dialog窗口句柄, 主动调用dismiss 触发onDismiss
     private SmsSelectDialog.DialogRefresh listener;
 
     /**
      *
      * @param smsList 包含短信的数组
      * @param context   dialog, 在此类中会调用dismiss
-     * @param listener  作为接口(在Activity中实现一个该对象, 一直传递到次), 监听选择的短信, 并进行刷新.
+     * @param listener  作为接口(在Activity中实现一个该对象, 一直传递到此), 监听选择的短信, 并进行刷新.
      */
     public SmsInfoAdapter(List<SmsInfo> smsList,
                           SmsSelectDialog context,
                           SmsSelectDialog.DialogRefresh listener
                         ) {
         this.smsList = smsList;
-        this.listener = listener;
         this.handler = context;
+        this.listener = listener;
     }
 
     @Override
@@ -57,7 +65,11 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
     public void onBindViewHolder(SmsInfoViewHolder holder, int position) {
         SmsInfo info = smsList.get(position);
         holder.smsBody.setText(info.getSmsbody());
-        holder.smsDate.setText(info.getDate());
+
+        // 格式化时间
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        String date = format.format(Long.valueOf(info.getDate()));
+        holder.smsDate.setText(date);
 
         holder.smsBody.setOnClickListener(new View.OnClickListener() {
             @Override

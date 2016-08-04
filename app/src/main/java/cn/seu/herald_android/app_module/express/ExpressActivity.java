@@ -64,10 +64,6 @@ public class ExpressActivity extends BaseActivity
         mSmsSelect.setOnClickListener(this);
         mSubmit.setOnClickListener(this);
 
-
-        Uri uri = Uri.parse("content://sms/inbox");
-        SmsContent smsContent = new SmsContent(this, uri);
-        List<SmsInfo> list = smsContent.getInfos();
     }
 
     @Override

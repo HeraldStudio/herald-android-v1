@@ -4,15 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".mod_query.express.ExpressActivity"
+    tools:context=".app_module.express.ExpressActivity"
     tools:showIn="@layout/mod_que_express">
 
+
+    <!--android:layout_margin="20dp"-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:orientation="vertical">
 
         <!--短信选择-->
@@ -197,11 +201,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:textColor="@color/expressSmsSelect"
             android:background="@color/expressCardBackground"
             android:text="提交请求"
             android:textStyle="bold"
             android:theme="@style/Widget.AppCompat.Button.Borderless" />
-
     </LinearLayout>
+
 </ScrollView>

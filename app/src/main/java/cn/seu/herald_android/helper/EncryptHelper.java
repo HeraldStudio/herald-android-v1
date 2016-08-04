@@ -1,5 +1,7 @@
 package cn.seu.herald_android.helper;
 
+import android.support.annotation.NonNull;
+
 import java.security.Key;
 
 import javax.crypto.Cipher;
@@ -123,6 +125,7 @@ class EncryptHelper {
      * @param strIn 需解密的字符串
      * @return 解密后的字符串
      */
+    @NonNull
     public String decrypt(String strIn) {
         try {
             return new String(decrypt(hexStr2ByteArr(strIn)));

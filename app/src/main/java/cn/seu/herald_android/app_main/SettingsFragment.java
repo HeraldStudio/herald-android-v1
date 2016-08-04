@@ -26,7 +26,7 @@ import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements ApiHelper.OnUserChangeListener {
 
     @BindView(R.id.tv_now_version)
     TextView nowVersion;
@@ -34,9 +34,9 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.tv_login_or_logout)
     TextView loginOrLogoutText;
 
-    View contentView;
+    private View contentView;
 
-    Unbinder unbinder;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
@@ -47,15 +47,23 @@ public class SettingsFragment extends Fragment {
 
         loadData();
 
-        // 当用户改变时重新加载
-        ApiHelper.addUserChangedListener(this::loadData);
+        // 注册用户改变事件
+        ApiHelper.registerOnUserChangeListener(this);
         return contentView;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // 防泄漏
+        ApiHelper.unregisterOnUserChangeListener(this);
         unbinder.unbind();
+    }
+
+    @Override
+    public void onUserChange() {
+        loadData();
     }
 
     private void loadData(){

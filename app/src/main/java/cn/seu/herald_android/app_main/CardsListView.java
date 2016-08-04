@@ -50,7 +50,8 @@ import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 
-public class CardsListView extends ListView {
+public class CardsListView extends ListView implements ApiHelper.OnUserChangeListener,
+        SettingsHelper.OnModuleSettingsChangeListener {
 
     private CustomSwipeRefreshLayout srl;
     private ShortcutBoxView shortcutBox;
@@ -93,16 +94,42 @@ public class CardsListView extends ListView {
         View footer = new View(getContext());
         footer.setLayoutParams(new AbsListView.LayoutParams(-1, (int)getResources().getDimension(R.dimen.bottom_tab_height)));
         addFooterView(footer);
+    }
 
-        // 监听模块设置改变事件
-        SettingsHelper.addModuleSettingsChangeListener(() -> {
-            loadContent(false);
-        });
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
 
-        // 监听用户改变事件
-        ApiHelper.addUserChangedListener(() -> {
-            loadContent(true);
-        });
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        getContext().registerReceiver(timeChangeReceiver, filter);
+
+        ApiHelper.registerOnUserChangeListener(this);
+        SettingsHelper.registerOnModuleSettingsChangeListener(this);
+
+        refreshSliders();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        getContext().unregisterReceiver(timeChangeReceiver);
+
+        ApiHelper.unregisterOnUserChangeListener(this);
+        SettingsHelper.unregisterOnModuleSettingsChangeListener(this);
+
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void onUserChange() {
+        loadContent(true);
+    }
+
+    @Override
+    public void onModuleSettingsChange() {
+        loadContent(false);
     }
 
     public void setSrl(CustomSwipeRefreshLayout srl) {
@@ -112,6 +139,7 @@ public class CardsListView extends ListView {
     private Handler uiThreadHandler = new Handler();
 
     private ArrayList<CardsModel> itemList = new ArrayList<>();
+
 
     /**
      * 刷新卡片列表
@@ -327,25 +355,6 @@ public class CardsListView extends ListView {
         }
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_TIME_TICK);
-        filter.addAction(Intent.ACTION_TIME_CHANGED);
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        getContext().registerReceiver(timeChangeReceiver, filter);
-
-        refreshSliders();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        getContext().unregisterReceiver(timeChangeReceiver);
-        super.onDetachedFromWindow();
-    }
-
     public class CardsAdapter extends BaseAdapter {
 
         class ViewHolder {
@@ -361,6 +370,8 @@ public class CardsListView extends ListView {
             View header;
             @BindView(R.id.notify_dot)
             View notifyDot;
+            @BindView(R.id.img_header_bg)
+            View headerArrow;
 
             public ViewHolder(View v) {
                 ButterKnife.bind(this, v);
@@ -406,9 +417,15 @@ public class CardsListView extends ListView {
 
             holder.avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
+            holder.headerArrow.setVisibility(item.getOnClickListener() == null ? View.GONE : View.VISIBLE);
+
             holder.header.setOnClickListener((v) -> {
                 item.markAsRead();
-                item.getOnClickListener().onClick(v);
+
+                if (item.getOnClickListener() != null) {
+                    item.getOnClickListener().onClick(v);
+                }
+
                 loadContent(false);
             });
 

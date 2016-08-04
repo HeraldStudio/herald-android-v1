@@ -25,7 +25,7 @@
             <RelativeLayout
                 android:id="@+id/toolcontent"
                 android:layout_width="match_parent"
-                android:layout_height="42dp">
+                android:layout_height="?attr/actionBarSize">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                     android:layout_centerInParent="true"
                     android:text="@string/app_name"
                     android:textColor="@color/colorIcons"
-                    android:textSize="17sp"/>
+                    android:textSize="18sp"/>
 
                 <ImageButton
                     android:id="@+id/ibtn_add"
@@ -42,7 +42,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/selectable_item_background"
-                    android:padding="12dp"
+                    android:padding="15dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/home_add_btn"/>
 
