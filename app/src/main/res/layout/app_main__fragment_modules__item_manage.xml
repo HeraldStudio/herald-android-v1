@@ -44,7 +44,7 @@
                 android:gravity="left|center"
                 android:text="模块管理"
                 android:textColor="#333"
-                android:textSize="15sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/tv_desc"
@@ -54,7 +54,7 @@
                 android:gravity="left|center"
                 android:text="管理各模块的显示/隐藏状态"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="13sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

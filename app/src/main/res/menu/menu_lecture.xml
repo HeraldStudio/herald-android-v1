@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cn.seu.herald_android.mod_query.lecture.LectureActivity">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="cn.seu.herald_android.app_module.lecture.LectureActivity">
     <item
         android:id="@+id/action_lecturerecord"
         android:orderInCategory="100"

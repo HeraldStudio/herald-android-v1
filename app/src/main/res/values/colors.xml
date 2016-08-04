@@ -3,116 +3,116 @@
     <color name="colorPrimary">#00b4ff</color>
     <color name="colorPrimaryDark">#00b4ff</color>
     <color name="colorAccent">#00b4ff</color>
-    <color name="colorPrimaryGreenDark">#b4eab3</color>
 
     <!--成绩页面-->
-    <color name="colorGradeprimary">#4CAF50</color>
-    <color name="colorGradeprimary_dark">#4CAF50</color>
-    <color name="colorGradeaccent">#4CAF50</color>
+    <color name="colorGradePrimary">#4CAF50</color>
+    <color name="colorGradePrimaryDark">#4CAF50</color>
+    <color name="colorGradeAccent">#4CAF50</color>
+    <color name="colorGradeLight">#fafafa</color>
 
     <!--教务信息-->
-    <color name="colorJwcprimary">#1976d2</color>
-    <color name="colorJwcprimary_dark">#1976d2</color>
-    <color name="colorJwcaccent">#1976d2</color>
+    <color name="colorJwcPrimary">#1976d2</color>
+    <color name="colorJwcPrimaryDark">#1976d2</color>
+    <color name="colorJwcAccent">#1976d2</color>
 
     <!--人文讲座页面-->
-    <color name="colorLectureprimary">#F44336</color>
-    <color name="colorLectureprimary_dark">#F44336</color>
-    <color name="colorLectureaccent">#FF5252</color>
+    <color name="colorLecturePrimary">#F44336</color>
+    <color name="colorLecturePrimaryDark">#F44336</color>
+    <color name="colorLectureAccent">#FF5252</color>
 
     <!--实验-->
-    <color name="colorExperimentprimary">#673AB7</color>
-    <color name="colorExperimentprimary_dark">#673AB7</color>
+    <color name="colorExperimentPrimary">#673AB7</color>
+    <color name="colorExperimentPrimaryDark">#673AB7</color>
     <color name="colorExperimentprimary_light">#a17aea</color>
-    <color name="colorExperimentaccent">#607D8B</color>
+    <color name="colorExperimentAccent">#607D8B</color>
 
     <!--一卡通-->
-    <color name="colorCardprimary">#00b4ff</color>
-    <color name="colorCardprimary_dark">#00b4ff</color>
-    <color name="colorCardaccent">#448AFF</color>
+    <color name="colorCardPrimary">#00b4ff</color>
+    <color name="colorCardPrimaryDark">#00b4ff</color>
+    <color name="colorCardAccent">#00b4ff</color>
 
     <!--校车查询-->
-    <color name="colorSchoolBusprimary">#009688</color>
-    <color name="colorSchoolBusprimary_dark">#009688</color>
-    <color name="colorSchoolBusaccent">#009688</color>
+    <color name="colorSchoolBusPrimary">#009688</color>
+    <color name="colorSchoolBusPrimaryDark">#009688</color>
+    <color name="colorSchoolBusAccent">#009688</color>
 
     <!--校园网-->
-    <color name="colorSeuNetprimary">#7cb342</color>
-    <color name="colorSeuNetprimary_dark">#7cb342</color>
-    <color name="colorSeuNetaccent">#e57373</color>
+    <color name="colorSeuNetPrimary">#7cb342</color>
+    <color name="colorSeuNetPrimaryDark">#7cb342</color>
+    <color name="colorSeuNetAccent">#e57373</color>
 
     <!--场馆预约-->
-    <color name="colorGymReserveprimary">#00abf1</color>
-    <color name="colorGymReserveprimary_dark">#00abf1</color>
-    <color name="colorGymReserveaccent">#6980de</color>
+    <color name="colorGymReservePrimary">#0082f1</color>
+    <color name="colorGymReservePrimaryDark">#0082f1</color>
+    <color name="colorGymReserveAccent">#80c5ff</color>
 
     <!--考试助手-->
-    <color name="colorExamprimary">#FF4081</color>
-    <color name="colorExamprimary_dark">#FF4081</color>
-    <color name="colorExamaccent">#FF4081</color>
+    <color name="colorExamPrimary">#FF4081</color>
+    <color name="colorExamPrimaryDark">#FF4081</color>
+    <color name="colorExamAccent">#FF4081</color>
 
     <!--跑操-->
-    <color name="colorPedetailprimary">#26a69a</color>
+    <color name="colorPedetailPrimary">#26a69a</color>
     <color name="colorPedetailprimaryDark">#26a69a</color>
     <color name="colorPedetailprimarySemiFade">#d026a69a</color>
     <color name="colorPedetailprimaryFade">#8026a69a</color>
-    <color name="colorPedetailaccent">#26a69a</color>
+    <color name="colorPedetailAccent">#26a69a</color>
     <color name="colorPedetailcalendarBg">#ffffff</color>
 
     <!--srtp-->
-    <color name="colorSrtpprimary">#FFEF5350</color>
+    <color name="colorSrtpPrimary">#FFEF5350</color>
     <color name="colorSrtpprimaryDark">#FFEF5350</color>
-    <color name="colorSrtpaccent">#FFEF5350</color>
+    <color name="colorSrtpAccent">#FFEF5350</color>
 
 
     <!--图书馆-->
-    <color name="colorLibraryprimary">#e53935</color>
+    <color name="colorLibraryPrimary">#e53935</color>
     <color name="colorLibraryprimaryDark">#e53935</color>
-    <color name="colorLibraryaccent">#e57373</color>
+    <color name="colorLibraryAccent">#e57373</color>
 
 
     <!--校历-->
-    <color name="colorScheduleprimary">#e54f40</color>
+    <color name="colorSchedulePrimary">#e54f40</color>
     <color name="colorScheduleprimaryDark">#e54f40</color>
-    <color name="colorScheduleaccent">#e54f40</color>
+    <color name="colorScheduleAccent">#e54f40</color>
 
     <!--空教室-->
-    <color name="colorEmptyRoomprimary">#3188cb</color>
+    <color name="colorEmptyRoomPrimary">#3188cb</color>
     <color name="colorEmptyRoomprimaryDark">#3188cb</color>
-    <color name="colorEmptyRoomaccent">#3188cb</color>
+    <color name="colorEmptyRoomAccent">#3188cb</color>
 
     <!--权益服务-->
-    <color name="colorQuanYiprimary">#ed7f0e</color>
+    <color name="colorQuanYiPrimary">#ed7f0e</color>
     <color name="colorQuanYiprimaryDark">#ed7f0e</color>
-    <color name="colorQuanYiaccent">#ed7f0e</color>
+    <color name="colorQuanYiAccent">#ed7f0e</color>
 
 
     <!--生活服务-->
-    <color name="colorAfterSchoolPrimary">#1976d2</color>
-    <color name="colorAfterSchoolDark">#1976d2</color>
-    <color name="colorAfterSchoolAccent">#1976d2</color>
+    <color name="colorActivitiesPrimary">#1976d2</color>
+    <color name="colorActivitiesDark">#1976d2</color>
+    <color name="colorActivitiesAccent">#1976d2</color>
 
     <!--关于我们-->
-    <color name="colorAboutusprimary">#57b3ff</color>
-    <color name="colorAboutusprimaryDark">#57b3ff</color>
-    <color name="colorAboutusprimaryAccent">#57b3ff</color>
+    <color name="colorAboutusPrimary">#00b4ff</color>
+    <color name="colorAboutusprimaryDark">#00b4ff</color>
+    <color name="colorAboutusprimaryAccent">#00b4ff</color>
 
 
     <!--意见反馈-->
-    <color name="colorFeedbackprimary">#00acc1</color>
+    <color name="colorFeedbackPrimary">#00acc1</color>
     <color name="colorFeedbackprimaryDark">#00acc1</color>
     <color name="colorFeedbackprimaryAccent">#00acc1</color>
 
     <!--Web页面-->
-    <color name="colorWebprimary">#616161</color>
-    <color name="colorWebprimary_dark">#616161</color>
-    <color name="colorWebaccent">#616161</color>
+    <color name="colorWebPrimary">#616161</color>
+    <color name="colorWebPrimaryDark">#616161</color>
+    <color name="colorWebAccent">#616161</color>
 
 
     <!--首页四个fragment的主题色-->
     <color name="colorFragmentCards">#00b4ff</color>
     <color name="colorFragmentActivitys">#1976d2</color>
-    <color name="colorFragmentModules">#1976d2</color>
+    <color name="colorFragmentModules">#00b4ff</color>
     <color name="colorFragmentSettings">#00b4ff</color>
 
     <!--课表-->
@@ -142,7 +142,7 @@
     <color name="colorUnenabledGray">#535252</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
-    <color name="colorMainPagesBg">#fff</color>
+    <color name="colorMainPagesBg">#eeeeee</color>
     <color name="colorMainPagesDivider">#eaeaea</color>
 
 

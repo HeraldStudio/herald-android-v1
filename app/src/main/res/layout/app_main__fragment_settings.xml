@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#eee"
-    android:scrollbars="none">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorMainPagesBg"
+            android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/bottom_tab_height"
         android:orientation="vertical">
 
         <TextView
@@ -27,7 +28,7 @@
             android:background="@color/colorDivider" />
 
         <TextView
-            android:id="@+id/tv_logout"
+            android:id="@+id/tv_login_or_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selectable_item_background_white"
@@ -37,7 +38,7 @@
             android:paddingTop="10dp"
             android:text="退出登录"
             android:textColor="#333"
-            android:textSize="15sp" />
+            android:textSize="14sp"/>
 
         <View
             android:layout_width="match_parent"
@@ -81,7 +82,7 @@
                     android:paddingRight="5dp"
                     android:text="摇一摇登录校园网"
                     android:textColor="#333"
-                    android:textSize="15sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -91,7 +92,7 @@
                     android:paddingTop="3dp"
                     android:text="在小猴主界面摇一摇自动登录seu-wlan/dorm"
                     android:textColor="@color/colorSecondaryText"
-                    android:textSize="13sp"/>
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
@@ -138,7 +139,7 @@
                 android:paddingRight="5dp"
                 android:text="自定义校园网登录账号"
                 android:textColor="#333"
-                android:textSize="15sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -148,7 +149,7 @@
                 android:paddingTop="3dp"
                 android:text="用独立账号登陆校园网，校园网查询模块不受此设置影响"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="13sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 
@@ -173,71 +174,7 @@
             android:layout_height="@dimen/divider_height"
             android:background="@color/colorDivider" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="7dp"
-            android:paddingLeft="15dp"
-            android:paddingTop="20dp"
-            android:text="个性设置"
-            android:textColor="#666"
-            android:textSize="12sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/colorDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selectable_item_background_white"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="隐藏首页Tab栏"
-                    android:textColor="#333"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="3dp"
-                    android:text="可隐藏首页Tab栏以兼容某些屏幕空间小的设备"
-                    android:textColor="@color/colorSecondaryText"
-                    android:textSize="13sp"/>
-
-            </LinearLayout>
-
-            <cn.seu.herald_android.custom.CustomSwitchButton
-                android:id="@+id/switchbottomtab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:paddingLeft="15dp"
-                android:paddingRight="5dp" />
-
-        </LinearLayout>
         <!--个性设置-->
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/colorDivider" />
 
         <TextView
             android:layout_width="match_parent"
@@ -265,7 +202,7 @@
             android:paddingTop="10dp"
             android:text="关于我们"
             android:textColor="#333"
-            android:textSize="15sp" />
+            android:textSize="14sp"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -297,7 +234,7 @@
                 android:paddingRight="5dp"
                 android:text="意见反馈"
                 android:textColor="#333"
-                android:textSize="15sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -307,7 +244,7 @@
                 android:paddingTop="3dp"
                 android:text="如果某些模块无法连接或无数据，属于学校网络设施故障，小猴也无能为力，等一等就好啦~"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="13sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 
@@ -341,7 +278,7 @@
                 android:paddingRight="5dp"
                 android:text="检查更新"
                 android:textColor="#333"
-                android:textSize="15sp" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/tv_now_version"
@@ -352,7 +289,7 @@
                 android:paddingTop="3dp"
                 android:text="当前版本"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="13sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

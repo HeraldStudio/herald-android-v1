@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,34 +23,36 @@ import java.util.Collections;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_framework.AppContext;
+import cn.seu.herald_android.app_module.grade.GradeActivity;
+import cn.seu.herald_android.app_module.gymreserve.GymReserveActivity;
+import cn.seu.herald_android.app_module.library.LibraryActivity;
+import cn.seu.herald_android.app_module.srtp.SrtpActivity;
+import cn.seu.herald_android.consts.Module;
+import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
 import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
-import cn.seu.herald_android.custom.swiperefresh.CustomSwipeRefreshLayout;
-import cn.seu.herald_android.helper.ApiRequest;
-import cn.seu.herald_android.helper.ApiThreadManager;
-import cn.seu.herald_android.helper.AppModule;
+import cn.seu.herald_android.factory.ActivityCard;
+import cn.seu.herald_android.factory.CardCard;
+import cn.seu.herald_android.factory.CurriculumCard;
+import cn.seu.herald_android.factory.ExamCard;
+import cn.seu.herald_android.factory.ExperimentCard;
+import cn.seu.herald_android.factory.JwcCard;
+import cn.seu.herald_android.factory.LectureCard;
+import cn.seu.herald_android.factory.PedetailCard;
+import cn.seu.herald_android.factory.ServiceCard;
+import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.AppModule;
+import cn.seu.herald_android.framework.network.ApiEmptyRequest;
+import cn.seu.herald_android.framework.network.ApiRequest;
+import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_cards.ActivityCard;
-import cn.seu.herald_android.mod_cards.CardCard;
-import cn.seu.herald_android.mod_cards.CurriculumCard;
-import cn.seu.herald_android.mod_cards.ExamCard;
-import cn.seu.herald_android.mod_cards.ExperimentCard;
-import cn.seu.herald_android.mod_cards.JwcCard;
-import cn.seu.herald_android.mod_cards.LectureCard;
-import cn.seu.herald_android.mod_cards.PedetailCard;
-import cn.seu.herald_android.mod_cards.ServiceCard;
-import cn.seu.herald_android.mod_query.grade.GradeActivity;
-import cn.seu.herald_android.mod_query.gymreserve.GymReserveActivity;
-import cn.seu.herald_android.mod_query.library.LibraryActivity;
-import cn.seu.herald_android.mod_query.srtp.SrtpActivity;
 
-public class CardsListView extends ListView {
+public class CardsListView extends ListView implements ApiHelper.OnUserChangeListener,
+        SettingsHelper.OnModuleSettingsChangeListener {
 
-    private ArrayList<CardsModel> itemList;
     private CustomSwipeRefreshLayout srl;
     private ShortcutBoxView shortcutBox;
     private SliderView slider;
@@ -86,15 +90,55 @@ public class CardsListView extends ListView {
         shortcutBox = ButterKnife.findById(vg, R.id.shorcut_box);
         addHeaderView(vg);
 
-        // 监听模块设置改变事件
-        SettingsHelper.addModuleSettingsChangeListener(() -> {
-            loadContent(false);
-        });
+        // 添加页脚以防止被透明Tab挡住
+        View footer = new View(getContext());
+        footer.setLayoutParams(new AbsListView.LayoutParams(-1, (int)getResources().getDimension(R.dimen.bottom_tab_height)));
+        addFooterView(footer);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        getContext().registerReceiver(timeChangeReceiver, filter);
+
+        ApiHelper.registerOnUserChangeListener(this);
+        SettingsHelper.registerOnModuleSettingsChangeListener(this);
+
+        refreshSliders();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        getContext().unregisterReceiver(timeChangeReceiver);
+
+        ApiHelper.unregisterOnUserChangeListener(this);
+        SettingsHelper.unregisterOnModuleSettingsChangeListener(this);
+
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void onUserChange() {
+        loadContent(true);
+    }
+
+    @Override
+    public void onModuleSettingsChange() {
+        loadContent(false);
     }
 
     public void setSrl(CustomSwipeRefreshLayout srl) {
         this.srl = srl;
     }
+
+    private Handler uiThreadHandler = new Handler();
+
+    private ArrayList<CardsModel> itemList = new ArrayList<>();
 
 
     /**
@@ -108,169 +152,183 @@ public class CardsListView extends ListView {
         // 单独刷新快捷栏，不刷新轮播图。轮播图在轮播图数据下载完成后单独刷新。
         refreshShortcutBox();
 
-        // 清空卡片列表，等待载入
-        itemList = new ArrayList<>();
+        // 丢你拉姆
+        new Thread(() -> {
 
-        // 加载版本更新缓存
-        CardsModel item1 = ServiceCard.getCheckVersionCard();
-        if (item1 != null) itemList.add(item1);
+            // 防止多个刷新请求同时执行导致混乱
+            synchronized (this) {
 
-        // 加载推送缓存
-        CardsModel item = ServiceCard.getPushMessageCard();
-        if (item != null) itemList.add(item);
+                ArrayList<CardsModel> newItemList = new ArrayList<>();
 
-        // 判断各模块是否开启并加载对应数据
-        if (SettingsHelper.Module.curriculum.cardEnabled.$get()) {
-            // 加载并解析课表缓存
-            itemList.add(CurriculumCard.getCard());
-        }
+                // 清空卡片列表，等待载入
+                newItemList.clear();
 
-        if (SettingsHelper.Module.experiment.cardEnabled.$get()) {
-            // 加载并解析实验缓存
-            itemList.add(ExperimentCard.getCard());
-        }
+                // 加载版本更新缓存
+                CardsModel item1 = ServiceCard.getCheckVersionCard();
+                if (item1 != null) newItemList.add(item1);
 
-        if (SettingsHelper.Module.exam.cardEnabled.$get()) {
-            // 加载并解析考试缓存
-            itemList.add(ExamCard.getCard());
-        }
+                // 加载推送缓存
+                CardsModel item = ServiceCard.getPushMessageCard();
+                if (item != null) newItemList.add(item);
 
-        //活动这项永远保留在首页，加载并解析活动缓存
-        CardsModel activityItem = ActivityCard.getCard();
-        //修改默认点击函数，设置为主页滑动至活动页
-        activityItem.setOnClickListener(v -> new AppModule(null, "TAB1").open());
-        itemList.add(activityItem);
+                // 判断各模块是否开启并加载对应数据
+                if (Module.card.getCardEnabled()) {
+                    // 加载并解析一卡通缓存
+                    newItemList.add(CardCard.getCard());
+                }
 
-        if (SettingsHelper.Module.lecture.cardEnabled.$get()) {
-            // 加载并解析人文讲座预告缓存
-            itemList.add(LectureCard.getCard());
-        }
+                if (Module.pedetail.getCardEnabled()) {
+                    // 加载并解析跑操预报缓存
+                    newItemList.add(PedetailCard.getCard());
+                }
 
-        if (SettingsHelper.Module.pedetail.cardEnabled.$get()) {
-            // 加载并解析跑操预报缓存
-            itemList.add(PedetailCard.getCard());
-        }
+                if (Module.curriculum.getCardEnabled()) {
+                    // 加载并解析课表缓存
+                    newItemList.add(CurriculumCard.getCard());
+                }
 
-        if (SettingsHelper.Module.card.cardEnabled.$get()) {
-            // 加载并解析一卡通缓存
-            itemList.add(CardCard.getCard());
-        }
+                if (Module.experiment.getCardEnabled()) {
+                    // 加载并解析实验缓存
+                    newItemList.add(ExperimentCard.getCard());
+                }
 
-        if (SettingsHelper.Module.jwc.cardEnabled.$get()) {
-            // 加载并解析教务处缓存
-            itemList.add(JwcCard.getCard());
-        }
+                if (Module.exam.getCardEnabled()) {
+                    // 加载并解析考试缓存
+                    newItemList.add(ExamCard.getCard());
+                }
 
-        // 有消息的排在前面，没消息的排在后面
-        Collections.sort(itemList, (p1, p2) ->
-                p1.getDisplayPriority().ordinal() - p2.getDisplayPriority().ordinal());
+                // 活动这项永远保留在首页，加载并解析活动缓存
+                CardsModel activityItem = ActivityCard.getCard();
+                // 修改默认点击函数，设置为主页滑动至活动页
+                activityItem.setOnClickListener(v -> new AppModule(null, "TAB1").open());
+                newItemList.add(activityItem);
 
-        // 更新适配器，结束刷新
-        if (adapter == null) {
-            setAdapter(adapter = new CardsAdapter());
-        } else {
-            adapter.notifyDataSetChanged();
-        }
+                if (Module.lecture.getCardEnabled()) {
+                    // 加载并解析人文讲座预告缓存
+                    newItemList.add(LectureCard.getCard());
+                }
+
+                if (Module.jwc.getCardEnabled()) {
+                    // 加载并解析教务处缓存
+                    newItemList.add(JwcCard.getCard());
+                }
+
+                // 有消息的排在前面，没消息的排在后面
+                Collections.sort(newItemList, (p1, p2) ->
+                        p1.getDisplayPriority().ordinal() - p2.getDisplayPriority().ordinal());
+
+                // 丢你雷姆
+                uiThreadHandler.post(() -> {
+                    // 深复制，注意这里不能改变 itemList 的地址，因为列表视图已经绑定了原地址上的 itemList
+                    itemList.clear();
+                    for (CardsModel model : newItemList) {
+                        itemList.add(model);
+                    }
+                    // 更新适配器，结束刷新
+                    if (adapter == null) {
+                        setAdapter(adapter = new CardsAdapter(itemList));
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+
 
         /**
          * 联网部分
          *
-         * 1、此处为懒惰刷新，即当某模块需要刷新时才刷新，不需要时不刷新，
+         * 此处为懒惰刷新，即当某模块需要刷新时才刷新，不需要时不刷新，
          * 各个模块是否刷新的判断条件可以按不同模块的需求来写。
-         *
-         * 2、此处改为用 {@link ApiThreadManager} 方式管理线程。
-         * 该管理器可以自定义在每个线程结束时、在所有线程结束时执行不同的操作。
-         *
-         * 3、这部分利用 {@link ApiThreadManager} 的错误处理机制，当管理器添加线程时，
-         * 会将每个线程的错误处理改为自动将错误放到管理器的错误池中。当管理器报告运行结束时，
-         * 我们可以手动让管理器显示一个错误信息来代替这些线程的多个错误信息。
          **/
 
-        if (refresh) {
-
-            // 线程管理器
-            ApiThreadManager manager = new ApiThreadManager().onResponse((success, c, r) -> {
-                if (success) loadContent(false);
-            });
-
-            // 刷新版本信息和推送消息
-            manager.add(ServiceCard.getRefresher()
-                    .onFinish((success, code, response) -> {
-                // 刷新好后单独重载轮播图
-                refreshSliders();
-            }));
-
-            // 当课表模块开启时
-            if (SettingsHelper.Module.curriculum.cardEnabled.$get()) {
-                // 仅当课表数据不存在时刷新课表
-                if (CacheHelper.get("herald_curriculum").equals("")
-                        || CacheHelper.get("herald_sidebar").equals("")) {
-                    manager.addAll(CurriculumCard.getRefresher());
-                }
-            }
-
-            // 当实验模块开启时
-            if (SettingsHelper.Module.experiment.cardEnabled.$get()) {
-                // 仅当实验数据不存在时刷新实验
-                if (CacheHelper.get("herald_experiment").equals("")) {
-                    manager.add(ExperimentCard.getRefresher());
-                }
-            }
-
-            // 当考试模块开启时
-            if (SettingsHelper.Module.exam.cardEnabled.$get()) {
-                // 仅当考试数据不存在时刷新考试
-                if (CacheHelper.get("herald_exam").equals("")) {
-                    manager.add(ExamCard.getRefresher());
-                }
-            }
-
-            // 当人文讲座模块开启时
-            if (SettingsHelper.Module.lecture.cardEnabled.$get()) {
-                // 直接刷新人文讲座预告
-                manager.add(LectureCard.getRefresher());
-            }
-
-            // 当跑操模块开启时
-            if (SettingsHelper.Module.pedetail.cardEnabled.$get()) {
-                // 直接刷新跑操
-                manager.addAll(PedetailCard.getRefresher());
-            }
-
-            // 当一卡通模块开启时
-            if (SettingsHelper.Module.card.cardEnabled.$get()) {
-                // 直接刷新一卡通数据
-                manager.add(CardCard.getRefresher());
-            }
-
-            // 当教务处模块开启时
-            if (SettingsHelper.Module.jwc.cardEnabled.$get()) {
-                // 直接刷新教务处数据
-                manager.add(JwcCard.getRefresher());
-            }
-
-            // 活动为非模块，永远保持在首页
-            manager.add(ActivityCard.getRefresher());
-
-            manager.addAll(new ApiRequest[]{
-                    GymReserveActivity.remoteRefreshNotifyDotState(),
-                    SrtpActivity.remoteRefreshNotifyDotState(),
-                    GradeActivity.remoteRefreshNotifyDotState(),
-                    LibraryActivity.remoteRefreshNotifyDotState()
-            });
-
-            /**
-             * 结束刷新部分
-             * 当最后一个线程结束时调用这一部分，刷新结束
-             **/
-            manager.onFinish((success) -> {
-                if (srl != null) srl.setRefreshing(false);
-                if (!success) {
-                    AppContext.showMessage("部分数据刷新失败");
-                }
-                slider.startAutoCycle();
-            }).run();
+        if (!refresh) {
+            return;
         }
+
+        if (srl != null && !srl.isRefreshing()) srl.setRefreshing(true);
+
+        ApiRequest request = new ApiEmptyRequest();
+
+        // 刷新版本信息和推送消息
+        request = request.parallel(ServiceCard.getRefresher()
+                .onFinish((success, code) -> {
+                    // 刷新好后单独重载轮播图
+                    refreshSliders();
+                }));
+
+        // 当一卡通模块开启时
+        if (Module.card.getCardEnabled() && ApiHelper.isLogin()) {
+            // 直接刷新一卡通数据
+            request = request.parallel(CardCard.getRefresher());
+        }
+
+        // 当跑操模块开启时
+        if (Module.pedetail.getCardEnabled() && ApiHelper.isLogin()) {
+            // 直接刷新跑操
+            request = request.parallel(PedetailCard.getRefresher());
+        }
+
+        // 当课表模块开启时
+        if (Module.curriculum.getCardEnabled() && ApiHelper.isLogin()) {
+            // 仅当课表数据不存在时刷新课表
+            if (CacheHelper.get("herald_curriculum").equals("")
+                    || CacheHelper.get("herald_sidebar").equals("")) {
+                request = request.parallel(CurriculumCard.getRefresher());
+            }
+        }
+
+        // 当实验模块开启时
+        if (Module.experiment.getCardEnabled() && ApiHelper.isLogin()) {
+            // 仅当实验数据不存在时刷新实验
+            if (CacheHelper.get("herald_experiment").equals("")) {
+                request = request.parallel(ExperimentCard.getRefresher());
+            }
+        }
+
+        // 当考试模块开启时
+        if (Module.exam.getCardEnabled() && ApiHelper.isLogin()) {
+            // 仅当考试数据不存在时刷新考试
+            if (CacheHelper.get("herald_exam").equals("")) {
+                request = request.parallel(ExamCard.getRefresher());
+            }
+        }
+
+        // 直接刷新校园活动
+        request = request.parallel(ActivityCard.getRefresher());
+
+        // 当人文讲座模块开启时
+        if (Module.lecture.getCardEnabled()) {
+            // 直接刷新人文讲座预告
+            request = request.parallel(LectureCard.getRefresher());
+        }
+
+        // 当教务处模块开启时
+        if (Module.jwc.getCardEnabled()) {
+            // 直接刷新教务处数据
+            request = request.parallel(JwcCard.getRefresher());
+        }
+
+        request = request
+                .parallel(GymReserveActivity.remoteRefreshNotifyDotState())
+                .parallel(SrtpActivity.remoteRefreshNotifyDotState())
+                .parallel(GradeActivity.remoteRefreshNotifyDotState())
+                .parallel(LibraryActivity.remoteRefreshNotifyDotState());
+
+        /**
+         * 结束刷新部分
+         * 当最后一个线程结束时调用这一部分，刷新结束
+         **/
+        request.onResponse((success1, code, response) -> {
+            loadContent(false);
+        }).onFinish((success, code) -> {
+            if (srl != null) srl.setRefreshing(false);
+
+            if (!success) {
+                AppContext.showMessage("部分数据刷新失败");
+            }
+            slider.startAutoCycle();
+        }).run();
     }
 
     private void refreshShortcutBox() {
@@ -284,36 +342,17 @@ public class CardsListView extends ListView {
     private void refreshSliders() {
         // 为轮播栏设置内容
         ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = ServiceHelper.getSliderViewItemArray();
-        if (slider!=null) slider.setupWithArrayList(sliderViewItemArrayList);
+        if (slider != null) slider.setupWithArrayList(sliderViewItemArrayList);
     }
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         // 轮播图居中变色动效的实现
-        if (fadeContainer!=null){
+        if (fadeContainer != null) {
             fadeContainer.syncFadeState();
             fadeContainer.syncScrollState();
         }
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_TIME_TICK);
-        filter.addAction(Intent.ACTION_TIME_CHANGED);
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        getContext().registerReceiver(timeChangeReceiver, filter);
-
-        refreshSliders();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        getContext().unregisterReceiver(timeChangeReceiver);
-        super.onDetachedFromWindow();
     }
 
     public class CardsAdapter extends BaseAdapter {
@@ -331,10 +370,18 @@ public class CardsListView extends ListView {
             View header;
             @BindView(R.id.notify_dot)
             View notifyDot;
+            @BindView(R.id.img_header_bg)
+            View headerArrow;
 
             public ViewHolder(View v) {
                 ButterKnife.bind(this, v);
             }
+        }
+
+        private ArrayList<CardsModel> itemList;
+
+        public CardsAdapter(ArrayList<CardsModel> itemList) {
+            this.itemList = itemList;
         }
 
         @Override
@@ -365,14 +412,20 @@ public class CardsListView extends ListView {
             holder.name.setText(item.getName());
             holder.content.setText(item.getInfo());
 
-            //标识已读消息和未读消息的小点
+            // 标识已读消息和未读消息的小点
             holder.notifyDot.setVisibility(item.getDisplayPriority() == CardsModel.Priority.CONTENT_NOTIFY ? VISIBLE : GONE);
 
             holder.avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
+            holder.headerArrow.setVisibility(item.getOnClickListener() == null ? View.GONE : View.VISIBLE);
+
             holder.header.setOnClickListener((v) -> {
                 item.markAsRead();
-                item.getOnClickListener().onClick(v);
+
+                if (item.getOnClickListener() != null) {
+                    item.getOnClickListener().onClick(v);
+                }
+
                 loadContent(false);
             });
 

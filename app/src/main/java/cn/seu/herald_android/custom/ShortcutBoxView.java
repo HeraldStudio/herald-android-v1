@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.seu.herald_android.helper.AppModule;
-import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.consts.Module;
+import cn.seu.herald_android.framework.AppModule;
 
 public class ShortcutBoxView extends GridView {
     public ShortcutBoxView(Context c, AttributeSet a) {
@@ -25,18 +25,18 @@ public class ShortcutBoxView extends GridView {
     }
 
     public void refresh() {
-        //加载适配器
-        //获取设置为快捷方式的查询模块
-        List<AppModule> settingArrayList = Arrays.asList(SettingsHelper.Module.array);
+        // 加载适配器
+        // 获取设置为快捷方式的查询模块
+        List<AppModule> settingArrayList = Arrays.asList(Module.array);
         List<AppModule> enabledShortcutList = new ArrayList<>();
         for (AppModule module : settingArrayList) {
-            if (module.shortcutEnabled.$get())
+            if (module.getShortcutEnabled())
                 enabledShortcutList.add(module);
         }
 
         ShortcutBoxAdapter adapter = new ShortcutBoxAdapter(enabledShortcutList);
 
-        //添加并且显示
+        // 添加并且显示
         setAdapter(adapter);
 
         if (adapter.getCount() == 1) setVisibility(GONE);

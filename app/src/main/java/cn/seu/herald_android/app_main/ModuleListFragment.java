@@ -1,12 +1,12 @@
 package cn.seu.herald_android.app_main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -16,63 +16,88 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.helper.AppModule;
+import cn.seu.herald_android.consts.Module;
+import cn.seu.herald_android.framework.AppModule;
+import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
-import cn.seu.herald_android.mod_modulemanager.ModuleManageActivity;
 
-public class ModuleListFragment extends Fragment {
+public class ModuleListFragment extends Fragment implements ApiHelper.OnUserChangeListener,
+        SettingsHelper.OnModuleSettingsChangeListener {
 
     private View contentView;
+
+    private Unbinder unbinder;
+
+    @BindView(R.id.list_modules)
+    public ListView listView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.app_main__fragment_modules, container, false);
+        unbinder = ButterKnife.bind(this, contentView);
+
+        // 添加页脚以防止被透明Tab挡住
+        View footer = new View(getContext());
+        footer.setLayoutParams(new AbsListView.LayoutParams(-1, (int)getResources().getDimension(R.dimen.bottom_tab_height)));
+        listView.addFooterView(footer);
+
         loadModuleList();
 
+        // 监听用户改变事件
+        ApiHelper.registerOnUserChangeListener(this);
         // 监听模块设置改变事件
-        SettingsHelper.addModuleSettingsChangeListener(() -> {
-            loadModuleList();
-        });
+        SettingsHelper.registerOnModuleSettingsChangeListener(this);
+
         return contentView;
     }
 
-    //模块管理的按钮
-    private View editButton;
-    private ArrayList<AppModule> seuModuleArrayList = new ArrayList<>();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // 防泄漏
+        ApiHelper.unregisterOnUserChangeListener(this);
+        SettingsHelper.unregisterOnModuleSettingsChangeListener(this);
+
+        unbinder.unbind();
+    }
 
     @Override
-    public void onResume() {
-        // 从模块管理界面返回时,重载模块列表
-        super.onResume();
+    public void onUserChange() {
         loadModuleList();
     }
+
+    @Override
+    public void onModuleSettingsChange() {
+        loadModuleList();
+    }
+
+    // 模块管理的按钮
+    private View editButton;
+    private ArrayList<AppModule> seuModuleArrayList = new ArrayList<>();
 
     public void loadModuleList() {
 
         if (contentView == null) return;
 
-        //获得所有模块列表
+        // 获得所有模块列表
         seuModuleArrayList.clear();
-        List<AppModule> list = Arrays.asList(SettingsHelper.Module.array);
+        List<AppModule> list = Arrays.asList(Module.array);
         for (AppModule k : list) {
-            //筛选已开启的模块
-            if (k.cardEnabled.$get() || k.shortcutEnabled.$get()) {
+            // 筛选已开启的模块
+            if (k.getCardEnabled() || k.getShortcutEnabled()) {
                 seuModuleArrayList.add(k);
             }
         }
 
-        //根据模块列表构造列表
-        ListView listView = ButterKnife.findById(contentView, R.id.list_modules);
-
         if (editButton == null) {
             editButton = getLayoutInflater(null).inflate(R.layout.app_main__fragment_modules__item_manage, null);
-            editButton.setOnClickListener((v) -> {
-                Intent intent = new Intent(getContext(), ModuleManageActivity.class);
-                startActivity(intent);
-            });
+            editButton.setOnClickListener((v) -> Module.moduleManager.open());
             listView.addHeaderView(editButton);
         }
 

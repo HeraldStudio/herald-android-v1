@@ -1,11 +1,11 @@
 package cn.seu.herald_android.app_main;
 
-import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import java.util.ArrayList;
 
-import cn.seu.herald_android.helper.AppModule;
+import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.helper.CacheHelper;
 
 /**
@@ -15,7 +15,7 @@ import cn.seu.herald_android.helper.CacheHelper;
  */
 public class CardsModel {
 
-    /// 表示卡片消息是否重要，不重要的消息总在后面
+    // 表示卡片消息是否重要，不重要的消息总在后面
     public enum Priority {
         CONTENT_NOTIFY,
         CONTENT_NO_NOTIFY,
@@ -26,12 +26,11 @@ public class CardsModel {
     private String name;
     private String info;
     private Priority contentPriority;
-    private View.OnClickListener onClickListener = v -> {
-    };
+    private View.OnClickListener onClickListener = null;
     private int iconRes;
 
     public CardsModel(String name, String info, Priority contentPriority, int iconRes) {
-        //非模块部分所调用的timelineItem构造
+        // 非模块部分所调用的timelineItem构造
         this.name = name;
         this.info = info;
         this.contentPriority = contentPriority;
@@ -39,14 +38,11 @@ public class CardsModel {
     }
 
     public CardsModel(AppModule module, Priority contentPriority, String info) {
-        //各个模块部分所调用的timelineItem构造
+        // 各个模块部分所调用的timelineItem构造
         this.name = module.nameTip;
         this.info = info;
         this.contentPriority = contentPriority;
-        this.onClickListener = (v) -> {
-            Intent intent = new Intent("cn.seu.herald_android." + module.controller);
-            v.getContext().startActivity(intent);
-        };
+        this.onClickListener = (v) -> module.open();
         this.iconRes = module.icon;
     }
 
@@ -67,6 +63,7 @@ public class CardsModel {
         return iconRes;
     }
 
+    @Nullable
     public View.OnClickListener getOnClickListener() {
         return onClickListener;
     }
