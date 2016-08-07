@@ -100,9 +100,9 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     }
 
     private void loadLoginButton() {
-        loginBtn.setOnClickListener(v -> {
-            AppContext.showLogin();
-        });
+        loginBtn.setOnClickListener(v ->
+                AppContext.showLogin());
+
         if (ApiHelper.isLogin()) {
             loginBtn.setVisibility(View.GONE);
         } else {
@@ -131,6 +131,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     protected void onResume() {
         super.onResume();
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         // 设置摇晃力度检测阈值
         shakeDetector.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT);
         shakeDetector.start(sensorManager);
@@ -146,16 +147,21 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
 
         // 点击外部时关闭
         dialog_more.setCanceledOnTouchOutside(true);
+
         // show函数需要在getWindow前调用
         dialog_more.show();
+
         // 对话框窗口设置布局文件
         Window window = dialog_more.getWindow();
+
         // 自定义背景半透明深度
         window.setDimAmount(0.25f);
+
         // 防止某些机型对话框显示背景色
         window.setBackgroundDrawable(null);
         WindowManager.LayoutParams wmlp = window.getAttributes();
         wmlp.gravity = Gravity.RIGHT | Gravity.TOP;
+
         // 此处容易引发布局的ClassCastException，需要注意
         // 所有写死的尺寸一定要乘以dp，否则会出现兼容问题
         wmlp.x = (int) (3 * dp);
@@ -163,8 +169,10 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         wmlp.width = (int) (140 * dp);
         window.setAttributes(wmlp);
         window.setContentView(R.layout.app_main__dialog_more);
+
         // 设置点击项
         window.findViewById(R.id.content_wifi).setOnClickListener(v1 -> {
+
             // 设置登录校园网
             new WifiLoginHelper(this).checkAndLogin();
         });
@@ -255,8 +263,10 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         });
 
         final View decorView = getWindow().getDecorView();
+
         // Activity's root View. Can also be root View of your layout
         final View rootView = decorView.findViewById(android.R.id.content);
+
         // set background, if your root layout doesn't have one
         final Drawable windowBackground = decorView.getBackground();
 
@@ -296,9 +306,5 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     protected void setNavigationColor(@ColorInt int color) {
         setStatusBarColor(color);
         mainToolbar.setBackgroundColor(color);
-    }
-
-    protected void setNavigationColorRes(@ColorRes int color) {
-        setNavigationColor(ContextCompat.getColor(this, color));
     }
 }

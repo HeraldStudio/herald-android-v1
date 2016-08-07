@@ -33,7 +33,7 @@ public class NetworkUtil {
     // 当请求出现致命错误时，提示身份过期并退出登录
     public static void addFatalErrorListenerInOnFinishList(LinkedList<OnFinishListener> list) {
         OnFinishListener listener = (success, code) -> {
-            if (400 <= code && code < 500) {
+            if (code == 401) {
                 ApiHelper.notifyUserIdentityExpired();
             }
         };
@@ -45,7 +45,7 @@ public class NetworkUtil {
     // 当请求出现致命错误时，提示身份过期并退出登录
     public static void addFatalErrorListenerInOnResponseList(LinkedList<OnResponseListener> list) {
         OnResponseListener listener = (success, code, response) -> {
-            if (400 <= code && code < 500) {
+            if (code == 401) {
                 ApiHelper.notifyUserIdentityExpired();
             }
         };

@@ -155,18 +155,22 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void setStatusBarColor(int color) {
 
-        // 若已经设置过 4.4 ~< 6.0 的沉浸, 直接改变颜色
-        if (statusView!=null) {
-            statusView.setBackgroundColor(color);
-            return;
-        }
+        // 若已经设置过，不用再判断，直接变颜色
+        if (statusView != null || window != null) {
 
-        // 若已经设置过 6.0 ~ 的沉浸, 直接改变颜色
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (window != null) {
-                window.setStatusBarColor(color);
-                return;
+            // 若已经设置过 4.4 ~< 5.0 的沉浸, 直接改变颜色
+            if (statusView != null) {
+                statusView.setBackgroundColor(color);
             }
+
+            // 若已经设置过 5.0 ~ 的沉浸, 直接改变颜色
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (window != null) {
+                    window.setStatusBarColor(color);
+                }
+            }
+
+            return;
         }
 
         // 判断版本在 4.4 以上, 低于 4.4 的不设置
@@ -226,7 +230,6 @@ public class BaseActivity extends AppCompatActivity {
                     .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
                     .duration(CustomSnackBar.SnackBarDuration.LONG).show();
         }
-
     }
 
     // 显示一个带按钮的SnackBar
