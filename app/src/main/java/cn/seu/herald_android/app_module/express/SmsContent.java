@@ -56,6 +56,7 @@ public class SmsContent {
 
             Log.d(TAG, "before 24 hours, time is " + String.valueOf(last));
 
+            //TODO 修改短信日期
             //String filter = "date > " + String.valueOf(last);   // 查询中的where语句, date > 1469839964323
             String filter = null;   // 查询中的where语句, date > 1469839964323
 

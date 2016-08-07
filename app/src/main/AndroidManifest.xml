@@ -286,6 +286,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".app_module.express.ExpressHistoryActivity"
+            android:label="代取记录"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExpressActivityTheme"
+            />
 
 
     </application>

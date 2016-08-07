@@ -1,22 +1,23 @@
 package cn.seu.herald_android.app_module.express;
 
 import android.app.FragmentTransaction;
-import android.net.Uri;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.framework.BaseActivity;
@@ -25,8 +26,7 @@ import cn.seu.herald_android.framework.BaseActivity;
  * Created by corvo on 7/28/16.
  */
 public class ExpressActivity extends BaseActivity
-        implements AdapterView.OnItemSelectedListener,
-        View.OnClickListener {
+        implements View.OnClickListener {
     private static String TAG = "ExpressActivity";
 
     private Spinner mDestSpinner;       // 取回地点
@@ -47,6 +47,18 @@ public class ExpressActivity extends BaseActivity
     String[] mArrivalArray;// = getResources().getStringArray(R.array.mod_express_arrival);
     String[] mWeightArray;// = getResources().getStringArray(R.array.mod_express_weight);
 
+    /**
+     * 调用此接口改变短信文本内容, 定义在SmsSelectDialog中
+     */
+    private SmsSelectDialog.DialogRefresh mSmsRefresh = new SmsSelectDialog.DialogRefresh() {
+        @Override
+        public void refreshSmsText(String text) {
+            mSmsShow.setText(text);
+        }
+    };
+
+    private ExpressDatabaseContent mDBContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +67,8 @@ public class ExpressActivity extends BaseActivity
         mArrivalSpinner = (Spinner) findViewById(R.id.express_spinner_arrival);
         mLocateSpinner = (Spinner) findViewById(R.id.express_spinner_locate);
         mWeightSpinner = (Spinner) findViewById(R.id.express_spinner_weight);
+        mUsername = (EditText) findViewById(R.id.express_edit_username);
+        mPhone = (EditText) findViewById(R.id.express_edit_phone);
 
 
         mSmsSelect = (Button) findViewById(R.id.express_button_sms_select);
@@ -64,6 +78,7 @@ public class ExpressActivity extends BaseActivity
         mSmsSelect.setOnClickListener(this);
         mSubmit.setOnClickListener(this);
 
+        mDBContent = new ExpressDatabaseContent(this);
     }
 
     @Override
@@ -101,19 +116,17 @@ public class ExpressActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_express, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //Log.d("ExpressActivity", String.valueOf(view.getId()));
-        Spinner spinner = (Spinner) parent;
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.express_button_history) {
+            onShowHisory();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -122,7 +135,7 @@ public class ExpressActivity extends BaseActivity
         switch (v.getId()) {
             case R.id.express_button_submit:
                 Log.d(TAG, "Click Submit");
-                Log.d(TAG, mSmsShow.getText().toString());
+                onSubmit();
                 break;
             case R.id.express_button_sms_select:
                 Log.d(TAG, "Click Sms Select");
@@ -132,24 +145,56 @@ public class ExpressActivity extends BaseActivity
     }
 
 
-    /**
-     * 调用此接口改变短信文本内容, 定义在SmsSelectDialog中
-     */
-    private SmsSelectDialog.DialogRefresh smsRefresh = new SmsSelectDialog.DialogRefresh() {
-        @Override
-        public void refreshSmsText(String text) {
-            mSmsShow.setText(text);
-        }
-    };
 
-    // 选择短信内容
+    /**
+     * 选择短信内容
+     */
     private void onSmsSelect() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("listener", smsRefresh);
+        bundle.putSerializable("listener", mSmsRefresh);
 
         SmsSelectDialog dialog = SmsSelectDialog.newInstance(bundle, this);
         FragmentTransaction ft = this.getFragmentManager().beginTransaction();
         dialog.show(ft, null);
     }
 
+    /**
+     * 提交请求
+     */
+    private void onSubmit() {
+        Log.d(TAG, mSmsShow.getText().toString());
+        dbInsert();
+    }
+
+    private void onShowHisory() {
+        Log.d(TAG, "show history");
+        Intent intent = new Intent(this, ExpressHistoryActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 提交请求后将数据保存在数据库中
+     */
+    private void dbInsert() {
+        Log.d(TAG, "Database Insert");
+        //SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        ExpressInfo info = new ExpressInfo();
+        info.setUsername(mUsername.getText().toString());
+        info.setUserphone(mPhone.getText().toString());
+        info.setSmsInfo(mSmsShow.getText().toString());
+        info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
+        info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
+        info.setLocate(mLocateArray[mLocateSpinner.getSelectedItemPosition()]);
+        info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
+        info.setSubmitTime(new Date().getTime());
+        info.setFetched(false);
+
+        mDBContent.dbInsert(info);
+    }
+
+    private String getNow() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }
