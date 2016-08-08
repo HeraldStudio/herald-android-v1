@@ -39,7 +39,8 @@ public class ExpressDatabaseContent {
     public List<ExpressInfo> dbQuery() {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         List<ExpressInfo> infoList = new ArrayList<>();
-        Cursor cursor = db.query("express", null, null, null, null, null, null);
+
+        Cursor cursor = db.query("express", null, null, null, null, null, "submit_time DESC"); // 按照时间逆序
         if (cursor.moveToFirst()) {
             do {
                 ExpressInfo info = new ExpressInfo();
