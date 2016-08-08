@@ -43,8 +43,6 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setCancelable(false);
         setStatusBarColor(Color.BLACK);
 
-        Picasso.with(this).load(R.drawable.login_bg).into(loginBg);
-
         tv_pwd.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 loginBtnOnClick();

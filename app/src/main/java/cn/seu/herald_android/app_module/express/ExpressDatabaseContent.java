@@ -4,9 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
 
 /**
  * 数据库操作类
@@ -14,6 +19,7 @@ import java.util.List;
  */
 public class ExpressDatabaseContent {
 
+    private static String TAG = makeLogTag(ExpressDatabaseContent.class);
     private static ExpressDatabaseHelper mDBHelper;
 
     public ExpressDatabaseContent(Context context) {
@@ -58,5 +64,14 @@ public class ExpressDatabaseContent {
             } while (cursor.moveToNext());
         }
         return infoList;
+    }
+
+    public void dbRefresh(String phone, Long timeStamp, boolean isFetched) {
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String[] args = new String[]{phone, String.valueOf(timeStamp)};
+        values.put("is_fetched", isFetched);
+        db.update("express", values, "userphone = ? AND submit_time = ?", args);
+        Log.d(TAG, "数据库更新成功");
     }
 }

@@ -67,7 +67,7 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
         holder.smsBody.setText(info.getSmsbody());
 
         // 格式化时间
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String date = format.format(Long.valueOf(info.getDate()));
         holder.smsDate.setText(date);
 

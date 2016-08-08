@@ -1,12 +1,19 @@
 package cn.seu.herald_android.app_module.express;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +46,7 @@ import okhttp3.Call;
 public class ExpressActivity extends BaseActivity
         implements View.OnClickListener {
     private static String TAG = "ExpressActivity";
+    final private int REQUEST_CODE_ASK_READ_SMS = 123;
 
     private Spinner mDestSpinner;       // 取回地点
     private Spinner mArrivalSpinner;    // 取回时间
@@ -57,6 +65,8 @@ public class ExpressActivity extends BaseActivity
     String[] mLocateArray;// = getResources().getStringArray(R.array.mod_express_locate);
     String[] mArrivalArray;// = getResources().getStringArray(R.array.mod_express_arrival);
     String[] mWeightArray;// = getResources().getStringArray(R.array.mod_express_weight);
+
+    private ProgressDialog mProgress;
 
     /**
      * 调用此接口改变短信文本内容, 定义在SmsSelectDialog中
@@ -155,8 +165,6 @@ public class ExpressActivity extends BaseActivity
         }
     }
 
-
-
     /**
      * 选择短信内容
      */
@@ -164,9 +172,18 @@ public class ExpressActivity extends BaseActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("listener", mSmsRefresh);
 
-        SmsSelectDialog dialog = SmsSelectDialog.newInstance(bundle, this);
-        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
-        dialog.show(ft, null);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.READ_SMS},
+                    REQUEST_CODE_ASK_READ_SMS);
+        } else {
+            Log.d(TAG, "create sms select dialog");
+            SmsSelectDialog dialog = SmsSelectDialog.newInstance(bundle, this);
+            FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+            dialog.show(ft, null);
+        }
     }
 
     /**
@@ -184,6 +201,8 @@ public class ExpressActivity extends BaseActivity
         info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
         //info.setSubmitTime(new Date().getTime());
         info.setFetched(false);
+
+        mProgress = ProgressDialog.show(this, "正在提交", "请稍后", true);
 
         makeSubmit(info);
     }
@@ -245,6 +264,7 @@ public class ExpressActivity extends BaseActivity
                                 info.setSubmitTime(1000 * content.getLong("sub_time")); // python 与 java 时间戳转换 * 1000
                                 dbInsert(info);     // 存入数据库
                                 showSnackBar("提交成功");
+                                mProgress.dismiss();
                             } else {
                                 showSnackBar(res.getString("content"));
                             }
@@ -255,5 +275,16 @@ public class ExpressActivity extends BaseActivity
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_ASK_READ_SMS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                onSmsSelect();
+            }
+        } else {
+            showSnackBar("获取短信权限失败");
+        }
     }
 }
