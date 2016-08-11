@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,15 +21,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.ListViewUtils;
+import cn.seu.herald_android.consts.Cache;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class GymMyOrderActivity extends BaseActivity {
 
     ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,31 +63,23 @@ public class GymMyOrderActivity extends BaseActivity {
 
     private void refreshMyOrder() {
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST)
-                .addUuid()
-                .api("yuyue")
-                .post("method", "myOrder")
-                .toCache("herald_gymreserve_myorder")
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadMyOrder();
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                })
-                .run();
+        Cache.gymReserveMyOrder.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadMyOrder();
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 
-    public void loadMyOrder(){
-        String cache = CacheHelper.get("herald_gymreserve_myorder");
+    public void loadMyOrder() {
+        String cache = Cache.gymReserveMyOrder.getValue();
         if (!cache.equals("")) {
             try {
                 JSONArray array = new JSONObject(cache).getJSONObject("content").getJSONArray("rows");
                 ArrayList<MyOrder> list = MyOrder.transformJSONtoArrayList(array);
-                listView.setAdapter(new MyOrderAdapter(getBaseContext(),R.layout.mod_que_gymreserve__my_order__item,list));
-                if (listView.getCount() == 0)
-                    ListViewUtils.addDefaultEmptyTipsView(getBaseContext(),listView,"暂无场馆预约记录");
+                listView.setAdapter(new MyOrderAdapter(getBaseContext(), R.layout.mod_que_gymreserve__my_order__item, list));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -97,31 +88,31 @@ public class GymMyOrderActivity extends BaseActivity {
         refreshMyOrder();
     }
 
-    public void cancelOrder(int id){
+    public void cancelOrder(int id) {
         showProgressDialog();
         new ApiSimpleRequest(Method.POST)
                 .addUuid()
                 .api("yuyue")
-                .post("method","cancelUrl")
-                .post("id",id+"")
+                .post("method", "cancelUrl")
+                .post("id", id + "")
                 .onResponse((success, code, response) -> {
                     try {
                         String res = new JSONObject(response).getJSONObject("content").getString("msg");
-                        if (success && res.equals("success")){
+                        if (success && res.equals("success")) {
                             showSnackBar("取消预约成功");
                             refreshMyOrder();
                         } else {
                             showSnackBar("取消预约失败，请重试");
                         }
-                    } catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }).run();
     }
 
-    public static class MyOrder{
+    public static class MyOrder {
         public static final int STATE_SUCCESS = 2;//预约成功，已通过
-        public static final int STATE_FINISHED =4;//已完成
+        public static final int STATE_FINISHED = 4;//已完成
         public static final int STATE_BREAK = 5;//失约
         public static final int STATE_CANCEL = 6;//已取消预约
         // 运动名称
@@ -141,7 +132,7 @@ public class GymMyOrderActivity extends BaseActivity {
         // 标识预约状态的state
         int state;
 
-        public MyOrder(String startTime, String endTime, String itemName, String floorName, String useDate,int id ,int peoplenum,int state) {
+        public MyOrder(String startTime, String endTime, String itemName, String floorName, String useDate, int id, int peoplenum, int state) {
             this.endTime = endTime;
             this.floorName = floorName;
             this.id = id;
@@ -152,9 +143,9 @@ public class GymMyOrderActivity extends BaseActivity {
             this.state = state;
         }
 
-        public static ArrayList<MyOrder> transformJSONtoArrayList(JSONArray array)throws JSONException{
-            ArrayList<MyOrder> list =new ArrayList<>();
-            for(int i= 0;i<array.length();i++){
+        public static ArrayList<MyOrder> transformJSONtoArrayList(JSONArray array) throws JSONException {
+            ArrayList<MyOrder> list = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
                 list.add(new MyOrder(
                         obj.getString("useBeginTime"),
@@ -173,7 +164,7 @@ public class GymMyOrderActivity extends BaseActivity {
 
     }
 
-    public class MyOrderAdapter extends ArrayAdapter<MyOrder>{
+    public class MyOrderAdapter extends EmptyTipArrayAdapter<MyOrder> {
 
         class ViewHolder {
             @BindView(R.id.tv_name_and_floor)
@@ -197,12 +188,12 @@ public class GymMyOrderActivity extends BaseActivity {
         int resource;
 
         public MyOrderAdapter(Context context, int resource, List<MyOrder> objects) {
-            super(context, resource,objects);
+            super(context, resource, objects);
             this.resource = resource;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(resource, null);
                 convertView.setTag(new ViewHolder(convertView));
@@ -215,7 +206,7 @@ public class GymMyOrderActivity extends BaseActivity {
             holder.tv_useTime.setText(String.format("%s-%s", item.startTime, item.endTime));
             holder.tv_peoplenum.setText(item.peoplenum + "人");
 
-            switch (item.state){
+            switch (item.state) {
                 case MyOrder.STATE_SUCCESS:
                     holder.btn_cancleorder.setVisibility(View.VISIBLE);
                     holder.btn_cancleorder.setOnClickListener(v -> {

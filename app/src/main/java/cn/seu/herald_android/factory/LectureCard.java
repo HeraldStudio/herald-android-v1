@@ -11,27 +11,24 @@ import java.util.Calendar;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.lecture.LectureBlockLayout;
 import cn.seu.herald_android.app_module.lecture.LectureNoticeModel;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class LectureCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).url(ApiHelper.wechat_lecture_notice_url).addUuid()
-                .toCache("herald_lecture_notices");
+        return Cache.lectureNotices.getRefresher();
     }
 
     /**
      * 读取人文讲座预告缓存，转换成对应的时间轴条目
      **/
     public static CardsModel getCard() {
-        String cache = CacheHelper.get("herald_lecture_notices");
+        String cache = Cache.lectureNotices.getValue();
         try {
             JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
             ArrayList<View> lectures = new ArrayList<>();

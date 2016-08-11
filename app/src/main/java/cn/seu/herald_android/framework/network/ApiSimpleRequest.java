@@ -24,7 +24,7 @@ import okhttp3.Response;
  * ApiSimpleRequest | 简单请求
  * 网络请求的一个基本单元，包含一次请求和一次回调。
  **/
-public class ApiSimpleRequest implements ApiRequest {
+public class ApiSimpleRequest extends ApiRequest {
 
     private Method method;
 
@@ -90,7 +90,7 @@ public class ApiSimpleRequest implements ApiRequest {
                 // 触发回调
                 uiThreadHandler.post(() -> {
                     for (OnResponseListener listener : onResponseListeners) {
-                        listener.processResponse(success, code, responseString);
+                        listener.onResponse(success, code, responseString);
                     }
                 });
             } catch (IOException e) {
@@ -102,7 +102,7 @@ public class ApiSimpleRequest implements ApiRequest {
         public void onFailure(Call call, IOException e) {
             uiThreadHandler.post(() -> {
                 for (OnResponseListener listener : onResponseListeners) {
-                    listener.processResponse(false, 500, "I/O Error");
+                    listener.onResponse(false, 500, "I/O Error");
                 }
             });
         }
@@ -126,7 +126,7 @@ public class ApiSimpleRequest implements ApiRequest {
     }
 
     public ApiRequest onFinish(OnFinishListener listener) {
-        return onResponse((success, code, response) -> listener.parseFinish(success, code));
+        return onResponse((success, code, response) -> listener.onFinish(success, code));
     }
 
     /**
@@ -167,7 +167,7 @@ public class ApiSimpleRequest implements ApiRequest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     for (OnResponseListener onResponseListener : onResponseListeners) {
-                        onResponseListener.processResponse(false, 0, "");
+                        onResponseListener.onResponse(false, 0, "");
                     }
                 }
             }
@@ -188,20 +188,12 @@ public class ApiSimpleRequest implements ApiRequest {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     for (OnResponseListener onResponseListener : onResponseListeners) {
-                        onResponseListener.processResponse(false, 0, "");
+                        onResponseListener.onResponse(false, 0, "");
                     }
                 }
             }
         });
         return this;
-    }
-
-    public ApiRequest chain(ApiRequest nextRequest) {
-        return new ApiChainRequest(this, nextRequest);
-    }
-
-    public ApiRequest parallel(ApiRequest anotherRequest) {
-        return new ApiParallelRequest(this, anotherRequest);
     }
 
     /**

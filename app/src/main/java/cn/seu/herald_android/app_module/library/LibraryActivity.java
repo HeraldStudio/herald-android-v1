@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.consts.Module;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
@@ -33,12 +33,6 @@ import cn.seu.herald_android.helper.User;
  * 图书主页面Acvitity
  */
 public class LibraryActivity extends BaseActivity {
-
-    public static ApiSimpleRequest remoteRefreshNotifyDotState() {
-        return new ApiSimpleRequest(Method.POST).api("library").addUuid()
-                .toCache("herald_library_borrowbook",
-                        /** notifyModuleIfChanged: */Module.library);
-    }
 
     // 热门书籍展示列表
     @BindView(R.id.list_library_hotbook)
@@ -77,63 +71,59 @@ public class LibraryActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void refreshHotBook() {
         // 加载校内最热门图书列表
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("library_hot").addUuid()
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            JSONArray jsonArray = json_res.getJSONArray("content");
-                            loadHotBookList(HotBookModel.transformJSONArrayToArrayList(jsonArray));
-                            // showSnackBar("刷新成功");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showSnackBar("解析失败，请刷新");
-                        }
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.libraryHotBook.refresh((success, code) -> {
+            hideProgressDialog();
+            loadCache();
+            if (!success) {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 
-    private void loadHotBookList(ArrayList<HotBookModel> list) {
-        listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.mod_que_library__item, list));
+    private void loadCache() {
+        try {
+            JSONObject json_res = new JSONObject(Cache.libraryHotBook.getValue());
+            JSONArray jsonArray = json_res.getJSONArray("content");
+            ArrayList<HotBookModel> list = HotBookModel.transformJSONArrayToArrayList(jsonArray);
+            listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.mod_que_library__item, list));// showSnackBar("刷新成功");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            showSnackBar("解析失败，请刷新");
+        }
     }
 
     public void refreshBorrowRocord() {
         // 获取最新的已借书记录
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("library").addUuid().toCache("herald_library_borrowbook")
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        try {
-                            JSONObject json_res = new JSONObject(response);
-                            if (json_res.getInt("code") == 401) {
-                                displayLibraryAuthDialog();
-                                return;
-                            }
-
-                            JSONArray jsonArray = json_res.getJSONArray("content");
-                            if (jsonArray.length() == 0) {
-                                // 如果列表为空则说明没有借过书
-                                showSnackBar("目前尚无在借图书");
-                            } else {
-                                // 反之打开借书记录对话框
-                                displayBorrowRecordDialog(BorrowBookModel.transformJSONArrayToArrayList(jsonArray));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            showSnackBar("解析失败，请刷新");
-                        }
-                    } else {
-                        showSnackBar("刷新失败，请重试");
+        Cache.libraryBorrowBook.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                try {
+                    JSONObject json_res = new JSONObject(Cache.libraryBorrowBook.getValue());
+                    if (json_res.getInt("code") == 401) {
+                        displayLibraryAuthDialog();
+                        return;
                     }
-                }).run();
+
+                    JSONArray jsonArray = json_res.getJSONArray("content");
+                    if (jsonArray.length() == 0) {
+                        // 如果列表为空则说明没有借过书
+                        showSnackBar("目前尚无在借图书");
+                    } else {
+                        // 反之打开借书记录对话框
+                        displayBorrowRecordDialog(BorrowBookModel.transformJSONArrayToArrayList(jsonArray));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    showSnackBar("解析失败，请刷新");
+                }
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 
     private void displayBorrowRecordDialog(ArrayList<BorrowBookModel> list) {

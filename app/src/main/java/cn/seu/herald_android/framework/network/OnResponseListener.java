@@ -6,5 +6,5 @@ package cn.seu.herald_android.framework.network;
  * 若当前请求是复合请求，其中包含的每个简单请求结束时都会触发一次
  */
 public interface OnResponseListener {
-    void processResponse(boolean success, int code, String response);
+    void onResponse(boolean success, int code, String response);
 }

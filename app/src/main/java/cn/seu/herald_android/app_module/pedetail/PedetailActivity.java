@@ -19,9 +19,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.factory.PedetailCard;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class PedetailActivity extends BaseActivity {
 
@@ -90,9 +90,9 @@ public class PedetailActivity extends BaseActivity {
     private void readLocal() {
         try {
             // 读取本地保存的跑操数据
-            JSONArray array = new JSONArray(CacheHelper.get("herald_pedetail"));
-            String countStr = CacheHelper.get("herald_pe_count");
-            String remainStr = CacheHelper.get("herald_pe_remain");
+            JSONArray array = new JSONArray(Cache.peDetail.getValue());
+            String countStr = Cache.peCount.getValue();
+            String remainStr = Cache.peRemain.getValue();
 
             // 用户有数据
             // 有效跑操计数器，用于显示每一个跑操是第几次

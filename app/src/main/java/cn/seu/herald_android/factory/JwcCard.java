@@ -10,25 +10,22 @@ import java.util.Calendar;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.jwc.JwcBlockLayout;
 import cn.seu.herald_android.app_module.jwc.JwcNoticeModel;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class JwcCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).api("jwc").addUuid()
-                .toCache("herald_jwc");
+        return Cache.jwc.getRefresher();
     }
 
     /**
      * 读取教务通知缓存，转换成对应的时间轴条目
      **/
     public static CardsModel getCard() {
-        String cache = CacheHelper.get("herald_jwc");
+        String cache = Cache.jwc.getValue();
         try {
             JSONArray json_content = new JSONObject(cache)
                     .getJSONObject("content").getJSONArray("教务信息");
@@ -72,7 +69,7 @@ public class JwcCard {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新实验
-            CacheHelper.set("herald_jwc", "");
+            Cache.jwc.clear();
             return new CardsModel(Module.experiment,
                     CardsModel.Priority.CONTENT_NOTIFY, "教务通知数据为空，请尝试刷新"
             );

@@ -16,21 +16,12 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.consts.Module;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;
 
 public class GradeActivity extends BaseActivity {
-
-    public static ApiSimpleRequest remoteRefreshNotifyDotState() {
-        return new ApiSimpleRequest(Method.POST).api("gpa").addUuid()
-                .toCache("herald_grade_gpa",
-                        /** notifyModuleIfChanged: */Module.grade);
-    }
 
     @BindView(R.id.tableview_grade)
     SortableTableView<GradeModel> tableViewGrade;
@@ -66,11 +57,10 @@ public class GradeActivity extends BaseActivity {
         loadCache();
     }
 
-
     private void loadCache() {
         try {
             // 测试数据测试
-            String cache = CacheHelper.get("herald_grade_gpa");
+            String cache = Cache.grade.getValue();
             if (!cache.equals("")) {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
                 // 获取计算后的绩点
@@ -110,17 +100,15 @@ public class GradeActivity extends BaseActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("gpa").addUuid()
-                .toCache("herald_grade_gpa")
-                .onFinish((success, code) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadCache();
-                        // showSnackBar("刷新成功");
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.grade.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadCache();
+                // showSnackBar("刷新成功");
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 }
 

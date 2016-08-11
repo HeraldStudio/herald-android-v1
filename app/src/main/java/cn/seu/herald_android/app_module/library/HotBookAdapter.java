@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,9 +11,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.AppContext;
 
-class HotBookAdapter extends ArrayAdapter<HotBookModel> {
+class HotBookAdapter extends EmptyTipArrayAdapter<HotBookModel> {
 
     static class ViewHolder {
         @BindView(R.id.tv_count)
@@ -37,7 +36,7 @@ class HotBookAdapter extends ArrayAdapter<HotBookModel> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         HotBookModel hotBookModel = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_library__item,null);

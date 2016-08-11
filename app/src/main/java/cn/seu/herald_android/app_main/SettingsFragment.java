@@ -121,7 +121,7 @@ public class SettingsFragment extends Fragment implements ApiHelper.OnUserChange
                     .setTitle("发现新版本")
                     .setMessage(tip)
                     .setPositiveButton("赶紧下载", (dialog, which) -> {
-                        AppContext.openUrlInBrowser("http://android.heraldstudio.com/download");
+                        AppContext.openUrlInBrowser("http://app.heraldstudio.com/download");
                     })
                     .setNegativeButton("残忍拒绝", (dialog, which) -> {}).show();
         } else {

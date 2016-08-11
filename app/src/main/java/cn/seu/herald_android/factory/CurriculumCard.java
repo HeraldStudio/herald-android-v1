@@ -15,25 +15,19 @@ import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.curriculum.ClassModel;
 import cn.seu.herald_android.app_module.curriculum.CurriculumBlockLayout;
 import cn.seu.herald_android.app_module.curriculum.CurriculumScheduleLayout;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class CurriculumCard {
 
     public static ApiRequest getRefresher() {
-        return
-                new ApiSimpleRequest(Method.POST).api("sidebar").addUuid()
-                        .toCache("herald_sidebar", o -> o.getJSONArray("content"))
-                        .parallel(
-                                new ApiSimpleRequest(Method.POST).api("curriculum").addUuid()
-                        .toCache("herald_curriculum", o -> o.getJSONObject("content"))
-                        );
+        return Cache.curriculum.getRefresher().parallel(
+                Cache.curriculumSidebar.getRefresher()
+        );
     }
 
     /**
@@ -48,11 +42,11 @@ public class CurriculumCard {
 
         final long now = Calendar.getInstance().getTimeInMillis();
 
-        String cache = CacheHelper.get("herald_curriculum");
+        String cache = Cache.curriculum.getValue();
         if (!cache.equals("")) try {
             JSONObject jsonObject = new JSONObject(cache);
             // 读取侧栏信息
-            String sidebar = CacheHelper.get("herald_sidebar");
+            String sidebar = Cache.curriculumSidebar.getValue();
             Map<String, Pair<String, String>> sidebarInfo = new HashMap<>();
 
             // 将课程的授课教师和学分信息放入键值对
@@ -205,7 +199,7 @@ public class CurriculumCard {
         } catch (Exception e) {
             e.printStackTrace();
             // 清除出错的数据，使下次懒惰刷新时刷新课表
-            CacheHelper.set("herald_curriculum", "");
+            Cache.curriculum.clear();
         }
         return new CardsModel(Module.curriculum,
                 CardsModel.Priority.CONTENT_NOTIFY, "课表数据为空，请尝试刷新"

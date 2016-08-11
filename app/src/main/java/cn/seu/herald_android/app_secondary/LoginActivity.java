@@ -8,8 +8,6 @@ import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,7 +85,7 @@ public class LoginActivity extends BaseActivity {
                     } else if (response.contains("Bad Request")) {
                         hideProgressDialog();
                         AppContext.showToast("当前客户端版本已过期，请下载最新版本");
-                        AppContext.openUrlInBrowser("http://android.heraldstudio.com/download");
+                        AppContext.openUrlInBrowser("http://app.heraldstudio.com/download");
                     } else if (!success) {
                         hideProgressDialog();
                         showSnackBar("网络异常，请重试");

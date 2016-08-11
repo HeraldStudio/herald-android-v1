@@ -18,12 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class ActivitiesFragment extends Fragment {
 
@@ -93,23 +93,20 @@ public class ActivitiesFragment extends Fragment {
         srl.setOnRefreshListener(this::refreshCache);
     }
 
-    public void refreshCache(){
+    public void refreshCache() {
         // 刷新第一页的缓存,刷新后载入最新的第一页，同时重置page为第一页
         if (isRefreshing)
             return;
         isRefreshing = true;
-        new ApiSimpleRequest(Method.GET)
-                .url("http://115.28.27.150/herald/api/v1/huodong/get")
-                .toCache("herald_activities")
-                .onResponse((success, code, response) -> {
-                    if (srl != null) srl.setRefreshing(false);
-                    loadCache();
+        Cache.activities.refresh((success, code) -> {
+            if (srl != null) srl.setRefreshing(false);
+            loadCache();
 
-                    if (!success) {
-                        AppContext.showMessage("刷新失败，请重试");
-                    }
-                    isRefreshing = false;
-                }).run();
+            if (!success) {
+                AppContext.showMessage("刷新失败，请重试");
+            }
+            isRefreshing = false;
+        });
     }
 
     // 载入缓存内容
@@ -122,11 +119,11 @@ public class ActivitiesFragment extends Fragment {
         page = 0;
 
         try {
-            JSONArray array = new JSONObject(CacheHelper.get("herald_activities")).getJSONArray("content");
+            JSONArray array = new JSONObject(Cache.activities.getValue()).getJSONArray("content");
 
             // 新一页的内容
             ArrayList<ActivitiesItem> newContent =
-                        ActivitiesItem.transformJSONArrayToArrayList(array);
+                    ActivitiesItem.transformJSONArrayToArrayList(array);
 
             // 如果有数据，逐条添加数据，并设置当前页数为1
             for (ActivitiesItem item : newContent) {
@@ -149,7 +146,7 @@ public class ActivitiesFragment extends Fragment {
 
     // 联网加载下一页内容，若成功，加入列表并自增一页；否则显示错误信息
     public void loadNextPage() {
-        new ApiSimpleRequest(Method.GET).url("http://115.28.27.150/herald/api/v1/huodong/get?page=" + (page + 1))
+        new ApiSimpleRequest(Method.GET).url("http://www.heraldstudio.com/herald/api/v1/huodong/get?page=" + (page + 1))
                 .onResponse((success, code, response) -> {
                     if (srl != null) srl.setRefreshing(false);
 

@@ -1,4 +1,4 @@
-package cn.seu.herald_android.app_module.lecture;
+package cn.seu.herald_android.app_module.curriculum;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,13 +12,13 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 
-class LectureRecordAdapter extends EmptyTipArrayAdapter<LectureRecordModel> {
+class CurriculumFloatClassAdapter extends EmptyTipArrayAdapter<SidebarClassModel> {
 
     static class ViewHolder {
-        @BindView(R.id.content)
-        TextView tv_time;
-        @BindView(R.id.tv_place)
-        TextView tv_place;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.desc)
+        TextView desc;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
@@ -27,22 +27,23 @@ class LectureRecordAdapter extends EmptyTipArrayAdapter<LectureRecordModel> {
 
     private int resource;
 
-    public LectureRecordAdapter(Context context, int resource, List<LectureRecordModel> objects) {
+    public CurriculumFloatClassAdapter(Context context, int resource, List<SidebarClassModel> objects) {
         super(context, resource, objects);
         this.resource = resource;
     }
 
     @Override
     public View getView(int position, View convertView) {
-        final LectureRecordModel lectureRecordItem = getItem(position);
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(resource, null);
             convertView.setTag(new ViewHolder(convertView));
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        holder.tv_time.setText(lectureRecordItem.time);
-        holder.tv_place.setText(lectureRecordItem.place);
+        final SidebarClassModel model = getItem(position);
+        holder.title.setText(model.getClassName());
+        holder.desc.setText(model.getDesc());
         return convertView;
     }
 }

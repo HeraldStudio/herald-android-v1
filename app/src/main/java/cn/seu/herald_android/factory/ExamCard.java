@@ -10,19 +10,16 @@ import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.exam.AddExamActivity;
 import cn.seu.herald_android.app_module.exam.ExamBlockLayout;
 import cn.seu.herald_android.app_module.exam.ExamModel;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class ExamCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).api("exam").addUuid()
-                .toCache("herald_exam");
+        return Cache.exam.getRefresher();
     }
 
     /**
@@ -36,7 +33,7 @@ public class ExamCard {
         }
 
         // 教务处考试缓存
-        String cache = CacheHelper.get("herald_exam");
+        String cache = Cache.exam.getValue();
         try {
             List<ExamModel> examList = new ArrayList<>();
             List<ExamModel> temp = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
@@ -84,7 +81,7 @@ public class ExamCard {
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新考试
             e.printStackTrace();
-            CacheHelper.set("herald_exam", "");
+            Cache.exam.clear();
             return new CardsModel(Module.exam,
                     CardsModel.Priority.CONTENT_NOTIFY, "考试数据为空，请尝试刷新"
             );
