@@ -1,7 +1,6 @@
 package cn.seu.herald_android.framework;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,6 +22,8 @@ import com.r0adkll.slidr.model.SlidrConfig;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.app_secondary.LoginActivity;
@@ -42,9 +43,11 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // 加载刷新对话框
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("加载中，请稍候…");
+        progressDialog = new ACProgressFlower.Builder(this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .petalThickness(2)
+                .themeColor(Color.WHITE)
+                .fadeColor(Color.DKGRAY).build();
     }
 
     @Override
@@ -134,7 +137,7 @@ public class BaseActivity extends AppCompatActivity {
         return statusView;
     }
 
-    protected ProgressDialog progressDialog;
+    protected ACProgressFlower progressDialog;
 
     public void showProgressDialog() {
         progressDialog.show();

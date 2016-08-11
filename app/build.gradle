@@ -62,4 +62,7 @@ dependencies {
 
     // 动态模糊
     compile 'com.eightbitlab:blurview:1.1.2'
+
+    // 进度对话框
+    compile 'cc.cloudist.acplibrary:library:1.2.1'
 }

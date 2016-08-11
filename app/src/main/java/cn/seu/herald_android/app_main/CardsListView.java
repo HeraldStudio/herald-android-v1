@@ -242,8 +242,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             return;
         }
 
-        if (srl != null && !srl.isRefreshing()) srl.setRefreshing(true);
-
         ApiRequest request = new ApiEmptyRequest();
 
         // 刷新版本信息和推送消息
