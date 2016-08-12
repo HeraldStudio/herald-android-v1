@@ -16,11 +16,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class ExamActivity extends BaseActivity {
 
@@ -60,7 +58,7 @@ public class ExamActivity extends BaseActivity {
 
     private void loadCache() {
         // 加载缓存中的考试
-        String cache = CacheHelper.get("herald_exam");
+        String cache = Cache.exam.getValue();
         if (cache.equals("")) {
             refreshCache();
             return;
@@ -97,17 +95,15 @@ public class ExamActivity extends BaseActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("exam").addUuid()
-                .toCache("herald_exam")
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadCache();
-                        // showSnackBar("刷新成功");
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.exam.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadCache();
+                // showSnackBar("刷新成功");
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 
     void deleteDefinedExam(ExamModel item) {
@@ -123,7 +119,7 @@ public class ExamActivity extends BaseActivity {
                 }
                 array_new.put(obj);
             }
-            CacheHelper.set("herald_exam_custom", array_new.toString());
+            Cache.examCustom.setValue(array_new.toString());
             showSnackBar("删除成功");
             loadCache();
         } catch (JSONException e) {

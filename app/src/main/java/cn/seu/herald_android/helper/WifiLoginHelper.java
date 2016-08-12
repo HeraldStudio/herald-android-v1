@@ -24,7 +24,7 @@ public class WifiLoginHelper {
     }
 
     public void checkAndLogin() {
-        if (!ApiHelper.isLogin() && ApiHelper.getWifiUserName().equals(User.trialUser.userName)) {
+        if (!ApiHelper.isWifiLoginAvailable()) {
             ApiHelper.showTrialFunctionLimitMessage();
         }
 

@@ -19,12 +19,10 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class CardActivity extends BaseActivity {
 
@@ -46,7 +44,7 @@ public class CardActivity extends BaseActivity {
         recyclerViewCard.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewCard.setHasFixedSize(true);
 
-        String cache = CacheHelper.get("herald_card");
+        String cache = Cache.card.getValue();
         if (!cache.equals("")) {
             loadCache();
         }
@@ -79,8 +77,8 @@ public class CardActivity extends BaseActivity {
     private void loadCache() {
         try {
             // 尝试加载缓存
-            String cache = CacheHelper.get("herald_card");
-            String todayCache = CacheHelper.get("herald_card_today");
+            String cache = Cache.card.getValue();
+            String todayCache = Cache.cardToday.getValue();
             ArrayList<CardRecordModel> list = new ArrayList<>();
 
             if (!todayCache.equals("")) {
@@ -116,15 +114,11 @@ public class CardActivity extends BaseActivity {
         showProgressDialog();
 
         // 先加入刷新余额的请求
-        ApiRequest request = new ApiSimpleRequest(Method.POST)
-                .api("card").addUuid().post("timedelta", "1")
-                .toCache("herald_card_today");
+        ApiRequest request = Cache.cardToday.getRefresher();
 
         // 如果今天还没刷新过, 加入刷新流水的请求
         if (!todayHasRefreshed()) {
-            request = request.parallel(new ApiSimpleRequest(Method.POST)
-                    .api("card").addUuid().post("timedelta", "31")
-                    .toCache("herald_card"));
+            request = request.parallel(Cache.card.getRefresher());
         }
 
         // 刷新完毕后登记刷新日期
@@ -133,7 +127,7 @@ public class CardActivity extends BaseActivity {
             loadCache();
             if (success) {
                 // showSnackBar("刷新成功");
-                CacheHelper.set("herald_card_date", getDayStamp());
+                Cache.cardDate.setValue(getDayStamp());
             } else {
                 showSnackBar("刷新失败，请重试或到充值页面查询");
             }
@@ -145,6 +139,6 @@ public class CardActivity extends BaseActivity {
     }
 
     public boolean todayHasRefreshed() {
-        return CacheHelper.get("herald_card_date").equals(getDayStamp());
+        return Cache.cardDate.getValue().equals(getDayStamp());
     }
 }

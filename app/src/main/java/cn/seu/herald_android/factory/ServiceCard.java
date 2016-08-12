@@ -17,7 +17,7 @@ import cn.seu.herald_android.helper.ServiceHelper;
 public class ServiceCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).url("http://android.heraldstudio.com/checkversion").addUuid()
+        return new ApiSimpleRequest(Method.POST).url("http://app.heraldstudio.com/checkversion").addUuid()
                 .post("schoolnum", ApiHelper.getCurrentUser().schoolNum,
                         "versioncode", String.valueOf(SystemUtil.getAppVersionCode()),
                         "versionname", SystemUtil.getAppVersionName(),
@@ -65,7 +65,7 @@ public class ServiceCard {
                     CardsModel.Priority.CONTENT_NOTIFY, R.mipmap.ic_update);
 
             item.setOnClickListener((v) ->
-                    AppContext.openUrlInBrowser("http://android.heraldstudio.com/download"));
+                    AppContext.openUrlInBrowser("http://app.heraldstudio.com/download"));
 
             return item;
         }

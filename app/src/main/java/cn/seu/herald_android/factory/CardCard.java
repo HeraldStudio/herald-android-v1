@@ -4,19 +4,16 @@ import org.json.JSONObject;
 
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.cardextra.CardActivity;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class CardCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).api("card").addUuid().post("timedelta", "1")
-                .toCache("herald_card_today");
+        return Cache.cardToday.getRefresher();
     }
 
     /**
@@ -29,7 +26,7 @@ public class CardCard {
             );
         }
 
-        String cache = CacheHelper.get("herald_card_today");
+        String cache = Cache.cardToday.getValue();
         try {
             JSONObject json_cache = new JSONObject(cache).getJSONObject("content");
             // 获取余额并且设置

@@ -3,8 +3,6 @@ package cn.seu.herald_android.app_main;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,9 +11,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.AppModule;
 
-public class ModuleListAdapter extends ArrayAdapter<AppModule> {
+public class ModuleListAdapter extends EmptyTipArrayAdapter<AppModule> {
 
     static class ViewHolder {
         @BindView(R.id.module_item_header)
@@ -37,7 +36,7 @@ public class ModuleListAdapter extends ArrayAdapter<AppModule> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_modules__item, null);
             convertView.setTag(new ViewHolder(convertView));

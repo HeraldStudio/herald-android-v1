@@ -6,12 +6,11 @@ import java.util.Calendar;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.pedetail.PedetailActivity;
 import cn.seu.herald_android.app_module.pedetail.PedetailBlockLayout;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 
@@ -19,25 +18,11 @@ public class PedetailCard {
 
     public static ApiRequest getRefresher() {
         return (
-                new ApiSimpleRequest(Method.POST).api("pc").addUuid()
-                        .toCache("herald_pc_forecast", o -> o.getString("content"))
-                        .onResponse((success, code, response) -> {
-                            long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
-                            if (success) {
-                                CacheHelper.set("herald_pc_date", String.valueOf(today));
-                            } else if (code == 201) { // 今天还没有预告
-                                CacheHelper.set("herald_pc_date", String.valueOf(today));
-                                // 覆盖旧的预告信息
-                                CacheHelper.set("herald_pc_forecast", "refreshing");
-                            }
-                        })
+                Cache.pcForecast.getRefresher()
         ).parallel(
-                new ApiSimpleRequest(Method.POST).api("pedetail").addUuid()
-                        .toCache("herald_pedetail", o -> o.getJSONArray("content"))
+                Cache.peDetail.getRefresher()
         ).parallel(
-                new ApiSimpleRequest(Method.POST).api("pe").addUuid()
-                        .toCache("herald_pe_count", o -> o.getString("content"))
-                        .toCache("herald_pe_remain", o -> o.getString("remain"))
+                Cache.peCount.getRefresher()
         );
     }
 
@@ -54,12 +39,12 @@ public class PedetailCard {
         final long now = Calendar.getInstance().getTimeInMillis();
 
         String date = CacheHelper.get("herald_pc_date");
-        String forecast = CacheHelper.get("herald_pc_forecast");
-        String record = CacheHelper.get("herald_pedetail");
+        String forecast = Cache.pcForecast.getValue();
+        String record = Cache.peDetail.getValue();
 
         try {
-            int count = Integer.valueOf(CacheHelper.get("herald_pe_count"));
-            int remain = Integer.valueOf(CacheHelper.get("herald_pe_remain"));
+            int count = Integer.valueOf(Cache.peCount.getValue());
+            int remain = Integer.valueOf(Cache.peRemain.getValue());
 
             Calendar nowCal = Calendar.getInstance();
             long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,21 +27,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.custom.ListViewUtils;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class GymNewOrderActivity extends BaseActivity {
 
     public static void startWithData(GymSportModel item, String dayInfo, String availableTime) {
         Intent intent = new Intent(AppContext.instance, GymNewOrderActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("gymItem",item);
-        bundle.putString("dayInfo",dayInfo);
+        bundle.putSerializable("gymItem", item);
+        bundle.putString("dayInfo", dayInfo);
         bundle.putString("availableTime", availableTime);
         intent.putExtras(bundle);
         AppContext.startActivitySafely(intent);
@@ -91,7 +90,6 @@ public class GymNewOrderActivity extends BaseActivity {
     ArrayList<FriendModel> recentlyFriends;
 
     boolean isOrdering = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,20 +158,20 @@ public class GymNewOrderActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupItemInfo(){
+    private void setupItemInfo() {
         // 预约时间
         tv_time.setText(dayinfo + " " + avaliableTime);
 
         // 此处手机号已在GymReserveActivity中预获取，如果获取失败了那么取到的字符串是空，设置的text也为空，在提交时会提示用户输入手机号
-        et_phone.setText(CacheHelper.get("herald_gymreserve_phone"));
+        et_phone.setText(Cache.gymReserveGetPhone.getValue());
 
     }
 
-    public void setupSpinner(){
+    public void setupSpinner() {
         // 下拉框设置
         String[] list;
-        if ( gymItem.allowHalf == 1){
-            list = new String[]{"全场","半场"};
+        if (gymItem.allowHalf == 1) {
+            list = new String[]{"全场", "半场"};
         } else {
             list = new String[]{"全场"};
         }
@@ -196,10 +194,10 @@ public class GymNewOrderActivity extends BaseActivity {
     }
 
     // 刷新邀请好友数提示
-    boolean refreshTipsOfInvitedNum(){
+    boolean refreshTipsOfInvitedNum() {
         int min = (half ? gymItem.halfMinUsers : gymItem.fullMinUsers) - 1;
         int max = (half ? gymItem.halfMaxUsers : gymItem.fullMaxUsers) - 1;
-        tv_tipsOfInvitedNums.setText(String.format("已邀请好友：%d (可邀请好友数：%d 到 %d )",invitedFriends.size(),min,max));
+        tv_tipsOfInvitedNums.setText(String.format("已邀请好友：%d (可邀请好友数：%d 到 %d )", invitedFriends.size(), min, max));
         // 如果满足预约人数要求则返回true，反之返回false
         return invitedFriends.size() >= min && invitedFriends.size() <= max;
     }
@@ -210,33 +208,26 @@ public class GymNewOrderActivity extends BaseActivity {
         refreshRecentlyFriend();
     }
 
-    void sendNewOrder(){
+    void sendNewOrder() {
         // 发起新预约
         // 检查自己的userId是否为空
         if (isOrdering)
             return;
         isOrdering = true;
         showProgressDialog();
-        String userId = CacheHelper.get("herald_gymreserve_userid");
+        String userId = Cache.gymReserveUserId.getValue();
         // 如果为空则需要继续获取userId
-        if (userId.equals("")){
-            new ApiSimpleRequest(Method.POST)
-                    .api("yuyue")
-                    .addUuid()
-                    .post("method", "getFriendList")
-                    .post("cardNo", ApiHelper.getCurrentUser().userName)
-                    .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
-                    .onResponse((success, code, response) -> {
-                        isOrdering = false;
-                        if (success){
-                            // 如果成功获取了自己的userId后继续尝试发送
-                            sendNewOrder();
-                        } else {
-                            // 没有成功则显示错误信息
-                            showSnackBar("用户信息获取失败，请退出场馆预约后重试进入");
-                        }
-                    })
-                    .run();
+        if (userId.equals("")) {
+            Cache.gymReserveUserId.refresh((success, code) -> {
+                isOrdering = false;
+                if (success) {
+                    // 如果成功获取了自己的userId后继续尝试发送
+                    sendNewOrder();
+                } else {
+                    // 没有成功则显示错误信息
+                    showSnackBar("用户信息获取失败，请退出场馆预约后重试进入");
+                }
+            });
             return;
         }
 
@@ -250,39 +241,39 @@ public class GymNewOrderActivity extends BaseActivity {
         String itemId = gymItem.sportId + "";
         String useTime = dayinfo.split(" ")[0] + " " + avaliableTime;//参数形式为 ‘2016-05-15 12:00-13:00’
         // 客户端这里发的1是全场，2是半场，在服务端会改掉这个
-        String useMode = half?"2":"1";
+        String useMode = half ? "2" : "1";
         String phone = et_phone.getText().toString();
         String useUserIds = userIds.toString();
         new ApiSimpleRequest(Method.POST)
                 .api("yuyue")
                 .addUuid()
                 .post("method", "new")
-                .post("orderVO.itemId",itemId)
-                .post("orderVO.useTime",useTime)
-                .post("orderVO.useMode",useMode)
-                .post("orderVO.phone",phone)
+                .post("orderVO.itemId", itemId)
+                .post("orderVO.useTime", useTime)
+                .post("orderVO.useMode", useMode)
+                .post("orderVO.phone", phone)
                 .post("orderVO.remark", useTime)//随便评论点内容
-                .post("useUserIds",useUserIds)
+                .post("useUserIds", useUserIds)
                 .onResponse((success, code, response) -> {
                     hideProgressDialog();
                     isOrdering = true;
                     Handler handler = new Handler();
                     try {
-                        if (success){
+                        if (success) {
                             int rescode = new JSONObject(response).getJSONObject("content").getInt("code");
 
-                            switch (rescode){
+                            switch (rescode) {
                                 case 0:
                                     showSnackBar("预约成功");
                                     handler.postDelayed(() -> {
                                         AppContext.startActivitySafely(GymMyOrderActivity.class);
                                         finish();
-                                    },500);
+                                    }, 500);
                                     break;
                                 default:
                                     showSnackBar(new JSONObject(response).getJSONObject("content").getString("msg"));
                                     // 预约失败会重新选择时间段
-                                    handler.postDelayed(this::finish,500);
+                                    handler.postDelayed(this::finish, 500);
                             }
                         }
                     } catch (JSONException e) {
@@ -292,7 +283,7 @@ public class GymNewOrderActivity extends BaseActivity {
                         handler.postDelayed(() -> {
                             AppContext.startActivitySafely(GymMyOrderActivity.class);
                             finish();
-                        },500);
+                        }, 500);
                     }
                 })
                 .run();
@@ -300,18 +291,17 @@ public class GymNewOrderActivity extends BaseActivity {
     }
 
     // 加载最近的好友列表
-    void refreshRecentlyFriend(){
+    void refreshRecentlyFriend() {
         // 重新获取最近好友列表
         recentlyFriends = getFriendArrayList();
-        recentlyFriendAdapter = new RecentlyFriendAdapter(getBaseContext(),R.layout.mod_que_gymreserve__item_recent_friend,recentlyFriends);
+        recentlyFriendAdapter = new RecentlyFriendAdapter(getBaseContext(), R.layout.mod_que_gymreserve__item_recent_friend, recentlyFriends);
         list_recentlyfriend.setAdapter(recentlyFriendAdapter);
         ListViewUtils.setHeightWithContent(list_recentlyfriend);
     }
 
-
-    void refreshInvitedFriend(){
+    void refreshInvitedFriend() {
         // 适配器数据改变
-        invitedFriendAdapter = new InvitedFriendAdapter(getBaseContext(),R.layout.mod_que_gymreserve__new_order__item_invited_friend,invitedFriends);
+        invitedFriendAdapter = new InvitedFriendAdapter(getBaseContext(), R.layout.mod_que_gymreserve__new_order__item_invited_friend, invitedFriends);
         list_invitedfriend.setAdapter(invitedFriendAdapter);
         ListViewUtils.setHeightWithContent(list_invitedfriend);
         refreshTipsOfInvitedNum();
@@ -321,7 +311,7 @@ public class GymNewOrderActivity extends BaseActivity {
         try {
             JSONArray array = getFriendJSONArray();
             ArrayList<FriendModel> list = new ArrayList<>();
-            for(int i=0;i<array.length();i++){
+            for (int i = 0; i < array.length(); i++) {
                 list.add(new FriendModel(array.getJSONObject(i)));
             }
             return list;
@@ -331,15 +321,15 @@ public class GymNewOrderActivity extends BaseActivity {
         return new ArrayList<>();
     }
 
-    public  JSONArray getFriendJSONArray(){
-        String cache = CacheHelper.get("herald_gymreserve_friend_list");
+    public JSONArray getFriendJSONArray() {
+        String cache = Cache.gymReserveFriend.getValue();
         try {
             if (!cache.equals("")) {
                 return new JSONArray(cache);
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            CacheHelper.set("herald_gymreserve_friend_list", "");
+            Cache.gymReserveFriend.clear();
         }
         return new JSONArray();
     }
@@ -348,19 +338,19 @@ public class GymNewOrderActivity extends BaseActivity {
         try {
             JSONArray array = getFriendJSONArray();
             JSONArray result = new JSONArray();
-            for(int i=0;i<array.length();i++){
+            for (int i = 0; i < array.length(); i++) {
                 if (friendModel.getJSONObject().toString().equals(array.getJSONObject(i).toString()))
                     continue;
                 result.put(array.getJSONObject(i));
             }
-            CacheHelper.set("herald_gymreserve_friend_list", result.toString());
+            Cache.gymReserveFriend.setValue(result.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     // 最近联系人展示用Adapter
-    public class RecentlyFriendAdapter extends ArrayAdapter<FriendModel> {
+    public class RecentlyFriendAdapter extends EmptyTipArrayAdapter<FriendModel> {
         int resource;
 
         public RecentlyFriendAdapter(Context context, int resource, List<FriendModel> objects) {
@@ -369,13 +359,13 @@ public class GymNewOrderActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView) {
             FriendModel friendModel = getItem(position);
             if (convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__item_recent_friend,null);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__item_recent_friend, null);
 
-            TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
-            TextView tv_department = (TextView)convertView.findViewById(R.id.tv_frienddepartment);
+            TextView tv_name = (TextView) convertView.findViewById(R.id.tv_friendname);
+            TextView tv_department = (TextView) convertView.findViewById(R.id.tv_frienddepartment);
             try {
                 tv_name.setText(friendModel.nameDepartment.split("\\(")[0]);
                 tv_department.setText(friendModel.nameDepartment.split("\\(")[1].split("\\)")[0]);
@@ -385,17 +375,17 @@ public class GymNewOrderActivity extends BaseActivity {
             }
 
 
-            ImageView imgv_add = (ImageView)convertView.findViewById(R.id.ibtn_add);
+            ImageView imgv_add = (ImageView) convertView.findViewById(R.id.ibtn_add);
             // 如果朋友不存在于已邀请朋友中，则加入
-            imgv_add.setOnClickListener(o->{
+            imgv_add.setOnClickListener(o -> {
                 if (!invitedFriends.contains(friendModel)) {
                     invitedFriends.add(friendModel);
                     refreshInvitedFriend();
                 }
             });
             // 从最近朋友中删除
-            ImageView imgv_delete = (ImageView)convertView.findViewById(R.id.ibtn_delete);
-            imgv_delete.setOnClickListener(o->{
+            ImageView imgv_delete = (ImageView) convertView.findViewById(R.id.ibtn_delete);
+            imgv_delete.setOnClickListener(o -> {
                 removeFriend(friendModel);
                 refreshRecentlyFriend();
             });
@@ -404,7 +394,7 @@ public class GymNewOrderActivity extends BaseActivity {
     }
 
     // 已邀请好友展示用Adapter
-    public class InvitedFriendAdapter extends ArrayAdapter<FriendModel> {
+    public class InvitedFriendAdapter extends EmptyTipArrayAdapter<FriendModel> {
         int resource;
 
         public InvitedFriendAdapter(Context context, int resource, List<FriendModel> objects) {
@@ -413,14 +403,14 @@ public class GymNewOrderActivity extends BaseActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView) {
             FriendModel friendModel = getItem(position);
             if (convertView == null)
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__new_order__item_invited_friend,null);
-            TextView tv_name = (TextView)convertView.findViewById(R.id.tv_friendname);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_gymreserve__new_order__item_invited_friend, null);
+            TextView tv_name = (TextView) convertView.findViewById(R.id.tv_friendname);
             tv_name.setText(friendModel.nameDepartment.split("\\(")[0]);
-            ImageView imgv_sub = (ImageView)convertView.findViewById(R.id.ibtn_sub);
-            imgv_sub.setOnClickListener(o->{
+            ImageView imgv_sub = (ImageView) convertView.findViewById(R.id.ibtn_sub);
+            imgv_sub.setOnClickListener(o -> {
                 invitedFriends.remove(friendModel);
                 refreshInvitedFriend();
             });

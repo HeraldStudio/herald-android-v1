@@ -16,20 +16,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.consts.Module;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class SrtpActivity extends BaseActivity {
-
-    public static ApiSimpleRequest remoteRefreshNotifyDotState() {
-        return new ApiSimpleRequest(Method.POST).api("srtp").addUuid().post("schoolnum", ApiHelper.getCurrentUser().schoolNum)
-                .toCache("herald_srtp",
-                        /** notifyModuleIfChanged: */Module.srtp);
-    }
 
     @BindView(R.id.recyclerview_srtp)
     RecyclerView recyclerView_srtp;
@@ -45,7 +35,7 @@ public class SrtpActivity extends BaseActivity {
     }
 
     private void loadCache() {
-        String cache = CacheHelper.get("herald_srtp");
+        String cache = Cache.srtp.getValue();
         if (!cache.equals("")) {
             try {
                 JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
@@ -85,21 +75,13 @@ public class SrtpActivity extends BaseActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("srtp").addUuid()
-                .post("schoolnum", ApiHelper.getCurrentUser().schoolNum)
-                .toCache("herald_srtp", o -> {
-                    if (o.getJSONArray("content").length() == 1) {
-                        showSnackBar("你还没有参加课外研学项目");
-                    }
-                    return o;
-                })
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadCache();
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.srtp.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadCache();
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 }

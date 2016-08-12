@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class SchoolBusActivity extends BaseActivity {
 
@@ -69,25 +67,23 @@ public class SchoolBusActivity extends BaseActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("schoolbus").addUuid()
-                .toCache("herald_schoolbus_cache")
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadListWithCache();
-                        // showSnackBar("刷新成功");
-                    } else {
-                        showSnackBar("刷新失败");
-                    }
-                }).run();
+        Cache.schoolbus.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadListWithCache();
+                // showSnackBar("刷新成功");
+            } else {
+                showSnackBar("刷新失败");
+            }
+        });
     }
 
     private void loadListWithCache() {
         // 尝试加载缓存
-        String cache = CacheHelper.get("herald_schoolbus_cache");
+        String cache = Cache.schoolbus.getValue();
         if (!cache.equals("")) {
             try {
-                JSONObject cache_json = new JSONObject(CacheHelper.get("herald_schoolbus_cache")).getJSONObject("content");
+                JSONObject cache_json = new JSONObject(Cache.schoolbus.getValue()).getJSONObject("content");
                 JSONArray weekend_tosubway = cache_json.getJSONObject("weekend").getJSONArray("前往地铁站");
                 JSONArray weekend_toschool = cache_json.getJSONObject("weekend").getJSONArray("返回九龙湖");
                 JSONArray weekday_tosubway = cache_json.getJSONObject("weekday").getJSONArray("前往地铁站");

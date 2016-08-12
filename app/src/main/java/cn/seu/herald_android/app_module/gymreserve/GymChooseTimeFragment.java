@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -23,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.custom.ListViewUtils;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
@@ -89,9 +88,6 @@ public class GymChooseTimeFragment extends Fragment {
         try {
             ArrayList<OrderItemTime> list = transformJSONtoArrayList(new JSONObject(response).getJSONObject("content").getJSONArray("orderIndexs"));
             listView.setAdapter(new OrderItemTimeAdapter(getContext(), R.layout.mod_que_gymreserve__order_time__fragment__item, list));
-            if (listView.getCount() == 0) {
-                ListViewUtils.addDefaultEmptyTipsView(getContext(), listView, "暂无可用预约场地");
-            }
             baseActivity.hideProgressDialog();
         } catch (JSONException e) {
             // 数据解析错误
@@ -162,7 +158,7 @@ public class GymChooseTimeFragment extends Fragment {
         return list;
     }
 
-    class OrderItemTimeAdapter extends ArrayAdapter<OrderItemTime> {
+    class OrderItemTimeAdapter extends EmptyTipArrayAdapter<OrderItemTime> {
 
         class ViewHolder {
             @BindView(R.id.availableTime)
@@ -185,7 +181,7 @@ public class GymChooseTimeFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(resource, null);
                 convertView.setTag(new ViewHolder(convertView));

@@ -151,6 +151,10 @@ public class ApiHelper {
         return helper1.decrypt(cachePwd);
     }
 
+    public static boolean isWifiLoginAvailable() {
+        return isLogin() || !getWifiUserName().equals(User.trialUser.userName);
+    }
+
     public static void clearWifiAuth() {
         CacheHelper.set("wifiAuthUser", "");
         CacheHelper.set("wifiAuthPwd", "");

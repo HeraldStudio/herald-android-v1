@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
@@ -124,21 +124,21 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
     }
 
     public  JSONArray getFriendJSONArray(){
-        String cache = CacheHelper.get("herald_gymreserve_friend_list");
+        String cache = Cache.gymReserveFriend.getValue();
         try {
             if (!cache.equals("")) {
                 return new JSONArray(cache);
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            CacheHelper.set("herald_gymreserve_friend_list", "");
+            Cache.gymReserveFriend.clear();
         }
         return new JSONArray();
     }
 
     public void addFriend(FriendModel friendModel) {
         try {
-            CacheHelper.set("herald_gymreserve_friend_list", getFriendJSONArray().put(friendModel.getJSONObject()).toString());
+            Cache.gymReserveFriend.setValue(getFriendJSONArray().put(friendModel.getJSONObject()).toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

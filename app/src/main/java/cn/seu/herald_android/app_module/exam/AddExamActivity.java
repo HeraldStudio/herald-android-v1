@@ -19,9 +19,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class AddExamActivity extends BaseActivity {
 
@@ -132,17 +132,17 @@ public class AddExamActivity extends BaseActivity {
     }
 
     public static JSONArray getCustomExamJSONArray() {
-        String cache = CacheHelper.get("herald_exam_custom");
+        String cache = Cache.examCustom.getValue();
         try {
             return new JSONArray(cache);
         } catch (JSONException e) {
             e.printStackTrace();
-            CacheHelper.set("herald_exam_custom", new JSONArray().toString());
+            Cache.examCustom.setValue(new JSONArray().toString());
         }
         return new JSONArray();
     }
 
     void saveDefinedExamsFromJSONArray(JSONArray array){
-        CacheHelper.set("herald_exam_custom", array.toString());
+        Cache.examCustom.setValue(array.toString());
     }
 }

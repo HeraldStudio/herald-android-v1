@@ -50,9 +50,9 @@ public class ServiceHelper {
             return new JSONObject(cache)
                     .getJSONObject("content").getJSONObject("version").getInt("code");
         } catch (JSONException e) {
-            e.printStackTrace();
+            // 此处为服务器判断应用版本已为最新，返回值中没有带version，属正常现象，直接返回0
+            return 0;
         }
-        return 0;
     }
 
     public static String getNewestVersionName() {
@@ -84,7 +84,7 @@ public class ServiceHelper {
     private Context context;
     private ApiHelper apiHelper;
     // 安卓服务端的接口
-    private static String android_service_url = "http://android.heraldstudio.com/";
+    private static String android_service_url = "http://app.heraldstudio.com/";
     // public static String android_service_url = "http://192.168.1.109:3000/";
     private static final int SERVICE_VERSION = 0;
     public static final int SERVICE_DOWNLOAD = 1;

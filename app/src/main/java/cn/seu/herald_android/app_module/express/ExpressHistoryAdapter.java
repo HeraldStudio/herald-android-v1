@@ -49,25 +49,22 @@ public class ExpressHistoryAdapter extends RecyclerView.Adapter<ExpressHistoryVi
         holder.smsRecord.setText(info.getSmsInfo());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         holder.submitRecord.setText(format.format(info.getSubmitTime()));
-        holder.isFetchedRecord.setText(info.isFetched()? "已取":"未取");
+        holder.isFetchedRecord.setText(info.isReceived()? "已接单":"未接单");
 
-        if (info.isFetched()) {
+        if (info.isReceived()) {
             holder.containerRecord.setClickable(false);
-        } else {    // 若快递未取
+        } else {    // 若快递被接单
             holder.containerRecord.setClickable(true);
             holder.containerRecord.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "Click item " + String.valueOf(position));
-
+                    deleteItem(position);
                 }
             });
         }
     }
 
-
     public void deleteItem(int position) {
-
+        Log.d(TAG, "Click item to delete" + String.valueOf(position));
     }
-
 }

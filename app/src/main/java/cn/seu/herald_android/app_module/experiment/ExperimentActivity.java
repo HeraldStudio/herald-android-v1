@@ -16,10 +16,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class ExperimentActivity extends BaseActivity {
 
@@ -62,7 +60,7 @@ public class ExperimentActivity extends BaseActivity {
 
     private void loadCache() {
         // 如果缓存不为空则加载缓存，反之刷新缓存
-        String cache = CacheHelper.get("herald_experiment");
+        String cache = Cache.experiment.getValue();
         if (!cache.equals("")) {
             try {
                 JSONObject json_content = new JSONObject(cache).getJSONObject("content");
@@ -105,17 +103,15 @@ public class ExperimentActivity extends BaseActivity {
 
     private void refreshCache() {
         showProgressDialog();
-        new ApiSimpleRequest(Method.POST).api("phylab").addUuid()
-                .toCache("herald_experiment")
-                .onFinish((success, code) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadCache();
-                        // showSnackBar("刷新成功");
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.experiment.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadCache();
+                // showSnackBar("刷新成功");
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 
     private void setupAchievementWall() {

@@ -72,11 +72,11 @@ public class Module {
 
     public static AppModule emptyroom = new AppModule("emptyroom",
             "空教室 Web", "提供指定时间内的空教室信息查询服务",
-            "http://115.28.27.150/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false, false);
+            "http://www.heraldstudio.com/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false, false);
 
     public static AppModule express = new AppModule("express",
             "快递代收", "快递代取",
-            "MODULE_EXPRESS", R.drawable.ic_build_purple_a700_24dp, false, false);
+            "MODULE_EXPRESS", R.drawable.ic_build_purple_a700_24dp, false, true);
 
 //        public static AppModule topic = new AppModule(17, "topic",
 //                "校园话题", "校园话题参与讨论",
