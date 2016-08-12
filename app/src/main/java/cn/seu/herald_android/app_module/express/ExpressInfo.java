@@ -16,13 +16,14 @@ public class ExpressInfo {
     private Long submitTime;    // 提交时间
 
     private boolean isFetched;  // 是否取回
+    private boolean isReceived; // 是否接单
 
     public ExpressInfo() {
 
     }
 
     public ExpressInfo(String username, String userphone, String smsInfo, String dest,
-                       String arrival, String locate, String weight, Long submitTime, boolean isFetched) {
+                       String arrival, String locate, String weight, Long submitTime, boolean isFetched, boolean isReceived) {
         this.username = username;
         this.userphone = userphone;
         this.smsInfo = smsInfo;
@@ -32,6 +33,7 @@ public class ExpressInfo {
         this.weight = weight;
         this.submitTime = submitTime;
         this.isFetched = isFetched;
+        this.isReceived = isReceived;
     }
 
     public String getArrival() {
@@ -70,6 +72,10 @@ public class ExpressInfo {
         return isFetched;
     }
 
+    public boolean isReceived() {
+        return isReceived;
+    }
+
     public void setArrival(String arrival) {
         this.arrival = arrival;
     }
@@ -104,5 +110,9 @@ public class ExpressInfo {
 
     public void setFetched(boolean fetched) {
         isFetched = fetched;
+    }
+
+    public void setReceived(boolean received) {
+        isReceived = received;
     }
 }

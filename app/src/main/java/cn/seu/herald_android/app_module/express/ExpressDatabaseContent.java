@@ -38,6 +38,7 @@ public class ExpressDatabaseContent {
         values.put("weight", info.getWeight());
         values.put("submit_time", info.getSubmitTime());
         values.put("is_fetched", info.isFetched());
+        values.put("is_received", info.isReceived());
 
         db.insert("express", null, values);
     }
@@ -66,12 +67,20 @@ public class ExpressDatabaseContent {
         return infoList;
     }
 
-    public void dbRefresh(String phone, Long timeStamp, boolean isFetched) {
+    public void dbRefresh(String phone, Long timeStamp, boolean isFetched, boolean isReceived) {
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         String[] args = new String[]{phone, String.valueOf(timeStamp)};
         values.put("is_fetched", isFetched);
+        values.put("is_received", isReceived);
         db.update("express", values, "userphone = ? AND submit_time = ?", args);
         Log.d(TAG, "数据库更新成功");
+    }
+
+    public void dbDelete(Long timeStamp) {
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        String[] args = new String[] {String.valueOf(timeStamp)};
+        db.delete("express", "submit_time = ?", args);
+
     }
 }

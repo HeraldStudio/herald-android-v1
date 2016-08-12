@@ -23,8 +23,9 @@ public class ExpressDatabaseHelper extends SQLiteOpenHelper {
             + "arrival text, "
             + "locate text, "
             + "weight text, "
-            + "submit_time datetime,"
-            + "is_fetched  text)";
+            + "submit_time datetime, "
+            + "is_fetched text, "
+            + "is_received text)";
 
     private Context mContext;
     public ExpressDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,

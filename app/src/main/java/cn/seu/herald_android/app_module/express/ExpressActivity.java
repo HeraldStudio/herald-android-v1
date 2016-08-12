@@ -38,6 +38,7 @@ import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
+import cn.seu.herald_android.framework.network.OnResponseListener;
 import okhttp3.Call;
 
 /**
@@ -232,31 +233,21 @@ public class ExpressActivity extends BaseActivity
      *  }
      */
     private void makeSubmit(ExpressInfo info) {
-        String submit = "http://192.168.1.105:8080/kuaidi/submit";
+        String submit = "http://139.129.4.159/kuaidi/submit";
         // post之后会返回时间戳, 之后再保存数据库
-        OkHttpUtils.post()
-                .url(submit)
-                .addParams("user_name", info.getUsername())
-                .addParams("user_phone", info.getUserphone())
-                .addParams("cardnumber", "一卡通号码")
-                .addParams("sms_txt", info.getSmsInfo())
-                .addParams("dest", info.getDest())
-                .addParams("arrival", info.getArrival())
-                .addParams("locate", info.getLocate())
-                .addParams("weight", info.getWeight())
-                .build()
-                .connTimeOut(20000)
-                .readTimeOut(20000)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        e.printStackTrace();
-                    }
 
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, response);
-                        Log.d(TAG, String.valueOf(new Date().getTime()));
+        new ApiSimpleRequest(Method.POST)
+                .url(submit)
+                .addUuid()
+                .post("user_name", info.getUsername())
+                .post("user_phone", info.getUserphone())
+                .post("sms_txt", info.getSmsInfo())
+                .post("dest", info.getDest())
+                .post("arrival", info.getArrival())
+                .post("locate", info.getLocate())
+                .post("weight", info.getWeight())
+                .onResponse(((success, code, response) -> {
+                    if (success) {
                         try {
                             JSONObject res = new JSONObject(response);
                             if (res.getInt("code") == 200) {
@@ -268,13 +259,15 @@ public class ExpressActivity extends BaseActivity
                             } else {
                                 showSnackBar(res.getString("content"));
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        mProgress.dismiss();
+                        showSnackBar("提交失败");
                     }
-                });
+
+                })).run();
     }
 
     @Override
