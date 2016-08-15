@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.lecture;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class LectureNoticeModel {
     private String date;
@@ -19,15 +18,15 @@ public class LectureNoticeModel {
         this.location = location;
     }
 
-    public static ArrayList<LectureNoticeModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<LectureNoticeModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<LectureNoticeModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject json_item = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj json_item = jsonArray.$o(i);
             list.add(new LectureNoticeModel(
-                    json_item.getString("date"),
-                    json_item.getString("topic"),
-                    json_item.getString("speaker"),
-                    json_item.getString("location")
+                    json_item.$s("date"),
+                    json_item.$s("topic"),
+                    json_item.$s("speaker"),
+                    json_item.$s("location")
             ));
         }
         return list;

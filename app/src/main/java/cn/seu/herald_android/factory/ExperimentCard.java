@@ -1,8 +1,5 @@
 package cn.seu.herald_android.factory;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -11,20 +8,19 @@ import java.util.Comparator;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.experiment.ExperimentBlockLayout;
 import cn.seu.herald_android.app_module.experiment.ExperimentModel;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class ExperimentCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).api("phylab").addUuid()
-                .toCache("herald_experiment");
+        return Cache.experiment.getRefresher();
     }
 
     /**
@@ -37,29 +33,29 @@ public class ExperimentCard {
             );
         }
 
-        String cache = CacheHelper.get("herald_experiment");
+        String cache = Cache.experiment.getValue();
         try {
-            JSONObject json_content = new JSONObject(cache).getJSONObject("content");
+            JObj json_content = new JObj(cache).$o("content");
             boolean todayHasExperiments = false;
             // 时间未到的所有实验
             ArrayList<ExperimentBlockLayout> allExperiments = new ArrayList<>();
             // 今天的实验或当前周的实验。若今天无实验，则为当前周的实验
             ArrayList<ExperimentBlockLayout> currExperiments = new ArrayList<>();
 
-            for (int i = 0; i < json_content.length(); i++) {
-                String jsonArray_str = json_content.getString(json_content.names().getString(i));
+            for (String key : json_content.keySet()) {
+                String jsonArray_str = json_content.$s(key);
                 if (!jsonArray_str.equals("")) {
                     // 如果有实验则加载数据和子项布局
-                    JSONArray jsonArray = new JSONArray(jsonArray_str);
-                    for (int j = 0; j < jsonArray.length(); j++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(j);
+                    JArr jsonArray = new JArr(jsonArray_str);
+                    for (int j = 0; j < jsonArray.size(); j++) {
+                        JObj jsonObject = jsonArray.$o(j);
                         ExperimentModel item = new ExperimentModel(
-                                jsonObject.getString("name"),
-                                jsonObject.getString("Date"),
-                                jsonObject.getString("Day"),
-                                jsonObject.getString("Teacher"),
-                                jsonObject.getString("Address"),
-                                jsonObject.getString("Grade")
+                                jsonObject.$s("name"),
+                                jsonObject.$s("Date"),
+                                jsonObject.$s("Day"),
+                                jsonObject.$s("Teacher"),
+                                jsonObject.$s("Address"),
+                                jsonObject.$s("Grade")
                         );
                         String[] ymdStr = item.getDate()
                                 .split("日")[0].replace("年", "-").replace("月", "-").split("-");
@@ -174,7 +170,7 @@ public class ExperimentCard {
 
         } catch (Exception e) {// JSONException, NumberFormatException
             // 清除出错的数据，使下次懒惰刷新时刷新实验
-            CacheHelper.set("herald_experiment", "");
+            Cache.experiment.clear();
             return new CardsModel(Module.experiment,
                     CardsModel.Priority.CONTENT_NOTIFY, "实验数据为空，请尝试刷新"
             );

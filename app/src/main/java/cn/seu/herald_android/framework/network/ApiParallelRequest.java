@@ -9,56 +9,45 @@ import java.util.LinkedList;
  * 所有子请求同时开始执行，直到最后结束的请求结束。
  * 仅当所有子请求都执行成功，才视为 ApiParallelRequest 执行成功。
  **/
-public class ApiParallelRequest implements ApiRequest {
+public class ApiParallelRequest extends ApiRequest {
 
-    private ApiRequest leftRequest;
+    private static final int SIDE_LEFT = 0, SIDE_RIGHT = 1;
 
-    private boolean leftFinished = false;
+    private final ApiRequest[] requests;
 
-    private ApiRequest rightRequest;
-
-    private boolean rightFinished = false;
+    private boolean[] finished = {false, false};
 
     private int code = 0;
 
     public ApiParallelRequest(ApiRequest left, ApiRequest right) {
-        leftRequest = left;
-        rightRequest = right;
+        requests = new ApiRequest[]{left, right};
 
-        leftRequest.onFinish((success, code) -> {
-            synchronized (this) {
-                leftFinished = true;
+        requests[SIDE_LEFT].onFinish((success, code) ->
+                invokeCallback(code, SIDE_LEFT));
 
-                // 首先更新复合请求的 code
-                this.code = NetworkUtil.mergeStatusCodes(this.code, code);
+        requests[SIDE_RIGHT].onFinish((success, code) ->
+                invokeCallback(code, SIDE_RIGHT));
+    }
 
-                if (rightFinished) {
-                    for (OnFinishListener listener : onFinishListeners) {
-                        listener.parseFinish(this.code < 300, this.code);
-                    }
-                }
-            }
-        });
+    private synchronized void invokeCallback(int code, int finishSide) {
+        finished[finishSide] = true;
 
-        rightRequest.onFinish((success, code) -> {
-            synchronized (this) {
-                rightFinished = true;
+        // 首先更新复合请求的 code
+        this.code = NetworkUtil.mergeStatusCodes(this.code, code);
 
-                // 首先更新复合请求的 code
-                this.code = NetworkUtil.mergeStatusCodes(this.code, code);
+        for (boolean finish : finished) {
+            if (!finish) return;
+        }
 
-                if (leftFinished) {
-                    for (OnFinishListener listener : onFinishListeners) {
-                        listener.parseFinish(this.code < 300, this.code);
-                    }
-                }
-            }
-        });
+        for (OnFinishListener listener : onFinishListeners) {
+            listener.onFinish(this.code < 300, this.code);
+        }
     }
 
     public ApiRequest onResponse(OnResponseListener listener) {
-        leftRequest.onResponse(listener);
-        rightRequest.onResponse(listener);
+        for (ApiRequest request : requests) {
+            request.onResponse(listener);
+        }
         return this;
     }
 
@@ -69,17 +58,10 @@ public class ApiParallelRequest implements ApiRequest {
         return this;
     }
 
-    public ApiRequest chain(ApiRequest nextRequest) {
-        return new ApiChainRequest(this, nextRequest);
-    }
-
-    public ApiRequest parallel(ApiRequest anotherRequest) {
-        return new ApiParallelRequest(this, anotherRequest);
-    }
-
     public void runWithoutFatalListener() {
-        leftRequest.runWithoutFatalListener();
-        rightRequest.runWithoutFatalListener();
+        for (ApiRequest request : requests) {
+            request.runWithoutFatalListener();
+        }
     }
 
     public void run() {

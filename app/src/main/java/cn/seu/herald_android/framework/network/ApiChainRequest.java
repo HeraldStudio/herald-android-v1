@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * 仅当所有子请求都执行成功，才视为 ApiChainRequest 执行成功。
  * 此请求是短路的，即左边的请求如果失败，将不会继续向右执行。
  */
-public class ApiChainRequest implements ApiRequest {
+public class ApiChainRequest extends ApiRequest {
 
     private ApiRequest leftRequest;
 
@@ -33,7 +33,7 @@ public class ApiChainRequest implements ApiRequest {
             } else {
                 // 否则直接报告请求结束
                 for (OnFinishListener listener : onFinishListeners) {
-                    listener.parseFinish(this.code < 300, this.code);
+                    listener.onFinish(this.code < 300, this.code);
                 }
             }
         });
@@ -45,7 +45,7 @@ public class ApiChainRequest implements ApiRequest {
 
             // 报告请求结束
             for (OnFinishListener listener : onFinishListeners) {
-                listener.parseFinish(this.code < 300, this.code);
+                listener.onFinish(this.code < 300, this.code);
             }
         });
     }
@@ -61,14 +61,6 @@ public class ApiChainRequest implements ApiRequest {
     public ApiRequest onFinish(OnFinishListener listener) {
         onFinishListeners.add(listener);
         return this;
-    }
-
-    public ApiRequest chain(ApiRequest nextRequest) {
-        return new ApiChainRequest(this, nextRequest);
-    }
-
-    public ApiRequest parallel(ApiRequest anotherRequest) {
-        return new ApiParallelRequest(this, anotherRequest);
     }
 
     public void runWithoutFatalListener() {

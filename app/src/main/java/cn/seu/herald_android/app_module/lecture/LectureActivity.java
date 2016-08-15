@@ -10,18 +10,13 @@ import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class LectureActivity extends BaseActivity {
 
@@ -58,21 +53,15 @@ public class LectureActivity extends BaseActivity {
 
     private void loadNoticeCache() {
         // 尝试从缓存加载讲座预告
-        String cache = CacheHelper.get("herald_lecture_notices");
+        String cache = Cache.lectureNotices.getValue();
         if (!cache.equals("")) {
-            try {
-                // 数据解析
-                JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
-                // json数组转化并且构造adapter
-                LectureNoticeAdapter lectureNoticeAdapter = new LectureNoticeAdapter(getBaseContext(),
-                        LectureNoticeModel.transformJSONArrayToArrayList(jsonArray));
-                // 设置adapter
-                recyclerView_notice.setAdapter(lectureNoticeAdapter);
-                // 刷新打卡记录缓存
-            } catch (JSONException e) {
-                e.printStackTrace();
-                showSnackBar("解析失败，请刷新");
-            }
+            // 数据解析
+            JArr jsonArray = new JObj(cache).$a("content");
+            // json数组转化并且构造adapter
+            LectureNoticeAdapter lectureNoticeAdapter = new LectureNoticeAdapter(getBaseContext(),
+                    LectureNoticeModel.transformJArrToArrayList(jsonArray));
+            // 设置adapter
+            recyclerView_notice.setAdapter(lectureNoticeAdapter);
         } else {
             showSnackBar("解析失败，请刷新");
         }
@@ -82,23 +71,14 @@ public class LectureActivity extends BaseActivity {
         showProgressDialog();
 
         // 获取讲座预告
-        new ApiSimpleRequest(Method.POST).url(ApiHelper.wechat_lecture_notice_url).addUuid()
-                .toCache("herald_lecture_notices", o -> {
-                    if (o.getJSONArray("content").length() == 0) {
-                        showSnackBar("最近暂无讲座预告信息");
-                    } else {
-                        showSnackBar("已获取最新讲座预告");
-                    }
-                    return o;
-                })
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        loadNoticeCache();
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.lectureNotices.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                loadNoticeCache();
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 
     private void displayLectureRecords() {
@@ -119,32 +99,25 @@ public class LectureActivity extends BaseActivity {
         // 加载讲座记录时显示刷新框
         showProgressDialog();
         // 获取已听讲座
-        new ApiSimpleRequest(Method.POST).api("lecture").addUuid()
-                .toCache("herald_lecture_records")
-                .onResponse((success, code, response) -> {
-                    hideProgressDialog();
-                    if (success) {
-                        String cache = CacheHelper.get("herald_lecture_records");
-                        if (!cache.equals("")) {
-                            try {
-                                // 设置打卡次数
-                                int count = new JSONObject(cache).getJSONObject("content").getInt("count");
-                                tv_count.setText(count + "");
-                                // 设置列表
-                                JSONArray jsonArray = new JSONObject(cache).getJSONObject("content").getJSONArray("detial");
-                                list_record.setAdapter(new LectureRecordAdapter(
-                                        getBaseContext(),
-                                        R.layout.mod_que_lecture__dialog_lecture_record__item,
-                                        LectureRecordModel.transformJSONArrayToArrayList(jsonArray)));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                showSnackBar("解析失败，请刷新");
-                            }
-                        }
-                        // showSnackBar("获取讲座记录成功");
-                    } else {
-                        showSnackBar("刷新失败，请重试");
-                    }
-                }).run();
+        Cache.lectureRecords.refresh((success, code) -> {
+            hideProgressDialog();
+            if (success) {
+                String cache = Cache.lectureRecords.getValue();
+                if (!cache.equals("")) {
+                    // 设置打卡次数
+                    int count = new JObj(cache).$o("content").$i("count");
+                    tv_count.setText(count + "");
+                    // 设置列表
+                    JArr jsonArray = new JObj(cache).$o("content").$a("detial");
+                    list_record.setAdapter(new LectureRecordAdapter(
+                            getBaseContext(),
+                            R.layout.mod_que_lecture__dialog_lecture_record__item,
+                            LectureRecordModel.transformJArrToArrayList(jsonArray)));
+                }
+                // showSnackBar("获取讲座记录成功");
+            } else {
+                showSnackBar("刷新失败，请重试");
+            }
+        });
     }
 }

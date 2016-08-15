@@ -1,9 +1,8 @@
 package cn.seu.herald_android.app_module.schoolbus;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
 
 class SchoolBusModel {
     private String period;
@@ -14,12 +13,12 @@ class SchoolBusModel {
         this.time = time;
     }
 
-    public static ArrayList<SchoolBusModel> transformJSONtoArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<SchoolBusModel> transformJSONtoArrayList(JArr jsonArray) {
         ArrayList<SchoolBusModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.size(); i++) {
             list.add(new SchoolBusModel(
-                    jsonArray.getJSONObject(i).getString("time"),
-                    jsonArray.getJSONObject(i).getString("bus")
+                    jsonArray.$o(i).$s("time"),
+                    jsonArray.$o(i).$s("bus")
             ));
         }
         return list;

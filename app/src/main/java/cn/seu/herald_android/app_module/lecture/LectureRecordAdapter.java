@@ -3,8 +3,6 @@ package cn.seu.herald_android.app_module.lecture;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -12,8 +10,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 
-class LectureRecordAdapter extends ArrayAdapter<LectureRecordModel> {
+class LectureRecordAdapter extends EmptyTipArrayAdapter<LectureRecordModel> {
 
     static class ViewHolder {
         @BindView(R.id.content)
@@ -34,7 +33,7 @@ class LectureRecordAdapter extends ArrayAdapter<LectureRecordModel> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         final LectureRecordModel lectureRecordItem = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(resource, null);

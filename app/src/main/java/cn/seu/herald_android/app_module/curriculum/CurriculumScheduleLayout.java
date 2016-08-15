@@ -13,10 +13,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +23,8 @@ import java.util.Map;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.UI;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 /**
  * 课程表视图的实现
@@ -67,7 +65,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
     // 是否当前周
     private boolean curWeek;
     // 表示当前学期课程信息的JSON对象
-    private JSONObject obj;
+    private JObj obj;
     // 当前时间的指示条（仅当本页为当前周、今天非休息日或有课时才会显示）
     private View timeHand;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
@@ -82,7 +80,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
     private Calendar beginOfTerm;
 
     // 本视图只需要手动创建，不会从xml中创建
-    public CurriculumScheduleLayout(Context context, JSONObject obj,
+    public CurriculumScheduleLayout(Context context, JObj obj,
                                     Map<String, Pair<String, String>> sidebar, int week,
                                     boolean curWeek, Calendar beginOfTerm) {
         super(context);
@@ -113,107 +111,103 @@ public class CurriculumScheduleLayout extends FrameLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        try {
-            // 获取屏幕缩放率、宽度和高度，并计算页面要占的高度（总高度-标题栏高度-系统顶栏高度）
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            width = dm.widthPixels;
-            height = dm.heightPixels - UI.dp2px(48) - getStatusBarHeight(getContext());
+        // 获取屏幕缩放率、宽度和高度，并计算页面要占的高度（总高度-标题栏高度-系统顶栏高度）
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        width = dm.widthPixels;
+        height = dm.heightPixels - UI.dp2px(48) - getStatusBarHeight(getContext());
 
-            // 绘制表示各课时的水平分割线
-            for (int i = 0; i < PERIOD_COUNT; i++) {
-                View v = new View(getContext());
-                v.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.curriculumstripeColor));
-                v.setLayoutParams(new LayoutParams(-1, 1));
-                v.setY((i + 1) * height / (PERIOD_COUNT + 1));
-                addView(v);
-            }
+        // 绘制表示各课时的水平分割线
+        for (int i = 0; i < PERIOD_COUNT; i++) {
+            View v = new View(getContext());
+            v.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.curriculumstripeColor));
+            v.setLayoutParams(new LayoutParams(-1, 1));
+            v.setY((i + 1) * height / (PERIOD_COUNT + 1));
+            addView(v);
+        }
 
-            // 取得一个Calendar用来表示当天
-            Calendar today = Calendar.getInstance();
-            today.setFirstDayOfWeek(Calendar.MONDAY);
+        // 取得一个Calendar用来表示当天
+        Calendar today = Calendar.getInstance();
+        today.setFirstDayOfWeek(Calendar.MONDAY);
 
-            // 首先假设7天都有课
-            columnsCount = 7;
+        // 首先假设7天都有课
+        columnsCount = 7;
 
-            // 用Calendar星期格式表示的当天的星期
-            int todayDayInCal = today.get(Calendar.DAY_OF_WEEK);
+        // 用Calendar星期格式表示的当天的星期
+        int todayDayInCal = today.get(Calendar.DAY_OF_WEEK);
 
-            // 用数组下标表示的当天的星期
-            int todayDayInArr = 0;
-            for (int j = 0; j < 7; j++) {
-                if (WEEK_NUMS_CALENDAR[j] == todayDayInCal)
-                    todayDayInArr = j;
-            }
+        // 用数组下标表示的当天的星期
+        int todayDayInArr = 0;
+        for (int j = 0; j < 7; j++) {
+            if (WEEK_NUMS_CALENDAR[j] == todayDayInCal)
+                todayDayInArr = j;
+        }
 
-            // 双重列表，用每个子列表表示一天的课程
-            List<List<ClassModel>> listOfList = new ArrayList<>();
+        // 双重列表，用每个子列表表示一天的课程
+        List<List<ClassModel>> listOfList = new ArrayList<>();
 
-            // 是否有无法读取的课程, 如辅修课
-            boolean hasInvalid = false;
+        // 是否有无法读取的课程, 如辅修课
+        boolean hasInvalid = false;
 
-            // 放两个循环是为了先把列数确定下来
-            for (int i = 0; i < 7; i++) {
+        // 放两个循环是为了先把列数确定下来
+        for (int i = 0; i < 7; i++) {
 
-                // 用JSON中对应的String表示的该日星期
-                JSONArray array = obj.getJSONArray(WEEK_NUMS[i]);
+            // 用JSON中对应的String表示的该日星期
+            JArr array = obj.$a(WEEK_NUMS[i]);
 
-                // 剔除不属于本周的课程，并将对应的课程添加到对应星期的列表中
-                List<ClassModel> list = new ArrayList<>();
-                for (int j = 0; j < array.length(); j++) {
-                    try {
-                        ClassModel info = new ClassModel(array.getJSONArray(j));
-                        info.weekNum = WEEK_NUMS_CN[i];
-                        int startWeek = info.getStartWeek();
-                        int endWeek = info.getEndWeek();
-                        if (endWeek >= week && startWeek <= week && info.isFitEvenOrOdd(week))
-                            list.add(info);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        hasInvalid = true;
-                    }
-                }
-
-                // 根据周六或周日无课的天数对列数进行删减
-                if ((i >= 5) && list.size() == 0) {
-                    columnsCount--;
-                }
-
-                // 将子列表添加到父列表
-                listOfList.add(list);
-            }
-
-            // 有无效课程时的提示
-            if (hasInvalid) {
-                AppContext.showMessage("暂不支持导入辅修课，敬请期待后续版本。");
-            }
-
-            // 确定好实际要显示的列数后，将每列数据交给子函数处理
-            for (int i = 0, j = 0; i < 7; i++) {
-                List<ClassModel> list = listOfList.get(i);
-                if (list.size() != 0 || i < 5) {
-
-                    setColumnData(
-                            list, // 这一列的数据
-                            j, // 该列在所有实际要显示的列中的序号
-                            i, // 该列在所有列中的序号
-                            i - todayDayInArr, // 该列的星期数与今天星期数之差
-                            // 是否突出显示与今天同星期的列
-                            curWeek && (todayDayInArr < 5 ||
-                                    listOfList.get(todayDayInArr).size() != 0));
-                    j++;
+            // 剔除不属于本周的课程，并将对应的课程添加到对应星期的列表中
+            List<ClassModel> list = new ArrayList<>();
+            for (int j = 0; j < array.size(); j++) {
+                try {
+                    ClassModel info = new ClassModel(array.$a(j));
+                    info.weekNum = WEEK_NUMS_CN[i];
+                    int startWeek = info.getStartWeek();
+                    int endWeek = info.getEndWeek();
+                    if (endWeek >= week && startWeek <= week && info.isFitEvenOrOdd(week))
+                        list.add(info);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    hasInvalid = true;
                 }
             }
 
-            // 如果是本周，定时刷新时间指示条
-            if (curWeek) {
-                refreshTimeHand();
-                IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction(Intent.ACTION_TIME_TICK);
-                intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-                intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-                getContext().registerReceiver(timeChangeReceiver, intentFilter);
+            // 根据周六或周日无课的天数对列数进行删减
+            if ((i >= 5) && list.size() == 0) {
+                columnsCount--;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+            // 将子列表添加到父列表
+            listOfList.add(list);
+        }
+
+        // 有无效课程时的提示
+        if (hasInvalid) {
+            AppContext.showMessage("暂不支持导入辅修课，敬请期待后续版本。");
+        }
+
+        // 确定好实际要显示的列数后，将每列数据交给子函数处理
+        for (int i = 0, j = 0; i < 7; i++) {
+            List<ClassModel> list = listOfList.get(i);
+            if (list.size() != 0 || i < 5) {
+
+                setColumnData(
+                        list, // 这一列的数据
+                        j, // 该列在所有实际要显示的列中的序号
+                        i, // 该列在所有列中的序号
+                        i - todayDayInArr, // 该列的星期数与今天星期数之差
+                        // 是否突出显示与今天同星期的列
+                        curWeek && (todayDayInArr < 5 ||
+                                listOfList.get(todayDayInArr).size() != 0));
+                j++;
+            }
+        }
+
+        // 如果是本周，定时刷新时间指示条
+        if (curWeek) {
+            refreshTimeHand();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Intent.ACTION_TIME_TICK);
+            intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+            intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+            getContext().registerReceiver(timeChangeReceiver, intentFilter);
         }
     }
 

@@ -1,7 +1,6 @@
 package cn.seu.herald_android.framework;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,6 +22,8 @@ import com.r0adkll.slidr.model.SlidrConfig;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.app_secondary.LoginActivity;
@@ -42,9 +43,11 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // 加载刷新对话框
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("加载中，请稍候…");
+        progressDialog = new ACProgressFlower.Builder(this)
+                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                .petalThickness(2)
+                .themeColor(Color.WHITE)
+                .fadeColor(Color.DKGRAY).build();
     }
 
     @Override
@@ -134,7 +137,7 @@ public class BaseActivity extends AppCompatActivity {
         return statusView;
     }
 
-    protected ProgressDialog progressDialog;
+    protected ACProgressFlower progressDialog;
 
     public void showProgressDialog() {
         progressDialog.show();
@@ -155,18 +158,22 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void setStatusBarColor(int color) {
 
-        // 若已经设置过 4.4 ~< 6.0 的沉浸, 直接改变颜色
-        if (statusView!=null) {
-            statusView.setBackgroundColor(color);
-            return;
-        }
+        // 若已经设置过，不用再判断，直接变颜色
+        if (statusView != null || window != null) {
 
-        // 若已经设置过 6.0 ~ 的沉浸, 直接改变颜色
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (window != null) {
-                window.setStatusBarColor(color);
-                return;
+            // 若已经设置过 4.4 ~< 5.0 的沉浸, 直接改变颜色
+            if (statusView != null) {
+                statusView.setBackgroundColor(color);
             }
+
+            // 若已经设置过 5.0 ~ 的沉浸, 直接改变颜色
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (window != null) {
+                    window.setStatusBarColor(color);
+                }
+            }
+
+            return;
         }
 
         // 判断版本在 4.4 以上, 低于 4.4 的不设置
@@ -226,7 +233,6 @@ public class BaseActivity extends AppCompatActivity {
                     .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
                     .duration(CustomSnackBar.SnackBarDuration.LONG).show();
         }
-
     }
 
     // 显示一个带按钮的SnackBar
