@@ -3,9 +3,6 @@ package cn.seu.herald_android.factory;
 import android.util.Pair;
 import android.view.View;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,6 +16,8 @@ import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
 
@@ -44,22 +43,22 @@ public class CurriculumCard {
 
         String cache = Cache.curriculum.getValue();
         if (!cache.equals("")) try {
-            JSONObject jsonObject = new JSONObject(cache);
+            JObj jsonObject = new JObj(cache);
             // 读取侧栏信息
             String sidebar = Cache.curriculumSidebar.getValue();
             Map<String, Pair<String, String>> sidebarInfo = new HashMap<>();
 
             // 将课程的授课教师和学分信息放入键值对
-            JSONArray sidebarArray = new JSONArray(sidebar);
-            for (int i = 0; i < sidebarArray.length(); i++) {
-                JSONObject obj = sidebarArray.getJSONObject(i);
-                sidebarInfo.put(obj.getString("course"),
-                        new Pair<>(obj.getString("lecturer"), obj.getString("credit")));
+            JArr sidebarArray = new JArr(sidebar);
+            for (int i = 0; i < sidebarArray.size(); i++) {
+                JObj obj = sidebarArray.$o(i);
+                sidebarInfo.put(obj.$s("course"),
+                        new Pair<>(obj.$s("lecturer"), obj.$s("credit")));
             }
 
             // 读取开学日期
-            int startMonth = jsonObject.getJSONObject("startdate").getInt("month");
-            int startDate = jsonObject.getJSONObject("startdate").getInt("day");
+            int startMonth = jsonObject.$o("startdate").$i("month");
+            int startDate = jsonObject.$o("startdate").$i("day");
             Calendar termStart = Calendar.getInstance();
             termStart.set(termStart.get(Calendar.YEAR), startMonth, startDate);
 
@@ -78,15 +77,15 @@ public class CurriculumCard {
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
 
             // 枚举今天的课程
-            JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+            JArr array = jsonObject.$a(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             int classCount = 0;
             boolean classAlmostEnd = false;
 
             ArrayList<View> remainingClasses = new ArrayList<>();
 
-            for (int j = 0; j < array.length(); j++) {
+            for (int j = 0; j < array.size(); j++) {
                 try {
-                    ClassModel info = new ClassModel(array.getJSONArray(j));
+                    ClassModel info = new ClassModel(array.$a(j));
                     // 如果该课程本周上课
                     if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                         classCount++;
@@ -166,13 +165,13 @@ public class CurriculumCard {
             dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24) + 1;
             week = dayDelta / 7 + 1;
             dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
-            array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+            array = jsonObject.$a(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             boolean todayHasClasses = classCount != 0;
 
             classCount = 0;
             ArrayList<View> viewList = new ArrayList<>();
-            for (int j = 0; j < array.length(); j++) {
-                ClassModel info = new ClassModel(array.getJSONArray(j));
+            for (int j = 0; j < array.size(); j++) {
+                ClassModel info = new ClassModel(array.$a(j));
                 // 如果该课程本周上课
                 if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                     classCount++;

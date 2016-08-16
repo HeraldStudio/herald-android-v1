@@ -7,10 +7,6 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -18,6 +14,8 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class ExperimentActivity extends BaseActivity {
 
@@ -62,40 +60,34 @@ public class ExperimentActivity extends BaseActivity {
         // 如果缓存不为空则加载缓存，反之刷新缓存
         String cache = Cache.experiment.getValue();
         if (!cache.equals("")) {
-            try {
-                JSONObject json_content = new JSONObject(cache).getJSONObject("content");
-                // 父view和子view数据集合
-                ArrayList<String> parentArray = new ArrayList<>();
-                ArrayList<ArrayList<ExperimentModel>> childArray = new ArrayList<>();
-                achievements = new ArrayList<>();
-                // 根据每种集合加载不同的子view
-                for (int i = 0; i < json_content.length(); i++) {
-                    String jsonArray_str = json_content.getString(json_content.names().getString(i));
-                    if (!jsonArray_str.equals("")) {
-                        // 如果有实验则加载数据和子项布局
-                        JSONArray jsonArray = new JSONArray(jsonArray_str);
-                        // 根据数组长度获得实验的Item集合
-                        ArrayList<ExperimentModel> item_list = ExperimentModel.transformJSONArrayToArrayList(jsonArray);
-                        // 加入到list中
-                        parentArray.add(json_content.names().getString(i));
-                        childArray.add(item_list);
-                        // 加入到成就列表中
-                        achievements.addAll(AchievementFactory.getExperimentAchievement(item_list));
-                    }
+            JObj json_content = new JObj(cache).$o("content");
+            // 父view和子view数据集合
+            ArrayList<String> parentArray = new ArrayList<>();
+            ArrayList<ArrayList<ExperimentModel>> childArray = new ArrayList<>();
+            achievements = new ArrayList<>();
+            // 根据每种集合加载不同的子view
+            for (String key : json_content.keySet()) {
+                String jsonArray_str = json_content.$s(key);
+                if (!jsonArray_str.equals("")) {
+                    // 如果有实验则加载数据和子项布局
+                    JArr jsonArray = new JArr(jsonArray_str);
+                    // 根据数组长度获得实验的Item集合
+                    ArrayList<ExperimentModel> item_list = ExperimentModel.transformJArrToArrayList(jsonArray);
+                    // 加入到list中
+                    parentArray.add(key);
+                    childArray.add(item_list);
+                    // 加入到成就列表中
+                    achievements.addAll(AchievementFactory.getExperimentAchievement(item_list));
                 }
-                // 设置成就列表
-                setupAchievementWall();
-                // 设置伸缩列表
-                ExperimentExpandAdapter experimentExpandAdapter = new ExperimentExpandAdapter(getBaseContext(), parentArray, childArray);
-                expandableListView.setAdapter(experimentExpandAdapter);
-
-                if (experimentExpandAdapter.getGroupCount() > 0)
-                    expandableListView.expandGroup(0);
-
-            } catch (JSONException e) {
-                showSnackBar("解析失败，请刷新");
-                e.printStackTrace();
             }
+            // 设置成就列表
+            setupAchievementWall();
+            // 设置伸缩列表
+            ExperimentExpandAdapter experimentExpandAdapter = new ExperimentExpandAdapter(getBaseContext(), parentArray, childArray);
+            expandableListView.setAdapter(experimentExpandAdapter);
+
+            if (experimentExpandAdapter.getGroupCount() > 0)
+                expandableListView.expandGroup(0);
         } else {
             refreshCache();
         }

@@ -6,9 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,6 +19,8 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.factory.PedetailCard;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class PedetailActivity extends BaseActivity {
 
@@ -90,7 +89,7 @@ public class PedetailActivity extends BaseActivity {
     private void readLocal() {
         try {
             // 读取本地保存的跑操数据
-            JSONArray array = new JSONArray(Cache.peDetail.getValue());
+            JArr array = new JArr(Cache.peDetail.getValue());
             String countStr = Cache.peCount.getValue();
             String remainStr = Cache.peRemain.getValue();
 
@@ -100,8 +99,8 @@ public class PedetailActivity extends BaseActivity {
 
             // 创建一个包含所有有效跑操记录的列表（单重列表结构）
             List<PedetailRecordModel> infoList = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject obj = array.getJSONObject(i);
+            for (int i = 0; i < array.size(); i++) {
+                JObj obj = array.$o(i);
 
                 // 将跑操数据倾倒到列表
                 PedetailRecordModel info = new PedetailRecordModel(obj, exerciseCount + 1);

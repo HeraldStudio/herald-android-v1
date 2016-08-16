@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.grade;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class GradeModel {
     private String name;
@@ -21,18 +20,18 @@ public class GradeModel {
         this.type = type;
     }
 
-    public static ArrayList<GradeModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
-        // 提供JSONArray到list的转换
+    public static ArrayList<GradeModel> transformJArrToArrayList(JArr jsonArray) {
+        // 提供JArr到list的转换
         ArrayList<GradeModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonItem = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj jsonItem = jsonArray.$o(i);
             if (jsonItem.has("name")) {
                 list.add(new GradeModel(
-                        jsonItem.getString("name"),
-                        jsonItem.getDouble("credit"),
-                        new GradeModel.Semester(jsonItem.getString("semester")),
-                        jsonItem.getString("score"),
-                        jsonItem.getString("type")
+                        jsonItem.$s("name"),
+                        jsonItem.$d("credit"),
+                        new GradeModel.Semester(jsonItem.$s("semester")),
+                        jsonItem.$s("score"),
+                        jsonItem.$s("type")
                 ));
             }
         }

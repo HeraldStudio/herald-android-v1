@@ -1,13 +1,11 @@
 package cn.seu.herald_android.factory;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.SystemUtil;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
@@ -29,14 +27,10 @@ public class ServiceCard {
         String cache = ServiceHelper.get("versioncheck_cache");
         String pushMessage = "", pushMessageUrl = "";
 
-        try {
-            pushMessage = new JSONObject(cache)
-                    .getJSONObject("content").getJSONObject("message").getString("content");
-            pushMessageUrl = new JSONObject(cache)
-                    .getJSONObject("content").getJSONObject("message").getString("url");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        pushMessage = new JObj(cache)
+                .$o("content").$o("message").$s("content");
+        pushMessageUrl = new JObj(cache)
+                .$o("content").$o("message").$s("url");
 
         if (!pushMessage.equals("")) {
             CardsModel item = new CardsModel("小猴提示", pushMessage,

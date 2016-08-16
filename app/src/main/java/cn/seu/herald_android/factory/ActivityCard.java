@@ -1,7 +1,5 @@
 package cn.seu.herald_android.factory;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import cn.seu.herald_android.R;
@@ -10,6 +8,7 @@ import cn.seu.herald_android.app_main.ActivitiesItem;
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 
 public class ActivityCard {
@@ -25,7 +24,7 @@ public class ActivityCard {
     public static CardsModel getCard() {
         String cache = Cache.activitiesHot.getValue();
         try {
-            List<ActivitiesItem> activitiesItems = ActivitiesItem.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
+            List<ActivitiesItem> activitiesItems = ActivitiesItem.transformJArrToArrayList(new JObj(cache).$a("content"));
             if (activitiesItems.size() == 0) {
                 return new CardsModel("校园活动","最近没有新的热门校园活动", CardsModel.Priority.NO_CONTENT, R.mipmap.ic_activity);
             } else {

@@ -9,7 +9,9 @@ import java.security.MessageDigest;
 import java.util.LinkedList;
 
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.User;
 import cn.seu.herald_android.framework.UserCache;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class ApiHelper {
     // heraldstudio.com 主站API
@@ -88,11 +90,11 @@ public class ApiHelper {
      */
     @NonNull
     public static User getCurrentUser() {
-        return new User(get("currentUser"));
+        return new User(new JObj(get("currentUser")));
     }
 
     public static void setCurrentUser(User newValue) {
-        set("currentUser", newValue.toJsonString());
+        set("currentUser", newValue.toJson().toString());
         notifyUserChanged();
     }
 
@@ -115,7 +117,7 @@ public class ApiHelper {
 
     public static boolean isLogin() {
         // 判断是否已登录
-        return !getCurrentUser().toJsonString().equals(User.trialUser.toJsonString());
+        return !getCurrentUser().equals(User.trialUser);
     }
 
     // 单独更新校园网登陆账户

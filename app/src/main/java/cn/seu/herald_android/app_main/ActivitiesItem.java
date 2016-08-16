@@ -1,14 +1,12 @@
 package cn.seu.herald_android.app_main;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class ActivitiesItem {
     String title;
@@ -90,20 +88,20 @@ public class ActivitiesItem {
         return tagColorID;
     }
 
-    public static ArrayList<ActivitiesItem> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<ActivitiesItem> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<ActivitiesItem> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonItem = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj jsonItem = jsonArray.$o(i);
             list.add(new ActivitiesItem(
-                    jsonItem.getString("title"),
-                    jsonItem.getString("introduction"),
-                    jsonItem.getString("start_time"),
-                    jsonItem.getString("end_time"),
-                    jsonItem.getString("activity_time"),
-                    jsonItem.getString("detail_url"),
-                    jsonItem.getString("association"),
-                    jsonItem.getString("location"),
-                    jsonItem.getString("pic_url")
+                    jsonItem.$s("title"),
+                    jsonItem.$s("introduction"),
+                    jsonItem.$s("start_time"),
+                    jsonItem.$s("end_time"),
+                    jsonItem.$s("activity_time"),
+                    jsonItem.$s("detail_url"),
+                    jsonItem.$s("association"),
+                    jsonItem.$s("location"),
+                    jsonItem.$s("pic_url")
             ));
         }
         return list;

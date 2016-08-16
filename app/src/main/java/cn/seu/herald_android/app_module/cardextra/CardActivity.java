@@ -8,10 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +18,8 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 
 public class CardActivity extends BaseActivity {
@@ -75,39 +73,33 @@ public class CardActivity extends BaseActivity {
     }
 
     private void loadCache() {
-        try {
-            // 尝试加载缓存
-            String cache = Cache.card.getValue();
-            String todayCache = Cache.cardToday.getValue();
-            ArrayList<CardRecordModel> list = new ArrayList<>();
+        // 尝试加载缓存
+        String cache = Cache.card.getValue();
+        String todayCache = Cache.cardToday.getValue();
+        ArrayList<CardRecordModel> list = new ArrayList<>();
 
-            if (!todayCache.equals("")) {
-                JSONObject json_cache = new JSONObject(todayCache).getJSONObject("content");
-                // 获取消费记录
-                JSONArray jsonArray = json_cache.getJSONArray("detial");
-                // 获取余额并且设置
-                String extra = new JSONObject(todayCache).getJSONObject("content").getString("left");
-                tv_extra.setText(extra);
-                // 数据类型转换
-                list.addAll(CardRecordModel.transformJSONArrayToArrayList(jsonArray));
-            }
-
-            if (!cache.equals("")) {
-                JSONObject json_cache = new JSONObject(cache).getJSONObject("content");
-                // 获取消费记录
-                JSONArray jsonArray = json_cache.getJSONArray("detial");
-                // 数据类型转换
-                list.addAll(CardRecordModel.transformJSONArrayToArrayList(jsonArray));
-            }
-
-            CardAdapter cardAdapter = new CardAdapter(getBaseContext(), list);
-            // 设置消费记录数据适配器
-            recyclerViewCard.setAdapter(cardAdapter);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showSnackBar("解析失败，请刷新");
+        if (!todayCache.equals("")) {
+            JObj json_cache = new JObj(todayCache).$o("content");
+            // 获取消费记录
+            JArr jsonArray = json_cache.$a("detial");
+            // 获取余额并且设置
+            String extra = new JObj(todayCache).$o("content").$s("left");
+            tv_extra.setText(extra);
+            // 数据类型转换
+            list.addAll(CardRecordModel.transformJArrToArrayList(jsonArray));
         }
+
+        if (!cache.equals("")) {
+            JObj json_cache = new JObj(cache).$o("content");
+            // 获取消费记录
+            JArr jsonArray = json_cache.$a("detial");
+            // 数据类型转换
+            list.addAll(CardRecordModel.transformJArrToArrayList(jsonArray));
+        }
+
+        CardAdapter cardAdapter = new CardAdapter(getBaseContext(), list);
+        // 设置消费记录数据适配器
+        recyclerViewCard.setAdapter(cardAdapter);
     }
 
     private void refreshCache() {

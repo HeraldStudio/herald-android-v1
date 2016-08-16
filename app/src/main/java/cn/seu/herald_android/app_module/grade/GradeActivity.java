@@ -9,15 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableHeaderAdapter;
 
@@ -58,28 +56,23 @@ public class GradeActivity extends BaseActivity {
     }
 
     private void loadCache() {
-        try {
-            // 测试数据测试
-            String cache = Cache.grade.getValue();
-            if (!cache.equals("")) {
-                JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
-                // 获取计算后的绩点
-                if (jsonArray.getJSONObject(0).has("gpa")) {
-                    tv_gpa.setText(jsonArray.getJSONObject(0).getString("gpa without revamp"));
-                    tv_gpa2.setText(jsonArray.getJSONObject(0).getString("gpa without revamp"));
-                    tv_time.setText("最后计算时间:" + jsonArray.getJSONObject(0).get("calculate time"));
-                }
-                // 数据类型转换
-                GradeAdapter gradeAdapter = new GradeAdapter(this, GradeModel.transformJSONArrayToArrayList(jsonArray));
-                // 设置成绩表单数据
-                tableViewGrade.setDataAdapter(gradeAdapter);
-                // 设置行颜色变化
-                tableViewGrade.setDataRowColoriser(new GradeAdapter.GradeRowColorizer(getBaseContext()));
-            } else {
-                refreshCache();
+        String cache = Cache.grade.getValue();
+        if (!cache.equals("")) {
+            JArr jsonArray = new JObj(cache).$a("content");
+            // 获取计算后的绩点
+            if (jsonArray.$o(0).has("gpa")) {
+                tv_gpa.setText(jsonArray.$o(0).$s("gpa without revamp"));
+                tv_gpa2.setText(jsonArray.$o(0).$s("gpa without revamp"));
+                tv_time.setText("最后计算时间:" + jsonArray.$o(0).$s("calculate time"));
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            // 数据类型转换
+            GradeAdapter gradeAdapter = new GradeAdapter(this, GradeModel.transformJArrToArrayList(jsonArray));
+            // 设置成绩表单数据
+            tableViewGrade.setDataAdapter(gradeAdapter);
+            // 设置行颜色变化
+            tableViewGrade.setDataRowColoriser(new GradeAdapter.GradeRowColorizer(getBaseContext()));
+        } else {
+            refreshCache();
         }
     }
 

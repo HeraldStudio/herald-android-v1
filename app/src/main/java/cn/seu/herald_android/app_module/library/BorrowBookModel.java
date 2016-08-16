@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.library;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class BorrowBookModel {
     // 应归还日期
@@ -32,18 +31,18 @@ public class BorrowBookModel {
         this.renewTime = renewTime;
     }
 
-    public static ArrayList<BorrowBookModel> transformJSONArrayToArrayList(JSONArray array) throws JSONException {
+    public static ArrayList<BorrowBookModel> transformJArrToArrayList(JArr array) {
         ArrayList<BorrowBookModel> list = new ArrayList<>();
-        for(int i = 0 ;i<array.length();i++){
-            JSONObject object = array.getJSONObject(i);
+        for (int i = 0; i < array.size(); i++) {
+            JObj object = array.$o(i);
             list.add(new BorrowBookModel(
-                    object.getString("due_date"),
-                    object.getString("author"),
-                    object.getString("barcode"),
-                    object.getString("render_date"),
-                    object.getString("place"),
-                    object.getString("title"),
-                    object.getString("renew_time")
+                    object.$s("due_date"),
+                    object.$s("author"),
+                    object.$s("barcode"),
+                    object.$s("render_date"),
+                    object.$s("place"),
+                    object.$s("title"),
+                    object.$s("renew_time")
             ));
         }
         return list;

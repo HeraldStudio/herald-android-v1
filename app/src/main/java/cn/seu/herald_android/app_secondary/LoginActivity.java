@@ -8,9 +8,6 @@ import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,10 +15,11 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.User;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.User;
 
 public class LoginActivity extends BaseActivity {
     @BindView(R.id.tv_login_cardnum)
@@ -121,20 +119,15 @@ public class LoginActivity extends BaseActivity {
                      * 4) 使用客户端刷新 srtp 模块, 应当返回正确的 srtp 信息;
                      * 5) 使用 postman, 调用 srtp 接口, 不带 schoolnum 参数, 应当返回自己的 srtp 信息;
                      **/
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        user.schoolNum = object.getJSONObject("content").getString("schoolnum");
+                    JObj object = new JObj(response);
+                    user.schoolNum = object.$o("content").$s("schoolnum");
 
-                        if (success && user.schoolNum.length() == 8) {
-                            hideProgressDialog();
-                            ApiHelper.setCurrentUser(user);
-                            finish();
-                            new AppModule("跳转到首页", "TAB0").open();
-                        } else {
-                            hideProgressDialog();
-                            showSnackBar("用户不存在或网络异常, 请重试");
-                        }
-                    } catch (JSONException e) {
+                    if (success && user.schoolNum.length() == 8) {
+                        hideProgressDialog();
+                        ApiHelper.setCurrentUser(user);
+                        finish();
+                        new AppModule("跳转到首页", "TAB0").open();
+                    } else {
                         hideProgressDialog();
                         showSnackBar("用户不存在或网络异常, 请重试");
                     }

@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.srtp;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 class SrtpModel {
     // 从该srtp项目中获得的学分
@@ -32,20 +31,20 @@ class SrtpModel {
         this.totalCredit = totalCredit;
     }
 
-    public static ArrayList<SrtpModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<SrtpModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<SrtpModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject json_item = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj json_item = jsonArray.$o(i);
             if (json_item.has("credit")) {
                 // 判断不是首项才开始处理，首项为srtp总概况相关信息
                 list.add(new SrtpModel(
-                        json_item.getString("credit"),
-                        json_item.getString("proportion"),
-                        json_item.getString("project"),
-                        json_item.getString("department"),
-                        json_item.getString("date"),
-                        json_item.getString("type"),
-                        json_item.getString("total credit")
+                        json_item.$s("credit"),
+                        json_item.$s("proportion"),
+                        json_item.$s("project"),
+                        json_item.$s("department"),
+                        json_item.$s("date"),
+                        json_item.$s("type"),
+                        json_item.$s("total credit")
                 ));
             }
         }

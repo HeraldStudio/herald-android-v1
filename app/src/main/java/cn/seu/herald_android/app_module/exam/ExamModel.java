@@ -1,13 +1,11 @@
 package cn.seu.herald_android.app_module.exam;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class ExamModel {
     String hour;
@@ -28,17 +26,13 @@ public class ExamModel {
         this.teacher = teacher;
     }
 
-    public ExamModel(JSONObject Json) {
-        try {
-            this.hour = Json.getString("hour");
-            this.course = Json.getString("course");
-            this.location =  Json.getString("location");
-            this.time =  Json.getString("time");
-            this.type =  Json.getString("type");
-            this.teacher = Json.getString("teacher");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public ExamModel(JObj Json) {
+        this.hour = Json.$s("hour");
+        this.course = Json.$s("course");
+        this.location = Json.$s("location");
+        this.time = Json.$s("time");
+        this.type = Json.$s("type");
+        this.teacher = Json.$s("teacher");
     }
 
     @Override
@@ -55,17 +49,17 @@ public class ExamModel {
         return false;
     }
 
-    public static ArrayList<ExamModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<ExamModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<ExamModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj jsonObject = jsonArray.$o(i);
             list.add(new ExamModel(
-                    jsonObject.getString("hour"),
-                    jsonObject.getString("course"),
-                    jsonObject.getString("location"),
-                    jsonObject.getString("time"),
-                    jsonObject.getString("type"),
-                    jsonObject.getString("teacher")
+                    jsonObject.$s("hour"),
+                    jsonObject.$s("course"),
+                    jsonObject.$s("location"),
+                    jsonObject.$s("time"),
+                    jsonObject.$s("type"),
+                    jsonObject.$s("teacher")
             ));
         }
         return list;

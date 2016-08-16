@@ -58,7 +58,7 @@ public class Cache {
     // 跑操预报
     public static AppCache pcForecast = new AppCache("herald_pc_forecast", () ->
             new ApiSimpleRequest(Method.POST).api("pc").addUuid()
-                    .toCache("herald_pc_forecast", o -> o.getString("content"))
+                    .toCache("herald_pc_forecast", o -> o.$s("content"))
                     .onResponse((success, code, response) -> {
                         long today = CalendarUtils.toSharpDay(Calendar.getInstance()).getTimeInMillis();
                         if (success) {
@@ -74,8 +74,8 @@ public class Cache {
     // 跑操次数
     public static AppCache peCount = new AppCache("herald_pe_count", () ->
             new ApiSimpleRequest(Method.POST).api("pe").addUuid()
-                    .toCache("herald_pe_count", o -> o.getString("content"))
-                    .toCache("herald_pe_remain", o -> o.getString("remain"))
+                    .toCache("herald_pe_count", o -> o.$s("content"))
+                    .toCache("herald_pe_remain", o -> o.$s("remain"))
     );
 
     // 跑操剩余天数（刷新请用 peCount）
@@ -84,7 +84,7 @@ public class Cache {
     // 跑操详细记录
     public static AppCache peDetail = new AppCache("herald_pedetail", () ->
             new ApiSimpleRequest(Method.POST).api("pedetail").addUuid()
-                    .toCache("herald_pedetail", o -> o.getJSONArray("content"))
+                    .toCache("herald_pedetail", o -> o.$a("content"))
     );
 
     /**
@@ -94,13 +94,13 @@ public class Cache {
     // 固定课程数据
     public static AppCache curriculum = new AppCache("herald_curriculum", () ->
             new ApiSimpleRequest(Method.POST).api("curriculum").addUuid()
-                    .toCache("herald_curriculum", o -> o.getJSONObject("content"))
+                    .toCache("herald_curriculum", o -> o.$o("content"))
     );
 
     // 课表侧栏数据
     public static AppCache curriculumSidebar = new AppCache("herald_sidebar", () ->
             new ApiSimpleRequest(Method.POST).api("sidebar").addUuid()
-                    .toCache("herald_sidebar", o -> o.getJSONArray("content"))
+                    .toCache("herald_sidebar", o -> o.$a("content"))
     );
 
     /**
@@ -175,14 +175,14 @@ public class Cache {
     // 场馆预约个人电话
     public static AppCache gymReserveGetPhone = new AppCache("herald_gymreserve_phone", () ->
             new ApiSimpleRequest(Method.POST).api("yuyue").addUuid().post("method", "getPhone")
-                    .toCache("herald_gymreserve_phone", o -> o.getJSONObject("content").getString("phone"))
+                    .toCache("herald_gymreserve_phone", o -> o.$o("content").$s("phone"))
     );
 
     // 场馆预约个人用户ID
     public static AppCache gymReserveUserId = new AppCache("herald_gymreserve_userid", () ->
             new ApiSimpleRequest(Method.POST).api("yuyue").addUuid()
                     .post("method", "getFriendList").post("cardNo", ApiHelper.getCurrentUser().userName)
-                    .toCache("herald_gymreserve_userid", o -> o.getJSONArray("content").getJSONObject(0).getString("userId"))
+                    .toCache("herald_gymreserve_userid", o -> o.$a("content").$o(0).$s("userId"))
     );
 
     // 场馆预约好友列表

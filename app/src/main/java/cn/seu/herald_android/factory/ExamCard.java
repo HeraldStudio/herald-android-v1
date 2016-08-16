@@ -1,7 +1,5 @@
 package cn.seu.herald_android.factory;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +11,7 @@ import cn.seu.herald_android.app_module.exam.ExamModel;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
 
@@ -36,8 +35,8 @@ public class ExamCard {
         String cache = Cache.exam.getValue();
         try {
             List<ExamModel> examList = new ArrayList<>();
-            List<ExamModel> temp = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<ExamModel> defined = ExamModel.transformJSONArrayToArrayList(AddExamActivity.getCustomExamJSONArray());
+            List<ExamModel> temp = ExamModel.transformJArrToArrayList(new JObj(cache).$a("content"));
+            List<ExamModel> defined = ExamModel.transformJArrToArrayList(AddExamActivity.getCustomExamJArr());
 
             // 加入教务处的考试
             for (ExamModel examModel : temp) {

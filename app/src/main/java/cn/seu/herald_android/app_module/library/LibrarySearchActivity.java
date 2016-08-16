@@ -10,15 +10,13 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -79,20 +77,14 @@ public class LibrarySearchActivity extends BaseActivity implements SearchView.On
                 .post("book", query).onResponse((success, code, response) -> {
             hideProgressDialog();
             if (success) {
-                try {
-                    JSONObject json_res = new JSONObject(response);
-                    if (json_res.getString("content").equals("[]")) {
-                        showSnackBar("当前书目不存在, 换个关键字试试");
-                        return;
-                    }
-                    ArrayList<SearchBookModel> searchResultList =
-                            SearchBookModel.transformJSONArrayToArrayList(json_res.getJSONArray("content"));
-                    loadSearchResult(searchResultList);
-                    // showSnackBar("刷新成功");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    showSnackBar("解析失败，请刷新");
+                JObj json_res = new JObj(response);
+                if (json_res.$s("content").equals("[]")) {
+                    showSnackBar("当前书目不存在, 换个关键字试试");
+                    return;
                 }
+                ArrayList<SearchBookModel> searchResultList =
+                        SearchBookModel.transformJArrToArrayList(json_res.$a("content"));
+                loadSearchResult(searchResultList);
             } else {
                 showSnackBar("刷新失败，请重试");
             }

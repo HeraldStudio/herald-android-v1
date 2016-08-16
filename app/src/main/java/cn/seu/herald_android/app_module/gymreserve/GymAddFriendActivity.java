@@ -8,10 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -19,6 +15,8 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -69,17 +67,13 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
                 .post("cardNo", query)
                 .onResponse((success, code, response) -> {
                     if (success) {
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                            ArrayList<FriendModel> list = new ArrayList<>();
-                            for (int i = 0; i < array.length(); i++) {
-                                list.add(new FriendModel(array.getJSONObject(i)));
-                            }
-                            // 加载搜索结果
-                            loadSearchResult(list);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        JArr array = new JObj(response).$a("content");
+                        ArrayList<FriendModel> list = new ArrayList<>();
+                        for (int i = 0; i < array.size(); i++) {
+                            list.add(new FriendModel(array.$o(i)));
                         }
+                        // 加载搜索结果
+                        loadSearchResult(list);
                     } else {
                         showSnackBar("查询失败，请重试");
                     }
@@ -110,37 +104,25 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
     }
 
     public ArrayList<FriendModel> getFriendArrayList() {
-        try {
-            JSONArray array = getFriendJSONArray();
-            ArrayList<FriendModel> list = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                list.add(new FriendModel(array.getJSONObject(i)));
-            }
-            return list;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JArr array = getFriendJArr();
+        ArrayList<FriendModel> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            list.add(new FriendModel(array.$o(i)));
         }
-        return new ArrayList<>();
+        return list;
     }
 
-    public  JSONArray getFriendJSONArray(){
+    public JArr getFriendJArr() {
         String cache = Cache.gymReserveFriend.getValue();
-        try {
-            if (!cache.equals("")) {
-                return new JSONArray(cache);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Cache.gymReserveFriend.clear();
+        if (!cache.equals("")) {
+            return new JArr(cache);
         }
-        return new JSONArray();
+        return new JArr();
     }
 
     public void addFriend(FriendModel friendModel) {
-        try {
-            Cache.gymReserveFriend.setValue(getFriendJSONArray().put(friendModel.getJSONObject()).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JArr arr = getFriendJArr();
+        arr.put(friendModel.getJObj());
+        Cache.gymReserveFriend.setValue(arr.toString());
     }
 }

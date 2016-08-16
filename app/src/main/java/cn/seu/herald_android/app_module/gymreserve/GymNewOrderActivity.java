@@ -16,10 +16,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +28,8 @@ import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.custom.ListViewUtils;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -258,32 +256,22 @@ public class GymNewOrderActivity extends BaseActivity {
                     hideProgressDialog();
                     isOrdering = true;
                     Handler handler = new Handler();
-                    try {
-                        if (success) {
-                            int rescode = new JSONObject(response).getJSONObject("content").getInt("code");
+                    if (success) {
+                        int rescode = new JObj(response).$o("content").$i("code");
 
-                            switch (rescode) {
-                                case 0:
-                                    showSnackBar("预约成功");
-                                    handler.postDelayed(() -> {
-                                        AppContext.startActivitySafely(GymMyOrderActivity.class);
-                                        finish();
-                                    }, 500);
-                                    break;
-                                default:
-                                    showSnackBar(new JSONObject(response).getJSONObject("content").getString("msg"));
-                                    // 预约失败会重新选择时间段
-                                    handler.postDelayed(this::finish, 500);
-                            }
+                        switch (rescode) {
+                            case 0:
+                                showSnackBar("预约成功, 建议手动检查预约是否有效");
+                                handler.postDelayed(() -> {
+                                    AppContext.startActivitySafely(GymMyOrderActivity.class);
+                                    finish();
+                                }, 500);
+                                break;
+                            default:
+                                showSnackBar(new JObj(response).$o("content").$s("msg"));
+                                // 预约失败会重新选择时间段
+                                handler.postDelayed(this::finish, 500);
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        showSnackBar("判断预约结果失败，请手动查询");
-                        // 跳转至我的预约列表，方便查看预约结果
-                        handler.postDelayed(() -> {
-                            AppContext.startActivitySafely(GymMyOrderActivity.class);
-                            finish();
-                        }, 500);
                     }
                 })
                 .run();
@@ -308,45 +296,31 @@ public class GymNewOrderActivity extends BaseActivity {
     }
 
     public ArrayList<FriendModel> getFriendArrayList() {
-        try {
-            JSONArray array = getFriendJSONArray();
-            ArrayList<FriendModel> list = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                list.add(new FriendModel(array.getJSONObject(i)));
-            }
-            return list;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JArr array = getFriendJArr();
+        ArrayList<FriendModel> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            list.add(new FriendModel(array.$o(i)));
         }
-        return new ArrayList<>();
+        return list;
     }
 
-    public JSONArray getFriendJSONArray() {
+    public JArr getFriendJArr() {
         String cache = Cache.gymReserveFriend.getValue();
-        try {
-            if (!cache.equals("")) {
-                return new JSONArray(cache);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Cache.gymReserveFriend.clear();
+        if (!cache.equals("")) {
+            return new JArr(cache);
         }
-        return new JSONArray();
+        return new JArr();
     }
 
     public void removeFriend(FriendModel friendModel) {
-        try {
-            JSONArray array = getFriendJSONArray();
-            JSONArray result = new JSONArray();
-            for (int i = 0; i < array.length(); i++) {
-                if (friendModel.getJSONObject().toString().equals(array.getJSONObject(i).toString()))
-                    continue;
-                result.put(array.getJSONObject(i));
-            }
-            Cache.gymReserveFriend.setValue(result.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JArr array = getFriendJArr();
+        JArr result = new JArr();
+        for (int i = 0; i < array.size(); i++) {
+            if (friendModel.getJObj().toString().equals(array.$(i).toString()))
+                continue;
+            result.put(array.$(i));
         }
+        Cache.gymReserveFriend.setValue(result.toString());
     }
 
     // 最近联系人展示用Adapter

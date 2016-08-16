@@ -7,9 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -19,6 +16,7 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -88,13 +86,9 @@ class BorrowBookAdapter extends EmptyTipArrayAdapter<BorrowBookModel> {
             new ApiSimpleRequest(Method.POST).api("renew").addUuid()
                     .post("barcode", borrowBookModel.barcode)
                     .onResponse((success, code, response) -> {
-                        try {
-                            response = new JSONObject(response).getString("content");
-                            AppContext.showMessage(
-                                    response.equals("success") ? "续借成功" : response);
-                        } catch (JSONException e) {
-                            AppContext.showMessage("续借失败");
-                        }
+                        response = new JObj(response).$s("content");
+                        AppContext.showMessage(
+                                response.equals("success") ? "续借成功" : response);
                     }).run();
         });
 

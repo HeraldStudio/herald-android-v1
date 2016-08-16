@@ -5,10 +5,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -17,6 +13,8 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class GymReserveActivity extends BaseActivity {
 
@@ -72,26 +70,21 @@ public class GymReserveActivity extends BaseActivity {
     }
 
     private void loadItemList() {
-        try {
-            JSONArray itemArray = new JSONObject(Cache.gymReserveGetDate.getValue()).getJSONObject("content").getJSONArray("itemList");
-            // 活动项目列表
-            ArrayList<GymSportModel> list = GymSportModel.transformJSONtoArrayList(itemArray);
-            // 获取日期列表
-            JSONArray timeArray = new JSONObject(Cache.gymReserveGetDate.getValue()).getJSONObject("content").getJSONArray("timeList");
-            String[] dayInfos = GymSportModel.transformJSONtoStringArray(timeArray);
-            // 设置适配器同时设置点击函数
-            GymReserveSportAdapter adapter = new GymReserveSportAdapter(getBaseContext(), list);
-            // 点击时创建相应运动预约界面
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener((parent, view1, position, id) -> {
-                // 打开相对应的预约界面
-                GymChooseTimeActivity.startWithData(list.get(position), dayInfos);
-            });
+        JArr itemArray = new JObj(Cache.gymReserveGetDate.getValue()).$o("content").$a("itemList");
+        // 活动项目列表
+        ArrayList<GymSportModel> list = GymSportModel.transformJSONtoArrayList(itemArray);
+        // 获取日期列表
+        JArr timeArray = new JObj(Cache.gymReserveGetDate.getValue()).$o("content").$a("timeList");
+        String[] dayInfos = GymSportModel.transformJSONtoStringArray(timeArray);
+        // 设置适配器同时设置点击函数
+        GymReserveSportAdapter adapter = new GymReserveSportAdapter(getBaseContext(), list);
+        // 点击时创建相应运动预约界面
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            // 打开相对应的预约界面
+            GymChooseTimeActivity.startWithData(list.get(position), dayInfos);
+        });
 
-            hideProgressDialog();
-        } catch (JSONException e) {
-            hideProgressDialog();
-            showSnackBar("数据解析失败，请重试");
-        }
+        hideProgressDialog();
     }
 }
