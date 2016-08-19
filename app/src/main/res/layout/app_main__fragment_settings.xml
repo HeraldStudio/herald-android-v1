@@ -45,15 +45,6 @@
             android:layout_height="@dimen/divider_height"
             android:background="@color/colorDivider" />
 
-
-        <!--个性设置-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/colorDivider"/>
-
-        <!--个性设置-->
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
