@@ -120,48 +120,6 @@ public class ApiHelper {
         return !getCurrentUser().equals(User.trialUser);
     }
 
-    // 单独更新校园网登陆账户
-    public static void setWifiAuth(String username, String password) {
-        try {
-            String encrypted = new EncryptHelper(username).encrypt(password);
-            CacheHelper.set("wifiAuthUser", username);
-            CacheHelper.set("wifiAuthPwd", encrypted);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @NonNull
-    public static String getWifiUserName() {
-        String cacheUser = CacheHelper.get("wifiAuthUser");
-
-        // 若无校园网独立用户缓存，则使用登陆应用的账户
-        if (cacheUser.equals("")) return getCurrentUser().userName;
-        return cacheUser;
-    }
-
-    @NonNull
-    public static String getWifiPassword() {
-        String username = getWifiUserName();
-        EncryptHelper helper1 = new EncryptHelper(username);
-        String cachePwd = CacheHelper.get("wifiAuthPwd");
-
-        // 若无校园网独立用户缓存，则使用登陆应用的账户
-        if (cachePwd.equals("") || helper1.decrypt(cachePwd).equals("")) {
-            return getCurrentUser().password;
-        }
-        return helper1.decrypt(cachePwd);
-    }
-
-    public static boolean isWifiLoginAvailable() {
-        return isLogin() || !getWifiUserName().equals(User.trialUser.userName);
-    }
-
-    public static void clearWifiAuth() {
-        CacheHelper.set("wifiAuthUser", "");
-        CacheHelper.set("wifiAuthPwd", "");
-    }
-
     @NonNull
     public static UserCache getAuthCache() {
         return new UserCache("auth");
