@@ -24,6 +24,14 @@ public class SettingsHelper {
         getSettingsCache().set(key, value);
     }
 
+    public static boolean getWifiAutoLogin() {
+        return getSettingsCache().get("herald_settings_wifi_auto_login").equals("1");
+    }
+
+    public static void setWifiAutoLogin(boolean newValue) {
+        getSettingsCache().set("herald_settings_wifi_auto_login", newValue ? "1" : "0");
+    }
+
     public interface OnModuleSettingsChangeListener {
         void onModuleSettingsChange();
     }

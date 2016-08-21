@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -43,6 +44,8 @@ import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
+import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.helper.WifiLoginHelper;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
@@ -108,8 +111,15 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         }
     }
 
+    private boolean preventShake = false;
+
     private ShakeDetector shakeDetector = new ShakeDetector(() -> {
-        // TODO
+        // 摇一摇自动登陆
+        if (SettingsHelper.getWifiAutoLogin() && !preventShake) {
+            preventShake = true;
+            new WifiLoginHelper(this).checkAndLogin();
+            new Handler().postDelayed(() -> preventShake = false, 2000);
+        }
     });
 
     @Override
@@ -161,6 +171,12 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         window.setAttributes(wmlp);
         window.setContentView(R.layout.app_main__dialog_more);
 
+        // 设置点击项
+        window.findViewById(R.id.content_wifi).setOnClickListener(v1 -> {
+
+            // 设置登录校园网
+            new WifiLoginHelper(this).checkAndLogin();
+        });
         window.findViewById(R.id.content_module_manage).setOnClickListener(v1 ->
                 Module.moduleManager.open());
         window.findViewById(R.id.content_charge).setOnClickListener(v1 ->
