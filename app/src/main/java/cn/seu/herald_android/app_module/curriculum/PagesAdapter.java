@@ -66,10 +66,15 @@ class PagesAdapter extends PagerAdapter {
         Calendar beginOfTerm = Calendar.getInstance();
         beginOfTerm.set(beginOfTerm.get(Calendar.YEAR), startMonth, startDate);
 
-        // 如果开学日期比今天还晚，则是去年开学的。这里用while保证了thisWeek永远大于零
-        while (beginOfTerm.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
+        // 如果开学日期比今天晚了超过两个月，则认为是去年开学的。这里用while保证了thisWeek永远大于零
+        while (beginOfTerm.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() > (long) 60 * 86400 * 1000) {
             beginOfTerm.set(Calendar.YEAR, beginOfTerm.get(Calendar.YEAR) - 1);
         }
+
+        // 为了保险，检查开学日期的星期，不是周一的话往前推到周一
+        long oldTimeMillis = beginOfTerm.getTimeInMillis();
+        long daysAfterMonday = beginOfTerm.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
+        beginOfTerm.setTimeInMillis(oldTimeMillis - daysAfterMonday * 86400 * 1000);
 
         // 计算当前周
         thisWeek = (int) ((Calendar.getInstance().getTimeInMillis() - beginOfTerm.getTimeInMillis())

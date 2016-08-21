@@ -86,6 +86,7 @@ public class CustomSnackBar {
 
 
         View sbView = snackbar.getView();
+
         TextView txtTitle = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         TextView txtAction = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_action);
 
