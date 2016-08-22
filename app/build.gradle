@@ -67,5 +67,5 @@ dependencies {
     compile 'com.eightbitlab:blurview:1.1.2'
 
     // 进度对话框
-    compile 'cc.cloudist.acplibrary:library:1.2.1'
+    compile 'com.kaopiz:kprogresshud:1.0.5'
 }

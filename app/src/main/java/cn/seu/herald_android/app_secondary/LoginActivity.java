@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_auth__login);
         ButterKnife.bind(this);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancellable(false);
         setStatusBarColor(Color.BLACK);
 
         tv_pwd.setOnKeyListener((v, keyCode, event) -> {
