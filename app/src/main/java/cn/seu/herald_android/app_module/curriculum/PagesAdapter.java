@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.json.JArr;
 import cn.seu.herald_android.framework.json.JObj;
@@ -64,6 +65,7 @@ class PagesAdapter extends PagerAdapter {
         int startMonth = content.$o("startdate").$i("month");
         int startDate = content.$o("startdate").$i("day");
         Calendar beginOfTerm = Calendar.getInstance();
+        beginOfTerm = CalendarUtils.toSharpDay(beginOfTerm);
         beginOfTerm.set(beginOfTerm.get(Calendar.YEAR), startMonth, startDate);
 
         // 如果开学日期比今天晚了超过两个月，则认为是去年开学的。这里用while保证了thisWeek永远大于零

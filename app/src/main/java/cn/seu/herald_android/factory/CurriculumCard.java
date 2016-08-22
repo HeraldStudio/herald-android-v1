@@ -60,6 +60,7 @@ public class CurriculumCard {
             int startMonth = jsonObject.$o("startdate").$i("month");
             int startDate = jsonObject.$o("startdate").$i("day");
             Calendar termStart = Calendar.getInstance();
+            termStart = CalendarUtils.toSharpDay(termStart);
             termStart.set(termStart.get(Calendar.YEAR), startMonth, startDate);
 
             // 如果开学日期比今天晚了超过两个月，则认为是去年开学的。这里用while保证了thisWeek永远大于零
