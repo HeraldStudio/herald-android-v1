@@ -1,11 +1,7 @@
 package cn.seu.herald_android.helper;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.MessageDigest;
 import java.util.LinkedList;
 
 import cn.seu.herald_android.framework.AppContext;
@@ -26,33 +22,7 @@ public class ApiHelper {
     private ApiHelper() {}
 
     @NonNull
-    public static String getAppid() {
-        Context context = AppContext.instance;
-        InputStream fis;
-        byte[] buffer = new byte[1024];
-        int numRead;
-        MessageDigest md5;
-        String appid = "";
-        try {
-            fis = new FileInputStream(context.getPackageResourcePath());
-            md5 = MessageDigest.getInstance("MD5");
-            while ((numRead = fis.read(buffer)) > 0) {
-                md5.update(buffer, 0, numRead);
-            }
-            fis.close();
-            appid = HashHelper.toHexString(md5.digest());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return /* "34cc6df78cfa7cd457284e4fc377559e";// todo*/ appid;
-        /**
-         * 以后不再通过修改此处return语句的方法来使用测试appid，而是在手机剪贴板中事先复制好如下字符串既可登录：
-         * IAmTheGodOfHerald|OverrideAppidWith:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-         * 其中最后一串代表你的测试appid。这个后门即使被发现，也不会泄漏我们的测试appid，所以是安全的。
-         * 该后门实现见LoginActivity.java
-         **/
-    }
+    public static final String appid = "9f9ce5c3605178daadc2d85ce9f8e064";
 
     @NonNull
     public static String getApiUrl(String api) {

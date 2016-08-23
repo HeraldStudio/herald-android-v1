@@ -29,6 +29,7 @@ public class GymAddFriendActivity extends BaseActivity implements SearchView.OnQ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("");
         setContentView(R.layout.mod_que_gymreserve__search_friend);
         ButterKnife.bind(this);
     }

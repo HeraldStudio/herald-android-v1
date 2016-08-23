@@ -1,56 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:paddingBottom="10dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp">
+
     <TextView
+        android:id="@+id/tv_name_and_floor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_name_and_floor"
         android:layout_alignParentTop="true"
-        android:textSize="17sp"
+        android:text="运动名（场地）"
         android:textColor="@color/colorGymReservePrimary"
-        android:text="运动名（场地）"/>
+        android:textSize="17sp"/>
+
     <TextView
+        android:id="@+id/tv_usedate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_name_and_floor"
-        android:text="使用日期"
-        android:id="@+id/tv_usedate"/>
+        android:text="使用日期"/>
+
     <TextView
+        android:id="@+id/tv_usetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_usedate"
         android:layout_marginRight="10dp"
-        android:text="使用时间"
-        android:id="@+id/tv_usetime"/>
+        android:text="使用时间"/>
+
     <TextView
+        android:id="@+id/tv_usepeoplenum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_usedate"
         android:layout_toRightOf="@id/tv_usetime"
-        android:text="使用人数"
-        android:id="@+id/tv_usepeoplenum"/>
+        android:text="使用人数"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:gravity="right"
         android:orientation="vertical">
+
         <TextView
+            android:id="@+id/tv_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:id="@+id/tv_state"
-            android:layout_gravity="center_horizontal"
             android:text="状态"/>
+
         <Button
-            android:layout_width="100dp"
+            android:id="@+id/btn_cancelorder"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:background="@drawable/gymreserve_bg_orderbtn"
-            android:textSize="13sp"
             android:text="取消预约"
             android:textColor="@color/colorIcons"
-            android:id="@+id/btn_cancelorder"/>
+            android:textSize="13sp"/>
     </LinearLayout>
 </RelativeLayout>

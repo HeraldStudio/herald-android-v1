@@ -66,7 +66,6 @@ public class FriendModel implements Serializable {
                 tv_name.setText(friendModel.nameDepartment.split("\\(")[0]);
                 tv_department.setText(friendModel.nameDepartment.split("\\(")[1].split("\\)")[0]);
             } catch (ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
                 tv_name.setText(friendModel.nameDepartment);
             }
 
