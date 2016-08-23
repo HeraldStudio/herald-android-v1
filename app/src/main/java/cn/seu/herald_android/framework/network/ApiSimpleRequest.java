@@ -2,14 +2,12 @@ package cn.seu.herald_android.framework.network;
 
 import android.os.Handler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 import cn.seu.herald_android.framework.AppModule;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
@@ -24,7 +22,7 @@ import okhttp3.Response;
  * ApiSimpleRequest | 简单请求
  * 网络请求的一个基本单元，包含一次请求和一次回调。
  **/
-public class ApiSimpleRequest implements ApiRequest {
+public class ApiSimpleRequest extends ApiRequest {
 
     private Method method;
 
@@ -90,7 +88,7 @@ public class ApiSimpleRequest implements ApiRequest {
                 // 触发回调
                 uiThreadHandler.post(() -> {
                     for (OnResponseListener listener : onResponseListeners) {
-                        listener.processResponse(success, code, responseString);
+                        listener.onResponse(success, code, responseString);
                     }
                 });
             } catch (IOException e) {
@@ -102,7 +100,7 @@ public class ApiSimpleRequest implements ApiRequest {
         public void onFailure(Call call, IOException e) {
             uiThreadHandler.post(() -> {
                 for (OnResponseListener listener : onResponseListeners) {
-                    listener.processResponse(false, 500, "I/O Error");
+                    listener.onResponse(false, 500, "I/O Error");
                 }
             });
         }
@@ -126,7 +124,7 @@ public class ApiSimpleRequest implements ApiRequest {
     }
 
     public ApiRequest onFinish(OnFinishListener listener) {
-        return onResponse((success, code, response) -> listener.parseFinish(success, code));
+        return onResponse((success, code, response) -> listener.onFinish(success, code));
     }
 
     /**
@@ -139,7 +137,7 @@ public class ApiSimpleRequest implements ApiRequest {
      **/
 
     public interface JSONParser {
-        Object parse(JSONObject src) throws JSONException;
+        Object parse(JObj src);
     }
 
     public ApiSimpleRequest toCache(String key) {
@@ -159,16 +157,9 @@ public class ApiSimpleRequest implements ApiRequest {
     public ApiSimpleRequest toCache(String key, JSONParser parser, AppModule notifyModuleIfChanged) {
         onResponse((success, code, response) -> {
             if (success) {
-                try {
-                    String cache = parser.parse(new JSONObject(response)).toString();
-                    if (CacheHelper.set(key, cache) && notifyModuleIfChanged != null) {
-                        notifyModuleIfChanged.setHasUpdates(true);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    for (OnResponseListener onResponseListener : onResponseListeners) {
-                        onResponseListener.processResponse(false, 0, "");
-                    }
+                String cache = parser.parse(new JObj(response)).toString();
+                if (CacheHelper.set(key, cache) && notifyModuleIfChanged != null) {
+                    notifyModuleIfChanged.setHasUpdates(true);
                 }
             }
         });
@@ -182,26 +173,11 @@ public class ApiSimpleRequest implements ApiRequest {
     public ApiSimpleRequest toServiceCache(String key, JSONParser parser) {
         onResponse((success, code, response) -> {
             if (success) {
-                try {
-                    String cache = parser.parse(new JSONObject(response)).toString();
-                    ServiceHelper.set(key, cache);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    for (OnResponseListener onResponseListener : onResponseListeners) {
-                        onResponseListener.processResponse(false, 0, "");
-                    }
-                }
+                String cache = parser.parse(new JObj(response)).toString();
+                ServiceHelper.set(key, cache);
             }
         });
         return this;
-    }
-
-    public ApiRequest chain(ApiRequest nextRequest) {
-        return new ApiChainRequest(this, nextRequest);
-    }
-
-    public ApiRequest parallel(ApiRequest anotherRequest) {
-        return new ApiParallelRequest(this, anotherRequest);
     }
 
     /**

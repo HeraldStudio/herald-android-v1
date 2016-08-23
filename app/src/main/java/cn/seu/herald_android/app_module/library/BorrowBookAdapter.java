@@ -4,13 +4,8 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.List;
@@ -19,14 +14,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
 /**
  * 这个类里面错放了太多的 model 层逻辑, 应尽快移走
  */
-class BorrowBookAdapter extends ArrayAdapter<BorrowBookModel> {
+class BorrowBookAdapter extends EmptyTipArrayAdapter<BorrowBookModel> {
 
     static class ViewHolder {
         @BindView(R.id.title)
@@ -52,7 +49,7 @@ class BorrowBookAdapter extends ArrayAdapter<BorrowBookModel> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         BorrowBookModel borrowBookModel = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_library__dialog_borrow_record__item, null);
@@ -89,13 +86,9 @@ class BorrowBookAdapter extends ArrayAdapter<BorrowBookModel> {
             new ApiSimpleRequest(Method.POST).api("renew").addUuid()
                     .post("barcode", borrowBookModel.barcode)
                     .onResponse((success, code, response) -> {
-                        try {
-                            response = new JSONObject(response).getString("content");
-                            AppContext.showMessage(
-                                    response.equals("success") ? "续借成功" : response);
-                        } catch (JSONException e) {
-                            AppContext.showMessage("续借失败");
-                        }
+                        response = new JObj(response).$s("content");
+                        AppContext.showMessage(
+                                response.equals("success") ? "续借成功" : response);
                     }).run();
         });
 

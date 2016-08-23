@@ -3,8 +3,6 @@ package cn.seu.herald_android.app_secondary;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,9 +14,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.AppModule;
 
-public class ModuleManageAdapter extends ArrayAdapter<AppModule> {
+public class ModuleManageAdapter extends EmptyTipArrayAdapter<AppModule> {
 
     /** 为了避免卡顿，模块管理列表已停用视图回收，改用 ScrollView 嵌套无滚动的 ListView 实现 */
     /**
@@ -45,7 +44,7 @@ public class ModuleManageAdapter extends ArrayAdapter<AppModule> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView) {
         AppModule seuModule = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_mod__item, null);

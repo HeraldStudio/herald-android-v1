@@ -1,20 +1,25 @@
 package cn.seu.herald_android.app_module.curriculum;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.helper.CacheHelper;
+import cn.seu.herald_android.framework.json.JArr;
 
 public class CurriculumActivity extends BaseActivity {
 
@@ -43,11 +48,9 @@ public class CurriculumActivity extends BaseActivity {
         showProgressDialog();
 
         (
-                new ApiSimpleRequest(Method.POST).api("sidebar").addUuid()
-                        .toCache("herald_sidebar", o -> o.getJSONArray("content"))
+                Cache.curriculumSidebar.getRefresher()
         ).parallel(
-                new ApiSimpleRequest(Method.POST).api("curriculum").addUuid()
-                        .toCache("herald_curriculum", o -> o.getJSONObject("content"))
+                Cache.curriculum.getRefresher()
         ).onFinish((allSuccess, mostCriticalCode) -> {
             hideProgressDialog();
             readLocal();
@@ -58,12 +61,14 @@ public class CurriculumActivity extends BaseActivity {
     }
 
     private void readLocal() {
-        String data = CacheHelper.get("herald_curriculum");
-        String sidebar = CacheHelper.get("herald_sidebar");
+        String data = Cache.curriculum.getValue();
+        String sidebar = Cache.curriculumSidebar.getValue();
         if (data.equals("")) {
             refreshCache();
             return;
         }
+
+        reloadFloatClassCount();
 
         PagesAdapter adapter = new PagesAdapter(this, data, sidebar);
         pager.setAdapter(adapter);
@@ -86,10 +91,18 @@ public class CurriculumActivity extends BaseActivity {
         });
     }
 
+    private void reloadFloatClassCount() {
+        ActionMenuItemView item = (ActionMenuItemView) findViewById(R.id.action_float_class);
+        if (item != null) {
+            item.setTitle("浮动课程(" + getFloatClassCount() + ")");
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sync, menu);
+        getMenuInflater().inflate(R.menu.menu_curriculum, menu);
+        reloadFloatClassCount();
         return true;
     }
 
@@ -104,6 +117,51 @@ public class CurriculumActivity extends BaseActivity {
         if (id == R.id.action_sync) {
             refreshCache();
         }
+        if (id == R.id.action_float_class) {
+            displayFloatClassDialog();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getFloatClassCount() {
+        // 设置列表
+        JArr array = new JArr(Cache.curriculumSidebar.getValue());
+        ArrayList<SidebarClassModel> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            SidebarClassModel model = new SidebarClassModel(array.$o(i));
+            if (!model.isAdded()) {
+                list.add(model);
+            }
+        }
+        return String.valueOf(list.size());
+    }
+
+    private void displayFloatClassDialog() {
+        // 加载浮动课程对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog dialog_lecture_records = builder.create();
+        // show函数需要在getWindow前调用
+        dialog_lecture_records.show();
+        // 对话框窗口设置布局文件
+        Window window = dialog_lecture_records.getWindow();
+        window.setContentView(R.layout.mod_que_curriculum__dialog_float_class);
+
+        // 获取对话窗口中的listview
+        ListView list_record = (ListView) window.findViewById(R.id.list_float_class);
+
+        // 设置列表
+        JArr array = new JArr(Cache.curriculumSidebar.getValue());
+        ArrayList<SidebarClassModel> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            SidebarClassModel model = new SidebarClassModel(array.$o(i));
+            if (!model.isAdded()) {
+                list.add(model);
+            }
+        }
+
+        list_record.setAdapter(new CurriculumFloatClassAdapter(
+                getBaseContext(),
+                R.layout.mod_que_curriculum__dialog_float_class__item,
+                list));
     }
 }

@@ -22,9 +22,8 @@ import cn.seu.herald_android.app_secondary.FeedbackActivity;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.SystemUtil;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
-import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
+import cn.seu.herald_android.helper.ShareHelper;
 
 public class SettingsFragment extends Fragment implements ApiHelper.OnUserChangeListener {
 
@@ -77,7 +76,7 @@ public class SettingsFragment extends Fragment implements ApiHelper.OnUserChange
                 SettingsHelper.setWifiAutoLogin(isChecked));
     }
 
-    @OnClick(R.id.tv_aboutus)
+    @OnClick(R.id.aboutus)
     void aboutUs() {
         AppContext.startActivitySafely(AboutUsActivity.class);
     }
@@ -103,30 +102,10 @@ public class SettingsFragment extends Fragment implements ApiHelper.OnUserChange
         }
     }
 
-    @OnClick(R.id.check_update)
-    void checkUpdate() {
-        // 如果版本有更新则提示更新版本
-        int versionCode = SystemUtil.getAppVersionCode();
-        int newestCode = ServiceHelper.getNewestVersionCode();
-
-        if (versionCode < newestCode) {
-            CacheHelper.set("herald_new_version_ignored", "");
-
-            // 如果当前版本号小于最新版本，则提示更新
-            String tip = "小猴偷米" + ServiceHelper.getNewestVersionName() + "更新说明\n"
-                    + ServiceHelper.getNewestVersionDesc().replaceAll("\\\\n", "\n");
-
-            // 显示对话框
-            new AlertDialog.Builder(getContext())
-                    .setTitle("发现新版本")
-                    .setMessage(tip)
-                    .setPositiveButton("赶紧下载", (dialog, which) -> {
-                        AppContext.openUrlInBrowser("http://android.heraldstudio.com/download");
-                    })
-                    .setNegativeButton("残忍拒绝", (dialog, which) -> {}).show();
-        } else {
-            AppContext.showMessage("当前版本已经是最新版本");
-        }
+    @OnClick(R.id.tv_share_app)
+    void shareApp() {
+        // 分享App
+        ShareHelper.share("我在使用小猴偷米App，它是东南大学本科生必备的校园生活助手，你也来试试吧：http://app.heraldstudio.com/");
     }
 
     @OnClick(R.id.custom_account)

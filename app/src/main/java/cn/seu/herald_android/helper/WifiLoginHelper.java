@@ -1,16 +1,13 @@
 package cn.seu.herald_android.helper;
 
 import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Handler;
 import android.os.Vibrator;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
+import android.util.Base64;
 
 import cn.seu.herald_android.framework.AppContext;
-import okhttp3.Call;
+import cn.seu.herald_android.framework.json.JObj;
+import cn.seu.herald_android.framework.network.ApiSimpleRequest;
+import cn.seu.herald_android.framework.network.Method;
 
 public class WifiLoginHelper {
 
@@ -18,99 +15,96 @@ public class WifiLoginHelper {
 
     private Vibrator vibrator;
 
+    static boolean working = false;
+
     public WifiLoginHelper(Context context) {
         this.context = context;
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void checkAndLogin() {
-        if (!ApiHelper.isLogin() && ApiHelper.getWifiUserName().equals(User.trialUser.userName)) {
+        if (!ApiHelper.isWifiLoginAvailable()) {
             ApiHelper.showTrialFunctionLimitMessage();
+            return;
         }
 
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        String ssid = wifiInfo.getSSID().replaceAll("\"", "");
-        if (ssid.equals("seu-wlan") || ssid.equals("seu-dorm")) {
-            vibrator.vibrate(50);
-            AppContext.showMessage("正在快捷登录校园网，请稍候~");
-
-            // 防止两条消息同时显示会吞掉前一条消息
-            new Handler().postDelayed(this::checkOnlineStatus, 500);
-        } else {
-            vibrator.vibrate(50);
-            AppContext.showMessage("你需要手动连接到seu网络才能登录校园网~");
+        if (working) {
+            return;
         }
+
+        working = true;
+        beginCheck();
+    }
+
+    private void beginCheck() {
+        new ApiSimpleRequest(Method.POST).url("https://selfservice.seu.edu.cn/selfservice/index.php")
+                .onResponse((success, code, response) -> {
+                    if (!response.contains("403 Forbidden")) {
+                        checkOnlineStatus();
+                    } else {
+                        working = false;
+                        AppContext.showMessage("校园网快捷登录：状态异常，请先手动连接到 seu-wlan 后再试~");
+                    }
+                }).runWithoutFatalListener();
     }
 
     private void checkOnlineStatus() {
-        OkHttpUtils.get().url("http://w.seu.edu.cn/portal/init.php").build()
-                .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-                vibrator.vibrate(50);
-                AppContext.showMessage("校园网信号不佳，换个姿势试试？");
-            }
-
-            @Override
-            public void onResponse(String response) {
-                if (response.contains("notlogin")
-                        // 如果已经登陆的账号与当前设置的校园网账号不同，也视为未登录
-                        || !response.contains(ApiHelper.getWifiUserName())) {
-                    // 未登录状态，开始登录
-                    loginToService();
-                } else {
-                    vibrator.vibrate(50);
-                    AppContext.showMessage("已登录校园网，无需重复登录~", "退出登录", () -> logoutFromService());
-                }
-            }
-        });
+        new ApiSimpleRequest(Method.GET).url("http://w.seu.edu.cn/index.php/index/init")
+                .onResponse((success, code, response) -> {
+                    if (success) {
+                        JObj responseJSON = new JObj(response);
+                        if (responseJSON.$i("status") == 0) {
+                            // 未登录状态，直接登录
+                            loginToService();
+                        } else if (!responseJSON.$s("logout_username").equals(ApiHelper.getWifiUserName())) {
+                            logoutThenLogin();
+                        } else {
+                            working = false;
+                            AppContext.showMessage("校园网快捷登录：已登录状态，无需重复登录~");
+                        }
+                    } else {
+                        working = false;
+                        AppContext.showMessage("校园网快捷登录：信号不佳，换个姿势试试？");
+                    }
+                }).run();
     }
 
-    private void loginToService(String username,String password){
-        // 登陆网络服务
-        OkHttpUtils.post().url("http://w.seu.edu.cn/portal/login.php")
-                .addParams("username", username)
-                .addParams("password", password).build()
-                .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-                vibrator.vibrate(50);
-                AppContext.showMessage("校园网信号不佳，换个姿势试试？");
-            }
-
-            @Override
-            public void onResponse(String response) {
-                // 登陆成功状态
-                vibrator.vibrate(50);
-                AppContext.showMessage("小猴登录校园网成功~", "退出登陆", () -> logoutFromService());
-            }
-        });
+    private void logoutThenLogin() {
+        new ApiSimpleRequest(Method.POST).url("http://w.seu.edu.cn/index.php/index/logout")
+                .onResponse((success, code, response) -> {
+                    if (success) {
+                        loginToService();
+                    } else {
+                        working = false;
+                        AppContext.showMessage("校园网快捷登录：已登录账号退出失败，请重试~");
+                    }
+                }).run();
     }
 
     private void loginToService() {
-        // 登陆网络服务
         String username = ApiHelper.getWifiUserName();
         String password = ApiHelper.getWifiPassword();
-        loginToService(username,password);
-    }
+        String passwordEncoded = new String(Base64.encode(password.getBytes(), Base64.DEFAULT));
 
-
-
-    private void logoutFromService() {
-        OkHttpUtils.post().url("http://w.seu.edu.cn/portal/logout.php").build()
-                .connTimeOut(5000).readTimeOut(5000).execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-                vibrator.vibrate(50);
-                AppContext.showMessage("校园网退出登录失败，请重试");
-            }
-
-            @Override
-            public void onResponse(String response) {
-                vibrator.vibrate(50);
-                AppContext.showMessage("校园网退出登录成功");
-            }
-        });
+        new ApiSimpleRequest(Method.POST).url("http://w.seu.edu.cn/index.php/index/login")
+                .post("username", username, "password", passwordEncoded, "domain", "teacher")
+                .onResponse((success, code, response) -> {
+                    if (success) {
+                        JObj info = new JObj(response);
+                        if (info.$i("status") == 1) {
+                            AppContext.showMessage("校园网快捷登录成功~");
+                        } else {
+                            String error = info.$s("info");
+                            if (!error.equals("")) {
+                                AppContext.showMessage("校园网快捷登录失败：" + error);
+                            } else {
+                                AppContext.showMessage("校园网快捷登录：信号不佳，换个姿势试试？");
+                            }
+                        }
+                    } else {
+                        AppContext.showMessage("校园网快捷登录：信号不佳，换个姿势试试？");
+                    }
+                    working = false;
+                }).run();
     }
 }

@@ -2,43 +2,39 @@ package cn.seu.herald_android.factory;
 
 import android.view.View;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import cn.seu.herald_android.app_main.CardsModel;
 import cn.seu.herald_android.app_module.lecture.LectureBlockLayout;
 import cn.seu.herald_android.app_module.lecture.LectureNoticeModel;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 
 public class LectureCard {
 
     public static ApiRequest getRefresher() {
-        return new ApiSimpleRequest(Method.POST).url(ApiHelper.wechat_lecture_notice_url).addUuid()
-                .toCache("herald_lecture_notices");
+        return Cache.lectureNotices.getRefresher();
     }
 
     /**
      * 读取人文讲座预告缓存，转换成对应的时间轴条目
      **/
     public static CardsModel getCard() {
-        String cache = CacheHelper.get("herald_lecture_notices");
+        String cache = Cache.lectureNotices.getValue();
         try {
-            JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
+            JArr jsonArray = new JObj(cache).$a("content");
             ArrayList<View> lectures = new ArrayList<>();
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject json_item = jsonArray.getJSONObject(i);
-                String dateStr = json_item.getString("date").split("日")[0];
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JObj json_item = jsonArray.$o(i);
+                String dateStr = json_item.$s("date").split("日")[0];
                 String[] date = dateStr.replaceAll("年", "-").replaceAll("月", "-").split("-");
                 String[] mdStr = {date[date.length - 2], date[date.length - 1]};
 
@@ -52,10 +48,10 @@ public class LectureCard {
 
                         LectureBlockLayout block = new LectureBlockLayout(AppContext.instance,
                                 new LectureNoticeModel(
-                                        json_item.getString("date"),
-                                        json_item.getString("topic"),
-                                        json_item.getString("speaker"),
-                                        json_item.getString("location")
+                                        json_item.$s("date"),
+                                        json_item.$s("topic"),
+                                        json_item.$s("speaker"),
+                                        json_item.$s("location")
                                 ));
                         lectures.add(block);
                     }
@@ -78,7 +74,7 @@ public class LectureCard {
             }
 
             // 今天无人文讲座
-            String desc = jsonArray.length() == 0 ? "暂无人文讲座预告信息" : "暂无新的人文讲座，点我查看以后的预告";
+            String desc = jsonArray.size() == 0 ? "暂无人文讲座预告信息" : "暂无新的人文讲座，点我查看以后的预告";
             if (!ApiHelper.isLogin()) {
                 desc = "暂无最近讲座预告，登录可查询讲座记录";
             }

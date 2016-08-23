@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="400dp"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@color/colorCurriculumPrimary"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="浮动课程：是指上课时间存在不确定因素，无法在课表上显示的课程，例如新生军训、短学期实训、辅修课等。\n\n遇到此类课程，请以授课教师指定的时间安排为准。"
+                android:textColor="@color/colorIcons"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_float_class"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/colorDivider"
+            android:dividerHeight="@dimen/divider_height"/>
+
+    </LinearLayout>
+
+</LinearLayout>

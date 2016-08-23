@@ -1,7 +1,7 @@
 package cn.seu.herald_android.app_module.curriculum;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import cn.seu.herald_android.framework.json.JArr;
+
 
 /**
  * 单次课程信息的类
@@ -12,10 +12,10 @@ public class ClassModel {
     private String className, place;
     private int startWeek, endWeek, startTime, endTime;
 
-    public ClassModel(JSONArray json) throws JSONException, ArrayIndexOutOfBoundsException {
-        className = json.getString(0);
-        place = json.getString(2);
-        String timeStr = json.getString(1);
+    public ClassModel(JArr json) throws ArrayIndexOutOfBoundsException {
+        className = json.$s(0);
+        place = json.$s(2);
+        String timeStr = json.$s(1);
         String[] timeStrs = timeStr
                 .replace("]", "-")
                 .replace("[", "")

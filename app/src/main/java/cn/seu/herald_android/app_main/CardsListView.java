@@ -23,10 +23,7 @@ import java.util.Collections;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_module.grade.GradeActivity;
-import cn.seu.herald_android.app_module.gymreserve.GymReserveActivity;
-import cn.seu.herald_android.app_module.library.LibraryActivity;
-import cn.seu.herald_android.app_module.srtp.SrtpActivity;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.custom.FadeOutHeaderContainer;
@@ -46,7 +43,6 @@ import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.network.ApiEmptyRequest;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.CacheHelper;
 import cn.seu.herald_android.helper.ServiceHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 
@@ -246,8 +242,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             return;
         }
 
-        if (srl != null && !srl.isRefreshing()) srl.setRefreshing(true);
-
         ApiRequest request = new ApiEmptyRequest();
 
         // 刷新版本信息和推送消息
@@ -272,8 +266,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         // 当课表模块开启时
         if (Module.curriculum.getCardEnabled() && ApiHelper.isLogin()) {
             // 仅当课表数据不存在时刷新课表
-            if (CacheHelper.get("herald_curriculum").equals("")
-                    || CacheHelper.get("herald_sidebar").equals("")) {
+            if (Cache.curriculum.isEmpty() || Cache.curriculumSidebar.isEmpty()) {
                 request = request.parallel(CurriculumCard.getRefresher());
             }
         }
@@ -281,7 +274,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         // 当实验模块开启时
         if (Module.experiment.getCardEnabled() && ApiHelper.isLogin()) {
             // 仅当实验数据不存在时刷新实验
-            if (CacheHelper.get("herald_experiment").equals("")) {
+            if (Cache.experiment.isEmpty()) {
                 request = request.parallel(ExperimentCard.getRefresher());
             }
         }
@@ -289,7 +282,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         // 当考试模块开启时
         if (Module.exam.getCardEnabled() && ApiHelper.isLogin()) {
             // 仅当考试数据不存在时刷新考试
-            if (CacheHelper.get("herald_exam").equals("")) {
+            if (Cache.exam.isEmpty()) {
                 request = request.parallel(ExamCard.getRefresher());
             }
         }
@@ -309,11 +302,13 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             request = request.parallel(JwcCard.getRefresher());
         }
 
-        request = request
-                .parallel(GymReserveActivity.remoteRefreshNotifyDotState())
-                .parallel(SrtpActivity.remoteRefreshNotifyDotState())
-                .parallel(GradeActivity.remoteRefreshNotifyDotState())
-                .parallel(LibraryActivity.remoteRefreshNotifyDotState());
+        if (ApiHelper.isLogin()) {
+            request = request
+                    .parallel(Cache.gymReserveMyOrder.getRefresher())
+                    .parallel(Cache.srtp.getRefresher())
+                    .parallel(Cache.grade.getRefresher())
+                    .parallel(Cache.libraryBorrowBook.getRefresher());
+        }
 
         /**
          * 结束刷新部分

@@ -82,7 +82,7 @@
                 android:id="@+id/main_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bottom_tab_height"
-                android:background="#d0fcfcfc"
+                android:background="#c8fcfcfc"
                 app:tl_indicator_height="0dp"
                 app:tl_iconHeight="38dp"
                 app:tl_iconMargin="0dp"

@@ -10,8 +10,8 @@ android {
         applicationId "cn.seu.herald_android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 16
-        versionName "V1.9.0"
+        versionCode 21
+        versionName "v1.9.5"
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
     }
@@ -37,6 +37,9 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    // 仿java8 stream 支持
+    compile 'com.annimon:stream:1.1.1'
+
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
@@ -62,4 +65,7 @@ dependencies {
 
     // 动态模糊
     compile 'com.eightbitlab:blurview:1.1.2'
+
+    // 进度对话框
+    compile 'com.kaopiz:kprogresshud:1.0.5'
 }

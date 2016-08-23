@@ -9,5 +9,5 @@ package cn.seu.herald_android.framework.network;
  * 如要监听简单请求结束的事件，可使用OnResponseListener
  */
 public interface OnFinishListener {
-    void parseFinish(boolean allSuccess, int mostCriticalCode);
+    void onFinish(boolean allSuccess, int mostCriticalCode);
 }

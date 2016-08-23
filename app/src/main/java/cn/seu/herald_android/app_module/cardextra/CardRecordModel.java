@@ -1,11 +1,10 @@
 package cn.seu.herald_android.app_module.cardextra;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import cn.seu.herald_android.framework.json.JArr;
 
 class CardRecordModel {
     // 消费日期
@@ -30,17 +29,17 @@ class CardRecordModel {
         this.left = left;
     }
 
-    public static ArrayList<CardRecordModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<CardRecordModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<CardRecordModel> list = new ArrayList<>();
 
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.size(); i++) {
             list.add(new CardRecordModel(
-                    jsonArray.getJSONObject(i).getString("date").split(" ")[0],
-                    jsonArray.getJSONObject(i).getString("date").split(" ")[1],
-                    jsonArray.getJSONObject(i).getString("price"),
-                    jsonArray.getJSONObject(i).getString("type"),
-                    jsonArray.getJSONObject(i).getString("system"),
-                    jsonArray.getJSONObject(i).getString("left")
+                    jsonArray.$o(i).$s("date").split(" ")[0],
+                    jsonArray.$o(i).$s("date").split(" ")[1],
+                    jsonArray.$o(i).$s("price"),
+                    jsonArray.$o(i).$s("type"),
+                    jsonArray.$o(i).$s("system"),
+                    jsonArray.$o(i).$s("left")
             ));
         }
         return list;

@@ -72,7 +72,7 @@ public class Module {
 
     public static AppModule emptyroom = new AppModule("emptyroom",
             "空教室 Web", "提供指定时间内的空教室信息查询服务",
-            "http://115.28.27.150/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false, false);
+            "http://www.heraldstudio.com/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false, false);
 
     // 特殊的模块，模块管理
     public static AppModule moduleManager = new AppModule("",
