@@ -7,10 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,6 +15,8 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class ExamActivity extends BaseActivity {
 
@@ -64,33 +62,28 @@ public class ExamActivity extends BaseActivity {
             return;
         }
 
-        try {
-            List<ExamModel> exams = ExamModel.transformJSONArrayToArrayList(new JSONObject(cache).getJSONArray("content"));
-            List<ExamModel> customExams = ExamModel.transformJSONArrayToArrayList(AddExamActivity.getCustomExamJSONArray());
-            for (ExamModel examModel : customExams) {
-                examModel.isCustom = true;
-                exams.add(examModel);
-            }
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            ExamAdapter adapter = new ExamAdapter(exams);
-            // 绑定自定义考试可以删除的响应函数
-            adapter.setOnItemClickListener((item, position) -> {
-                if (item.isCustom) {
-                    // 如果是自定义的考试就弹出删除询问
-                    new AlertDialog.Builder(this)
-                            .setMessage("确定删除这个自定义考试吗？")
-                            .setPositiveButton("确定", (dialog, which) -> {
-                                deleteDefinedExam(item);
-                            })
-                            .setNegativeButton("取消", (dialog1, which1) -> {
-                            }).show();
-                }
-            });
-            recyclerView.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showSnackBar("解析失败，请刷新");
+        List<ExamModel> exams = ExamModel.transformJArrToArrayList(new JObj(cache).$a("content"));
+        List<ExamModel> customExams = ExamModel.transformJArrToArrayList(AddExamActivity.getCustomExamJArr());
+        for (ExamModel examModel : customExams) {
+            examModel.isCustom = true;
+            exams.add(examModel);
         }
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ExamAdapter adapter = new ExamAdapter(exams);
+        // 绑定自定义考试可以删除的响应函数
+        adapter.setOnItemClickListener((item, position) -> {
+            if (item.isCustom) {
+                // 如果是自定义的考试就弹出删除询问
+                new AlertDialog.Builder(this)
+                        .setMessage("确定删除这个自定义考试吗？")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            deleteDefinedExam(item);
+                        })
+                        .setNegativeButton("取消", (dialog1, which1) -> {
+                        }).show();
+            }
+        });
+        recyclerView.setAdapter(adapter);
     }
 
     private void refreshCache() {
@@ -107,24 +100,19 @@ public class ExamActivity extends BaseActivity {
     }
 
     void deleteDefinedExam(ExamModel item) {
-        try {
-            JSONArray array_old = AddExamActivity.getCustomExamJSONArray();
-            JSONArray array_new = new JSONArray();
-            boolean deleted = false;
-            for (int i = 0; i < array_old.length(); i++) {
-                JSONObject obj = array_old.getJSONObject(i);
-                if (item.equals(new ExamModel(obj)) && !deleted) {
-                    deleted = true;
-                    continue;
-                }
-                array_new.put(obj);
+        JArr array_old = AddExamActivity.getCustomExamJArr();
+        JArr array_new = new JArr();
+        boolean deleted = false;
+        for (int i = 0; i < array_old.size(); i++) {
+            JObj obj = array_old.$o(i);
+            if (item.equals(new ExamModel(obj)) && !deleted) {
+                deleted = true;
+                continue;
             }
-            Cache.examCustom.setValue(array_new.toString());
-            showSnackBar("删除成功");
-            loadCache();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showSnackBar("删除失败");
+            array_new.put(obj);
         }
+        Cache.examCustom.setValue(array_new.toString());
+        showSnackBar("删除成功");
+        loadCache();
     }
 }

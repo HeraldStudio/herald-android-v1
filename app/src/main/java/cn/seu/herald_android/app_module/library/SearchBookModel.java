@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.library;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 class SearchBookModel {
     // 书所在位置索引
@@ -22,18 +21,18 @@ class SearchBookModel {
     // 剩余书数量
     public int left;
 
-    public static ArrayList<SearchBookModel> transformJSONArrayToArrayList(JSONArray array) throws JSONException {
+    public static ArrayList<SearchBookModel> transformJArrToArrayList(JArr array) {
         ArrayList<SearchBookModel> resList = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject jsonBook = array.getJSONObject(i);
+        for (int i = 0; i < array.size(); i++) {
+            JObj jsonBook = array.$o(i);
             SearchBookModel bookModel = new SearchBookModel();
-            bookModel.all = (jsonBook.getInt("all"));
-            bookModel.index = (jsonBook.getString("index"));
-            bookModel.name = (jsonBook.getString("name"));
-            bookModel.author = (jsonBook.getString("author"));
-            bookModel.publish = (jsonBook.getString("publish"));
-            bookModel.type = (jsonBook.getString("type"));
-            bookModel.left = (jsonBook.getInt("left"));
+            bookModel.all = (jsonBook.$i("all"));
+            bookModel.index = (jsonBook.$s("index"));
+            bookModel.name = (jsonBook.$s("name"));
+            bookModel.author = (jsonBook.$s("author"));
+            bookModel.publish = (jsonBook.$s("publish"));
+            bookModel.type = (jsonBook.$s("type"));
+            bookModel.left = (jsonBook.$i("left"));
             resList.add(bookModel);
         }
         return resList;

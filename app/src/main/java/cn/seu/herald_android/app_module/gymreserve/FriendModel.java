@@ -5,14 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class FriendModel implements Serializable {
     String nameDepartment;
@@ -25,14 +23,14 @@ public class FriendModel implements Serializable {
         this.userInfo = userInfo;
     }
 
-    public FriendModel(JSONObject obj) throws JSONException {
-        this(obj.getString("nameDepartment"),
-                obj.getString("userId"),
-                obj.getString("userInfo"));
+    public FriendModel(JObj obj) {
+        this(obj.$s("nameDepartment"),
+                obj.$s("userId"),
+                obj.$s("userInfo"));
     }
 
-    public JSONObject getJSONObject() throws JSONException{
-        JSONObject obj = new JSONObject();
+    public JObj getJObj() {
+        JObj obj = new JObj();
         obj.put("nameDepartment",nameDepartment);
         obj.put("userId",userId);
         obj.put("userInfo",userInfo);
@@ -68,7 +66,6 @@ public class FriendModel implements Serializable {
                 tv_name.setText(friendModel.nameDepartment.split("\\(")[0]);
                 tv_department.setText(friendModel.nameDepartment.split("\\(")[1].split("\\)")[0]);
             } catch (ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
                 tv_name.setText(friendModel.nameDepartment);
             }
 

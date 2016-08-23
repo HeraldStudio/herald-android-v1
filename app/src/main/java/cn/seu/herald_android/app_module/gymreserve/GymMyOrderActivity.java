@@ -11,10 +11,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +20,8 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -76,13 +74,9 @@ public class GymMyOrderActivity extends BaseActivity {
     public void loadMyOrder() {
         String cache = Cache.gymReserveMyOrder.getValue();
         if (!cache.equals("")) {
-            try {
-                JSONArray array = new JSONObject(cache).getJSONObject("content").getJSONArray("rows");
-                ArrayList<MyOrder> list = MyOrder.transformJSONtoArrayList(array);
-                listView.setAdapter(new MyOrderAdapter(getBaseContext(), R.layout.mod_que_gymreserve__my_order__item, list));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            JArr array = new JObj(cache).$o("content").$a("rows");
+            ArrayList<MyOrder> list = MyOrder.transformJSONtoArrayList(array);
+            listView.setAdapter(new MyOrderAdapter(getBaseContext(), R.layout.mod_que_gymreserve__my_order__item, list));
             return;
         }
         refreshMyOrder();
@@ -96,16 +90,12 @@ public class GymMyOrderActivity extends BaseActivity {
                 .post("method", "cancelUrl")
                 .post("id", id + "")
                 .onResponse((success, code, response) -> {
-                    try {
-                        String res = new JSONObject(response).getJSONObject("content").getString("msg");
-                        if (success && res.equals("success")) {
-                            showSnackBar("取消预约成功");
-                            refreshMyOrder();
-                        } else {
-                            showSnackBar("取消预约失败，请重试");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    String res = new JObj(response).$o("content").$s("msg");
+                    if (success && res.equals("success")) {
+                        showSnackBar("取消预约成功");
+                        refreshMyOrder();
+                    } else {
+                        showSnackBar("取消预约失败，请重试");
                     }
                 }).run();
     }
@@ -143,19 +133,19 @@ public class GymMyOrderActivity extends BaseActivity {
             this.state = state;
         }
 
-        public static ArrayList<MyOrder> transformJSONtoArrayList(JSONArray array) throws JSONException {
+        public static ArrayList<MyOrder> transformJSONtoArrayList(JArr array) {
             ArrayList<MyOrder> list = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject obj = array.getJSONObject(i);
+            for (int i = 0; i < array.size(); i++) {
+                JObj obj = array.$o(i);
                 list.add(new MyOrder(
-                        obj.getString("useBeginTime"),
-                        obj.getString("useEndTime"),
-                        obj.getString("itemName"),
-                        obj.getString("floorName"),
-                        obj.getString("useDate"),
-                        obj.getInt("id"),
-                        obj.getInt("usePeoples"),
-                        obj.getInt("state")
+                        obj.$s("useBeginTime"),
+                        obj.$s("useEndTime"),
+                        obj.$s("itemName"),
+                        obj.$s("floorName"),
+                        obj.$s("useDate"),
+                        obj.$i("id"),
+                        obj.$i("usePeoples"),
+                        obj.$i("state")
                 ));
             }
             return list;

@@ -1,9 +1,8 @@
 package cn.seu.herald_android.app_module.lecture;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
 
 class LectureRecordModel {
     String time;
@@ -14,12 +13,12 @@ class LectureRecordModel {
         this.place = place;
     }
 
-    public static ArrayList<LectureRecordModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<LectureRecordModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<LectureRecordModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.size(); i++) {
             list.add(new LectureRecordModel(
-                    jsonArray.getJSONObject(i).getString("date"),
-                    jsonArray.getJSONObject(i).getString("place")
+                    jsonArray.$o(i).$s("date"),
+                    jsonArray.$o(i).$s("place")
             ));
         }
         return list;

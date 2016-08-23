@@ -1,8 +1,5 @@
 package cn.seu.herald_android.factory;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +10,8 @@ import cn.seu.herald_android.app_module.jwc.JwcNoticeModel;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 
 public class JwcCard {
@@ -27,17 +26,17 @@ public class JwcCard {
     public static CardsModel getCard() {
         String cache = Cache.jwc.getValue();
         try {
-            JSONArray json_content = new JSONObject(cache)
-                    .getJSONObject("content").getJSONArray("教务信息");
+            JArr json_content = new JObj(cache)
+                    .$o("content").$a("教务信息");
 
             ArrayList<JwcBlockLayout> allNotices = new ArrayList<>();
 
-            for (int i = 0; i < json_content.length(); i++) {
-                JSONObject json_item = json_content.getJSONObject(i);
+            for (int i = 0; i < json_content.size(); i++) {
+                JObj json_item = json_content.$o(i);
                 JwcNoticeModel item = new JwcNoticeModel(
-                        json_item.getString("date"),
-                        json_item.getString("href"),
-                        json_item.getString("title"));
+                        json_item.$s("date"),
+                        json_item.$s("href"),
+                        json_item.$s("title"));
 
                 Calendar cal = Calendar.getInstance();
                 if (item.date.equals(new SimpleDateFormat("yyyy-MM-dd")

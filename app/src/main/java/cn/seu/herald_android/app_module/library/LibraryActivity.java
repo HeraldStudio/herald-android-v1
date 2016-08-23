@@ -3,6 +3,7 @@ package cn.seu.herald_android.app_module.library;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,10 +13,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -24,10 +21,12 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.User;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
-import cn.seu.herald_android.helper.User;
 
 /**
  * 图书主页面Acvitity
@@ -84,15 +83,10 @@ public class LibraryActivity extends BaseActivity {
     }
 
     private void loadCache() {
-        try {
-            JSONObject json_res = new JSONObject(Cache.libraryHotBook.getValue());
-            JSONArray jsonArray = json_res.getJSONArray("content");
-            ArrayList<HotBookModel> list = HotBookModel.transformJSONArrayToArrayList(jsonArray);
-            listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.mod_que_library__item, list));// showSnackBar("刷新成功");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showSnackBar("解析失败，请刷新");
-        }
+        JObj json_res = new JObj(Cache.libraryHotBook.getValue());
+        JArr jsonArray = json_res.$a("content");
+        ArrayList<HotBookModel> list = HotBookModel.transformJArrToArrayList(jsonArray);
+        listView_hotbook.setAdapter(new HotBookAdapter(this, R.layout.mod_que_library__item, list));
     }
 
     public void refreshBorrowRocord() {
@@ -101,24 +95,19 @@ public class LibraryActivity extends BaseActivity {
         Cache.libraryBorrowBook.refresh((success, code) -> {
             hideProgressDialog();
             if (success) {
-                try {
-                    JSONObject json_res = new JSONObject(Cache.libraryBorrowBook.getValue());
-                    if (json_res.getInt("code") == 401) {
-                        displayLibraryAuthDialog();
-                        return;
-                    }
+                JObj json_res = new JObj(Cache.libraryBorrowBook.getValue());
+                if (json_res.$i("code") == 401) {
+                    displayLibraryAuthDialog();
+                    return;
+                }
 
-                    JSONArray jsonArray = json_res.getJSONArray("content");
-                    if (jsonArray.length() == 0) {
-                        // 如果列表为空则说明没有借过书
-                        showSnackBar("目前尚无在借图书");
-                    } else {
-                        // 反之打开借书记录对话框
-                        displayBorrowRecordDialog(BorrowBookModel.transformJSONArrayToArrayList(jsonArray));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    showSnackBar("解析失败，请刷新");
+                JArr jsonArray = json_res.$a("content");
+                if (jsonArray.size() == 0) {
+                    // 如果列表为空则说明没有借过书
+                    showSnackBar("目前尚无在借图书");
+                } else {
+                    // 反之打开借书记录对话框
+                    displayBorrowRecordDialog(BorrowBookModel.transformJArrToArrayList(jsonArray));
                 }
             } else {
                 showSnackBar("刷新失败，请重试");
@@ -178,7 +167,7 @@ public class LibraryActivity extends BaseActivity {
                     hideProgressDialog();
                     if (response.equals("OK")) {
                         // 返回OK说明认证成功
-                        refreshBorrowRocord();
+                        new Handler().post(this::refreshBorrowRocord);
                     } else {
                         showSnackBar("绑定失败，请重试");
                     }

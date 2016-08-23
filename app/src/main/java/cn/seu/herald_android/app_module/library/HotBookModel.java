@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.library;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 class HotBookModel {
     // 书的借阅次数
@@ -39,15 +38,15 @@ class HotBookModel {
         return author;
     }
 
-    public static ArrayList<HotBookModel> transformJSONArrayToArrayList(JSONArray array) throws JSONException {
+    public static ArrayList<HotBookModel> transformJArrToArrayList(JArr array) {
         ArrayList<HotBookModel> list = new ArrayList<>();
-        for(int i=0;i<array.length();i++){
-            JSONObject objectItem = array.getJSONObject(i);
+        for (int i = 0; i < array.size(); i++) {
+            JObj objectItem = array.$o(i);
             list.add(new HotBookModel(
-                    objectItem.getInt("count"),
-                    objectItem.getString("place"),
-                    objectItem.getString("name"),
-                    objectItem.getString("author")
+                    objectItem.$i("count"),
+                    objectItem.$s("place"),
+                    objectItem.$s("name"),
+                    objectItem.$s("author")
             ));
         }
         return list;

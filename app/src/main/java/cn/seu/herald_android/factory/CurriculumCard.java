@@ -3,9 +3,6 @@ package cn.seu.herald_android.factory;
 import android.util.Pair;
 import android.view.View;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,6 +16,8 @@ import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
 
@@ -44,49 +43,64 @@ public class CurriculumCard {
 
         String cache = Cache.curriculum.getValue();
         if (!cache.equals("")) try {
-            JSONObject jsonObject = new JSONObject(cache);
+            JObj jsonObject = new JObj(cache);
             // 读取侧栏信息
             String sidebar = Cache.curriculumSidebar.getValue();
             Map<String, Pair<String, String>> sidebarInfo = new HashMap<>();
 
             // 将课程的授课教师和学分信息放入键值对
-            JSONArray sidebarArray = new JSONArray(sidebar);
-            for (int i = 0; i < sidebarArray.length(); i++) {
-                JSONObject obj = sidebarArray.getJSONObject(i);
-                sidebarInfo.put(obj.getString("course"),
-                        new Pair<>(obj.getString("lecturer"), obj.getString("credit")));
+            JArr sidebarArray = new JArr(sidebar);
+            for (int i = 0; i < sidebarArray.size(); i++) {
+                JObj obj = sidebarArray.$o(i);
+                sidebarInfo.put(obj.$s("course"),
+                        new Pair<>(obj.$s("lecturer"), obj.$s("credit")));
             }
 
             // 读取开学日期
-            int startMonth = jsonObject.getJSONObject("startdate").getInt("month");
-            int startDate = jsonObject.getJSONObject("startdate").getInt("day");
+            int startMonth = jsonObject.$o("startdate").$i("month");
+            int startDate = jsonObject.$o("startdate").$i("day");
             Calendar termStart = Calendar.getInstance();
+            termStart = CalendarUtils.toSharpDay(termStart);
             termStart.set(termStart.get(Calendar.YEAR), startMonth, startDate);
 
-            // 如果开学日期比今天还晚，则是去年开学的。这里用while保证了thisWeek永远大于零
-            while (termStart.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
+            // 如果开学日期比今天晚了超过两个月，则认为是去年开学的。这里用while保证了thisWeek永远大于零
+            while (termStart.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() > (long) 60 * 86400 * 1000) {
                 termStart.set(Calendar.YEAR, termStart.get(Calendar.YEAR) - 1);
             }
-            termStart = CalendarUtils.toSharpDay(termStart);
+
+            // 为了保险，检查开学日期的星期，不是周一的话往前推到周一
+            long oldTimeMillis = termStart.getTimeInMillis();
+            long daysAfterMonday = termStart.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
+            termStart.setTimeInMillis(oldTimeMillis - daysAfterMonday * 86400 * 1000);
 
             // 计算当前周
             Calendar today = Calendar.getInstance();
             today = CalendarUtils.toSharpDay(today);
 
             int dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24);
+            if (dayDelta < -1) {
+                return new CardsModel(Module.curriculum,
+                        CardsModel.Priority.CONTENT_NO_NOTIFY, "还没有开学，点击预览新学期课表~"
+                );
+            } else if (dayDelta == -1) {
+                return new CardsModel(Module.curriculum,
+                        CardsModel.Priority.CONTENT_NOTIFY, "明天就要开学了，点击预览新学期课表~"
+                );
+            }
+
             int week = dayDelta / 7 + 1;
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
 
             // 枚举今天的课程
-            JSONArray array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+            JArr array = jsonObject.$a(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             int classCount = 0;
             boolean classAlmostEnd = false;
 
             ArrayList<View> remainingClasses = new ArrayList<>();
 
-            for (int j = 0; j < array.length(); j++) {
+            for (int j = 0; j < array.size(); j++) {
                 try {
-                    ClassModel info = new ClassModel(array.getJSONArray(j));
+                    ClassModel info = new ClassModel(array.$a(j));
                     // 如果该课程本周上课
                     if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                         classCount++;
@@ -166,13 +180,13 @@ public class CurriculumCard {
             dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24) + 1;
             week = dayDelta / 7 + 1;
             dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
-            array = jsonObject.getJSONArray(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
+            array = jsonObject.$a(CurriculumScheduleLayout.WEEK_NUMS[dayOfWeek]);
             boolean todayHasClasses = classCount != 0;
 
             classCount = 0;
             ArrayList<View> viewList = new ArrayList<>();
-            for (int j = 0; j < array.length(); j++) {
-                ClassModel info = new ClassModel(array.getJSONArray(j));
+            for (int j = 0; j < array.size(); j++) {
+                ClassModel info = new ClassModel(array.$a(j));
                 // 如果该课程本周上课
                 if (info.getStartWeek() <= week && info.getEndWeek() >= week && info.isFitEvenOrOdd(week)) {
                     classCount++;

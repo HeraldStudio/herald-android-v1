@@ -16,14 +16,13 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.cloudist.acplibrary.ACProgressConstant;
-import cc.cloudist.acplibrary.ACProgressFlower;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.app_secondary.LoginActivity;
@@ -43,11 +42,11 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // 加载刷新对话框
-        progressDialog = new ACProgressFlower.Builder(this)
-                .direction(ACProgressConstant.DIRECT_CLOCKWISE)
-                .petalThickness(2)
-                .themeColor(Color.WHITE)
-                .fadeColor(Color.DKGRAY).build();
+        progressDialog = KProgressHUD.create(this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
     }
 
     @Override
@@ -137,7 +136,7 @@ public class BaseActivity extends AppCompatActivity {
         return statusView;
     }
 
-    protected ACProgressFlower progressDialog;
+    protected KProgressHUD progressDialog;
 
     public void showProgressDialog() {
         progressDialog.show();

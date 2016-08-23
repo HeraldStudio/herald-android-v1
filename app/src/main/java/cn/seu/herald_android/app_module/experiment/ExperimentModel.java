@@ -1,12 +1,10 @@
 package cn.seu.herald_android.app_module.experiment;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import cn.seu.herald_android.custom.CalendarUtils;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class ExperimentModel {
     String name;
@@ -27,17 +25,17 @@ public class ExperimentModel {
         this.beginStamp = getBeginHourMinuteStamp(time);
     }
 
-    public static ArrayList<ExperimentModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<ExperimentModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<ExperimentModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj jsonObject = jsonArray.$o(i);
             list.add(new ExperimentModel(
-                    jsonObject.getString("name"),
-                    jsonObject.getString("Date"),
-                    jsonObject.getString("Day"),
-                    jsonObject.getString("Teacher"),
-                    jsonObject.getString("Address"),
-                    jsonObject.getString("Grade")
+                    jsonObject.$s("name"),
+                    jsonObject.$s("Date"),
+                    jsonObject.$s("Day"),
+                    jsonObject.$s("Teacher"),
+                    jsonObject.$s("Address"),
+                    jsonObject.$s("Grade")
             ));
         }
         return list;

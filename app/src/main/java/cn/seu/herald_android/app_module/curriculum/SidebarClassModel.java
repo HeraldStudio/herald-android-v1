@@ -1,10 +1,8 @@
 package cn.seu.herald_android.app_module.curriculum;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import cn.seu.herald_android.consts.Cache;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class SidebarClassModel {
 
@@ -16,29 +14,25 @@ public class SidebarClassModel {
 
     private String credits;
 
-    public SidebarClassModel(JSONObject json) {
+    public SidebarClassModel(JObj json) {
 
-        try {
-            className = json.getString("course");
-        } catch (JSONException e) {
+        className = json.$s("course");
+        if (className.equals("")) {
             className = "未知课程";
         }
 
-        try {
-            teacher = json.getString("lecturer");
-        } catch (JSONException e) {
+        teacher = json.$s("lecturer");
+        if (teacher.equals("")) {
             teacher = "未知教师";
         }
 
-        try {
-            credits = json.getString("credit");
-        } catch (JSONException e) {
+        credits = json.$s("credit");
+        if (credits.equals("")) {
             credits = "未知";
         }
 
-        try {
-            week = json.getString("week");
-        } catch (JSONException e) {
+        week = json.$s("week");
+        if (week.equals("")) {
             week = "未知";
         }
     }
@@ -55,24 +49,21 @@ public class SidebarClassModel {
         String data = Cache.curriculum.getValue();
 
         // 读取json内容
-        try {
-            JSONObject content = new JSONObject(data);
+        JObj content = new JObj(data);
 
-            for (String weekNum : CurriculumScheduleLayout.WEEK_NUMS) {
-                JSONArray array = content.getJSONArray(weekNum);
-                for (int i = 0; i < array.length(); i++) {
-                    try {
-                        ClassModel model = new ClassModel(array.getJSONArray(i));
-                        if (model.getClassName().equals(className)) {
-                            return true;
-                        }
-                    } catch (Exception e) {
+        for (String weekNum : CurriculumScheduleLayout.WEEK_NUMS) {
+            JArr array = content.$a(weekNum);
+            for (int i = 0; i < array.size(); i++) {
+                try {
+                    ClassModel model = new ClassModel(array.$a(i));
+                    if (model.getClassName().equals(className)) {
+                        return true;
                     }
+                } catch (Exception e) {
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
         return false;
     }
 }

@@ -7,9 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,7 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JObj;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -65,25 +63,20 @@ public class SeunetActivity extends BaseActivity {
         String cache = Cache.seunet.getValue();
         if (!cache.equals("")) {
             // 如果缓存不为空
-            try {
-                JSONObject json_cache = new JSONObject(cache);
-                // 设置余额显示
-                String leftmoney = json_cache.getJSONObject("content").getString("left");
-                tv_money_left.setText(leftmoney);
+            JObj json_cache = new JObj(cache);
+            // 设置余额显示
+            String leftmoney = json_cache.$o("content").$s("left");
+            tv_money_left.setText(leftmoney);
 
-                // 设置已用流量显示
-                String used = json_cache.getJSONObject("content").getJSONObject("web").getString("used");
-                if (used.equals("暂无流量信息")) {
-                    // 说明已欠费或者还未使用
-                    used = "0.00 B";
-                }
-                tv_used.setText(used);
-                // 设置统计饼状图
-                setupChart(json_cache.getJSONObject("content"), pieChartView_wlan);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                showSnackBar("解析失败，请刷新");
+            // 设置已用流量显示
+            String used = json_cache.$o("content").$o("web").$s("used");
+            if (used.equals("暂无流量信息")) {
+                // 说明已欠费或者还未使用
+                used = "0.00 B";
             }
+            tv_used.setText(used);
+            // 设置统计饼状图
+            setupChart(json_cache.$o("content"), pieChartView_wlan);
         } else {
             List<SliceValue> values = new ArrayList<>();
             // 暂时用一个完整的饼代替默认图
@@ -111,18 +104,18 @@ public class SeunetActivity extends BaseActivity {
         });
     }
 
-    public static void setupChart(JSONObject json, PieChartView pieChartView) {
+    public static void setupChart(JObj json, PieChartView pieChartView) {
         if (json == null)
             return;
         try {
             // seu-wlan
-            if (json.getJSONObject("web").getString("state").equals("未开通")) {
+            if (json.$o("web").$s("state").equals("未开通")) {
                 setEmptyPie(pieChartView);
             } else {
-                String str_use = json.getJSONObject("web").getString("used");
+                String str_use = json.$o("web").$s("used");
                 setUsedPercentage(str_use, pieChartView);
             }
-        } catch (JSONException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             setEmptyPie(pieChartView);
         }

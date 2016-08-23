@@ -42,95 +42,99 @@ public class PedetailCard {
         String forecast = Cache.pcForecast.getValue();
         String record = Cache.peDetail.getValue();
 
+        int count, remain;
         try {
-            int count = Integer.valueOf(Cache.peCount.getValue());
-            int remain = Integer.valueOf(Cache.peRemain.getValue());
+            count = Integer.valueOf(Cache.peCount.getValue());
+        } catch (NumberFormatException e) {
+            count = 0;
+        }
 
-            Calendar nowCal = Calendar.getInstance();
-            long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
-            long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
-            long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
+        try {
+            remain = Integer.valueOf(Cache.peRemain.getValue());
+        } catch (NumberFormatException e) {
+            remain = 0;
+        }
 
-            String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime());
+        Calendar nowCal = Calendar.getInstance();
+        long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
+        long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
+        long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
-            if (record.contains(todayStamp)) {
+        String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime());
+
+        if (record.contains(todayStamp)) {
+            CardsModel item = new CardsModel(Module.pedetail,
+                    CardsModel.Priority.CONTENT_NOTIFY,
+                    "你今天的跑操已经到账。" + getRemainNotice(count, remain, false)
+            );
+
+            item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
+
+            return item;
+        }
+
+        if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
+            return new CardsModel(Module.pedetail,
+                    CardsModel.Priority.CONTENT_NOTIFY, "跑操预告数据为空，请尝试刷新"
+            );
+        }
+
+        if (now < startTime) {
+            // 跑操时间没到
+            CardsModel item = new CardsModel(Module.pedetail,
+                    CardsModel.Priority.CONTENT_NO_NOTIFY, "小猴会在早上跑操时间实时显示跑操预告\n"
+                    + getRemainNotice(count, remain, false)
+            );
+
+            item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
+
+            return item;
+        } else if (now >= endTime) {
+            // 跑操时间已过
+
+            if (!forecast.contains("跑操")) {
+                // 没有跑操预告信息
                 CardsModel item = new CardsModel(Module.pedetail,
-                        CardsModel.Priority.CONTENT_NOTIFY,
-                        "你今天的跑操已经到账。" + getRemainNotice(count, remain, false)
-                );
-
-                item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
-
-                return item;
-            }
-
-            if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
-                return new CardsModel(Module.pedetail,
-                        CardsModel.Priority.CONTENT_NOTIFY, "跑操预告数据为空，请尝试刷新"
-                );
-            }
-
-            if (now < startTime) {
-                // 跑操时间没到
-                CardsModel item = new CardsModel(Module.pedetail,
-                        CardsModel.Priority.CONTENT_NO_NOTIFY, "小猴会在早上跑操时间实时显示跑操预告\n"
+                        CardsModel.Priority.CONTENT_NO_NOTIFY, "今天没有跑操预告信息\n"
                         + getRemainNotice(count, remain, false)
                 );
 
                 item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
 
                 return item;
-            } else if (now >= endTime) {
-                // 跑操时间已过
-
-                if (!forecast.contains("跑操")) {
-                    // 没有跑操预告信息
-                    CardsModel item = new CardsModel(Module.pedetail,
-                            CardsModel.Priority.CONTENT_NO_NOTIFY, "今天没有跑操预告信息\n"
-                            + getRemainNotice(count, remain, false)
-                    );
-
-                    item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
-
-                    return item;
-                } else {
-                    // 有跑操预告信息但时间已过
-                    CardsModel item = new CardsModel(Module.pedetail,
-                            CardsModel.Priority.CONTENT_NO_NOTIFY, forecast + "(已结束)\n"
-                            + getRemainNotice(count, remain, false)
-                    );
-
-                    item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
-
-                    return item;
-                }
             } else {
-                // 还没有跑操预告信息
-                if (!forecast.contains("跑操")) {
-                    CardsModel item = new CardsModel(Module.pedetail,
-                            CardsModel.Priority.CONTENT_NO_NOTIFY, "目前暂无跑操预报信息，过一会再来看吧~\n"
-                            + getRemainNotice(count, remain, false)
-                    );
-
-                    item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
-
-                    return item;
-                }
-
-                // 有跑操预告信息
+                // 有跑操预告信息但时间已过
                 CardsModel item = new CardsModel(Module.pedetail,
-                        CardsModel.Priority.CONTENT_NOTIFY, "小猴预测" + forecast + "\n"
-                        + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
+                        CardsModel.Priority.CONTENT_NO_NOTIFY, forecast + "(已结束)\n"
+                        + getRemainNotice(count, remain, false)
                 );
 
                 item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
 
                 return item;
             }
-        } catch (Exception e) {
-            return new CardsModel(Module.pedetail,
-                    CardsModel.Priority.CONTENT_NOTIFY, "跑操数据为空，请尝试刷新"
+        } else {
+            // 还没有跑操预告信息
+            if (!forecast.contains("跑操")) {
+                CardsModel item = new CardsModel(Module.pedetail,
+                        CardsModel.Priority.CONTENT_NO_NOTIFY, "目前暂无跑操预报信息，过一会再来看吧~\n"
+                        + getRemainNotice(count, remain, false)
+                );
+
+                item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
+
+                return item;
+            }
+
+            // 有跑操预告信息
+            CardsModel item = new CardsModel(Module.pedetail,
+                    CardsModel.Priority.CONTENT_NOTIFY, "小猴预测" + forecast + "\n"
+                    + getRemainNotice(count, remain, forecast.contains("今天正常跑操"))
             );
+
+            item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
+
+            return item;
         }
     }
 

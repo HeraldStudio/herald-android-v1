@@ -258,6 +258,7 @@ public class ExpressActivity extends BaseActivity
                                 mProgress.dismiss();
                             } else {
                                 showSnackBar(res.getString("content"));
+                                mProgress.dismiss();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

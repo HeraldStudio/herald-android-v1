@@ -12,9 +12,6 @@ import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -22,6 +19,7 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
 
 public class CurriculumActivity extends BaseActivity {
 
@@ -126,20 +124,16 @@ public class CurriculumActivity extends BaseActivity {
     }
 
     private String getFloatClassCount() {
-        try {
-            // 设置列表
-            JSONArray array = new JSONArray(Cache.curriculumSidebar.getValue());
-            ArrayList<SidebarClassModel> list = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                SidebarClassModel model = new SidebarClassModel(array.getJSONObject(i));
-                if (!model.isAdded()) {
-                    list.add(model);
-                }
+        // 设置列表
+        JArr array = new JArr(Cache.curriculumSidebar.getValue());
+        ArrayList<SidebarClassModel> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            SidebarClassModel model = new SidebarClassModel(array.$o(i));
+            if (!model.isAdded()) {
+                list.add(model);
             }
-            return String.valueOf(list.size());
-        } catch (JSONException e) {
-            return "?";
         }
+        return String.valueOf(list.size());
     }
 
     private void displayFloatClassDialog() {
@@ -155,24 +149,19 @@ public class CurriculumActivity extends BaseActivity {
         // 获取对话窗口中的listview
         ListView list_record = (ListView) window.findViewById(R.id.list_float_class);
 
-        try {
-            // 设置列表
-            JSONArray array = new JSONArray(Cache.curriculumSidebar.getValue());
-            ArrayList<SidebarClassModel> list = new ArrayList<>();
-            for (int i = 0; i < array.length(); i++) {
-                SidebarClassModel model = new SidebarClassModel(array.getJSONObject(i));
-                if (!model.isAdded()) {
-                    list.add(model);
-                }
+        // 设置列表
+        JArr array = new JArr(Cache.curriculumSidebar.getValue());
+        ArrayList<SidebarClassModel> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            SidebarClassModel model = new SidebarClassModel(array.$o(i));
+            if (!model.isAdded()) {
+                list.add(model);
             }
-
-            list_record.setAdapter(new CurriculumFloatClassAdapter(
-                    getBaseContext(),
-                    R.layout.mod_que_curriculum__dialog_float_class__item,
-                    list));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showSnackBar("解析失败，请刷新");
         }
+
+        list_record.setAdapter(new CurriculumFloatClassAdapter(
+                getBaseContext(),
+                R.layout.mod_que_curriculum__dialog_float_class__item,
+                list));
     }
 }

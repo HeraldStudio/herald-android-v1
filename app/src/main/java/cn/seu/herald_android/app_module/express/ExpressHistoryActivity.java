@@ -60,10 +60,10 @@ public class ExpressHistoryActivity extends BaseActivity{
     }
 
     /**
-     * 请求与一卡通关联的所有数据
+     * 请求与一卡通关联的所有数据, 仅请求一次
      */
     private void getAllData() {
-        if (!CacheHelper.get("express_sync").equals("1")) {
+        if (CacheHelper.get("express_sync").equals("")) {
             Log.d(TAG, "getAllData");
             new ApiSimpleRequest(Method.POST)
                     .url(queryByCard)

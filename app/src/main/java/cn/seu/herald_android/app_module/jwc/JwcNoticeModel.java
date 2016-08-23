@@ -1,10 +1,9 @@
 package cn.seu.herald_android.app_module.jwc;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class JwcNoticeModel {
     public String date;
@@ -17,14 +16,14 @@ public class JwcNoticeModel {
         this.title = title;
     }
 
-    public static ArrayList<JwcNoticeModel> transformJSONArrayToArrayList(JSONArray jsonArray) throws JSONException {
+    public static ArrayList<JwcNoticeModel> transformJArrToArrayList(JArr jsonArray) {
         ArrayList<JwcNoticeModel> list = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JObj jsonObject = jsonArray.$o(i);
             list.add(new JwcNoticeModel(
-                    jsonObject.getString("date"),
-                    jsonObject.getString("href"),
-                    jsonObject.getString("title")
+                    jsonObject.$s("date"),
+                    jsonObject.$s("href"),
+                    jsonObject.$s("title")
             ));
         }
         return list;

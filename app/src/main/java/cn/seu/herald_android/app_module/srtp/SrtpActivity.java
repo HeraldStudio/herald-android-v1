@@ -7,10 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -18,6 +14,8 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class SrtpActivity extends BaseActivity {
 
@@ -37,21 +35,16 @@ public class SrtpActivity extends BaseActivity {
     private void loadCache() {
         String cache = Cache.srtp.getValue();
         if (!cache.equals("")) {
-            try {
-                JSONArray jsonArray = new JSONObject(cache).getJSONArray("content");
-                // 获得总学分
-                String total = jsonArray.getJSONObject(0).getString("total");
-                tv_total_credit.setText(total);
-                // 加载列表
-                ArrayList<SrtpModel> arrayList = SrtpModel.transformJSONArrayToArrayList(jsonArray);
-                // 适配器
-                SrtpAdapter srtpAdapter = new SrtpAdapter(this, arrayList);
-                recyclerView_srtp.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView_srtp.setAdapter(srtpAdapter);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                showSnackBar("解析失败，请刷新");
-            }
+            JArr jsonArray = new JObj(cache).$a("content");
+            // 获得总学分
+            String total = jsonArray.$o(0).$s("total");
+            tv_total_credit.setText(total);
+            // 加载列表
+            ArrayList<SrtpModel> arrayList = SrtpModel.transformJArrToArrayList(jsonArray);
+            // 适配器
+            SrtpAdapter srtpAdapter = new SrtpAdapter(this, arrayList);
+            recyclerView_srtp.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView_srtp.setAdapter(srtpAdapter);
         } else {
             refreshCache();
         }

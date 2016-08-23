@@ -6,12 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
@@ -158,7 +159,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         window.setDimAmount(0.25f);
 
         // 防止某些机型对话框显示背景色
-        window.setBackgroundDrawable(null);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams wmlp = window.getAttributes();
         wmlp.gravity = Gravity.RIGHT | Gravity.TOP;
 

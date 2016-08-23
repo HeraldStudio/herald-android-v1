@@ -8,10 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -22,6 +18,8 @@ import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
 import cn.seu.herald_android.custom.refreshrecyclerview.RefreshRecyclerView;
 import cn.seu.herald_android.framework.AppContext;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -118,30 +116,24 @@ public class ActivitiesFragment extends Fragment {
         // 设置当前页数为0，以便在没有得到数据时，上拉加载仍加载第1页内容而不是第2页
         page = 0;
 
-        try {
-            JSONArray array = new JSONObject(Cache.activities.getValue()).getJSONArray("content");
+        JArr array = new JObj(Cache.activities.getValue()).$a("content");
 
-            // 新一页的内容
-            ArrayList<ActivitiesItem> newContent =
-                    ActivitiesItem.transformJSONArrayToArrayList(array);
+        // 新一页的内容
+        ArrayList<ActivitiesItem> newContent =
+                ActivitiesItem.transformJArrToArrayList(array);
 
-            // 如果有数据，逐条添加数据，并设置当前页数为1
-            for (ActivitiesItem item : newContent) {
-                // 逐项加入列表中
-                activitiesAdapter.addItem(item);
-                page = 1;
-            }
-
-            // 恢复上拉加载控件的可用性
-            activitiesAdapter.setLoadFinished(false);
-
-            // 显式重载列表内容
-            activitiesAdapter.notifyDataSetChanged();
-
-        } catch (JSONException e) {
-            AppContext.showMessage("解析失败，请刷新");
-            e.printStackTrace();
+        // 如果有数据，逐条添加数据，并设置当前页数为1
+        for (ActivitiesItem item : newContent) {
+            // 逐项加入列表中
+            activitiesAdapter.addItem(item);
+            page = 1;
         }
+
+        // 恢复上拉加载控件的可用性
+        activitiesAdapter.setLoadFinished(false);
+
+        // 显式重载列表内容
+        activitiesAdapter.notifyDataSetChanged();
     }
 
     // 联网加载下一页内容，若成功，加入列表并自增一页；否则显示错误信息
@@ -153,24 +145,19 @@ public class ActivitiesFragment extends Fragment {
                     if (success) {
                         page++;
 
-                        try {
-                            JSONArray array = new JSONObject(response).getJSONArray("content");
-                            if (array.length() == 0) {
-                                activitiesAdapter.setLoadFinished(true);
-                            } else {
-                                // 新一页的内容
-                                ArrayList<ActivitiesItem> newContent =
-                                        ActivitiesItem.transformJSONArrayToArrayList(array);
-                                for (ActivitiesItem item : newContent) {
-                                    // 逐项加入列表中
-                                    activitiesAdapter.addItem(item);
-                                }
+                        JArr array = new JObj(response).$a("content");
+                        if (array.size() == 0) {
+                            activitiesAdapter.setLoadFinished(true);
+                        } else {
+                            // 新一页的内容
+                            ArrayList<ActivitiesItem> newContent =
+                                    ActivitiesItem.transformJArrToArrayList(array);
+                            for (ActivitiesItem item : newContent) {
+                                // 逐项加入列表中
+                                activitiesAdapter.addItem(item);
                             }
-                            activitiesAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            AppContext.showMessage("解析失败，请刷新");
-                            e.printStackTrace();
                         }
+                        activitiesAdapter.notifyDataSetChanged();
                     }
                 }).run();
     }

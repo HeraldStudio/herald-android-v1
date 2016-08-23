@@ -12,10 +12,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +20,8 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.EmptyTipArrayAdapter;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
@@ -85,14 +83,9 @@ public class GymChooseTimeFragment extends Fragment {
 
     // 根据数据来刷新当前项目在当天的各个时间段可预约情况
     public void loadOrderItemTimes(String response) {
-        try {
-            ArrayList<OrderItemTime> list = transformJSONtoArrayList(new JSONObject(response).getJSONObject("content").getJSONArray("orderIndexs"));
-            listView.setAdapter(new OrderItemTimeAdapter(getContext(), R.layout.mod_que_gymreserve__order_time__fragment__item, list));
-            baseActivity.hideProgressDialog();
-        } catch (JSONException e) {
-            // 数据解析错误
-            baseActivity.showSnackBar("数据解析错误，请稍后再试");
-        }
+        ArrayList<OrderItemTime> list = transformJSONtoArrayList(new JObj(response).$o("content").$a("orderIndexs"));
+        listView.setAdapter(new OrderItemTimeAdapter(getContext(), R.layout.mod_que_gymreserve__order_time__fragment__item, list));
+        baseActivity.hideProgressDialog();
     }
 
     public void judgeOrder(OrderItemTime time) {
@@ -108,23 +101,17 @@ public class GymChooseTimeFragment extends Fragment {
                 .post("time", time.availableTime)
                 .onResponse((success, code, response) -> {
                     isJudging = false;
-                    try {
-                        String judgeRes = "获取失败，请重试";
-                        if (success) {
-                            String rescode = new JSONObject(response).getJSONObject("content").getString("code");
-                            String msg = new JSONObject(response).getJSONObject("content").getString("msg");
-                            if (rescode.equals("0")) {
-                                // 可以进行预约
-                                GymNewOrderActivity.startWithData(gymSportModel, dayInfo, time.availableTime);
-                            } else {
-                                judgeRes = msg;
-                                baseActivity.showSnackBar(judgeRes);
-                            }
+                    String judgeRes = "获取失败，请重试";
+                    if (success) {
+                        String rescode = new JObj(response).$o("content").$s("code");
+                        String msg = new JObj(response).$o("content").$s("msg");
+                        if (rescode.equals("0")) {
+                            // 可以进行预约
+                            GymNewOrderActivity.startWithData(gymSportModel, dayInfo, time.availableTime);
+                        } else {
+                            judgeRes = msg;
+                            baseActivity.showSnackBar(judgeRes);
                         }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        baseActivity.showSnackBar("预约失败");
                     }
                 })
                 .run();
@@ -145,14 +132,14 @@ public class GymChooseTimeFragment extends Fragment {
         }
     }
 
-    public ArrayList<OrderItemTime> transformJSONtoArrayList(JSONArray array) throws JSONException {
+    public ArrayList<OrderItemTime> transformJSONtoArrayList(JArr array) {
         ArrayList<OrderItemTime> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject obj = array.getJSONObject(i);
+        for (int i = 0; i < array.size(); i++) {
+            JObj obj = array.$o(i);
             list.add(new OrderItemTime(
-                    obj.getBoolean("enable"),
-                    obj.getInt("surplus"),
-                    obj.getString("avaliableTime")
+                    obj.$b("enable"),
+                    obj.$i("surplus"),
+                    obj.$s("avaliableTime")
             ));
         }
         return list;

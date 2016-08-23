@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * DES加密和解密工具,可以对字符串进行加密和解密操作  。
  */
-class EncryptHelper {
+public class EncryptHelper {
     /**
      * 加密工具
      */

@@ -9,10 +9,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -22,6 +18,8 @@ import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
+import cn.seu.herald_android.framework.json.JObj;
 
 public class AddExamActivity extends BaseActivity {
 
@@ -89,7 +87,7 @@ public class AddExamActivity extends BaseActivity {
         timePickerDialog.show();
     }
 
-    void saveDefinedExam(){
+    void saveDefinedExam() {
         if (!selected[0]) {
             showSnackBar("请选择考试开始日期");
             return;
@@ -98,7 +96,7 @@ public class AddExamActivity extends BaseActivity {
             showSnackBar("请选择考试开始时间");
             return;
         }
-        JSONObject newExam = new JSONObject();
+        JObj newExam = new JObj();
 
         String hour = et_duration.getText().toString();
         String course = et_exam_name.getText().toString();
@@ -109,40 +107,29 @@ public class AddExamActivity extends BaseActivity {
         String location = et_location.getText().toString();
         String teacher = et_teacher.getText().toString();
 
-        try {
-            newExam.put("hour", hour);
-            newExam.put("course", course);
-            newExam.put("time", dateAndTime);
-            newExam.put("location", location);
-            newExam.put("teacher", teacher);
-            newExam.put("type", "自定义考试");
-            // 获取其他的考试列表
-            JSONArray array = getCustomExamJSONArray();
-            array.put(newExam);
-            // 保存新的自定义考试
-            saveDefinedExamsFromJSONArray(array);
-            showSnackBar("保存成功");
-            Handler handler = new Handler();
-            // 延时0.5秒显示保存成功信息后返回
-            handler.postDelayed(this::finish, 500);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showSnackBar("考试信息不规范，请重新输入");
-        }
+        newExam.put("hour", hour);
+        newExam.put("course", course);
+        newExam.put("time", dateAndTime);
+        newExam.put("location", location);
+        newExam.put("teacher", teacher);
+        newExam.put("type", "自定义考试");
+        // 获取其他的考试列表
+        JArr array = getCustomExamJArr();
+        array.put(newExam);
+        // 保存新的自定义考试
+        saveDefinedExamsFromJArr(array);
+        showSnackBar("保存成功");
+        Handler handler = new Handler();
+        // 延时0.5秒显示保存成功信息后返回
+        handler.postDelayed(this::finish, 500);
     }
 
-    public static JSONArray getCustomExamJSONArray() {
+    public static JArr getCustomExamJArr() {
         String cache = Cache.examCustom.getValue();
-        try {
-            return new JSONArray(cache);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Cache.examCustom.setValue(new JSONArray().toString());
-        }
-        return new JSONArray();
+        return new JArr(cache);
     }
 
-    void saveDefinedExamsFromJSONArray(JSONArray array){
+    void saveDefinedExamsFromJArr(JArr array) {
         Cache.examCustom.setValue(array.toString());
     }
 }
