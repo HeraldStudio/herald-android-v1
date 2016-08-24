@@ -6,6 +6,6 @@
     android:textSize="20sp"
     android:gravity="center"
     android:paddingRight="4dp"
-    android:layout_margin="4dp"
+    android:layout_margin="10dp"
     android:text="测试spinner"
     />

@@ -79,4 +79,8 @@ monkey by Zille Sophie Bostinius from the Noun Project
     <string name="title_activity_topic">校园话题</string>
     <string name="title_activity_express">快递代取</string>
 
+    <string name="title_activity_express_welcome">快递模块声明</string>
+    <string name="body_activity_express_welcome">
+        快递模块为收费项目, 且并非先声运营, 先声只提供平台
+    </string>
 </resources>

@@ -7,8 +7,11 @@ import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -24,7 +27,7 @@ import static cn.seu.herald_android.helper.LogUtils.LOGD;
 /**
  * Created by corvo on 8/2/16.
  */
-public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
+public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoAdapter.SmsInfoViewHolder> {
 
     private static String TAG = makeLogTag(SmsInfo.class);
     private List<SmsInfo> smsList;
@@ -79,5 +82,21 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoViewHolder> {
                 handler.dismiss();
             }
         });
+    }
+
+
+    class SmsInfoViewHolder extends RecyclerView.ViewHolder {
+        private final String TAG = "SmsInfoViewHolder";
+
+        public TextView smsDate;           // 短信日期
+        public Button smsBody;           // 短信内容
+        public RadioButton smsSelect;      // 短信选择按钮
+
+        public SmsInfoViewHolder(View v) {
+            super(v);
+            Log.d(TAG, "In Create");
+            smsDate = (TextView)v.findViewById(R.id.express_txt_sms_date);
+            smsBody = (Button) v.findViewById(R.id.express_txt_sms_body);
+        }
     }
 }

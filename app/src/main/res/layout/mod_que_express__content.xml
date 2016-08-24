@@ -38,7 +38,7 @@
                     android:id="@+id/express_txt_sms"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="这是一个简短类似的短信的Text, 不知道这个效果怎么样"
+                    android:text="这是一个简短类似的短信的Text, 请选择短信进行提交"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

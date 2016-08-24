@@ -39,7 +39,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="已取|未取" />
+                android:text="已接单|未接单" />
         </RelativeLayout>
 
         <LinearLayout

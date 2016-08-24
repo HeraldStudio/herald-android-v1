@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,11 +36,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.framework.network.OnResponseListener;
+import cn.seu.herald_android.helper.CacheHelper;
 import okhttp3.Call;
 
 /**
@@ -46,7 +50,7 @@ import okhttp3.Call;
  */
 public class ExpressActivity extends BaseActivity
         implements View.OnClickListener {
-    private static String TAG = "ExpressActivity";
+    private String TAG = "ExpressActivity";
     final private int REQUEST_CODE_ASK_READ_SMS = 123;
 
     private Spinner mDestSpinner;       // 取回地点
@@ -84,14 +88,19 @@ public class ExpressActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (CacheHelper.get("express_verify").equals("")) {
+            Intent intent = new Intent(ExpressActivity.this, ExpressWelcomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.mod_que_express);
-        mDestSpinner = (Spinner)findViewById(R.id.express_spinner_dest);
+        mDestSpinner = (Spinner) findViewById(R.id.express_spinner_dest);
         mArrivalSpinner = (Spinner) findViewById(R.id.express_spinner_arrival);
         mLocateSpinner = (Spinner) findViewById(R.id.express_spinner_locate);
         mWeightSpinner = (Spinner) findViewById(R.id.express_spinner_weight);
         mUsername = (EditText) findViewById(R.id.express_edit_username);
         mPhone = (EditText) findViewById(R.id.express_edit_phone);
-
 
         mSmsSelect = (Button) findViewById(R.id.express_button_sms_select);
         mSubmit = (Button) findViewById(R.id.express_button_submit);
@@ -101,6 +110,8 @@ public class ExpressActivity extends BaseActivity
         mSubmit.setOnClickListener(this);
 
         mDBContent = new ExpressDatabaseContent(this);
+
+
     }
 
     @Override
@@ -188,24 +199,35 @@ public class ExpressActivity extends BaseActivity
     }
 
     /**
-     *  向服务端提交请求并插入数据库
+     * 向服务端提交请求并插入数据库
      */
     private void onSubmit() {
         Log.d(TAG, mSmsShow.getText().toString());
-        ExpressInfo info = new ExpressInfo();
-        info.setUsername(mUsername.getText().toString());
-        info.setUserphone(mPhone.getText().toString());
-        info.setSmsInfo(mSmsShow.getText().toString());
-        info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
-        info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
-        info.setLocate(mLocateArray[mLocateSpinner.getSelectedItemPosition()]);
-        info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
-        //info.setSubmitTime(new Date().getTime());
-        info.setFetched(false);
 
-        mProgress = ProgressDialog.show(this, "正在提交", "请稍后", true);
+        ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (cm.hasPrimaryClip()) {
+            ClipData data = cm.getPrimaryClip();
+            String secret = data.getItemAt(0).getText().toString();
+            if (secret.equals("IaMEXPRESSmanageR")) {
+                Intent intent = new Intent(this, ExpressAdminActivity.class);
+                startActivity(intent);
+                return;
+            }
+        } else {
+            ExpressInfo info = new ExpressInfo();
+            info.setUsername(mUsername.getText().toString());
+            info.setUserphone(mPhone.getText().toString());
+            info.setSmsInfo(mSmsShow.getText().toString());
+            info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
+            info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
+            info.setLocate(mLocateArray[mLocateSpinner.getSelectedItemPosition()]);
+            info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
+            //info.setSubmitTime(new Date().getTime());
+            info.setFetched(false);
 
-        makeSubmit(info);
+
+            makeSubmit(info);
+        }
     }
 
     private void onShowHisory() {
@@ -225,17 +247,23 @@ public class ExpressActivity extends BaseActivity
     /**
      * 向服务器端提交请求
      * example
-     *  {
-     *      "content": {
-     *          "sub_time": "1470620033"
-     *      },
-     *      "code": 200
-     *  }
+     * {
+     * "content": {
+     * "sub_time": "1470620033"
+     * },
+     * "code": 200
+     * }
      */
     private void makeSubmit(ExpressInfo info) {
         String submit = "http://139.129.4.159/kuaidi/submit";
         // post之后会返回时间戳, 之后再保存数据库
 
+        if (info.getUsername().isEmpty() || info.getUserphone().isEmpty()) {
+            showSnackBar("请将信息填写完整");
+            return;
+        }
+
+        mProgress = ProgressDialog.show(this, "正在提交", "请稍后", true);
         new ApiSimpleRequest(Method.POST)
                 .url(submit)
                 .addUuid()

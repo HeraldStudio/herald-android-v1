@@ -60,6 +60,7 @@ public class ExpressDatabaseContent {
                 info.setWeight(cursor.getString(7));
                 info.setSubmitTime(cursor.getLong(8));
                 info.setFetched(cursor.getString(9).equals("1"));
+                info.setReceived(cursor.getString(10).equals("1"));
 
                 infoList.add(info);
             } while (cursor.moveToNext());
@@ -82,5 +83,9 @@ public class ExpressDatabaseContent {
         String[] args = new String[] {String.valueOf(timeStamp)};
         db.delete("express", "submit_time = ?", args);
 
+    }
+
+    public void dbClear() {
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
     }
 }
