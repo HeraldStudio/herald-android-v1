@@ -44,7 +44,7 @@
     二) 下面介绍三种省略规则: 单词简写, 惯例省略, 承前省略.
 
             单词简写是指某些单词我们可以简写, 比如 mod_communicate 可写成 mod_com, mod_modulemanager 可
-        写成 mod_mod 等;
+        写成 app_sec__module_manager 等;
 
             惯例省略是指, 因为绝大多数布局文件都有 package 和 activity 这两个字段, 故这两个字段的字段名不需
         写出, 也不会造成歧义. 例如:
@@ -73,7 +73,7 @@
     三) 把上述规则变成文件名, 规定每个字段内用一个下划线代替任何符号, 字段与字段之间用两个下划线隔开.
 
         例12) 将例 8 表示为 xml 文件名.
-            mod_com__welcome.xml
+            app_sec__welcome.xml
 
         例13) 将例 12 表示为 xml 文件名.
             mod_que_pedetail__cell.xml

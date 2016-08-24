@@ -32,7 +32,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mod_auth__login);
+        setContentView(R.layout.app_sec__login);
         ButterKnife.bind(this);
         progressDialog.setCancellable(false);
         setStatusBarColor(Color.BLACK);

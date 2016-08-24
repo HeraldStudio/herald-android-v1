@@ -21,7 +21,7 @@ public class ModuleManageAdapter extends EmptyTipArrayAdapter<AppModule> {
 
     /** 为了避免卡顿，模块管理列表已停用视图回收，改用 ScrollView 嵌套无滚动的 ListView 实现 */
     /**
-     * 详情请见 mod_mod__content.xml
+     * 详情请见 app_sec__module_manager__contentmanager__content.xml
      */
 
     static class ViewHolder {
@@ -47,7 +47,7 @@ public class ModuleManageAdapter extends EmptyTipArrayAdapter<AppModule> {
     public View getView(int position, View convertView) {
         AppModule seuModule = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_mod__item, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_sec__module_manager__item, null);
             convertView.setTag(new ViewHolder(convertView));
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();

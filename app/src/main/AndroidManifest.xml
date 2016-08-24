@@ -193,11 +193,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".app_secondary.AboutUsActivity"
-            android:label="@string/title_activity_aboutus"
-            android:screenOrientation="portrait"
-            android:theme="@style/AboutusTheme" />
-        <activity
             android:name=".app_secondary.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:screenOrientation="portrait"

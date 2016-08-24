@@ -17,8 +17,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_secondary.AboutUsActivity;
 import cn.seu.herald_android.app_secondary.FeedbackActivity;
+import cn.seu.herald_android.app_secondary.WebModuleActivity;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.SystemUtil;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -78,7 +78,8 @@ public class SettingsFragment extends Fragment implements ApiHelper.OnUserChange
 
     @OnClick(R.id.aboutus)
     void aboutUs() {
-        AppContext.startActivitySafely(AboutUsActivity.class);
+        WebModuleActivity.startWebModuleActivity("关于小猴",
+                "http://app.heraldstudio.com/about.htm?type=android", R.style.AboutusTheme);
     }
 
     @OnClick(R.id.tv_feedback)
