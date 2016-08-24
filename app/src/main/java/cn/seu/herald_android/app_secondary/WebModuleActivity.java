@@ -55,7 +55,7 @@ public class WebModuleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         beforeCreate();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mod_web);
+        setContentView(R.layout.app_sec__web);
         ButterKnife.bind(this);
 
         // 设置标题
