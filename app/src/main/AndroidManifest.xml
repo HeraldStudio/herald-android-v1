@@ -8,6 +8,8 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
 
     <application
         android:name=".framework.AppContext"
@@ -193,11 +195,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".app_secondary.AboutUsActivity"
-            android:label="@string/title_activity_aboutus"
-            android:screenOrientation="portrait"
-            android:theme="@style/AboutusTheme" />
-        <activity
             android:name=".app_secondary.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:screenOrientation="portrait"
@@ -261,6 +258,41 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
+
+        <activity android:name=".app_module.topic.TopicActivity"
+            android:label="@string/title_activity_topic"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TopicTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_TOPIC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".app_module.express.ExpressActivity"
+            android:label="@string/title_activity_express"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExpressActivityTheme">
+            <intent-filter>
+                <action android:name="cn.seu.herald_android.MODULE_EXPRESS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".app_module.express.ExpressHistoryActivity"
+            android:label="代取记录"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/ExpressActivityTheme"
+            />
+        <activity android:name=".app_module.express.ExpressAdminActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
+
+
     </application>
 
 </manifest>

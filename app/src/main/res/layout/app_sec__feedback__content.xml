@@ -5,7 +5,7 @@
                 android:layout_height="match_parent"
                 android:paddingTop="?attr/actionBarSize"
                 tools:context=".app_secondary.FeedbackActivity"
-                tools:showIn="@layout/mod_com__feedback">
+                tools:showIn="@layout/app_sec__feedback">
 
     <EditText
         android:layout_width="match_parent"

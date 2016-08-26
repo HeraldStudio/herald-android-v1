@@ -1,6 +1,7 @@
 package cn.seu.herald_android.app_secondary;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +22,7 @@ public class ModuleManageAdapter extends EmptyTipArrayAdapter<AppModule> {
 
     /** 为了避免卡顿，模块管理列表已停用视图回收，改用 ScrollView 嵌套无滚动的 ListView 实现 */
     /**
-     * 详情请见 mod_mod__content.xml
+     * 详情请见 app_sec__module_manager__contentmanager__content.xml
      */
 
     static class ViewHolder {
@@ -47,9 +48,10 @@ public class ModuleManageAdapter extends EmptyTipArrayAdapter<AppModule> {
     public View getView(int position, View convertView) {
         AppModule seuModule = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.mod_mod__item, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_sec__module_manager__item, null);
             convertView.setTag(new ViewHolder(convertView));
         }
+        Log.d("In The Manager", "View Changed once");
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
         holder.icon.setImageDrawable(null);

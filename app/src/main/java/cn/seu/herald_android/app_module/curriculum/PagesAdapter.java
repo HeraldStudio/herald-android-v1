@@ -104,7 +104,7 @@ class PagesAdapter extends PagerAdapter {
     }
 
     public int getCurrentPage() {
-        return Math.min(viewList.size() - 1, thisWeek - 1);
+        return Math.max(0, Math.min(viewList.size() - 1, thisWeek - 1));
     }
 
     @Override

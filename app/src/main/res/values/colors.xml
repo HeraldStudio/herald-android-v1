@@ -92,6 +92,14 @@
     <color name="colorActivitiesDark">#1976d2</color>
     <color name="colorActivitiesAccent">#1976d2</color>
 
+
+    <!--快递代取-->
+    <color name="colorExpressPrimary">#ffe082</color>
+    <color name="colorExpressDark">#ffca28</color>
+    <color name="colorExpressAccent">#ffd54f</color>
+    <color name="expressCardBackground">#fff9c4</color>
+    <color name="expressSmsSelect">#f57f17</color>
+
     <!--关于我们-->
     <color name="colorAboutusPrimary">#00b4ff</color>
     <color name="colorAboutusprimaryDark">#00b4ff</color>

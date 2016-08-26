@@ -74,6 +74,14 @@ public class Module {
             "空教室 Web", "提供指定时间内的空教室信息查询服务",
             "http://www.heraldstudio.com/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false, false);
 
+    public static AppModule express = new AppModule("express",
+            "快递代收", "快递代取",
+            "MODULE_EXPRESS", R.drawable.ic_build_purple_a700_24dp, false, true);
+
+//        public static AppModule topic = new AppModule(17, "topic",
+//                "校园话题", "校园话题参与讨论",
+//                "MODULE_TOPIC", R.drawable.ic_build_purple_a700_24dp, false);
+
     // 特殊的模块，模块管理
     public static AppModule moduleManager = new AppModule("",
             "模块管理", "管理各模块的显示/隐藏状态",
@@ -81,6 +89,7 @@ public class Module {
 
     public static AppModule[] array = new AppModule[]{
             card, pedetail, curriculum, experiment, exam, lecture, jwc,
-            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom
+            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom,
+            express
     };
 }
