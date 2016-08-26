@@ -1,6 +1,7 @@
 package cn.seu.herald_android.app_secondary;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,6 +51,7 @@ public class ModuleManageAdapter extends EmptyTipArrayAdapter<AppModule> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.app_sec__module_manager__item, null);
             convertView.setTag(new ViewHolder(convertView));
         }
+        Log.d("In The Manager", "View Changed once");
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
         holder.icon.setImageDrawable(null);

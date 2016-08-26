@@ -158,6 +158,15 @@
         <item name="colorAccent">@color/colorActivitiesAccent</item>
     </style>
 
+    <style name="ExpressActivityTheme" parent="SubActivityTheme">
+        <!-- 活动生活风格 -->
+        <item name="colorPrimary">@color/colorExpressPrimary</item>
+        <item name="colorPrimaryDark">@color/colorExpressDark</item>
+        <item name="colorAccent">@color/colorExpressAccent</item>
+    </style>
+
+
+
     <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->
         <item name="colorPrimary">@color/colorAboutusPrimary</item>
@@ -179,6 +188,13 @@
         <item name="colorAccent">@color/colorWebAccent</item>
     </style>
 
+
+    <style name="TopicTheme" parent="SubActivityTheme">
+        <!-- 话题模块 -->
+        <item name="colorPrimary">@color/colorCurriculumPrimary</item>
+        <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
+        <item name="colorAccent">@color/colorCurriculumAccent</item>
+    </style>
 
     <style name="WifiAutoLoginTheme" parent="SubActivityTheme">
         <!-- 校园网自动登录模块 -->

@@ -49,7 +49,7 @@
             惯例省略是指, 因为绝大多数布局文件都有 package 和 activity 这两个字段, 故这两个字段的字段名不需
         写出, 也不会造成歧义. 例如:
 
-        例8) 对 mod_communicate.WelcomeActivity 中的总布局进行单词简写和惯例省略.
+        例8) 对 mod_communicate.ExpressWelcomeActivity 中的总布局进行单词简写和惯例省略.
             mod_com -> welcome
 
         例9) 对例 5 进行惯例省略.
