@@ -10,8 +10,8 @@ android {
         applicationId "cn.seu.herald_android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 18
-        versionName "V1.9.2"
+        versionCode 21
+        versionName "v1.9.5"
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
     }
@@ -67,5 +67,5 @@ dependencies {
     compile 'com.eightbitlab:blurview:1.1.2'
 
     // 进度对话框
-    compile 'cc.cloudist.acplibrary:library:1.2.1'
+    compile 'com.kaopiz:kprogresshud:1.0.5'
 }

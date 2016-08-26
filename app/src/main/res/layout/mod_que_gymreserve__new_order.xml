@@ -17,11 +17,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:gravity="top"
             android:minHeight="?attr/actionBarSize"
             app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleMarginTop="15dp" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
     </cn.seu.herald_android.custom.CustomAppBarLayout>
     <ScrollView
         android:layout_width="match_parent"

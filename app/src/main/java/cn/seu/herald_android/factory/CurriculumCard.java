@@ -60,19 +60,34 @@ public class CurriculumCard {
             int startMonth = jsonObject.$o("startdate").$i("month");
             int startDate = jsonObject.$o("startdate").$i("day");
             Calendar termStart = Calendar.getInstance();
+            termStart = CalendarUtils.toSharpDay(termStart);
             termStart.set(termStart.get(Calendar.YEAR), startMonth, startDate);
 
-            // 如果开学日期比今天还晚，则是去年开学的。这里用while保证了thisWeek永远大于零
-            while (termStart.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
+            // 如果开学日期比今天晚了超过两个月，则认为是去年开学的。这里用while保证了thisWeek永远大于零
+            while (termStart.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() > (long) 60 * 86400 * 1000) {
                 termStart.set(Calendar.YEAR, termStart.get(Calendar.YEAR) - 1);
             }
-            termStart = CalendarUtils.toSharpDay(termStart);
+
+            // 为了保险，检查开学日期的星期，不是周一的话往前推到周一
+            long oldTimeMillis = termStart.getTimeInMillis();
+            long daysAfterMonday = termStart.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY;
+            termStart.setTimeInMillis(oldTimeMillis - daysAfterMonday * 86400 * 1000);
 
             // 计算当前周
             Calendar today = Calendar.getInstance();
             today = CalendarUtils.toSharpDay(today);
 
             int dayDelta = (int) ((today.getTimeInMillis() - termStart.getTimeInMillis()) / 1000 / 60 / 60 / 24);
+            if (dayDelta < -1) {
+                return new CardsModel(Module.curriculum,
+                        CardsModel.Priority.CONTENT_NO_NOTIFY, "还没有开学，点击预览新学期课表~"
+                );
+            } else if (dayDelta == -1) {
+                return new CardsModel(Module.curriculum,
+                        CardsModel.Priority.CONTENT_NOTIFY, "明天就要开学了，点击预览新学期课表~"
+                );
+            }
+
             int week = dayDelta / 7 + 1;
             int dayOfWeek = dayDelta % 7; // 0代表周一，以此类推
 

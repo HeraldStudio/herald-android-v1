@@ -1,7 +1,5 @@
 package cn.seu.herald_android.app_secondary;
 
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -36,7 +34,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_auth__login);
         ButterKnife.bind(this);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancellable(false);
         setStatusBarColor(Color.BLACK);
 
         tv_pwd.setOnKeyListener((v, keyCode, event) -> {
@@ -54,17 +52,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        String appid = ApiHelper.getAppid();
-        String godModePrefix = "IAmTheGodOfHerald|OverrideAppidWith:";
-
-        ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
-            boolean GODMODE = manager.getPrimaryClip().getItemAt(0).getText().toString().startsWith(godModePrefix);
-            if (GODMODE) {
-                appid = manager.getPrimaryClip().getItemAt(0).getText().toString().replace(godModePrefix, "");
-                showSnackBar("进入上帝登陆模式");
-            }
-        }
+        String appid = ApiHelper.appid;
 
         String username = tv_card.getText().toString();
         String password = tv_pwd.getText().toString();
