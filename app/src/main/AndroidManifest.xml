@@ -287,7 +287,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/ExpressActivityTheme"
             />
-        <activity android:name=".app_module.express.ExpressAdminActivity"
+        <activity
+            android:name=".app_module.express.ExpressAdminAdapter$ExpressAdminActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             />

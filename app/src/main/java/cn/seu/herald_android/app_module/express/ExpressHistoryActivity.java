@@ -1,16 +1,9 @@
 package cn.seu.herald_android.app_module.express;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,14 +14,12 @@ import java.util.List;
 
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.framework.BaseActivity;
-
-import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
-
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
+
+import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
 
 /**
  * Created by corvo on 8/6/16.
@@ -40,14 +31,11 @@ public class ExpressHistoryActivity extends BaseActivity {
     String queryByCard = "http://139.129.4.159/kuaidi/queryByCard";
     String deleteRecord = "http://139.129.4.159/kuaidi/deleteRecord";
 
-
     private RecyclerView historyRecyclerView;
     private ExpressHistoryAdapter historyAdapter;
     private List<ExpressInfo> expressInfoList;
 
     private ExpressDatabaseContent dbContent;
-
-    private ProgressDialog mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,8 +150,7 @@ public class ExpressHistoryActivity extends BaseActivity {
     private OnDelete onDelete = new OnDelete() {
         @Override
         public void deleteItem(ExpressInfo info) {
-
-            mProgress = ProgressDialog.show(ExpressHistoryActivity.this, "正在提交", "请稍后", true);
+            showProgressDialog();
 
             new ApiSimpleRequest(Method.POST)
                 .url(deleteRecord)
@@ -171,24 +158,22 @@ public class ExpressHistoryActivity extends BaseActivity {
                 .post("user_phone", info.getUserphone())
                 .post("sub_time", String.valueOf(info.getSubmitTime() / 1000)) // 时间戳转换
                 .onResponse(((success, code, response) -> {
+                    hideProgressDialog();
                     if (success) {
-                        Log.d(TAG, response);
                         try {
                             JSONObject res = new JSONObject(response);
                             if (res.getInt("code") == 200) {
                                 dbContent.dbDelete(info.getSubmitTime());
                                 refreshUI();
-                                mProgress.dismiss();
-                                showSnackBar("删除记录成功");
                             } else {
-                                mProgress.dismiss();
                                 showSnackBar(res.getString("content"));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            mProgress.dismiss();
-                            showSnackBar("删除失败");
+                            showSnackBar("删除失败，请重试");
                         }
+                    } else {
+                        showSnackBar("连接失败，请重试");
                     }
                 })).run();
         }
