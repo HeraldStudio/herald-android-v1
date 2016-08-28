@@ -5,24 +5,15 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import butterknife.OnItemClick;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.framework.network.ApiSimpleRequest;
-import cn.seu.herald_android.framework.network.Method;
 
 import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
 
@@ -72,6 +63,7 @@ public class ExpressHistoryAdapter extends RecyclerView.Adapter<ExpressHistoryAd
 
         if (info.isReceived()) {
             holder.containerRecord.setClickable(false);
+            holder.containerRecord.setOnClickListener(null);
         } else {    // 若快递被接单
             holder.containerRecord.setClickable(true);
             holder.containerRecord.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +76,10 @@ public class ExpressHistoryAdapter extends RecyclerView.Adapter<ExpressHistoryAd
     }
 
     public void deleteItem(int position) {
-        Log.d(TAG, "Click item to delete" + String.valueOf(position));
-        new AlertDialog.Builder(context).setTitle("确认")
-                .setMessage("确认删除此条记录?")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(context).setTitle("删除订单")
+                .setMessage("删除记录将取消该订单，是否确认删除？")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("删除订单", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ExpressInfo info = expressInfoList.get(position);

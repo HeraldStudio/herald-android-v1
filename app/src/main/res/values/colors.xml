@@ -94,11 +94,11 @@
 
 
     <!--快递代取-->
-    <color name="colorExpressPrimary">#ffe082</color>
-    <color name="colorExpressDark">#ffca28</color>
-    <color name="colorExpressAccent">#ffd54f</color>
-    <color name="expressCardBackground">#fff9c4</color>
-    <color name="expressSmsSelect">#f57f17</color>
+    <color name="colorExpressPrimary">#ffba00</color>
+    <color name="colorExpressDark">#ffba00</color>
+    <color name="colorExpressAccent">#ffba00</color>
+    <color name="expressCardBackground">#fff</color>
+    <color name="expressSmsSelect">#ffba00</color>
 
     <!--关于我们-->
     <color name="colorAboutusPrimary">#00b4ff</color>

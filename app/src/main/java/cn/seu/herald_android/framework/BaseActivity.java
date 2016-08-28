@@ -17,15 +17,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.r0adkll.slidr.Slidr;
-import com.r0adkll.slidr.model.SlidrConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_main.MainActivity;
-import cn.seu.herald_android.app_secondary.LoginActivity;
 import cn.seu.herald_android.custom.CustomSnackBar;
 
 /**
@@ -73,12 +69,7 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         // 滑动返回和状态栏沉浸
-        if (!(this instanceof MainActivity) && !(this instanceof LoginActivity)) {
-            setStatusBarColor(AppContext.getColorPrimary(this));
-            Slidr.attach(this, new SlidrConfig.Builder().edge(true).edgeSize(.05f).build());
-        } else if (this instanceof MainActivity) {
-            setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        }
+        setStatusBarColor(AppContext.getColorPrimary(this));
     }
 
     /**************************************************************

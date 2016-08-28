@@ -20,9 +20,9 @@
 
     <!--快件重量-->
     <string-array name="mod_express_weight">
-        <item>小于4斤</item>
-        <item>4-8斤</item>
-        <item>8斤以上</item>
+        <item>小于2kg</item>
+        <item>2~4kg</item>
+        <item>4kg以上</item>
     </string-array>
 
 

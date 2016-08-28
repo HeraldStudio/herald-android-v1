@@ -1,33 +1,25 @@
 package cn.seu.herald_android.app_module.express;
 
-import android.provider.Telephony;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.custom.StaticViewHolder;
 
 import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
-import static cn.seu.herald_android.helper.LogUtils.LOGD;
 
 /**
  * Created by corvo on 8/2/16.
  */
-public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoAdapter.SmsInfoViewHolder> {
+public class SmsInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static String TAG = makeLogTag(SmsInfo.class);
     private List<SmsInfo> smsList;
@@ -52,11 +44,16 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoAdapter.SmsInfoV
 
     @Override
     public int getItemCount() {
-        return smsList.size();
+        return Math.max(smsList.size(), 1);
     }
 
     @Override
-    public SmsInfoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (smsList.size() == 0) {
+            return new StaticViewHolder(LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.custom__view_empty_tip, parent, false));
+        }
+
         Log.d(TAG, "OnCreateViewHolder");
         View v = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.mod_que_express__sms_select_item, parent, false);
@@ -65,16 +62,23 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoAdapter.SmsInfoV
     }
 
     @Override
-    public void onBindViewHolder(SmsInfoViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder _holder, int position) {
+        // 列表为空，显示一个无内容的提示
+        if (smsList.size() == 0) {
+            return;
+        }
+
+        // 列表非空，则必为SmsInfoViewHolder，直接强制转换
+        SmsInfoViewHolder holder = (SmsInfoViewHolder) _holder;
         SmsInfo info = smsList.get(position);
         holder.smsBody.setText(info.getSmsbody());
 
         // 格式化时间
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/M/d H:mm");
         String date = format.format(Long.valueOf(info.getDate()));
         holder.smsDate.setText(date);
 
-        holder.smsBody.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Click" + info.getSmsbody());
@@ -89,14 +93,14 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<SmsInfoAdapter.SmsInfoV
         private final String TAG = "SmsInfoViewHolder";
 
         public TextView smsDate;           // 短信日期
-        public Button smsBody;           // 短信内容
+        public TextView smsBody;           // 短信内容
         public RadioButton smsSelect;      // 短信选择按钮
 
         public SmsInfoViewHolder(View v) {
             super(v);
             Log.d(TAG, "In Create");
-            smsDate = (TextView)v.findViewById(R.id.express_txt_sms_date);
-            smsBody = (Button) v.findViewById(R.id.express_txt_sms_body);
+            smsDate = (TextView) v.findViewById(R.id.express_txt_sms_date);
+            smsBody = (TextView) v.findViewById(R.id.express_txt_sms_body);
         }
     }
 }

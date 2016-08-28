@@ -48,10 +48,6 @@ monkey by Zille Sophie Bostinius from the Noun Project
 
 本软件所有数据来自学校网站或其他第三方，受学校网站或其他第三方数据的不确定性影响，本软件显示的数据可能会出现某些不正常情况，包含但不限于无法连接、信息错误、显示延迟或自相矛盾等。小猴偷米工作室不对以上问题导致的任何后果负责。"
     </string>
-
-
-
-
     <string name="title_activity_card">一卡通</string>
     <string name="title_activity_experiment">实验助手</string>
     <string name="title_activity_seunet">校园网络</string>
@@ -78,9 +74,4 @@ monkey by Zille Sophie Bostinius from the Noun Project
     <string name="title_activity_gym_add_friend">添加好友</string>
     <string name="title_activity_topic">校园话题</string>
     <string name="title_activity_express">快递代取</string>
-
-    <string name="title_activity_express_welcome">快递模块声明</string>
-    <string name="body_activity_express_welcome">
-        快递模块为收费项目, 且并非先声运营, 先声只提供平台
-    </string>
 </resources>

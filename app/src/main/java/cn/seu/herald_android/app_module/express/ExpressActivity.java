@@ -1,19 +1,11 @@
 package cn.seu.herald_android.app_module.express;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -22,34 +14,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.framework.BaseActivity;
-import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
-import cn.seu.herald_android.framework.network.OnResponseListener;
-import cn.seu.herald_android.helper.CacheHelper;
-import okhttp3.Call;
 
 /**
  * Created by corvo on 7/28/16.
  */
 public class ExpressActivity extends BaseActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private String TAG = "ExpressActivity";
     final private int REQUEST_CODE_ASK_READ_SMS = 123;
 
@@ -62,16 +45,17 @@ public class ExpressActivity extends BaseActivity
     private Button mSubmit;             // 提交请求
 
     private TextView mSmsShow;          // 短信框
+    private EditText mPostScript;       // 用户备注
 
     private EditText mUsername;         // 姓名编辑框
     private EditText mPhone;            // 手机号码编辑框
+
+    private CheckBox mCheckBox;         // 同意条款
 
     String[] mDestArray;// = getResources().getStringArray(R.array.mod_express_dest);
     String[] mLocateArray;// = getResources().getStringArray(R.array.mod_express_locate);
     String[] mArrivalArray;// = getResources().getStringArray(R.array.mod_express_arrival);
     String[] mWeightArray;// = getResources().getStringArray(R.array.mod_express_weight);
-
-    private ProgressDialog mProgress;
 
     /**
      * 调用此接口改变短信文本内容, 定义在SmsSelectDialog中
@@ -88,11 +72,6 @@ public class ExpressActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (CacheHelper.get("express_verify").equals("")) {
-            Intent intent = new Intent(ExpressActivity.this, ExpressWelcomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         setContentView(R.layout.mod_que_express);
         mDestSpinner = (Spinner) findViewById(R.id.express_spinner_dest);
@@ -105,19 +84,26 @@ public class ExpressActivity extends BaseActivity
         mSmsSelect = (Button) findViewById(R.id.express_button_sms_select);
         mSubmit = (Button) findViewById(R.id.express_button_submit);
         mSmsShow = (TextView) findViewById(R.id.express_txt_sms);
+        mPostScript = (EditText) findViewById(R.id.express_postscript);
+
+        mCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
         mSmsSelect.setOnClickListener(this);
         mSubmit.setOnClickListener(this);
+        mCheckBox.setOnCheckedChangeListener(this);
 
         mDBContent = new ExpressDatabaseContent(this);
-
-
     }
 
     @Override
     protected void onResume() {
         initSpinner();
         super.onResume();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        mSubmit.setEnabled(isChecked);
     }
 
     /**
@@ -164,14 +150,11 @@ public class ExpressActivity extends BaseActivity
 
     @Override
     public void onClick(View v) {
-        Log.d("ExpressActivity", String.valueOf(v.getId()));
         switch (v.getId()) {
             case R.id.express_button_submit:
-                Log.d(TAG, "Click Submit");
                 onSubmit();
                 break;
             case R.id.express_button_sms_select:
-                Log.d(TAG, "Click Sms Select");
                 onSmsSelect();
                 break;
         }
@@ -191,7 +174,6 @@ public class ExpressActivity extends BaseActivity
                     new String[]{Manifest.permission.READ_SMS},
                     REQUEST_CODE_ASK_READ_SMS);
         } else {
-            Log.d(TAG, "create sms select dialog");
             SmsSelectDialog dialog = SmsSelectDialog.newInstance(bundle, this);
             FragmentTransaction ft = this.getFragmentManager().beginTransaction();
             dialog.show(ft, null);
@@ -202,32 +184,23 @@ public class ExpressActivity extends BaseActivity
      * 向服务端提交请求并插入数据库
      */
     private void onSubmit() {
-        Log.d(TAG, mSmsShow.getText().toString());
-
-        ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        if (cm.hasPrimaryClip()) {
-            ClipData data = cm.getPrimaryClip();
-            String secret = data.getItemAt(0).getText().toString();
-            if (secret.equals("IaMEXPRESSmanageR")) {
-                Intent intent = new Intent(this, ExpressAdminActivity.class);
-                startActivity(intent);
-                return;
-            }
-        } else {
-            ExpressInfo info = new ExpressInfo();
-            info.setUsername(mUsername.getText().toString());
-            info.setUserphone(mPhone.getText().toString());
-            info.setSmsInfo(mSmsShow.getText().toString());
-            info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
-            info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
-            info.setLocate(mLocateArray[mLocateSpinner.getSelectedItemPosition()]);
-            info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
-            //info.setSubmitTime(new Date().getTime());
-            info.setFetched(false);
-
-
-            makeSubmit(info);
+        ExpressInfo info = new ExpressInfo();
+        info.setUsername(mUsername.getText().toString());
+        info.setUserphone(mPhone.getText().toString());
+        String postScript = "";
+        if (!mPostScript.getText().toString().isEmpty()) {
+            postScript = "[用户备注：" + mPostScript.getText().toString() + "]";
         }
+        info.setSmsInfo(mSmsShow.getText().toString() + postScript);
+
+        info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
+        info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
+        info.setLocate(mLocateArray[mLocateSpinner.getSelectedItemPosition()]);
+        info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
+        //info.setSubmitTime(new Date().getTime());
+        info.setFetched(false);
+
+        makeSubmit(info);
     }
 
     private void onShowHisory() {
@@ -258,12 +231,17 @@ public class ExpressActivity extends BaseActivity
         String submit = "http://139.129.4.159/kuaidi/submit";
         // post之后会返回时间戳, 之后再保存数据库
 
+        if (info.getSmsInfo().isEmpty()) {
+            showSnackBar("请选择短信内容");
+            return;
+        }
+
         if (info.getUsername().isEmpty() || info.getUserphone().isEmpty()) {
             showSnackBar("请将信息填写完整");
             return;
         }
 
-        mProgress = ProgressDialog.show(this, "正在提交", "请稍后", true);
+        showProgressDialog();
         new ApiSimpleRequest(Method.POST)
                 .url(submit)
                 .addUuid()
@@ -275,6 +253,7 @@ public class ExpressActivity extends BaseActivity
                 .post("locate", info.getLocate())
                 .post("weight", info.getWeight())
                 .onResponse(((success, code, response) -> {
+                    hideProgressDialog();
                     if (success) {
                         try {
                             JSONObject res = new JSONObject(response);
@@ -283,19 +262,15 @@ public class ExpressActivity extends BaseActivity
                                 info.setSubmitTime(1000 * content.getLong("sub_time")); // python 与 java 时间戳转换 * 1000
                                 dbInsert(info);     // 存入数据库
                                 showSnackBar("提交成功");
-                                mProgress.dismiss();
                             } else {
                                 showSnackBar(res.getString("content"));
-                                mProgress.dismiss();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        mProgress.dismiss();
                         showSnackBar("提交失败");
                     }
-
                 })).run();
     }
 
