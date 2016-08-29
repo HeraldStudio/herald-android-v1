@@ -87,5 +87,6 @@ public class ExpressDatabaseContent {
 
     public void dbClear() {
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        db.delete("express", null, null);
     }
 }

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
@@ -44,6 +47,24 @@ public class ExpressHistoryActivity extends BaseActivity {
         historyRecyclerView = (RecyclerView) findViewById(R.id.express_view_history);
         expressInfoList = new ArrayList<>();
         dbContent = new ExpressDatabaseContent(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_express_history, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.express_button_history_refresh) {
+            Log.d(TAG, "Refresh");
+            dbContent.dbClear();
+            CacheHelper.set("express_sync", "");
+            getAllData();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -185,4 +206,5 @@ public class ExpressHistoryActivity extends BaseActivity {
     public interface OnDelete {
         public void deleteItem(ExpressInfo info);
     }
+
 }
