@@ -1,27 +1,21 @@
 package cn.seu.herald_android.app_module.express;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.StaticViewHolder;
 
-import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
-
-/**
- * Created by corvo on 8/2/16.
- */
 public class SmsInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static String TAG = makeLogTag(SmsInfo.class);
     private List<SmsInfo> smsList;
 
     private SmsSelectDialog handler;        // dialog窗口句柄, 主动调用dismiss 触发onDismiss
@@ -54,7 +48,6 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     inflate(R.layout.custom__view_empty_tip, parent, false));
         }
 
-        Log.d(TAG, "OnCreateViewHolder");
         View v = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.mod_que_express__sms_select_item, parent, false);
 
@@ -81,7 +74,6 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Click" + info.getSmsbody());
                 listener.refreshSmsText(info.getSmsbody());
                 handler.dismiss();
             }
@@ -92,15 +84,15 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     class SmsInfoViewHolder extends RecyclerView.ViewHolder {
         private final String TAG = "SmsInfoViewHolder";
 
+        @BindView(R.id.express_txt_sms_date)
         public TextView smsDate;           // 短信日期
+
+        @BindView(R.id.express_txt_sms_body)
         public TextView smsBody;           // 短信内容
-        public RadioButton smsSelect;      // 短信选择按钮
 
         public SmsInfoViewHolder(View v) {
             super(v);
-            Log.d(TAG, "In Create");
-            smsDate = (TextView) v.findViewById(R.id.express_txt_sms_date);
-            smsBody = (TextView) v.findViewById(R.id.express_txt_sms_body);
+            ButterKnife.bind(this, v);
         }
     }
 }

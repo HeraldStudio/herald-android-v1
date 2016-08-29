@@ -26,12 +26,10 @@
 
         <include layout="@layout/custom__divider"/>
 
-        <EditText
+        <TextView
             android:id="@+id/express_txt_sms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:enabled="false"
             android:hint="请选择快递短信"
             android:padding="10dp"
             android:textSize="16sp"/>
@@ -48,17 +46,6 @@
             android:textColor="#fff"
             android:textSize="16sp"
             />
-
-        <include layout="@layout/custom__divider"/>
-
-        <EditText
-            android:id="@+id/express_postscript"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:hint="填写备注（可不填；到达超过一天的快递请务必写清到达日期）"
-            android:padding="10dp"
-            android:textSize="16sp"/>
 
         <include layout="@layout/custom__divider"/>
 

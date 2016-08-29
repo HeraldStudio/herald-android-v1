@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
 import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
@@ -91,23 +93,27 @@ public class ExpressHistoryAdapter extends RecyclerView.Adapter<ExpressHistoryAd
 
     class ExpressHistoryViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.express_txt_submit_time_record)
         public TextView submitRecord;
+
+        @BindView(R.id.express_txt_is_fetched_record)
         public TextView isFetchedRecord;
+
+        @BindView(R.id.express_txt_sms_record)
         public TextView smsRecord;
+
+        @BindView(R.id.express_txt_locate_record)
         public TextView locateRecord;
+
+        @BindView(R.id.express_txt_arrival_record)
         public TextView arrivalRecord;
 
+        @BindView(R.id.express_card_history_record)
         public CardView containerRecord;
 
         public ExpressHistoryViewHolder(View v) {
             super(v);
-            submitRecord = (TextView)v.findViewById(R.id.express_txt_submit_time_record);
-            isFetchedRecord = (TextView)v.findViewById(R.id.express_txt_is_fetched_record);
-            smsRecord = (TextView) v.findViewById(R.id.express_txt_sms_record);
-            locateRecord = (TextView) v.findViewById(R.id.express_txt_locate_record);
-            arrivalRecord = (TextView) v.findViewById(R.id.express_txt_arrival_record);
-
-            containerRecord = (CardView) v.findViewById(R.id.express_card_history_record);
+            ButterKnife.bind(this, v);
         }
     }
 }
