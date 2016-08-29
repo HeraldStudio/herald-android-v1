@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.app_secondary.WebModuleActivity;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
@@ -158,6 +159,12 @@ public class ExpressActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.express_txt_terms)
+    void onClickTerms() {
+        WebModuleActivity.startWebModuleActivity("快递代取",
+                "http://app.heraldstudio.com/kuaidi_terms.htm", R.style.ExpressActivityTheme);
+    }
+
     /**
      * 向服务端提交请求并插入数据库
      */
@@ -200,7 +207,7 @@ public class ExpressActivity extends BaseActivity {
      * }
      */
     private void makeSubmit(ExpressInfo info) {
-        String submit = "http://139.129.4.159/kuaidi/submit";
+        String submit = "http://app.heraldstudio.com/kuaidi/submit";
         // post之后会返回时间戳, 之后再保存数据库
 
         if (info.getSmsInfo().isEmpty()) {
