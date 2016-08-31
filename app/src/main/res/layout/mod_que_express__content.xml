@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:text="快递代取服务小猴偷米App协助开发，由龙湖速递负责运营，为货到付款的有偿服务。您需要在同意其有关条款和条件的前提下使用本服务。"
+            android:text="快递代取服务为小猴偷米App协助开发，由龙湖速递负责运营，为货到付款的有偿服务。您需要在同意其有关条款和条件的前提下使用本服务。"
             android:textSize="16sp"/>
 
         <include layout="@layout/custom__divider"/>
