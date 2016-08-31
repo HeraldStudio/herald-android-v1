@@ -26,11 +26,12 @@
 
         <include layout="@layout/custom__divider"/>
 
-        <TextView
+        <EditText
             android:id="@+id/express_txt_sms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请选择快递短信"
+            android:hint="请选择快递短信或在此粘贴短信内容"
+            android:background="@android:color/transparent"
             android:padding="10dp"
             android:textSize="16sp"/>
 

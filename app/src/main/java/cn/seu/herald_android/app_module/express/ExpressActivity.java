@@ -1,6 +1,7 @@
 package cn.seu.herald_android.app_module.express;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.app_secondary.WebModuleActivity;
+import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
@@ -87,6 +89,10 @@ public class ExpressActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_express);
         ButterKnife.bind(this);
+
+        mUsername.setText(Cache.expressUserName.getValue());
+
+        mPhone.setText(Cache.expressUserPhone.getValue());
 
         mDBContent = new ExpressDatabaseContent(this);
     }
@@ -220,6 +226,10 @@ public class ExpressActivity extends BaseActivity {
             return;
         }
 
+        Cache.expressUserName.setValue(info.getUsername());
+
+        Cache.expressUserPhone.setValue(info.getUserphone());
+
         showProgressDialog();
         new ApiSimpleRequest(Method.POST)
                 .url(submit)
@@ -240,7 +250,14 @@ public class ExpressActivity extends BaseActivity {
                                 JSONObject content = res.getJSONObject("content");
                                 info.setSubmitTime(1000 * content.getLong("sub_time")); // python 与 java 时间戳转换 * 1000
                                 dbInsert(info);     // 存入数据库
-                                showSnackBar("提交成功");
+                                new AlertDialog.Builder(this)
+                                        .setMessage("尊敬的客户您好，已收到您的订单。请您于 "
+                                                + info.getArrival()
+                                                + " 内到 "
+                                                + info.getDest()
+                                                + " 取回您的快件，现场付款，支持支付宝和微信转账。"
+                                                + "如有疑问，请按照“价格、条款与条件”中的联系方式进行咨询。")
+                                        .setNegativeButton("确定", null).show();
                             } else {
                                 showSnackBar(res.getString("content"));
                             }
@@ -248,7 +265,7 @@ public class ExpressActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                     } else {
-                        showSnackBar("提交失败");
+                        showSnackBar("提交失败, 请重试");
                     }
                 })).run();
     }
