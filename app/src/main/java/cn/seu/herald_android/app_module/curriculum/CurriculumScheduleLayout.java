@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,21 +90,6 @@ public class CurriculumScheduleLayout extends FrameLayout {
         this.beginOfTerm = beginOfTerm;
     }
 
-    // 获取手机状态栏高度
-    private static int getStatusBarHeight(Context context) {
-        int statusBarHeight = 0;
-        try {
-            Class<?> c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            statusBarHeight = context.getResources().getDimensionPixelSize(x);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        return statusBarHeight;
-    }
-
     // 要显示在屏幕上时再进行添加view的操作，显著提高应用启动速度
     @Override
     protected void onAttachedToWindow() {
@@ -114,7 +98,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
         // 获取屏幕缩放率、宽度和高度，并计算页面要占的高度（总高度-标题栏高度-系统顶栏高度）
         DisplayMetrics dm = getResources().getDisplayMetrics();
         width = dm.widthPixels;
-        height = dm.heightPixels - UI.dp2px(48) - getStatusBarHeight(getContext());
+        height = dm.heightPixels - UI.dp2px(48) - UI.getStatusBarHeight(getContext());
 
         // 绘制表示各课时的水平分割线
         for (int i = 0; i < PERIOD_COUNT; i++) {

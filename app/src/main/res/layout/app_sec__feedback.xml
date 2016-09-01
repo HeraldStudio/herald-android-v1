@@ -1,27 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context=".app_secondary.FeedbackActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context=".app_secondary.FeedbackActivity"
+                tools:showIn="@layout/app_sec__feedback">
 
-    <cn.seu.herald_android.custom.CustomAppBarLayout
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:inputType="textMultiLine"
+        android:id="@+id/editText"
+        android:gravity="top|left"
+        android:background="@null"
+        android:layout_above="@+id/tv_contact"
+        android:layout_alignParentTop="true"
+        android:padding="15dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:hint="在这里写下您的宝贵意见~"
+        android:textSize="13sp"/>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@+id/tv_contact"
+        android:background="@color/colorDivider"></View>
 
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:background="@null"
+        android:gravity="left"
+        android:hint="您的联系方式(可不填)"
+        android:layout_centerInParent="true"
+        android:textSize="13sp"
+        android:id="@+id/tv_contact"/>
 
-    <include layout="@layout/app_sec__feedback__content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/tv_contact"
+        android:background="@color/colorDivider">
+    </View>
 
-</android.support.design.widget.CoordinatorLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="对于您的问题，工作人员会主动联系您，而对于可行性建议，我们会考虑直接投入开发喔~"
+        android:layout_below="@+id/tv_contact"
+        android:padding="15dp" />
+
+</RelativeLayout>

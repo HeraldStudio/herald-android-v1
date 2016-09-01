@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".app_secondary.LoginActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ImageView
             android:id="@+id/login_bg"
@@ -26,7 +18,7 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="130dp">
+            android:paddingBottom="150dp">
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -151,5 +143,3 @@
             android:textSize="12sp"/>
 
     </RelativeLayout>
-
-</android.support.design.widget.CoordinatorLayout>

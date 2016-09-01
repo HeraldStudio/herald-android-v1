@@ -1,45 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context="cn.seu.herald_android.app_module.lecture.LectureActivity">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <cn.seu.herald_android.custom.CustomAppBarLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/zhiyuzhishan"/>
 
-        <cn.seu.herald_android.custom.CustomCollapsingToolbarLayout
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recyclerview_lecture_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/zhiyuzhishan"
-                app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        </cn.seu.herald_android.custom.CustomCollapsingToolbarLayout>
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
-
-    <include layout="@layout/mod_que_lecture__content" />
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

@@ -37,7 +37,7 @@
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/LoginActivityTheme"/>
         <activity
             android:name=".app_secondary.ModuleManageActivity"
             android:label="@string/title_activity_query"
@@ -88,8 +88,8 @@
         </activity>
         <activity
             android:name=".app_module.library.LibrarySearchActivity"
-            android:label="@string/title_activity_library_search"
             android:launchMode="singleTask"
+            android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/LibraryTheme" />
         <activity

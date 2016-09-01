@@ -65,7 +65,6 @@ monkey by Zille Sophie Bostinius from the Noun Project
     <string name="title_activity_grade">绩点查询</string>
     <string name="title_activity_library">图书馆</string>
     <string name="title_activity_schedule">校历查询</string>
-    <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>
     <string name="title_activity_gym_choose_time">选择时段</string>

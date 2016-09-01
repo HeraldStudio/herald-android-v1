@@ -5,7 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class ShortViewPager extends ViewPager {
 
         if (getAdapter() != null) {
             int height = (int) (getChildHeight(leftPos) * (1 - offset) + getChildHeight(rightPos) * offset);
-            setLayoutParams(new FrameLayout.LayoutParams(-1, height));
+            setLayoutParams(new LinearLayout.LayoutParams(-1, height));
         }
         super.onPageScrolled(position, offset, offsetPixels);
     }
