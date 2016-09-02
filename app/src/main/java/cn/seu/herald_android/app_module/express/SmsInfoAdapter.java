@@ -44,8 +44,10 @@ public class SmsInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (smsList.size() == 0) {
-            return new StaticViewHolder(LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.custom__view_empty_tip, parent, false));
+            View v = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.custom__view_empty_tip, parent, false);
+            ((TextView) v.findViewById(R.id.tv_emptytip)).setText("24小时之内暂无短信");
+            return new StaticViewHolder(v);
         }
 
         View v = LayoutInflater.from(parent.getContext()).

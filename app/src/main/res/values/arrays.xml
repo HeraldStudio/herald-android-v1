@@ -2,8 +2,8 @@
 <resources>
     <!--客户取快递地点-->
     <string-array name="mod_express_dest">
-        <item>梅九</item>
-        <item>桃三四</item>
+        <item>梅九大厅</item>
+        <item>桃三四大厅</item>
     </string-array>
 
     <!--取快递的时间段-->

@@ -29,9 +29,9 @@ import cn.seu.herald_android.helper.CacheHelper;
  */
 public class ExpressHistoryActivity extends BaseActivity {
 
-    String queryState = "http://139.129.4.159/kuaidi/queryState";
-    String queryByCard = "http://139.129.4.159/kuaidi/queryByCard";
-    String deleteRecord = "http://139.129.4.159/kuaidi/deleteRecord";
+    String queryState = "http://app.heraldstudio.com/kuaidi/queryState";
+    String queryByCard = "http://app.heraldstudio.com/kuaidi/queryByCard";
+    String deleteRecord = "http://app.heraldstudio.com/kuaidi/deleteRecord";
 
     @BindView(R.id.express_view_history)
     RecyclerView historyRecyclerView;

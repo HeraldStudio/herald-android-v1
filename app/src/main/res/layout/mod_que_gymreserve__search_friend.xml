@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+<ListView
+    android:id="@+id/searchResult"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
-
-    <cn.seu.herald_android.custom.CustomAppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/searchResult">
-    </ListView>
-
-</android.support.design.widget.CoordinatorLayout>
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</ListView>

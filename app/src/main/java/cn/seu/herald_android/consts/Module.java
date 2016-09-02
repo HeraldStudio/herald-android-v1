@@ -89,7 +89,6 @@ public class Module {
 
     public static AppModule[] array = new AppModule[]{
             card, pedetail, curriculum, experiment, exam, lecture, jwc,
-            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom,
-            express
+            seunet, gymreserve, library, grade, srtp, schoolbus, express, schedule, quanyi, emptyroom
     };
 }

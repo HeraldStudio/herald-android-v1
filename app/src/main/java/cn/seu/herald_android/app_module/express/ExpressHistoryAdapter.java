@@ -57,7 +57,7 @@ public class ExpressHistoryAdapter extends RecyclerView.Adapter<ExpressHistoryAd
         ExpressInfo info = expressInfoList.get(position);
 
         holder.arrivalRecord.setText(info.getArrival());
-        holder.locateRecord.setText(info.getLocate());
+        holder.locateRecord.setText(info.getLocate() + " -> " + info.getDest());
         holder.smsRecord.setText(info.getSmsInfo());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         holder.submitRecord.setText(format.format(info.getSubmitTime()));

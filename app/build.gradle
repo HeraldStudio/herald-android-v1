@@ -52,6 +52,7 @@ dependencies {
     compile 'com.zhy:okhttputils:2.2.0'
     compile 'de.codecrafters.tableview:tableview:1.0.1'
     compile 'com.kyleduo.switchbutton:library:1.3.4'
+    compile 'com.r0adkll:slidableactivity:2.0.5'
     compile 'com.squareup:seismic:1.0.2'
 
     // 轮播库

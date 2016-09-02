@@ -227,4 +227,11 @@ public class Cache {
             new ApiSimpleRequest(Method.POST).api("schoolbus").addUuid()
                     .toCache("herald_schoolbus")
     );
+
+    /**
+     * 快递代取模块缓存
+     */
+    public static AppCache expressUserName = new AppCache("herald_express_user_name");
+
+    public static AppCache expressUserPhone = new AppCache("herald_express_user_phone");
 }

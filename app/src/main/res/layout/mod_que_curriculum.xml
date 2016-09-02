@@ -1,51 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="cn.seu.herald_android.app_module.curriculum.CurriculumActivity">
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <cn.seu.herald_android.custom.CustomAppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="?attr/actionBarSize">
+        android:background="#eee">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/curriculum_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#eee">
+            android:layout_height="match_parent"/>
 
-            <ImageView
-                android:id="@+id/curriculum_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    </FrameLayout>
 
-        </FrameLayout>
-
-    </LinearLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
