@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.BaseActivity;
@@ -22,19 +24,18 @@ import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
 
-import static cn.seu.herald_android.helper.LogUtils.makeLogTag;
-
 /**
  * Created by corvo on 8/6/16.
  */
 public class ExpressHistoryActivity extends BaseActivity {
-    private static String TAG = makeLogTag(ExpressHistoryActivity.class);
 
     String queryState = "http://139.129.4.159/kuaidi/queryState";
     String queryByCard = "http://139.129.4.159/kuaidi/queryByCard";
     String deleteRecord = "http://139.129.4.159/kuaidi/deleteRecord";
 
-    private RecyclerView historyRecyclerView;
+    @BindView(R.id.express_view_history)
+    RecyclerView historyRecyclerView;
+
     private ExpressHistoryAdapter historyAdapter;
     private List<ExpressInfo> expressInfoList;
 
@@ -44,7 +45,8 @@ public class ExpressHistoryActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_express__history);
-        historyRecyclerView = (RecyclerView) findViewById(R.id.express_view_history);
+        ButterKnife.bind(this);
+
         expressInfoList = new ArrayList<>();
         dbContent = new ExpressDatabaseContent(this);
     }
@@ -59,7 +61,7 @@ public class ExpressHistoryActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.express_button_history_refresh) {
-            Log.d(TAG, "Refresh");
+            //Log.d(TAG, "Refresh");
             dbContent.dbClear();
             CacheHelper.set("express_sync", "");
             getAllData();
@@ -80,7 +82,6 @@ public class ExpressHistoryActivity extends BaseActivity {
      */
     private void getAllData() {
         if (CacheHelper.get("express_sync").equals("")) {
-            Log.d(TAG, "getAllData");
             new ApiSimpleRequest(Method.POST)
                     .url(queryByCard)
                     .post("card_num", ApiHelper.getCurrentUser().userName)
@@ -119,7 +120,6 @@ public class ExpressHistoryActivity extends BaseActivity {
     }
 
     private void refreshUI() {
-        Log.d(TAG, "refreshUI");
         expressInfoList = dbContent.dbQuery();
         historyAdapter = new ExpressHistoryAdapter(expressInfoList, onDelete, this);
         historyRecyclerView.setAdapter(historyAdapter);
@@ -129,8 +129,6 @@ public class ExpressHistoryActivity extends BaseActivity {
     private void refreshState() {
 
         for (ExpressInfo info : expressInfoList) {
-            Log.d(TAG, "refresh state");
-
             if (!info.isReceived()) {        // 只对没有接单的进行查询
                 new ApiSimpleRequest(Method.POST)
                         .url(queryState)
@@ -147,7 +145,6 @@ public class ExpressHistoryActivity extends BaseActivity {
 
                                         info.setFetched(isFetched); // 更新此次记录
                                         info.setReceived(isReceived);
-                                        Log.d(TAG, "更新记录成功");
 
                                         dbContent.dbRefresh(info.getUserphone(), // 刷新数据库
                                                 info.getSubmitTime(),
@@ -155,7 +152,7 @@ public class ExpressHistoryActivity extends BaseActivity {
 
                                         refreshUI();            // 刷新UI
                                     } else {
-                                        Log.d(TAG, res.getString("content"));
+                                        //Log.d(TAG, res.getString("content"));
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();

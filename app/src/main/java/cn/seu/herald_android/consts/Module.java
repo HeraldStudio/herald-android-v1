@@ -64,7 +64,7 @@ public class Module {
 
     public static AppModule express = new AppModule("express",
             "快递代取", "提供线上预订、线下交付的快递便捷代取服务",
-            "MODULE_EXPRESS", R.mipmap.ic_express, false, true);
+            "MODULE_EXPRESS", R.mipmap.ic_express, false, false);
 
     public static AppModule schedule = new AppModule("schedule",
             "校历查询 Web", "显示当前年度各学期的学校校历安排",

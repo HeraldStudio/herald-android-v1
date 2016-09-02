@@ -2,19 +2,15 @@ package cn.seu.herald_android.app_module.express;
 
 import android.Manifest;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,38 +19,54 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindArray;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 
-/**
- * Created by corvo on 7/28/16.
- */
-public class ExpressActivity extends BaseActivity
-        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    private String TAG = "ExpressActivity";
+public class ExpressActivity extends BaseActivity {
     final private int REQUEST_CODE_ASK_READ_SMS = 123;
 
-    private Spinner mDestSpinner;       // 取回地点
-    private Spinner mArrivalSpinner;    // 取回时间
-    private Spinner mWeightSpinner;     // 快件重量
-    private Spinner mLocateSpinner;     // 快件所在地
+    @BindView(R.id.express_spinner_dest)
+    Spinner mDestSpinner;       // 取回地点
 
-    private Button mSmsSelect;          // 短信选择
-    private Button mSubmit;             // 提交请求
+    @BindView(R.id.express_spinner_arrival)
+    Spinner mArrivalSpinner;    // 取回时间
 
-    private TextView mSmsShow;          // 短信框
-    private EditText mPostScript;       // 用户备注
+    @BindView(R.id.express_spinner_weight)
+    Spinner mWeightSpinner;     // 快件重量
 
-    private EditText mUsername;         // 姓名编辑框
-    private EditText mPhone;            // 手机号码编辑框
+    @BindView(R.id.express_spinner_locate)
+    Spinner mLocateSpinner;     // 快件所在地
 
-    private CheckBox mCheckBox;         // 同意条款
+    @BindView(R.id.express_txt_sms)
+    TextView mSmsShow;          // 短信框
 
+    @BindView(R.id.express_edit_username)
+    EditText mUsername;         // 姓名编辑框
+
+    @BindView(R.id.express_edit_phone)
+    EditText mPhone;            // 手机号码编辑框
+
+    @BindView(R.id.express_button_submit)
+    Button mSubmit;         // 同意条款
+
+    @BindArray(R.array.mod_express_dest)
     String[] mDestArray;// = getResources().getStringArray(R.array.mod_express_dest);
+
+    @BindArray(R.array.mod_express_locate)
     String[] mLocateArray;// = getResources().getStringArray(R.array.mod_express_locate);
+
+    @BindArray(R.array.mod_express_arrival)
     String[] mArrivalArray;// = getResources().getStringArray(R.array.mod_express_arrival);
+
+    @BindArray(R.array.mod_express_weight)
     String[] mWeightArray;// = getResources().getStringArray(R.array.mod_express_weight);
 
     /**
@@ -72,25 +84,8 @@ public class ExpressActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.mod_que_express);
-        mDestSpinner = (Spinner) findViewById(R.id.express_spinner_dest);
-        mArrivalSpinner = (Spinner) findViewById(R.id.express_spinner_arrival);
-        mLocateSpinner = (Spinner) findViewById(R.id.express_spinner_locate);
-        mWeightSpinner = (Spinner) findViewById(R.id.express_spinner_weight);
-        mUsername = (EditText) findViewById(R.id.express_edit_username);
-        mPhone = (EditText) findViewById(R.id.express_edit_phone);
-
-        mSmsSelect = (Button) findViewById(R.id.express_button_sms_select);
-        mSubmit = (Button) findViewById(R.id.express_button_submit);
-        mSmsShow = (TextView) findViewById(R.id.express_txt_sms);
-        mPostScript = (EditText) findViewById(R.id.express_postscript);
-
-        mCheckBox = (CheckBox) findViewById(R.id.checkbox);
-
-        mSmsSelect.setOnClickListener(this);
-        mSubmit.setOnClickListener(this);
-        mCheckBox.setOnCheckedChangeListener(this);
+        ButterKnife.bind(this);
 
         mDBContent = new ExpressDatabaseContent(this);
     }
@@ -101,7 +96,7 @@ public class ExpressActivity extends BaseActivity
         super.onResume();
     }
 
-    @Override
+    @OnCheckedChanged(R.id.checkbox)
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         mSubmit.setEnabled(isChecked);
     }
@@ -110,12 +105,6 @@ public class ExpressActivity extends BaseActivity
      * 初始化四个选择框
      */
     private void initSpinner() {
-        mDestArray = getResources().getStringArray(R.array.mod_express_dest);
-        mLocateArray = getResources().getStringArray(R.array.mod_express_locate);
-        mArrivalArray = getResources().getStringArray(R.array.mod_express_arrival);
-        mWeightArray = getResources().getStringArray(R.array.mod_express_weight);
-
-        Log.d(TAG, "initSpinner");
         mDestSpinner.setAdapter(new ArrayAdapter<String>(
                 this, R.layout.mod_que_express__spin_item, mDestArray
         ));
@@ -148,22 +137,11 @@ public class ExpressActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.express_button_submit:
-                onSubmit();
-                break;
-            case R.id.express_button_sms_select:
-                onSmsSelect();
-                break;
-        }
-    }
-
     /**
      * 选择短信内容
      */
-    private void onSmsSelect() {
+    @OnClick(R.id.express_button_sms_select)
+    void onSmsSelect() {
         Bundle bundle = new Bundle();
         bundle.putSerializable("listener", mSmsRefresh);
 
@@ -183,15 +161,12 @@ public class ExpressActivity extends BaseActivity
     /**
      * 向服务端提交请求并插入数据库
      */
-    private void onSubmit() {
+    @OnClick(R.id.express_button_submit)
+    void onSubmit() {
         ExpressInfo info = new ExpressInfo();
         info.setUsername(mUsername.getText().toString());
         info.setUserphone(mPhone.getText().toString());
-        String postScript = "";
-        if (!mPostScript.getText().toString().isEmpty()) {
-            postScript = "[用户备注：" + mPostScript.getText().toString() + "]";
-        }
-        info.setSmsInfo(mSmsShow.getText().toString() + postScript);
+        info.setSmsInfo(mSmsShow.getText().toString());
 
         info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
         info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
@@ -204,16 +179,13 @@ public class ExpressActivity extends BaseActivity
     }
 
     private void onShowHisory() {
-        Log.d(TAG, "show history");
-        Intent intent = new Intent(this, ExpressHistoryActivity.class);
-        startActivity(intent);
+        AppContext.startActivitySafely(ExpressHistoryActivity.class);
     }
 
     /**
      * 提交请求后将数据保存在数据库中
      */
     private void dbInsert(ExpressInfo info) {
-        Log.d(TAG, "Database Insert");
         mDBContent.dbInsert(info);
     }
 

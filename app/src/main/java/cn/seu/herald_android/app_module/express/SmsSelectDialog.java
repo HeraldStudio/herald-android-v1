@@ -1,19 +1,14 @@
 package cn.seu.herald_android.app_module.express;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -21,22 +16,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 
-/**
- * Created by corvo on 8/2/16.
- */
 public class SmsSelectDialog extends DialogFragment{
 
-    private static String TAG = "SmsSelectDialog";
+    @BindView(R.id.express_view_sms)
+    RecyclerView smsRecyclerView;
 
-    private RecyclerView smsRecyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private List<SmsInfo> smsInfoList;
     private static Context context;
-
 
     private DialogRefresh listener;   // 为了改变原Activity中的短信文本
 
@@ -54,9 +47,9 @@ public class SmsSelectDialog extends DialogFragment{
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.mod_que_express__sms_select, null);
+        ButterKnife.bind(this, view);
 
         listener = (DialogRefresh) getArguments().getSerializable("listener");
-        smsRecyclerView = (RecyclerView)view.findViewById(R.id.express_view_sms);
 
         smsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -66,8 +59,6 @@ public class SmsSelectDialog extends DialogFragment{
         SmsContent smsContent = new SmsContent(context, uri);
         smsInfoList = smsContent.getInfos();
 
-
-        Log.d(TAG, "setAdapter");
         adapter = new SmsInfoAdapter(smsInfoList, this, listener);
         smsRecyclerView.setAdapter(adapter);
         smsRecyclerView.setItemAnimator(new DefaultItemAnimator());
