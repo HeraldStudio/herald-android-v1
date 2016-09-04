@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
@@ -72,6 +72,7 @@
             android:layout_alignParentLeft="true"
             android:gravity="center"
             android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:text="活跃度走势"
             android:textColor="#ffffff"
             android:textSize="12sp"/>
