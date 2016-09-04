@@ -27,6 +27,7 @@ import cn.seu.herald_android.app_secondary.WebModuleActivity;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.json.JArr;
 import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
@@ -64,9 +65,6 @@ public class ExpressActivity extends BaseActivity {
     @BindArray(R.array.mod_express_locate)
     String[] mLocateArray;// = getResources().getStringArray(R.array.mod_express_locate);
 
-    @BindArray(R.array.mod_express_arrival)
-    String[] mArrivalArray;// = getResources().getStringArray(R.array.mod_express_arrival);
-
     @BindArray(R.array.mod_express_weight)
     String[] mWeightArray;// = getResources().getStringArray(R.array.mod_express_weight);
 
@@ -98,6 +96,7 @@ public class ExpressActivity extends BaseActivity {
     @Override
     protected void onResume() {
         initSpinner();
+        refreshTimeList();
         super.onResume();
     }
 
@@ -106,16 +105,36 @@ public class ExpressActivity extends BaseActivity {
         mSubmit.setEnabled(isChecked);
     }
 
+    public void refreshTimeList() {
+        showProgressDialog();
+        new ApiSimpleRequest(Method.POST).url("http://app.heraldstudio.com/kuaidi/getTimeList")
+                .onResponse((success, code, response) -> {
+                    hideProgressDialog();
+                    if (success) {
+                        JArr arr = new JObj(response).$a("content");
+                        String[] arrivalArray = new String[arr.size()];
+                        for (int i = 0; i < arr.size(); i++) {
+                            arrivalArray[i] = arr.$s(i);
+                        }
+                        if (arrivalArray.length > 0) {
+                            mArrivalSpinner.setAdapter(new ArrayAdapter<String>(
+                                    this, R.layout.mod_que_express__spin_item, arrivalArray
+                            ));
+                        } else {
+                            showSnackBar("获取可用取货时间失败，请刷新");
+                        }
+                    } else {
+                        showSnackBar("获取可用取货时间失败，请刷新");
+                    }
+                }).run();
+    }
+
     /**
-     * 初始化四个选择框
+     * 初始化除取货时间以外的三个选择框
      */
     private void initSpinner() {
         mDestSpinner.setAdapter(new ArrayAdapter<String>(
                 this, R.layout.mod_que_express__spin_item, mDestArray
-        ));
-
-        mArrivalSpinner.setAdapter(new ArrayAdapter<String>(
-                this, R.layout.mod_que_express__spin_item, mArrivalArray
         ));
 
         mLocateSpinner.setAdapter(new ArrayAdapter<String>(
@@ -137,7 +156,9 @@ public class ExpressActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.express_button_history) {
-            onShowHisory();
+            onShowHistory();
+        } else if (id == R.id.action_sync) {
+            refreshTimeList();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -179,17 +200,21 @@ public class ExpressActivity extends BaseActivity {
         info.setUserphone(mPhone.getText().toString());
         info.setSmsInfo(mSmsShow.getText().toString());
 
-        info.setDest(mDestArray[mDestSpinner.getSelectedItemPosition()]);
-        info.setArrival(mArrivalArray[mArrivalSpinner.getSelectedItemPosition()]);
-        info.setLocate(mLocateArray[mLocateSpinner.getSelectedItemPosition()]);
-        info.setWeight(mWeightArray[mWeightSpinner.getSelectedItemPosition()]);
+        if (mArrivalSpinner.getSelectedItemPosition() < 0) {
+            showSnackBar("取货时间为空，请先刷新并选择取货时间");
+            return;
+        }
+        info.setDest((String) mDestSpinner.getSelectedItem());
+        info.setArrival((String) mArrivalSpinner.getSelectedItem());
+        info.setLocate((String) mLocateSpinner.getSelectedItem());
+        info.setWeight((String) mWeightSpinner.getSelectedItem());
         //info.setSubmitTime(new Date().getTime());
         info.setFetched(false);
 
         makeSubmit(info);
     }
 
-    private void onShowHisory() {
+    private void onShowHistory() {
         AppContext.startActivitySafely(ExpressHistoryActivity.class);
     }
 
@@ -216,6 +241,11 @@ public class ExpressActivity extends BaseActivity {
 
         if (info.getSmsInfo().isEmpty()) {
             showSnackBar("请选择短信内容");
+            return;
+        }
+
+        if (info.getSmsInfo().length() < 10) {
+            showSnackBar("短信内容不得少于10字符");
             return;
         }
 
@@ -248,13 +278,24 @@ public class ExpressActivity extends BaseActivity {
                             info.setSubmitTime(1000 * content.$l("sub_time")); // python 与 java 时间戳转换 * 1000
                             dbInsert(info);     // 存入数据库
                             new AlertDialog.Builder(this)
+                                    .setCancelable(false)
                                     .setMessage("尊敬的客户您好，已收到您的订单。请您于"
                                             + info.getArrival()
                                             + "内到"
                                             + info.getDest()
                                             + "取回您的快件，现场付款，支持支付宝和微信转账。"
                                             + "如有疑问，请按照“价格、条款和条件”中的联系方式进行咨询。")
-                                    .setNegativeButton("确定", null).show();
+                                    .setPositiveButton("确定", (dialog, which) -> {
+
+                                        // 先清除输入内容，防止重复提交
+                                        mSmsShow.setText("");
+
+                                        // 为了和上一句相一致，下拉框的选项也还原
+                                        initSpinner();
+
+                                        // 跳转到记录页面
+                                        onShowHistory();
+                                    }).show();
                         } else {
                             String error = res.$s("content");
                             if (error.isEmpty()) {

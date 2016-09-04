@@ -53,16 +53,16 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:stretchColumns="1">
 
-            <TableRow>
+            <TableRow android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0"
+                    android:padding="10dp"
                     android:text="用户姓名"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -79,13 +79,14 @@
                     android:textSize="16sp"/>
             </TableRow>
 
-            <TableRow>
+            <TableRow android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0"
+                    android:padding="10dp"
                     android:text="手机号码"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -103,13 +104,14 @@
 
             </TableRow>
 
-            <TableRow>
+            <TableRow android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0"
+                    android:padding="10dp"
                     android:text="快件地址"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -123,13 +125,14 @@
                     android:scrollbarSize="20dp"/>
             </TableRow>
 
-            <TableRow>
+            <TableRow android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0"
+                    android:padding="10dp"
                     android:text="快件重量"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -143,13 +146,14 @@
                     android:scrollbarSize="20dp"/>
             </TableRow>
 
-            <TableRow>
+            <TableRow android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0"
+                    android:padding="10dp"
                     android:text="取回地点"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -164,12 +168,13 @@
                     android:spinnerMode="dropdown"/>
             </TableRow>
 
-            <TableRow>
+            <TableRow android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:padding="10dp"
                     android:text="取回时间"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
