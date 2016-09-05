@@ -322,7 +322,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             if (!success) {
                 AppContext.showMessage("部分数据刷新失败");
             }
-            slider.startAutoCycle();
+            slider.startAutoCycleIfNeeded();
         }).run();
     }
 
