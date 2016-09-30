@@ -24,9 +24,6 @@ import cn.seu.herald_android.framework.json.JObj;
 
 public class PedetailActivity extends BaseActivity {
 
-    public static final int[] FORECAST_TIME_PERIOD = {
-            6 * 60 + 20, 7 * 60 + 20
-    };
     // 左右滑动分页的日历容器
     @BindView(R.id.calendarPager)
     ViewPager pager;
