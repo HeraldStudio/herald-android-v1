@@ -76,14 +76,18 @@ public class ApiSimpleRequest extends ApiRequest {
         @Override
         public void onResponse(Call call, Response response) {
             try {
-                // 解析错误码（这里指的是 HTTP Response Status Code，不考虑 JSON 中返回的 code）
-                int code = response.code();
-
-                // 按照错误码判断是否成功
-                boolean success = code < 300;
+                // 解析 HTTP Response Status Code
+                int httpCode = response.code();
 
                 // 取返回的字符串值
                 String responseString = response.body().string();
+
+                // 将 HTTP Response Status Code 与 JSON code 合并, 取其中较严重的一个。
+                // 若返回字符串无法解析成 JSON, 按照我们的 JSON 解析库的实现, 后一个参数将为0, 仍取前一个参数作为 code
+                final int code = NetworkUtil.mergeStatusCodes(httpCode, new JObj(responseString).$i("code"));
+
+                // 按照错误码判断是否成功
+                boolean success = code < 300;
 
                 // 触发回调
                 uiThreadHandler.post(() -> {
