@@ -62,10 +62,6 @@ public class Module {
             "校车助手", "提供可实时更新的校车班车时间表",
             "MODULE_QUERY_SCHOOLBUS", R.mipmap.ic_bus, false, false);
 
-    //    public static AppModule express = new AppModule("express",
-    //            "快递代取", "提供线上预订、线下交付的快递便捷代取服务",
-    //            "MODULE_EXPRESS", R.mipmap.ic_express, false, false);
-
     public static AppModule schedule = new AppModule("schedule",
             "校历查询 Web", "显示当前年度各学期的学校校历安排",
             "http://heraldstudio.com/static/images/xiaoli.jpg", R.mipmap.ic_schedule, false, false);
@@ -78,10 +74,6 @@ public class Module {
             "空教室 Web", "提供指定时间内的空教室信息查询服务",
             "http://www.heraldstudio.com/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, false, false);
 
-//        public static AppModule topic = new AppModule(17, "topic",
-//                "校园话题", "校园话题参与讨论",
-//                "MODULE_TOPIC", R.drawable.ic_build_purple_a700_24dp, false);
-
     // 特殊的模块，模块管理
     public static AppModule moduleManager = new AppModule("",
             "模块管理", "管理各模块的显示/隐藏状态",
@@ -89,6 +81,6 @@ public class Module {
 
     public static AppModule[] array = new AppModule[]{
             card, pedetail, curriculum, experiment, exam, lecture, jwc,
-            seunet, gymreserve, library, grade, srtp, schoolbus, /*express, */schedule, quanyi, emptyroom
+            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom
     };
 }

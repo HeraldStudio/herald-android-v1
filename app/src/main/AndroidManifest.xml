@@ -270,26 +270,6 @@
             </intent-filter>
         </activity-->
 
-        <!--activity
-            android:name=".app_module.express.ExpressActivity"
-            android:label="@string/title_activity_express"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExpressActivityTheme"
-            android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_EXPRESS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".app_module.express.ExpressHistoryActivity"
-            android:label="代取记录"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExpressActivityTheme"
-            /-->
-
-
     </application>
 
 </manifest>

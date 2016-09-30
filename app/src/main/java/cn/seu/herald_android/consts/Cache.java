@@ -169,7 +169,7 @@ public class Cache {
     // 场馆预约记录
     public static AppCache gymReserveMyOrder = new AppCache("herald_gymreserve_myorder", () ->
             new ApiSimpleRequest(Method.POST).api("yuyue").addUuid().post("method", "myOrder")
-                    .toCache("herald_gymreserve_myorder", Module.gymreserve)
+                    .toCache("herald_gymreserve_myorder")
     );
 
     // 场馆预约个人电话
@@ -195,7 +195,7 @@ public class Cache {
     // 图书馆借书记录
     public static AppCache libraryBorrowBook = new AppCache("herald_library_borrowbook", () ->
             new ApiSimpleRequest(Method.POST).api("library").addUuid()
-                    .toCache("herald_library_borrowbook", Module.library)
+                    .toCache("herald_library_borrowbook")
     );
 
     // 图书馆热门书目
@@ -217,7 +217,7 @@ public class Cache {
      */
     public static AppCache srtp = new AppCache("herald_srtp", () ->
             new ApiSimpleRequest(Method.POST).api("srtp").addUuid().post("schoolnum", ApiHelper.getCurrentUser().schoolNum)
-                    .toCache("herald_srtp", Module.srtp)
+                    .toCache("herald_srtp")
     );
 
     /**
@@ -227,11 +227,4 @@ public class Cache {
             new ApiSimpleRequest(Method.POST).api("schoolbus").addUuid()
                     .toCache("herald_schoolbus")
     );
-
-    /**
-     * 快递代取模块缓存
-     */
-    public static AppCache expressUserName = new AppCache("herald_express_user_name");
-
-    public static AppCache expressUserPhone = new AppCache("herald_express_user_phone");
 }

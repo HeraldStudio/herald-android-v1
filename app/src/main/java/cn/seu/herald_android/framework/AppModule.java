@@ -1,6 +1,9 @@
 package cn.seu.herald_android.framework;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.app_secondary.WebModuleActivity;
@@ -108,6 +111,8 @@ public class AppModule {
             return;
         }
 
+        setHasUpdates(false);
+
         if (needLogin && !ApiHelper.isLogin()) {
             AppContext.showMessage(nameTip + "功能需要登录使用", "立即登录", AppContext::showLogin);
             return;
@@ -129,5 +134,27 @@ public class AppModule {
     @Override
     public boolean equals(Object o) {
         return o instanceof AppModule && getDestination().equals(((AppModule) o).getDestination());
+    }
+
+    private int mainColor = 0;
+
+    public int getIconMainColor() {
+        if (mainColor != 0) {
+            return mainColor;
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeResource(AppContext.getCurrentContext().getResources(), icon);
+
+            for (int i = 0; i < bitmap.getWidth(); i++) {
+                for (int j = 0; j < bitmap.getHeight(); j++) {
+                    int pixel = bitmap.getPixel(i, j);
+                    if (Color.alpha(pixel) >= 240) {
+                        float hsv[] = new float[3];
+                        Color.colorToHSV(pixel, hsv);
+                        return mainColor = Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel));
+                    }
+                }
+            }
+            return mainColor = Color.GRAY;
+        }
     }
 }

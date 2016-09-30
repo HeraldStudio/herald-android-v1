@@ -40,7 +40,7 @@ public class ApiParallelRequest extends ApiRequest {
         }
 
         for (OnFinishListener listener : onFinishListeners) {
-            listener.onFinish(this.code < 300, this.code);
+            listener.onFinish(this.code < 400, this.code);
         }
     }
 

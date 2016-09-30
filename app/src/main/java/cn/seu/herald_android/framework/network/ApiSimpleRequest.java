@@ -1,6 +1,7 @@
 package cn.seu.herald_android.framework.network;
 
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -87,7 +88,10 @@ public class ApiSimpleRequest extends ApiRequest {
                 final int code = NetworkUtil.mergeStatusCodes(httpCode, new JObj(responseString).$i("code"));
 
                 // 按照错误码判断是否成功
-                boolean success = code < 300;
+                boolean success = code < 400;
+                if (!success) {
+                    Log.w("Herald_Android", code + " Response : " + responseString);
+                }
 
                 // 触发回调
                 uiThreadHandler.post(() -> {
@@ -105,6 +109,7 @@ public class ApiSimpleRequest extends ApiRequest {
             uiThreadHandler.post(() -> {
                 for (OnResponseListener listener : onResponseListeners) {
                     listener.onResponse(false, 500, "I/O Error");
+                    Log.w("Herald_Android", 500 + " I/O Error : " + e);
                 }
             });
         }
