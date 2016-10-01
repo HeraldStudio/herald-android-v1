@@ -35,7 +35,7 @@ public class AppModule {
     }
 
     // 模块图标id
-    public int icon;
+    public int icon, invertIcon;
 
     // 是否有卡片
     public boolean hasCard;
@@ -44,19 +44,20 @@ public class AppModule {
 
     // 构造函数
     public AppModule(String name, String nameTip, String desc,
-                     String destination, int icon, boolean hasCard, boolean needLogin) {
+                     String destination, int icon, int invertIcon, boolean hasCard, boolean needLogin) {
         this.name = name;
         this.nameTip = nameTip;
         this.desc = desc;
         this.mDestination = destination;
         this.icon = icon;
+        this.invertIcon = invertIcon;
         this.hasCard = hasCard;
         this.needLogin = needLogin;
     }
 
     // 创建一个基于 WebView 的页面，注意这里url中必须含有http
     public AppModule(String title, String url) {
-        this("", title, "", url, 0, false, false);
+        this("", title, "", url, 0, 0, false, false);
     }
 
     // 卡片是否开启

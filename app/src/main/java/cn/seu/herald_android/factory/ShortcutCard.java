@@ -16,7 +16,7 @@ public class ShortcutCard {
      **/
     public static CardsModel getCard() {
         CardsModel model = new CardsModel(new AppModule("",
-                "常用模块", "", "MODULE_MANAGER", R.mipmap.ic_add, true, false),
+                "常用模块", "", "MODULE_MANAGER", R.mipmap.ic_add, R.mipmap.ic_add, true, false),
                 CardsModel.Priority.CONTENT_NO_NOTIFY, "点我管理常用模块，让小猴更懂你"
         );
         model.attachedView = new ArrayList<>();

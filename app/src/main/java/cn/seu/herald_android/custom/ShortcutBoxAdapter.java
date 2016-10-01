@@ -49,7 +49,7 @@ public class ShortcutBoxAdapter extends BaseAdapter {
         }
         // 快捷方式图标
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ic_shortcut);
-        imageView.setImageResource(module.icon);
+        imageView.setImageResource(module.invertIcon);
         // 文字说明
         TextView textView = (TextView) convertView.findViewById(R.id.tv_shortcut);
         textView.setText(module.nameTip.split(" ")[0]);
