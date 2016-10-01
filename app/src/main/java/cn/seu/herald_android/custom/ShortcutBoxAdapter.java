@@ -1,6 +1,5 @@
 package cn.seu.herald_android.custom;
 
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.framework.AppModule;
 
 public class ShortcutBoxAdapter extends BaseAdapter {
@@ -67,22 +65,6 @@ public class ShortcutBoxAdapter extends BaseAdapter {
                 module.setHasUpdates(false);
             }
             module.open();
-        });
-
-        convertView.setOnLongClickListener((v) -> {
-            if (module != Module.moduleManager) {
-                new AlertDialog.Builder(parent.getContext())
-                        .setMessage("确定移除此模块的快捷方式吗？")
-                        .setPositiveButton("确定", (dialog, which) -> {
-                            // 设置为不可用
-                            module.setShortcutEnabled(false);
-                        })
-                        .setNegativeButton("取消", (dialog1, which1) -> {
-
-                        }).show();
-                return true;
-            }
-            return false;
         });
         return convertView;
     }
