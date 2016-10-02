@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/selectable_item_background_white">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
 
     <include layout="@layout/custom__divider"/>
 
-    <ImageView
-        android:id="@+id/ic_shortcut"
-        android:layout_centerHorizontal="true"
-        android:tint="@color/colorPrimary"
-        android:layout_marginTop="5dp"
-        android:layout_width="36dp"
-        android:layout_height="36dp"/>
-
-    <TextView
-        android:id="@+id/tv_shortcut"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ic_shortcut"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="12sp"/>
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:orientation="horizontal"
+        android:gravity="left|center">
 
-    <View
-        android:id="@+id/notify_dot"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_alignRight="@+id/ic_shortcut"
-        android:layout_alignTop="@+id/ic_shortcut"
-        android:background="@drawable/timeline_notify_dot"
-        android:visibility="gone" />
+        <ImageView
+            android:id="@+id/ic_shortcut"
+            android:tint="@color/colorPrimary"
+            android:layout_width="32dp"
+            android:layout_height="32dp"/>
+
+        <TextView
+            android:id="@+id/tv_shortcut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center"
+            android:textColor="#555"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -56,10 +56,6 @@ public class ShortcutBoxAdapter extends BaseAdapter {
 
         int columnCount = ((GridView) parent).getNumColumns();
 
-        convertView.findViewById(R.id.notify_dot).setVisibility(
-                module.getHasUpdates() ? View.VISIBLE : View.GONE
-        );
-
         convertView.setOnClickListener((v) -> {
             if (module.getHasUpdates()) {
                 module.setHasUpdates(false);
