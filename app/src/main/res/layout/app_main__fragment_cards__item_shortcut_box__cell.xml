@@ -18,7 +18,6 @@
 
         <ImageView
             android:id="@+id/ic_shortcut"
-            android:tint="@color/colorPrimary"
             android:layout_width="32dp"
             android:layout_height="32dp"/>
 
