@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.CacheHelper;
@@ -150,26 +149,13 @@ public class ApiSimpleRequest extends ApiRequest {
     }
 
     public ApiSimpleRequest toCache(String key) {
-        return toCache(key, src -> src, null);
+        return toCache(key, src -> src);
     }
 
     public ApiSimpleRequest toCache(String key, JSONParser parser) {
-        return toCache(key, parser, null);
-    }
-
-    public ApiSimpleRequest toCache(String key, AppModule notifyModuleIfChanged) {
-        return toCache(key, o -> o, notifyModuleIfChanged);
-    }
-
-    // 若对应的缓存发生了改变, 向对应的模块缓存中保存"已改动"的标记
-    // 目前暂时只有CacheHelper有更新检测机制，如果另外两个也需要该机制，请修改对应的Helper的setCache函数
-    public ApiSimpleRequest toCache(String key, JSONParser parser, AppModule notifyModuleIfChanged) {
         onResponse((success, code, response) -> {
             if (success) {
-                String cache = parser.parse(new JObj(response)).toString();
-                if (CacheHelper.set(key, cache) && notifyModuleIfChanged != null) {
-                    notifyModuleIfChanged.setHasUpdates(true);
-                }
+                CacheHelper.set(key, parser.parse(new JObj(response)).toString());
             }
         });
         return this;

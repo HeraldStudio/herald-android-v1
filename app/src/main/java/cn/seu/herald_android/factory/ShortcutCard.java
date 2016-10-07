@@ -12,7 +12,7 @@ import cn.seu.herald_android.framework.AppModule;
 public class ShortcutCard {
 
     /**
-     * 读取人文讲座预告缓存，转换成对应的时间轴条目
+     * 原快捷栏变成了一个卡片
      **/
     public static CardsModel getCard() {
         CardsModel model = new CardsModel(new AppModule("",

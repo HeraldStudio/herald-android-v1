@@ -56,12 +56,7 @@ public class ShortcutBoxAdapter extends BaseAdapter {
 
         int columnCount = ((GridView) parent).getNumColumns();
 
-        convertView.setOnClickListener((v) -> {
-            if (module.getHasUpdates()) {
-                module.setHasUpdates(false);
-            }
-            module.open();
-        });
+        convertView.setOnClickListener((v) -> module.open());
         return convertView;
     }
 }

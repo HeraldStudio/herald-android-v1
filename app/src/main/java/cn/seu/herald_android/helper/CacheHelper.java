@@ -23,12 +23,7 @@ public class CacheHelper {
     }
 
     // 返回值为该缓存与之前相比是否有变化
-    public static boolean set(String cacheName, String cacheValue) {
-        String oldValue = getCache().get(cacheName);
+    public static void set(String cacheName, String cacheValue) {
         getCache().set(cacheName, cacheValue);
-
-        // 此处首先判断旧值是否为空，若旧值为空说明是初次更新
-        // 因为初次更新无法判断实际数据是否发生了变化，同时也是为了为了首次启动时不干扰用户，所以初次更新时不显示小红点
-        return !oldValue.equals("") && !cacheValue.equals(oldValue);
     }
 }

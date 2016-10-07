@@ -283,10 +283,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             request = request.parallel(JwcCard.getRefresher());
         }
 
-        if (ApiHelper.isLogin()) {
-            request = request.parallel(Cache.grade.getRefresher());
-        }
-
         /**
          * 结束刷新部分
          * 当最后一个线程结束时调用这一部分，刷新结束

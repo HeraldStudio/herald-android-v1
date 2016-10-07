@@ -92,18 +92,6 @@ public class AppModule {
         SettingsHelper.notifyModuleSettingsChanged();
     }
 
-    // 用来标识一个不带卡片的模块数据是否有更新
-    public boolean getHasUpdates() {
-        String cache = SettingsHelper.get("herald_settings_module_has_updates_" + name);
-        return !hasCard && cache.equals("1");
-    }
-
-    public void setHasUpdates(boolean newValue) {
-        // flag为true则设置为选中，否则设置为不选中
-        SettingsHelper.set("herald_settings_module_has_updates_" + name, newValue ? "1" : "0");
-        SettingsHelper.notifyModuleSettingsChanged();
-    }
-
     // 打开模块
     public void open() {
 
@@ -111,8 +99,6 @@ public class AppModule {
         if (getDestination().equals("")) {
             return;
         }
-
-        setHasUpdates(false);
 
         if (needLogin && !ApiHelper.isLogin()) {
             AppContext.showMessage(nameTip + "功能需要登录使用", "立即登录", AppContext::showLogin);
