@@ -209,7 +209,7 @@ public class Cache {
      */
     public static AppCache grade = new AppCache("herald_grade_gpa", () ->
             new ApiSimpleRequest(Method.POST).api("gpa").addUuid()
-                    .toCache("herald_grade_gpa", Module.grade)
+                    .toCache("herald_grade_gpa")
     );
 
     /**
