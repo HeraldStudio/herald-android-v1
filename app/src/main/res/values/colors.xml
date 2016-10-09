@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00b4ff</color>
-    <color name="colorPrimaryDark">#00b4ff</color>
-    <color name="colorAccent">#00b4ff</color>
+    <color name="colorPrimary">#12b0ec</color>
+    <color name="colorPrimaryDark">#12b0ec</color>
+    <color name="colorAccent">#12b0ec</color>
 
     <!--成绩页面-->
     <color name="colorGradePrimary">#4CAF50</color>
@@ -118,10 +118,10 @@
 
 
     <!--首页四个fragment的主题色-->
-    <color name="colorFragmentCards">#00b4ff</color>
+    <color name="colorFragmentCards">#12b0ec</color>
     <color name="colorFragmentActivitys">#1976d2</color>
-    <color name="colorFragmentModules">#00b4ff</color>
-    <color name="colorFragmentSettings">#00b4ff</color>
+    <color name="colorFragmentModules">#12b0ec</color>
+    <color name="colorFragmentSettings">#12b0ec</color>
 
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
@@ -145,7 +145,7 @@
     <color name="relaxGreen">#419655</color>
     <color name="relaxRed">#FF5252</color>
     <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#888888</color>
+    <color name="colorSecondaryText">#707070</color>
     <color name="colorAlphawhite">#96ffffff</color>
     <color name="colorUnenabledGray">#535252</color>
     <color name="colorIcons">#FFFFFF</color>

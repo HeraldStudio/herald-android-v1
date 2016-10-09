@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import cn.seu.herald_android.app_main.CardsModel;
-import cn.seu.herald_android.app_module.pedetail.PedetailActivity;
+import cn.seu.herald_android.app_module.pedetail.ExerciseUtil;
 import cn.seu.herald_android.app_module.pedetail.PedetailBlockLayout;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
@@ -17,13 +17,19 @@ import cn.seu.herald_android.helper.CacheHelper;
 public class PedetailCard {
 
     public static ApiRequest getRefresher() {
-        return (
+        ApiRequest request = (
                 Cache.pcForecast.getRefresher()
-        ).parallel(
-                Cache.peDetail.getRefresher()
         ).parallel(
                 Cache.peCount.getRefresher()
         );
+
+        // 为了减轻服务器压力, 只在跑操时间已过后刷新跑操详情
+        if (ExerciseUtil.getCurrentExerciseStatus() == ExerciseUtil.ExerciseStatus.AfterExercise) {
+            request = request.parallel(
+                    Cache.peDetail.getRefresher()
+            );
+        }
+        return request;
     }
 
     /**
@@ -36,7 +42,6 @@ public class PedetailCard {
             );
         }
 
-        final long now = Calendar.getInstance().getTimeInMillis();
 
         String date = CacheHelper.get("herald_pc_date");
         String forecast = Cache.pcForecast.getValue();
@@ -56,9 +61,6 @@ public class PedetailCard {
         }
 
         Calendar nowCal = Calendar.getInstance();
-        long today = CalendarUtils.toSharpDay(nowCal).getTimeInMillis();
-        long startTime = today + PedetailActivity.FORECAST_TIME_PERIOD[0] * 60 * 1000;
-        long endTime = today + PedetailActivity.FORECAST_TIME_PERIOD[1] * 60 * 1000;
 
         String todayStamp = new SimpleDateFormat("yyyy-MM-dd").format(nowCal.getTime());
 
@@ -73,13 +75,15 @@ public class PedetailCard {
             return item;
         }
 
-        if (now >= startTime && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
+        final ExerciseUtil.ExerciseStatus status = ExerciseUtil.getCurrentExerciseStatus();
+        if (status != ExerciseUtil.ExerciseStatus.BeforeExercise
+                && !date.equals(String.valueOf(CalendarUtils.toSharpDay(nowCal).getTimeInMillis()))) {
             return new CardsModel(Module.pedetail,
                     CardsModel.Priority.CONTENT_NOTIFY, "跑操预告数据为空，请尝试刷新"
             );
         }
 
-        if (now < startTime) {
+        if (status == ExerciseUtil.ExerciseStatus.BeforeExercise) {
             // 跑操时间没到
             CardsModel item = new CardsModel(Module.pedetail,
                     CardsModel.Priority.CONTENT_NO_NOTIFY, "小猴会在早上跑操时间实时显示跑操预告\n"
@@ -89,7 +93,7 @@ public class PedetailCard {
             item.attachedView.add(new PedetailBlockLayout(AppContext.instance, count, Math.max(0, 45 - count), remain));
 
             return item;
-        } else if (now >= endTime) {
+        } else if (status == ExerciseUtil.ExerciseStatus.AfterExercise) {
             // 跑操时间已过
 
             if (!forecast.contains("跑操")) {

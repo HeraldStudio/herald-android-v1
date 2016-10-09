@@ -17,6 +17,7 @@ public class CardsModel {
 
     // 表示卡片消息是否重要，不重要的消息总在后面
     public enum Priority {
+        PINNED,
         CONTENT_NOTIFY,
         CONTENT_NO_NOTIFY,
         NO_CONTENT
@@ -45,7 +46,6 @@ public class CardsModel {
         this.onClickListener = (v) -> module.open();
         this.iconRes = module.icon;
     }
-
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;

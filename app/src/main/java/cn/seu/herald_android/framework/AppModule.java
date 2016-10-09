@@ -1,6 +1,9 @@
 package cn.seu.herald_android.framework;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import cn.seu.herald_android.app_main.MainActivity;
 import cn.seu.herald_android.app_secondary.WebModuleActivity;
@@ -32,7 +35,7 @@ public class AppModule {
     }
 
     // 模块图标id
-    public int icon;
+    public int icon, invertIcon;
 
     // 是否有卡片
     public boolean hasCard;
@@ -41,19 +44,20 @@ public class AppModule {
 
     // 构造函数
     public AppModule(String name, String nameTip, String desc,
-                     String destination, int icon, boolean hasCard, boolean needLogin) {
+                     String destination, int icon, int invertIcon, boolean hasCard, boolean needLogin) {
         this.name = name;
         this.nameTip = nameTip;
         this.desc = desc;
         this.mDestination = destination;
         this.icon = icon;
+        this.invertIcon = invertIcon;
         this.hasCard = hasCard;
         this.needLogin = needLogin;
     }
 
     // 创建一个基于 WebView 的页面，注意这里url中必须含有http
     public AppModule(String title, String url) {
-        this("", title, "", url, 0, false, false);
+        this("", title, "", url, 0, 0, false, false);
     }
 
     // 卡片是否开启
@@ -88,18 +92,6 @@ public class AppModule {
         SettingsHelper.notifyModuleSettingsChanged();
     }
 
-    // 用来标识一个不带卡片的模块数据是否有更新
-    public boolean getHasUpdates() {
-        String cache = SettingsHelper.get("herald_settings_module_has_updates_" + name);
-        return !hasCard && cache.equals("1");
-    }
-
-    public void setHasUpdates(boolean newValue) {
-        // flag为true则设置为选中，否则设置为不选中
-        SettingsHelper.set("herald_settings_module_has_updates_" + name, newValue ? "1" : "0");
-        SettingsHelper.notifyModuleSettingsChanged();
-    }
-
     // 打开模块
     public void open() {
 
@@ -129,5 +121,27 @@ public class AppModule {
     @Override
     public boolean equals(Object o) {
         return o instanceof AppModule && getDestination().equals(((AppModule) o).getDestination());
+    }
+
+    private int mainColor = 0;
+
+    public int getIconMainColor() {
+        if (mainColor != 0) {
+            return mainColor;
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeResource(AppContext.getCurrentContext().getResources(), icon);
+
+            for (int i = 0; i < bitmap.getWidth(); i++) {
+                for (int j = 0; j < bitmap.getHeight(); j++) {
+                    int pixel = bitmap.getPixel(i, j);
+                    if (Color.alpha(pixel) >= 240) {
+                        float hsv[] = new float[3];
+                        Color.colorToHSV(pixel, hsv);
+                        return mainColor = Color.rgb(Color.red(pixel), Color.green(pixel), Color.blue(pixel));
+                    }
+                }
+            }
+            return mainColor = Color.GRAY;
+        }
     }
 }

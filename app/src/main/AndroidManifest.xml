@@ -259,7 +259,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/GymReserveTheme"/>
 
-        <activity android:name=".app_module.topic.TopicActivity"
+        <!--activity android:name=".app_module.topic.TopicActivity"
             android:label="@string/title_activity_topic"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -268,31 +268,7 @@
                 <action android:name="cn.seu.herald_android.MODULE_TOPIC" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".app_module.express.ExpressActivity"
-            android:label="@string/title_activity_express"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExpressActivityTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_EXPRESS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".app_module.express.ExpressHistoryActivity"
-            android:label="代取记录"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExpressActivityTheme"
-            />
-        <activity
-            android:name=".app_module.express.ExpressAdminAdapter$ExpressAdminActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            />
-
+        </activity-->
 
     </application>
 
