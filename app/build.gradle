@@ -10,8 +10,8 @@ android {
         applicationId "cn.seu.herald_android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 22
-        versionName "v1.9.6"
+        versionCode 23
+        versionName "v1.9.7"
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
     }

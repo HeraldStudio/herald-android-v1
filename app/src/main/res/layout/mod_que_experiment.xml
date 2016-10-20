@@ -1,35 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ExpandableListView
+    android:divider="@color/colorDivider"
+    android:dividerHeight="@dimen/divider_height"
+    android:id="@+id/expandableListView"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:background="?attr/colorPrimary">
-
-        <TextView
-            android:id="@+id/num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="成就墙"/>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/chengjiu_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"/>
-    </LinearLayout>
-
-    <cn.seu.herald_android.custom.CustomExpandableListView
-        android:id="@+id/expandableListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/colorDivider"
-        android:dividerHeight="@dimen/divider_height"
-        android:scrollbarStyle="outsideOverlay"/>
-</LinearLayout>
+    android:layout_width="match_parent"
+    android:scrollbarStyle="outsideOverlay"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>
