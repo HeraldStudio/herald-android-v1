@@ -63,7 +63,7 @@ public class CardActivity extends BaseActivity {
             refreshCache();
         } else if (id == R.id.action_card_chongzhi) {
             new AlertDialog.Builder(this)
-                    .setMessage("注意：\\n1、一卡通充值由东南大学学生处官方开发，具有一定的权威性和可靠性；\\n2、充值之后需要在食堂刷卡机上刷卡，充值金额才能到账。")
+                    .setMessage("注意：\n1、一卡通充值由东南大学学生处官方开发，具有一定的权威性和可靠性；\n2、充值之后需要在食堂刷卡机上刷卡，充值金额才能到账。")
                     .setPositiveButton("确定", (d, w) -> {
                         new AppModule("一卡通充值", chargeUrl).open();
                     }).show();

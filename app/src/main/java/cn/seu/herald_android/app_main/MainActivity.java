@@ -36,7 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.seu.herald_android.R;
-import cn.seu.herald_android.app_module.cardextra.CardActivity;
 import cn.seu.herald_android.consts.Module;
 import cn.seu.herald_android.custom.TabEntity;
 import cn.seu.herald_android.framework.AppContext;
@@ -45,6 +44,8 @@ import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.helper.WifiLoginHelper;
+
+import static cn.seu.herald_android.app_module.cardextra.CardActivity.chargeUrl;
 
 public class MainActivity extends BaseActivity implements ApiHelper.OnUserChangeListener, BaseActivity.NoSwipeBack {
 
@@ -176,8 +177,13 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         });
         window.findViewById(R.id.content_module_manage).setOnClickListener(v1 ->
                 Module.moduleManager.open());
-        window.findViewById(R.id.content_charge).setOnClickListener(v1 ->
-                new AppModule("一卡通充值", CardActivity.chargeUrl).open());
+        window.findViewById(R.id.content_charge).setOnClickListener(v1 -> {
+            new AlertDialog.Builder(this)
+                    .setMessage("注意：\n1、一卡通充值由东南大学学生处官方开发，具有一定的权威性和可靠性；\n2、充值之后需要在食堂刷卡机上刷卡，充值金额才能到账。")
+                    .setPositiveButton("确定", (d, w) -> {
+                        new AppModule("一卡通充值", chargeUrl).open();
+                    }).show();
+        });
     }
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
