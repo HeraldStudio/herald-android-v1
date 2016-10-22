@@ -48,10 +48,6 @@ monkey by Zille Sophie Bostinius from the Noun Project
 
 本软件所有数据来自学校网站或其他第三方，受学校网站或其他第三方数据的不确定性影响，本软件显示的数据可能会出现某些不正常情况，包含但不限于无法连接、信息错误、显示延迟或自相矛盾等。小猴偷米工作室不对以上问题导致的任何后果负责。"
     </string>
-
-
-
-
     <string name="title_activity_card">一卡通</string>
     <string name="title_activity_experiment">实验助手</string>
     <string name="title_activity_seunet">校园网络</string>
@@ -69,12 +65,12 @@ monkey by Zille Sophie Bostinius from the Noun Project
     <string name="title_activity_grade">绩点查询</string>
     <string name="title_activity_library">图书馆</string>
     <string name="title_activity_schedule">校历查询</string>
-    <string name="title_activity_library_search">藏书搜索</string>
     <string name="title_activity_jwc">教务通知</string>
     <string name="title_activity_feedback">用户反馈</string>
     <string name="title_activity_gym_choose_time">选择时段</string>
     <string name="title_activity_gym_new_order">新增预约</string>
     <string name="title_activity_gym_my_order">预约记录</string>
     <string name="title_activity_gym_add_friend">添加好友</string>
-
+    <string name="title_activity_topic">校园话题</string>
+    <string name="title_activity_express">快递代取</string>
 </resources>

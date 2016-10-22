@@ -1,133 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 android:orientation="vertical"
-                                                 tools:context=".app_module.gymreserve.GymNewOrderActivity">
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <cn.seu.herald_android.custom.CustomAppBarLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:background="@color/colorDivider"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
-    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:orientation="vertical"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:background="@color/colorIcons"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:background="@color/colorDivider"
-            >
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:text="场馆信息"/>
+
+        <android.support.v7.widget.CardView
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            app:cardElevation="2dp">
+
             <TextView
+                android:gravity="center"
+                android:id="@+id/tv_time"
+                android:layout_height="50dp"
                 android:layout_width="match_parent"
+                android:text="时间"
+                android:textColor="@color/colorGymReservePrimary"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            app:cardElevation="2dp">
+
+            <Spinner
+                android:id="@+id/spiner_type"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="场馆信息"
-                android:background="@color/colorIcons"/>
-            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            app:cardElevation="2dp">
+
+            <EditText
+                android:background="@drawable/selectable_item_background_white"
+                android:gravity="center"
+                android:hint="联系电话"
+                android:id="@+id/et_phone"
+                android:layout_height="50dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardElevation="2dp">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:id="@+id/tv_time"
-                    android:textColor="@color/colorGymReservePrimary"
-                    android:text="时间"/>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                app:cardElevation="2dp">
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spiner_type"/>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardElevation="2dp">
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:textSize="12sp"
-                    android:hint="联系电话"
-                    android:background="@drawable/selectable_item_background_white"
-                    android:minEms="11"
-                    android:maxEms="15"
-                    android:id="@+id/et_phone"/>
-            </android.support.v7.widget.CardView>
+                android:maxEms="15"
+                android:minEms="11"
+                android:textSize="12sp"/>
+        </android.support.v7.widget.CardView>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:background="@color/colorIcons"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_tipofinvitedfriends"
                 android:layout_height="wrap_content"
-                android:background="@color/colorIcons"
-                android:orientation="vertical"
-                android:layout_marginBottom="10dp"
-                android:padding="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tv_tipofinvitedfriends"
-                    android:text="已邀请好友"/>
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/listview_invitedfriend">
-                </ListView>
-            </LinearLayout>
+                android:layout_width="wrap_content"
+                android:text="已邀请好友"/>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ListView
+                android:id="@+id/listview_invitedfriend"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorIcons"
-                android:padding="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="好友列表"/>
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/listview_recentlyfriend">
-                </ListView>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:id="@+id/btn_add_friend"
-                    android:background="@drawable/selectable_item_background"
-                    android:text="添加新好友"/>
-            </LinearLayout>
-
-
+                android:layout_width="match_parent">
+            </ListView>
         </LinearLayout>
-    </ScrollView>
-</android.support.design.widget.CoordinatorLayout>
+
+
+        <LinearLayout
+            android:background="@color/colorIcons"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="好友列表"/>
+
+            <ListView
+                android:id="@+id/listview_recentlyfriend"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </ListView>
+
+            <Button
+                android:background="@drawable/selectable_item_background"
+                android:gravity="center"
+                android:id="@+id/btn_add_friend"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="添加新好友"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

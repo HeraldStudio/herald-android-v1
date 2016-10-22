@@ -1,6 +1,5 @@
 package cn.seu.herald_android.app_secondary;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.ImageView;
@@ -19,7 +18,7 @@ import cn.seu.herald_android.framework.network.ApiSimpleRequest;
 import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.helper.ApiHelper;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements BaseActivity.NoSwipeBack {
     @BindView(R.id.tv_login_cardnum)
     TextView tv_card;
     @BindView(R.id.tv_login_pwd)
@@ -32,10 +31,10 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mod_auth__login);
+        setContentView(R.layout.app_sec__login);
+        hideToolbar();
         ButterKnife.bind(this);
         progressDialog.setCancellable(false);
-        setStatusBarColor(Color.BLACK);
 
         tv_pwd.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {

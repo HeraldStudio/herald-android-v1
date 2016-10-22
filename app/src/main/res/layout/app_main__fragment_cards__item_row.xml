@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="15dp"
@@ -8,41 +9,41 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorDivider"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:background="@color/colorDivider"/>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:ellipsize="end"
-        android:lines="1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="7dp" />
+        android:layout_marginTop="7dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textSize="17sp"/>
 
     <TextView
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/title"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/title"
         android:ellipsize="end"
         android:lines="1"
-        android:layout_alignBottom="@+id/title"
-        android:layout_toRightOf="@+id/title"
-        android:layout_marginLeft="5dp"
         android:textColor="@color/colorSecondaryText"/>
 
     <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/title"
-        android:layout_alignParentBottom="true"
         android:paddingBottom="9dp"
-        android:textSize="12sp"
-        android:textColor="@color/colorSecondaryText"/>
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="12sp"/>
 
     <TextView
         android:id="@+id/num"

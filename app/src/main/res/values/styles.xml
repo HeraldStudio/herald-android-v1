@@ -10,16 +10,12 @@
         <item name="windowNoTitle">true</item>
         <item name="android:actionBarSize">48dp</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/default_animation</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="default_animation" mce_bogus="1" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/default_anim_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/default_anim_out</item>
     </style>
 
     <style name="ActionBarTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -158,6 +154,15 @@
         <item name="colorAccent">@color/colorActivitiesAccent</item>
     </style>
 
+    <style name="ExpressActivityTheme" parent="SubActivityTheme">
+        <!-- 活动生活风格 -->
+        <item name="colorPrimary">@color/colorExpressPrimary</item>
+        <item name="colorPrimaryDark">@color/colorExpressDark</item>
+        <item name="colorAccent">@color/colorExpressAccent</item>
+    </style>
+
+
+
     <style name="AboutusTheme" parent="SubActivityTheme">
         <!-- 关于我们 -->
         <item name="colorPrimary">@color/colorAboutusPrimary</item>
@@ -180,6 +185,13 @@
     </style>
 
 
+    <style name="TopicTheme" parent="SubActivityTheme">
+        <!-- 话题模块 -->
+        <item name="colorPrimary">@color/colorCurriculumPrimary</item>
+        <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
+        <item name="colorAccent">@color/colorCurriculumAccent</item>
+    </style>
+
     <style name="WifiAutoLoginTheme" parent="SubActivityTheme">
         <!-- 校园网自动登录模块 -->
         <item name="colorPrimary">@color/colorSeuNetPrimary</item>
@@ -187,7 +199,7 @@
         <item name="colorAccent">@color/colorSeuNetAccent</item>
     </style>
 
-    <style name="AppTheme.Invisible" parent="AppTheme.NoActionBar">
+    <style name="AppTheme.Invisible" parent="AppTheme">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@null</item>
@@ -196,5 +208,11 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="LoginActivityTheme" parent="AppTheme">
+        <item name="colorPrimary">#040406</item>
+        <item name="colorPrimaryDark">#040406</item>
+        <item name="colorAccent">#2bbfff</item>
+    </style>
 
 </resources>

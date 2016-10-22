@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
@@ -46,10 +45,8 @@ import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.helper.WifiLoginHelper;
-import eightbitlab.com.blurview.BlurView;
-import eightbitlab.com.blurview.RenderScriptBlur;
 
-public class MainActivity extends BaseActivity implements ApiHelper.OnUserChangeListener {
+public class MainActivity extends BaseActivity implements ApiHelper.OnUserChangeListener, BaseActivity.NoSwipeBack {
 
     @BindView(R.id.main_tabs_pager)
     ViewPager viewPager;
@@ -59,8 +56,6 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     RelativeLayout mainToolbar;
     @BindView(R.id.tv_login)
     TextView loginBtn;
-    @BindView(R.id.blurView)
-    BlurView blurView;
 
     CardsFragment cardsFragment = new CardsFragment();
     ActivitiesFragment afterSchoolFragment = new ActivitiesFragment();
@@ -74,6 +69,8 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_main);
+        setCustomToolbar(R.layout.app_main__custom_toolbar);
+
         ButterKnife.bind(this);
 
         // 放置三个Tab页面
@@ -253,7 +250,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
                 int colorOld = statusColors[position];
                 int colorNew = statusColors[(position + 1) % statusColors.length];
                 int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld, colorNew);
-                setNavigationColor(evaluate);
+                changeToolbarColor(evaluate);
             }
 
             @Override public void onPageSelected(int position) {
@@ -270,10 +267,6 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
 
         // set background, if your root layout doesn't have one
         final Drawable windowBackground = decorView.getBackground();
-
-        blurView.setupWith(rootView)
-                .windowBackground(windowBackground).blurAlgorithm(new RenderScriptBlur(this, true))
-                .blurRadius(16);
     }
 
     public static void sendChangeMainFragmentBroadcast(int fragmentCode) {
@@ -302,10 +295,5 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(changeMainFragmentReceiver);
-    }
-
-    protected void setNavigationColor(@ColorInt int color) {
-        setStatusBarColor(color);
-        mainToolbar.setBackgroundColor(color);
     }
 }

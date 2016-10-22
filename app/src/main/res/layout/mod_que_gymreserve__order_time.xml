@@ -1,45 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".app_module.gymreserve.GymChooseTimeActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <cn.seu.herald_android.custom.CustomAppBarLayout
-        android:layout_width="match_parent"
+    <android.support.design.widget.TabLayout
+        android:background="#fff"
+        android:id="@+id/tablayout_orderitem"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_width="match_parent"/>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="center"
-            android:minHeight="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.v4.view.ViewPager
+        android:background="#f8f8f8"
+        android:id="@+id/viewpager_orderitem"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="?attr/actionBarSize">
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tablayout_orderitem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"/>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager_orderitem"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#f8f8f8"/>
-    </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+        android:layout_width="match_parent"/>
+</LinearLayout>

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:minEms="5"
             android:text="登录校园网"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textColor="@color/colorSecondaryText"/>
     </LinearLayout>
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:minEms="5"
             android:text="一卡通充值"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textColor="@color/colorSecondaryText"/>
     </LinearLayout>
     <View
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:minEms="5"
             android:text="模块管理"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textColor="@color/colorSecondaryText"/>
     </LinearLayout>
 </LinearLayout>

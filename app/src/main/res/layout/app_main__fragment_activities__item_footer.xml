@@ -10,6 +10,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:id="@+id/tv_tip"
-        android:text="Loading"
-        android:layout_marginBottom="@dimen/bottom_tab_height"/>
+        android:text="Loading"/>
 </RelativeLayout>

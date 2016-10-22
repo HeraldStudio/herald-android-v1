@@ -61,11 +61,21 @@ public class SliderView extends SliderLayout implements BaseSliderView.OnSliderC
         // 设置轮播选项
         setPresetTransformer(SliderLayout.Transformer.Default);
         // 圆点位置
-        setPresetIndicator(SliderLayout.PresetIndicators.Right_Bottom);
+        setPresetIndicator(PresetIndicators.Center_Bottom);
         // 描述动画
         // sliderLayout.setCustomAnimation(new DescriptionAnimation());
         // 切换间隔
         setDuration(5000);
+
+        startAutoCycleIfNeeded();
+    }
+
+    public void startAutoCycleIfNeeded() {
+        if (itemList.size() > 1) {
+            startAutoCycle();
+        } else {
+            stopAutoCycle();
+        }
     }
 
     @Override

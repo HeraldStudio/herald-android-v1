@@ -1,10 +1,8 @@
 package cn.seu.herald_android.factory;
 
 import cn.seu.herald_android.app_main.CardsModel;
-import cn.seu.herald_android.app_module.cardextra.CardActivity;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
-import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.json.JObj;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -33,12 +31,9 @@ public class CardCard {
             float extra = Float.valueOf(left);
 
             if (extra < 20) {
-                CardsModel item = new CardsModel(Module.card,
-                        CardsModel.Priority.CONTENT_NOTIFY, "一卡通余额还有" + left + "元，快点我充值~\n如果已经充值过了，需要在食堂刷卡一次才会更新哦~"
+                return new CardsModel(Module.card,
+                        CardsModel.Priority.CONTENT_NOTIFY, "一卡通余额还有" + left + "元，快去充值~\n如果已经充值过了，需要在食堂刷卡一次才会更新哦~"
                 );
-                item.setOnClickListener(v ->
-                        new AppModule("一卡通充值", CardActivity.chargeUrl).open());
-                return item;
             } else {
                 return new CardsModel(Module.card,
                         CardsModel.Priority.CONTENT_NO_NOTIFY, "你的一卡通余额还有" + left + "元"

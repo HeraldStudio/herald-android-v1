@@ -38,8 +38,5 @@ public class ShortcutBoxView extends GridView {
 
         // 添加并且显示
         setAdapter(adapter);
-
-        if (adapter.getCount() == 1) setVisibility(GONE);
-        else setVisibility(VISIBLE);
     }
 }

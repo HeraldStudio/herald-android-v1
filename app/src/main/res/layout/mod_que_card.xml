@@ -1,57 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="false"
-                                                 tools:context="cn.seu.herald_android.app_module.cardextra.CardActivity">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <cn.seu.herald_android.custom.CustomAppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="100dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="150dp"
+        android:padding="20dp">
 
-        <cn.seu.herald_android.custom.CustomCollapsingToolbarLayout
-
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="false"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:minHeight="150dp"
-                android:padding="20dp"
-                app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:text="余额"
-                    android:textSize="12sp"/>
-                <TextView
-                    android:id="@+id/tv_extra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="0.00"
-                    android:textSize="44sp" />
-            </RelativeLayout>
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-        </cn.seu.herald_android.custom.CustomCollapsingToolbarLayout>
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
+            android:layout_alignParentLeft="true"
+            android:text="余额"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
 
-    <include layout="@layout/mod_que_card__content" />
+        <TextView
+            android:id="@+id/tv_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="0.00"
+            android:textColor="@color/white"
+            android:textSize="44sp"/>
+    </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/recyclerview_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="cn.seu.herald_android.app_module.cardextra.CardActivity"/>
+
+</LinearLayout>

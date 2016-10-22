@@ -1,36 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/colorDivider" />
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <cn.seu.herald_android.custom.ShortcutBoxView
-        android:id="@+id/shorcut_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:columnWidth="80dp"
         android:gravity="center_horizontal"
-        android:background="@color/colorIcons"
+        android:id="@+id/shorcut_box"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:numColumns="auto_fit"
-        android:columnWidth="60dp"
-        android:horizontalSpacing="@dimen/divider_height"
-        android:verticalSpacing="@dimen/divider_height"
-        android:stretchMode="columnWidth" />
-
-    <!-- 这里放两个，因为一个莫名其妙会被吞掉，看不到效果 -->
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/colorDivider" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/colorDivider" />
+        android:stretchMode="columnWidth"/>
 
 </LinearLayout>

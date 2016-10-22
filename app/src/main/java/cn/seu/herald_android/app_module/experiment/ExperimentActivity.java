@@ -1,11 +1,9 @@
 package cn.seu.herald_android.app_module.experiment;
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -21,17 +19,12 @@ public class ExperimentActivity extends BaseActivity {
 
     @BindView(R.id.expandableListView)
     ExpandableListView expandableListView;
-    @BindView(R.id.chengjiu_viewpager)
-    ViewPager viewPager;
 
     // 每节实验开始的时间，以(Hour * 60 + Minute)形式表示
     // 本程序假定每节实验都是3小时
     public static final int[] EXPERIMENT_BEGIN_TIME = {
             9 * 60 + 45, 13 * 60 + 45, 18 * 60 + 15
     };
-
-    // 成就列表
-    private ArrayList<AchievementModel> achievements;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +57,6 @@ public class ExperimentActivity extends BaseActivity {
             // 父view和子view数据集合
             ArrayList<String> parentArray = new ArrayList<>();
             ArrayList<ArrayList<ExperimentModel>> childArray = new ArrayList<>();
-            achievements = new ArrayList<>();
             // 根据每种集合加载不同的子view
             for (String key : json_content.keySet()) {
                 String jsonArray_str = json_content.$s(key);
@@ -76,12 +68,8 @@ public class ExperimentActivity extends BaseActivity {
                     // 加入到list中
                     parentArray.add(key);
                     childArray.add(item_list);
-                    // 加入到成就列表中
-                    achievements.addAll(AchievementFactory.getExperimentAchievement(item_list));
                 }
             }
-            // 设置成就列表
-            setupAchievementWall();
             // 设置伸缩列表
             ExperimentExpandAdapter experimentExpandAdapter = new ExperimentExpandAdapter(getBaseContext(), parentArray, childArray);
             expandableListView.setAdapter(experimentExpandAdapter);
@@ -104,20 +92,5 @@ public class ExperimentActivity extends BaseActivity {
                 showSnackBar("刷新失败，请重试");
             }
         });
-    }
-
-    private void setupAchievementWall() {
-        // 设置成就数目
-        TextView tv_numOfAchievement = (TextView) findViewById(R.id.num);
-        if (tv_numOfAchievement != null) {
-            tv_numOfAchievement.setText(String.format("成就墙(%d/%d)", achievements.size(), 20));
-        }
-        if (0 == achievements.size()) {
-            // 无成就时添加提示
-            AchievementModel tipModel = new AchievementModel("暂无成就", "你还没有获得任何实验成就，赶紧参加实验，寻找神秘的成就碎片吧！", "");
-            achievements.add(tipModel);
-        }
-        // 设置适配器
-        viewPager.setAdapter(new AchievementViewPagerAdapter(getBaseContext(), achievements));
     }
 }

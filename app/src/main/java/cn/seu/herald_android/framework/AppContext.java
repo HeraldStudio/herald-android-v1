@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -107,9 +108,14 @@ public class AppContext extends Application implements Application.ActivityLifec
 
     @ColorInt
     public static int getColorPrimary(Context context) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        return ContextCompat.getColor(context, typedValue.resourceId);
+        try {
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            return ContextCompat.getColor(context, typedValue.resourceId);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+            return ContextCompat.getColor(context, R.color.colorPrimary);
+        }
     }
 
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

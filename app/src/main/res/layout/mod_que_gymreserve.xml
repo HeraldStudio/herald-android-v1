@@ -1,33 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context=".app_module.gymreserve.GymReserveActivity">
-
-    <cn.seu.herald_android.custom.CustomAppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </cn.seu.herald_android.custom.CustomAppBarLayout>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listview_reserve"
-        android:dividerHeight="@dimen/divider_height"
-        android:divider="@color/colorDivider"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </ListView>
-
-</android.support.design.widget.CoordinatorLayout>
+<ListView
+    android:divider="@color/colorDivider"
+    android:dividerHeight="@dimen/divider_height"
+    android:id="@+id/listview_reserve"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</ListView>

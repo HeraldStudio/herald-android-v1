@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
+import cn.seu.herald_android.framework.BaseActivity;
 
 public class CardsFragment extends Fragment {
 
@@ -30,8 +31,14 @@ public class CardsFragment extends Fragment {
         View contentView = inflater.inflate(R.layout.app_main__fragment_cards, container, false);
         unbinder = ButterKnife.bind(this, contentView);
 
-        view.setSrl(srl);
-        srl.setOnRefreshListener(() -> view.loadContent(true));
+        if (getActivity() instanceof BaseActivity) {
+            view.activity = (BaseActivity) getActivity();
+        }
+
+        srl.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> srl.setRefreshing(false), 500);
+            view.loadContent(true);
+        });
 
         new Handler().postDelayed(() -> {
             view.loadContent(true);

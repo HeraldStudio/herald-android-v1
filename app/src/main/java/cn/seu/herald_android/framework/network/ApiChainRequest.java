@@ -33,7 +33,7 @@ public class ApiChainRequest extends ApiRequest {
             } else {
                 // 否则直接报告请求结束
                 for (OnFinishListener listener : onFinishListeners) {
-                    listener.onFinish(this.code < 300, this.code);
+                    listener.onFinish(this.code < 400, this.code);
                 }
             }
         });
@@ -45,7 +45,7 @@ public class ApiChainRequest extends ApiRequest {
 
             // 报告请求结束
             for (OnFinishListener listener : onFinishListeners) {
-                listener.onFinish(this.code < 300, this.code);
+                listener.onFinish(this.code < 400, this.code);
             }
         });
     }

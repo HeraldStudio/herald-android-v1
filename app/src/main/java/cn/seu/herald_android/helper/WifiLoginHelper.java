@@ -87,7 +87,7 @@ public class WifiLoginHelper {
         String passwordEncoded = new String(Base64.encode(password.getBytes(), Base64.DEFAULT));
 
         new ApiSimpleRequest(Method.POST).url("http://w.seu.edu.cn/index.php/index/login")
-                .post("username", username, "password", passwordEncoded, "domain", "teacher")
+                .post("username", username, "password", passwordEncoded, "enablemacauth", "1")
                 .onResponse((success, code, response) -> {
                     if (success) {
                         JObj info = new JObj(response);

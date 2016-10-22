@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--客户取快递地点-->
+    <string-array name="mod_express_dest">
+        <item>梅九大厅</item>
+        <item>桃三四大厅</item>
+    </string-array>
+
+    <!--取快递的时间段-->
+    <string-array name="mod_express_arrival">
+        <item>中午12:20~12:40</item>
+        <item>下午5:40~6:00</item>
+    </string-array>
+
+    <!--快递所在地-->
+    <string-array name="mod_express_locate">
+        <item>东门</item>
+        <item>南门</item>
+    </string-array>
+
+    <!--快件重量-->
+    <string-array name="mod_express_weight">
+        <item>小于2kg</item>
+        <item>2~4kg</item>
+        <item>4kg以上</item>
+    </string-array>
+
+
+</resources>

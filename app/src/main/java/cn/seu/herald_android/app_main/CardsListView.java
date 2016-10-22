@@ -25,9 +25,6 @@ import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
 import cn.seu.herald_android.consts.Module;
-import cn.seu.herald_android.custom.CustomSwipeRefreshLayout;
-import cn.seu.herald_android.custom.FadeOutHeaderContainer;
-import cn.seu.herald_android.custom.ShortcutBoxView;
 import cn.seu.herald_android.custom.SliderView;
 import cn.seu.herald_android.factory.ActivityCard;
 import cn.seu.herald_android.factory.CardCard;
@@ -38,8 +35,10 @@ import cn.seu.herald_android.factory.JwcCard;
 import cn.seu.herald_android.factory.LectureCard;
 import cn.seu.herald_android.factory.PedetailCard;
 import cn.seu.herald_android.factory.ServiceCard;
+import cn.seu.herald_android.factory.ShortcutCard;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.AppModule;
+import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.network.ApiEmptyRequest;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -49,10 +48,8 @@ import cn.seu.herald_android.helper.SettingsHelper;
 public class CardsListView extends ListView implements ApiHelper.OnUserChangeListener,
         SettingsHelper.OnModuleSettingsChangeListener {
 
-    private CustomSwipeRefreshLayout srl;
-    private ShortcutBoxView shortcutBox;
+    public BaseActivity activity;
     private SliderView slider;
-    private FadeOutHeaderContainer fadeContainer;
     private CardsAdapter adapter;
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -68,28 +65,12 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         // 实例化轮播图
         slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_slider, null);
 
-        // 轮播图居中变色动效的调用
-        fadeContainer = new FadeOutHeaderContainer<SliderView>(getContext())
-                .maskColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
-                .append(slider);
-
         // 设置高度。在其他地方设置没用。
         float resolution = 5 / 2f;
         int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
-        slider.setLayoutParams(new FadeOutHeaderContainer.LayoutParams(-1, height));
+        slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
 
-        addHeaderView(fadeContainer);
-
-        // 实例化快捷栏
-        ViewGroup vg = (ViewGroup)
-                LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_shortcut_box, null);
-        shortcutBox = ButterKnife.findById(vg, R.id.shorcut_box);
-        addHeaderView(vg);
-
-        // 添加页脚以防止被透明Tab挡住
-        View footer = new View(getContext());
-        footer.setLayoutParams(new AbsListView.LayoutParams(-1, (int)getResources().getDimension(R.dimen.bottom_tab_height)));
-        addFooterView(footer);
+        addHeaderView(slider);
     }
 
     @Override
@@ -128,14 +109,9 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         loadContent(false);
     }
 
-    public void setSrl(CustomSwipeRefreshLayout srl) {
-        this.srl = srl;
-    }
-
     private Handler uiThreadHandler = new Handler();
 
     private ArrayList<CardsModel> itemList = new ArrayList<>();
-
 
     /**
      * 刷新卡片列表
@@ -144,9 +120,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         /**
          * 本地重载部分
          **/
-
-        // 单独刷新快捷栏，不刷新轮播图。轮播图在轮播图数据下载完成后单独刷新。
-        refreshShortcutBox();
 
         // 丢你拉姆
         new Thread(() -> {
@@ -158,6 +131,8 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
 
                 // 清空卡片列表，等待载入
                 newItemList.clear();
+
+                newItemList.add(ShortcutCard.getCard());
 
                 // 加载版本更新缓存
                 CardsModel item1 = ServiceCard.getCheckVersionCard();
@@ -241,6 +216,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         if (!refresh) {
             return;
         }
+        if (activity != null) activity.showProgressDialog();
 
         ApiRequest request = new ApiEmptyRequest();
 
@@ -302,14 +278,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             request = request.parallel(JwcCard.getRefresher());
         }
 
-        if (ApiHelper.isLogin()) {
-            request = request
-                    .parallel(Cache.gymReserveMyOrder.getRefresher())
-                    .parallel(Cache.srtp.getRefresher())
-                    .parallel(Cache.grade.getRefresher())
-                    .parallel(Cache.libraryBorrowBook.getRefresher());
-        }
-
         /**
          * 结束刷新部分
          * 当最后一个线程结束时调用这一部分，刷新结束
@@ -317,17 +285,13 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         request.onResponse((success1, code, response) -> {
             loadContent(false);
         }).onFinish((success, code) -> {
-            if (srl != null) srl.setRefreshing(false);
+            if (activity != null) activity.hideProgressDialog();
 
             if (!success) {
                 AppContext.showMessage("部分数据刷新失败");
             }
-            slider.startAutoCycle();
+            slider.startAutoCycleIfNeeded();
         }).run();
-    }
-
-    private void refreshShortcutBox() {
-        if (shortcutBox != null) shortcutBox.refresh();
     }
 
     /**
@@ -338,16 +302,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         // 为轮播栏设置内容
         ArrayList<SliderView.SliderViewItem> sliderViewItemArrayList = ServiceHelper.getSliderViewItemArray();
         if (slider != null) slider.setupWithArrayList(sliderViewItemArrayList);
-    }
-
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-        // 轮播图居中变色动效的实现
-        if (fadeContainer != null) {
-            fadeContainer.syncFadeState();
-            fadeContainer.syncScrollState();
-        }
     }
 
     public class CardsAdapter extends BaseAdapter {
@@ -426,16 +380,14 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
 
             holder.attachedContainer.removeAllViews();
 
-            if (item.attachedView.size() != 0) {
-                for (View k : item.attachedView) {
+            for (View k : item.attachedView) {
 
-                    if (k.getParent() != null) {
-                        ((ViewGroup) k.getParent()).removeView(k);
-                    }
-                    k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-
-                    holder.attachedContainer.addView(k);
+                if (k.getParent() != null) {
+                    ((ViewGroup) k.getParent()).removeView(k);
                 }
+                k.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+
+                holder.attachedContainer.addView(k);
             }
 
             return convertView;
