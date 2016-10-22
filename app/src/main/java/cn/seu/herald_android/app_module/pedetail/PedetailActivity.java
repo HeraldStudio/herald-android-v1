@@ -1,65 +1,72 @@
 package cn.seu.herald_android.app_module.pedetail;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.seu.herald_android.R;
 import cn.seu.herald_android.consts.Cache;
+import cn.seu.herald_android.custom.CalendarUtils;
 import cn.seu.herald_android.factory.PedetailCard;
 import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.framework.json.JArr;
 import cn.seu.herald_android.framework.json.JObj;
 
-public class PedetailActivity extends BaseActivity {
+public class PedetailActivity extends BaseActivity implements CompactCalendarView.CompactCalendarViewListener {
 
-    // 左右滑动分页的日历容器
-    @BindView(R.id.calendarPager)
-    ViewPager pager;
     // 跑操次数数字
     @BindView(R.id.tv_count)
-    TextView count;
+    TextView countLabel;
     @BindView(R.id.tv_remain)
-    TextView remain;
+    TextView remainLabel;
+    @BindView(R.id.pedetail_week)
+    TextView weekLabel;
+    @BindView(R.id.compactcalendar_view)
+    CompactCalendarView calendarView;
+
+    @BindColor(R.color.colorPedetailPrimary)
+    public int primaryColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mod_que_pedetail);
         ButterKnife.bind(this);
+        calendarView.setListener(this);
+        calendarView.setShouldShowMondayAsFirstDay(false);
+        calendarView.setDayColumnNames(new String[]{"日", "一", "二", "三", "四", "五", "六"});
+        calendarView.setCurrentSelectedDayIndicatorStyle(CompactCalendarView.NO_FILL_LARGE_INDICATOR);
+        calendarView.setCurrentDayIndicatorStyle(CompactCalendarView.NO_FILL_LARGE_INDICATOR);
 
         // 首先加载一次缓存数据（如未登录则弹出登陆窗口）
-        readLocal();
+        loadCache();
 
-        // 检查是否需要联网刷新，如果需要则刷新，不需要则取消
-        if (isRefreshNeeded()) refreshCache();
+        // 联网刷新
+        refreshCache();
     }
 
     private void refreshCache() {
         showProgressDialog();
         PedetailCard.getRefresher().onFinish((success, code) -> {
             hideProgressDialog();
-            if (success) {
-                readLocal();
-            } else {
+            if (!success) {
                 showSnackBar("刷新失败，请重试");
             }
+            loadCache();
         }).run();
-    }
-
-    private boolean isRefreshNeeded() {
-        return (pager.getAdapter() == null) || (pager.getAdapter().getCount() == 0);
     }
 
     @Override
@@ -71,88 +78,96 @@ public class PedetailActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // noinspection SimplifiableIfStatement
         if (id == R.id.action_sync) {
             refreshCache();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void readLocal() {
+    private ArrayList<PedetailRecordModel> history = new ArrayList<>();
+
+    private void loadCache() {
         try {
-            // 读取本地保存的跑操数据
-            JArr array = new JArr(Cache.peDetail.getValue());
-            String countStr = Cache.peCount.getValue();
-            String remainStr = Cache.peRemain.getValue();
+            String cache = Cache.peDetail.getValue();
+            String count = Cache.peCount.getValue();
+            String remain = Cache.peRemain.getValue();
+            countLabel.setText(count);
+            remainLabel.setText(remain);
 
-            // 用户有数据
-            // 有效跑操计数器，用于显示每一个跑操是第几次
-            int exerciseCount = 0;
+            JArr jsonArray = new JArr(cache);
+            calendarView.removeAllEvents();
+            history.clear();
 
-            // 创建一个包含所有有效跑操记录的列表（单重列表结构）
-            List<PedetailRecordModel> infoList = new ArrayList<>();
-            for (int i = 0; i < array.size(); i++) {
-                JObj obj = array.$o(i);
-
-                // 将跑操数据倾倒到列表
-                PedetailRecordModel info = new PedetailRecordModel(obj, exerciseCount + 1);
-                if (info.getValid()) {
-                    infoList.add(info);
-                    exerciseCount++;
-                }
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JObj k = jsonArray.$o(i);
+                PedetailRecordModel model = new PedetailRecordModel(k);
+                calendarView.addEvent(new Event(
+                        primaryColor,
+                        model.getDateTime().getTimeInMillis()), false);
+                history.add(model);
             }
-            count.setText(countStr);
-            remain.setText(remainStr);
+            calendarView.invalidate();
+            updateCurrentDayColor();
+            updateMonthDisplay();
 
-            // 用年月时间戳（年*12+自然月-1）比较器进行排序以防万一
-            Collections.sort(infoList, PedetailRecordModel.yearMonthComparator);
-
-            // 当前所在月的年月戳
-            Calendar cal = Calendar.getInstance();
-            int curMonth = cal.get(Calendar.YEAR) * 12 + cal.get(Calendar.MONTH);
-
-            // 起始月为最早记录所在月
-            int startMonth = infoList.size() > 0 ? infoList.get(0).getYearMonth() : curMonth;
-
-            // 终止月为最晚记录所在月
-            int endMonth = infoList.size() > 0 ?
-                    Math.max(infoList.get(infoList.size() - 1).getYearMonth(), curMonth) : curMonth;
-
-            // 创建一个键值对结构，键为年月戳，值为该月的跑操记录列表
-            Map<Integer, List<PedetailRecordModel>> pages = new HashMap<>();
-            for (int i = startMonth; i <= endMonth; i++) {
-                pages.put(i, new ArrayList<>());
-            }
-
-            // 将单重列表的每个元素倾倒到双重列表中对应的位置
-            for (PedetailRecordModel info : infoList) {
-                pages.get(info.getYearMonth()).add(info);
-            }
-
-            // 删除空白月（当前月除外）
-            for (int i = startMonth; i <= endMonth; i++) {
-                if (pages.get(i).size() == 0 && infoList.size() > 0)
-                    pages.remove(i);
-            }
-
-            // 设置水平滚动分页的适配器，负责将双重列表中每一个子列表的数据转换为视图，供水平滚动分页控件调用
-            final PagesAdapter adapter = new PagesAdapter(pages, this, this::refreshCache);
-            pager.setAdapter(adapter);
-
-            // 根据实际需要，显示时应首先滑动到末页
-            pager.setCurrentItem(adapter.getCount() - 1);
-
-            if (infoList.size() == 0) {
+            if (history.size() == 0) {
                 showSnackBar("本学期暂时没有跑操记录");
             }
         } catch (Exception e) {
             showSnackBar("解析失败，请刷新");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDayClick(Date dateClicked) {
+        updateSelectColor(dateClicked);
+        updateCurrentDayColor();
+        for (int i = 0; i < history.size(); i++) {
+            PedetailRecordModel model = history.get(i);
+            if (dateClicked.equals(CalendarUtils.toSharpDay(model.getDateTime()).getTime())) {
+                showSnackBar("(第 " + (i + 1) + " 次跑操) " + model.toString());
+                return;
+            }
+        }
+        showSnackBar("该日无跑操记录");
+    }
+
+    @Override
+    public void onMonthScroll(Date firstDayOfNewMonth) {
+        updateSelectColor(firstDayOfNewMonth);
+        updateCurrentDayColor();
+        updateMonthDisplay();
+    }
+
+    private void updateMonthDisplay() {
+        Date date = calendarView.getFirstDayOfCurrentMonth();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年M月");
+        weekLabel.setText(format.format(date));
+    }
+
+    private void updateSelectColor(Date date) {
+        for (int i = 0; i < history.size(); i++) {
+            PedetailRecordModel model = history.get(i);
+            if (date.equals(CalendarUtils.toSharpDay(model.getDateTime()).getTime())) {
+                calendarView.setCurrentSelectedDayBackgroundColor(primaryColor);
+                return;
+            }
+        }
+        calendarView.setCurrentSelectedDayBackgroundColor(Color.argb(255, 240, 240, 240));
+    }
+
+    private void updateCurrentDayColor() {
+        for (int i = 0; i < history.size(); i++) {
+            PedetailRecordModel model = history.get(i);
+            if (CalendarUtils.toSharpDay(Calendar.getInstance()).getTime()
+                    .equals(CalendarUtils.toSharpDay(model.getDateTime()).getTime())) {
+                calendarView.setCurrentDayBackgroundColor(primaryColor);
+                return;
+            }
+        }
+        calendarView.setCurrentDayBackgroundColor(Color.argb(255, 240, 240, 240));
     }
 }

@@ -45,8 +45,6 @@ import cn.seu.herald_android.framework.BaseActivity;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.helper.WifiLoginHelper;
-import eightbitlab.com.blurview.BlurView;
-import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class MainActivity extends BaseActivity implements ApiHelper.OnUserChangeListener, BaseActivity.NoSwipeBack {
 
@@ -58,8 +56,6 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
     RelativeLayout mainToolbar;
     @BindView(R.id.tv_login)
     TextView loginBtn;
-    @BindView(R.id.blurView)
-    BlurView blurView;
 
     CardsFragment cardsFragment = new CardsFragment();
     ActivitiesFragment afterSchoolFragment = new ActivitiesFragment();
@@ -271,10 +267,6 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
 
         // set background, if your root layout doesn't have one
         final Drawable windowBackground = decorView.getBackground();
-
-        blurView.setupWith(rootView)
-                .windowBackground(windowBackground).blurAlgorithm(new RenderScriptBlur(this, true))
-                .blurRadius(16);
     }
 
     public static void sendChangeMainFragmentBroadcast(int fragmentCode) {

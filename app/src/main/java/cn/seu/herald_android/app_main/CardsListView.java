@@ -71,11 +71,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
 
         addHeaderView(slider);
-
-        // 添加页脚以防止被透明Tab挡住
-        View footer = new View(getContext());
-        footer.setLayoutParams(new AbsListView.LayoutParams(-1, (int) getResources().getDimension(R.dimen.bottom_tab_height)));
-        addFooterView(footer);
     }
 
     @Override

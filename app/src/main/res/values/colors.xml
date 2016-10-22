@@ -54,10 +54,7 @@
     <!--跑操-->
     <color name="colorPedetailPrimary">#26a69a</color>
     <color name="colorPedetailprimaryDark">#26a69a</color>
-    <color name="colorPedetailprimarySemiFade">#d026a69a</color>
-    <color name="colorPedetailprimaryFade">#8026a69a</color>
     <color name="colorPedetailAccent">#26a69a</color>
-    <color name="colorPedetailcalendarBg">#ffffff</color>
 
     <!--srtp-->
     <color name="colorSrtpPrimary">#FFEF5350</color>

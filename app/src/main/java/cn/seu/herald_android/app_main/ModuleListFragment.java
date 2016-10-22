@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -40,11 +39,6 @@ public class ModuleListFragment extends Fragment implements ApiHelper.OnUserChan
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.app_main__fragment_modules, container, false);
         unbinder = ButterKnife.bind(this, contentView);
-
-        // 添加页脚以防止被透明Tab挡住
-        View footer = new View(getContext());
-        footer.setLayoutParams(new AbsListView.LayoutParams(-1, (int)getResources().getDimension(R.dimen.bottom_tab_height)));
-        listView.addFooterView(footer);
 
         loadModuleList();
 

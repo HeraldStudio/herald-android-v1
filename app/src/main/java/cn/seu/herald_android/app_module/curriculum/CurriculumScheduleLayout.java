@@ -214,7 +214,7 @@ public class CurriculumScheduleLayout extends FrameLayout {
 
         View v = LayoutInflater.from(getContext()).inflate(R.layout.mod_que_curriculum__cell_week, null);
         TextView week = (TextView) v.findViewById(R.id.week);
-        week.setText(new SimpleDateFormat("M月d日\n").format(cal.getTime()) + WEEK_NUMS_CN[dayIndex]);
+        week.setText(new SimpleDateFormat("M/d\n").format(cal.getTime()) + WEEK_NUMS_CN[dayIndex]);
 
         v.setX((dayDelta > 0 ? columnIndex + addition : columnIndex) * width / (columnsCount + addition));
         v.setY(0);
