@@ -74,6 +74,10 @@ public class Module {
             "空教室 Web", "提供指定时间内的空教室信息查询服务",
             "http://www.heraldstudio.com/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, R.mipmap.ic_emptyroom_invert, false, false);
 
+    public static AppModule topic = new AppModule("topic",
+            "小猴偷米话题", "提供校内最新最热话题",
+            "MODULE_TOPIC", R.mipmap.ic_topics, R.mipmap.ic_topics, false, false);
+
     // 特殊的模块，模块管理
     public static AppModule moduleManager = new AppModule("",
             "模块管理", "管理各模块的显示/隐藏状态",
@@ -81,6 +85,7 @@ public class Module {
 
     public static AppModule[] array = new AppModule[]{
             card, pedetail, curriculum, experiment, exam, lecture, jwc,
-            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom
+            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom,
+            topic
     };
 }

@@ -7,4 +7,5 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="divider_height">1px</dimen>
     <dimen name="divider_height_wide">6px</dimen>
+    <dimen name="fab_scroll_threshold">8dp</dimen>
 </resources>
