@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--此activity为新建评论所需-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:id="@+id/edit_topic_comment"
+        android:gravity="top|left"
+        android:background="@null"
+        android:layout_above="@+id/tv_contact"
+        android:layout_alignParentTop="true"
+        android:padding="15dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:hint="Type here"
+        android:textSize="13sp"
+        android:layout_weight="0.44" />
+
+
+    <RelativeLayout
+
+        android:background="#00897b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_topic_send_now"
+            android:id="@+id/ibtn_topic_comment_commit"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <CheckBox
+            android:id="@+id/ckbok_topic_commnt_ano"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:paddingLeft="10dp"
+            android:text="匿名"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
