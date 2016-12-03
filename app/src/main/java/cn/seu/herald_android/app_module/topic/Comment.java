@@ -8,6 +8,11 @@ package cn.seu.herald_android.app_module.topic;
 public class Comment {
 
     /**
+     * 该评论的编号
+     */
+    private String mCid;
+
+    /**
      * 是否匿名回复
      */
     private boolean mIsAnonymous;
@@ -37,7 +42,17 @@ public class Comment {
      */
     private boolean mIsLike;
 
-    public Comment(boolean mIsAnonymous, String mContent, String mTime, int mLike, String mName, boolean mIsLike) {
+    public String getmCid() {
+        return mCid;
+    }
+
+    public void setmCid(String mCid) {
+        this.mCid = mCid;
+    }
+
+
+    public Comment(String mCid, boolean mIsAnonymous, String mContent, String mTime, int mLike, String mName, boolean mIsLike) {
+        this.mCid = mCid;
         this.mIsAnonymous = mIsAnonymous;
         this.mContent = mContent;
         this.mTime = mTime;

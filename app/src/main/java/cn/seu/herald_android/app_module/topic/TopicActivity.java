@@ -137,10 +137,9 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
     public void onRefresh() {
         Log.d(TAG, "Start Refresh");
         Log.d(TAG, ApiHelper.getCurrentUser().schoolNum);
-        // 获取话题 TODO 修改URL
         new ApiSimpleRequest(Method.POST)
-                .url("http://223.3.81.245:7000/herald/api/v1/topic")
-                .post("askcode", "110")
+                .url(TopicUtils.TOPIC_URL)
+                .post("askcode", "110")         // 请求所有话题
                 .post("cardnum", ApiHelper.getCurrentUser().userName)
                 .onResponse(new OnResponseListener() {
                     @Override

@@ -60,8 +60,8 @@ public class CommentsMakeActivity extends BaseActivity{
 
     private void makeComment() {
         new ApiSimpleRequest(Method.POST)
-                .url("http://223.3.81.245:7000/herald/api/v1/topic")
-                .post("askcode", "103")
+                .url(TopicUtils.TOPIC_URL)
+                .post("askcode", "103")     // 进行评论
                 .post("cardnum", mCardNum)
                 .post("tid", mTid)
                 .post("quo", "1")

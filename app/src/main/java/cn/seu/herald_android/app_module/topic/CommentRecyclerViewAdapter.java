@@ -10,9 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import cn.seu.herald_android.R;
+import cn.seu.herald_android.framework.network.ApiSimpleRequest;
+import cn.seu.herald_android.framework.network.Method;
+import cn.seu.herald_android.framework.network.OnResponseListener;
+import cn.seu.herald_android.helper.ApiHelper;
 
 /**
  * Created by corvo on 11/27/16.
@@ -83,7 +90,28 @@ public class CommentRecyclerViewAdapter
 
         holder.mImageLike.setOnClickListener(view -> {
             // TODO 添加处理点赞的函数
-            holder.mImageLike.setImageResource(R.drawable.ic_heart_red);
+            Log.d("CommentRecycler", "OnClicked");
+            new ApiSimpleRequest(Method.POST)
+                    .url(TopicUtils.TOPIC_URL)
+                    .post("askcode", "105")     // 为评论点赞
+                    .post("cid", comment.getmCid())
+                    .post("cardnum", ApiHelper.getCurrentUser().userName)
+                    .onResponse(new OnResponseListener() {
+                        @Override
+                        public void onResponse(boolean success, int code, String response) {
+                            Log.d("CommentRecycler", response);
+                            if (code == 200) {
+                                try {
+                                    JSONObject jRes = new JSONObject(response);
+                                    if (jRes.getInt("code") == 200) {
+                                        holder.mImageLike.setImageResource(R.drawable.ic_heart_red);    // 点赞成功则修改图片状态
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }).run();
         });
 
     }
