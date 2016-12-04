@@ -50,6 +50,13 @@ public class Comment {
         this.mCid = mCid;
     }
 
+    public boolean ismIsLike() {
+        return mIsLike;
+    }
+
+    public void setmIsLike(boolean mIsLike) {
+        this.mIsLike = mIsLike;
+    }
 
     public Comment(String mCid, boolean mIsAnonymous, String mContent, String mTime, int mLike, String mName, boolean mIsLike) {
         this.mCid = mCid;
@@ -85,6 +92,9 @@ public class Comment {
         this.mIsAnonymous = mIsAnonymous;
     }
 
+    public void addmLike() {
+        mLike += 1;
+    }
     public int getmLike() {
         return mLike;
     }

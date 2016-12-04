@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.icu.text.LocaleDisplayNames;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -74,6 +75,7 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
                 revealEffectFab();
             }
         }, 300);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,9 +83,9 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
             }
         });
 
-        int currentapiVersion=android.os.Build.VERSION.SDK_INT;
-        Log.d(TAG, String.valueOf(currentapiVersion));
+
         Log.d(TAG, "create finish");
+        loadHeaderCache();
     }
 
     /**
@@ -93,7 +95,24 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
         Intent intent = new Intent(TopicActivity.this, CommentsMakeActivity.class);
         intent.putExtra("tid", mTopic.getmId());
         intent.putExtra("cardnum", ApiHelper.getCurrentUser().userName);
-        startActivity(intent);
+        startActivityForResult(intent, 1);      // 开始评论Activity, 评论成功与否将会返回到主Activity中
+    }
+
+    /**
+     * 刷新评论数目
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        boolean isCommentOk = data.getExtras().getBoolean("IsCommentOk");
+        Log.d(TAG, "getResult " + String.valueOf(isCommentOk));
+        if (isCommentOk) {
+            mTopic.addCommentN();
+            setupText();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -102,8 +121,7 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
     public void loadHeaderCache() {
         Log.d(TAG, "loadHeaderCache");
         String jsonRes = CacheHelper.get("topic_header");
-
-        if (jsonRes.isEmpty()){
+        if (jsonRes.isEmpty()){     // 缓存中尚无数据, 直接进行刷新
             onRefresh();
             return;
         }
@@ -118,25 +136,35 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
 
                 setupViewPager(viewPager, curTopic.getString("id"));
                 mTopic = new Topic(curTopic.getString("id"),
-                                    curTopic.getString("commentN"),
-                                    curTopic.getString("name"),
-                                    curTopic.getString("startT"),
-                                    curTopic.getString("content"));
-
-                mTopicHeader.setText(mTopic.getmName());
-                mTopicHeaderContent.setText(mTopic.getContent());
-                mTopicCommentN.setText("已有" + mTopic.getmCommentN() + "人评论");
+                       curTopic.getString("commentN"),
+                       curTopic.getString("name"),
+                       curTopic.getString("startT"),
+                       curTopic.getString("content"));
+                setupText();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * 此函数仅在mTopic != null 时使用
+     */
+    public void setupText() {
+        if (mTopic == null) {
+            return;
+        }
+        Log.d(TAG, "set " + mTopic.getmCommentN());
+        mTopicHeader.setText(mTopic.getmName());
+        mTopicHeaderContent.setText(mTopic.getContent());
+        mTopicCommentN.setText("已有" + mTopic.getmCommentN() + "人评论");
+    }
 
-
+    /**
+     * 进行刷新操作, 此操作刷新整个页面, 包括两个tabLayout
+     */
     public void onRefresh() {
         Log.d(TAG, "Start Refresh");
-        Log.d(TAG, ApiHelper.getCurrentUser().schoolNum);
         new ApiSimpleRequest(Method.POST)
                 .url(TopicUtils.TOPIC_URL)
                 .post("askcode", "110")         // 请求所有话题
@@ -149,7 +177,6 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
                             hideProgressDialog();
                         } else {
                             hideProgressDialog();
-                            Log.d(TAG, response);
                             CacheHelper.set("topic_header", response);
                             loadHeaderCache();
                         }
@@ -157,30 +184,26 @@ public class TopicActivity extends BaseActivity implements CommentsFragment.onPa
                 }).run();
     }
 
-
-
-    @Override
-    protected void onResume() {
-        //setupViewPager(viewPager);
-        loadHeaderCache();
-        super.onResume();
-    }
-
+    /**
+     * 加载下方两个评论Fragment
+     * @param viewPager
+     * @param tId
+     */
     public void setupViewPager(ViewPager viewPager, String tId) {
         Log.d(TAG, "setupViewPage");
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        CommentsFragment hotCommentsFragment = new CommentsFragment();
+        CommentsFragment hotCommentsFragment = new CommentsFragment();      // 点赞最多的评论
         Bundle bundleHot = new Bundle();
         bundleHot.putString("type", "hot");
         bundleHot.putString("tid", tId);
         hotCommentsFragment.setArguments(bundleHot);
         adapter.addFragment(hotCommentsFragment, "最热");
 
-        CommentsFragment newCommentsFragment = new CommentsFragment();
+        CommentsFragment newCommentsFragment = new CommentsFragment();      // 最新的评论
         Bundle bundleNew = new Bundle();
         bundleNew.putString("type", "new");
-        bundleHot.putString("tid", tId);
+        bundleNew.putString("tid", tId);
         newCommentsFragment.setArguments(bundleNew);
         adapter.addFragment(newCommentsFragment, "最近");
 

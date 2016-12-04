@@ -5,7 +5,7 @@ package cn.seu.herald_android.app_module.topic;
  */
 
 public class TopicUtils {
-    static final String TOPIC_URL = "http://223.3.81.245:7000/herald/api/v1/topic";
+    static final String TOPIC_URL = "http://223.3.81.245/herald/api/v1/topic";
 
     static final String[] TOPIC_FUN = {
             "103",

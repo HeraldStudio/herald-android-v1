@@ -68,13 +68,16 @@ public class CommentsFragment extends Fragment {
             mCommentsType = 0;
         }
         mTid = bundle.getString("tid");
-
     }
 
     /**
      * 刷新评论区
      */
     public void onRefreshComments() {
+        if (mCommentsType == 0 || mTid == null) {
+            return;
+        }
+        Log.d(TAG, String.valueOf(mCommentsType));
         Log.d(TAG, "OnRefreshComments");
         if (mCommentsType == TOPIC_HOT)
             loadCommentHot();
@@ -82,10 +85,30 @@ public class CommentsFragment extends Fragment {
             loadCommentNew();
     }
 
+    /**
+     * 获取最热评论
+     */
     public void loadCommentHot() {
+        makeRequest("107");
+        Log.d(TAG, "load hot");
+    }
+
+    /**
+     * 获取最新评论
+     */
+    public void loadCommentNew() {
+        makeRequest("111");
+        Log.d(TAG, "load new");
+    }
+
+    /**
+     * 不同code对应于返回不同评论
+     * @param code
+     */
+    public void makeRequest(String code) {
         new ApiSimpleRequest(Method.POST)
                 .url(TopicUtils.TOPIC_URL)
-                .post("askcode", "107")         // 获取最热评论
+                .post("askcode", code)
                 .post("tid", mTid)
                 .post("cardnum", ApiHelper.getCurrentUser().userName)
                 .onResponse(new OnResponseListener() {
@@ -118,7 +141,7 @@ public class CommentsFragment extends Fragment {
                         jComment.getString("time"),
                         jComment.getInt("likeN"),
                         jComment.getString("cardnum"),
-                        false);
+                        jComment.getInt("parase") == 1? true:false );
                 mCommentList.add(comment);
             }
             mRecycleView.setLayoutManager(new LinearLayoutManager(mRecycleView.getContext()));
@@ -129,28 +152,7 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    /**
-     * 暂未启用
-     */
-    public void loadCommentNew() {
 
-        /*
-        new ApiSimpleRequest(Method.POST)
-                .url("http://223.3.81.245:7000/herald/api/v1/topic")
-                .post("askcode", "107")
-                .post("tid", mTid)
-                .post("cardnum", ApiHelper.getCurrentUser().userName)
-                .onResponse(new OnResponseListener() {
-                    @Override
-                    public void onResponse(boolean success, int code, String response) {
-                        Log.d("CommentFragment", response);
-                        if (success) {
-                            mRes = response;
-                        }
-                    }
-                }).run();
-            */
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,6 +171,10 @@ public class CommentsFragment extends Fragment {
         return mRecycleView;
     }
 
+    /**
+     * 测试使用
+     * @return
+     */
     public List<Comment> createData() {
         List<Comment> commentList = new ArrayList<Comment>();
 

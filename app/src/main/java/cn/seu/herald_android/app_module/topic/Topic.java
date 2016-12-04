@@ -66,6 +66,12 @@ public class Topic {
         this.mCommentN = mCommentN;
     }
 
+    public void addCommentN() {
+        int commentN = Integer.parseInt(mCommentN);
+        commentN ++;
+        mCommentN = String.valueOf(commentN);
+    }
+
     public String getmStartT() {
         return mStartT;
     }

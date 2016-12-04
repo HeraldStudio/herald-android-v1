@@ -21,6 +21,7 @@ import cn.seu.herald_android.framework.network.Method;
 import cn.seu.herald_android.framework.network.OnResponseListener;
 
 /**
+ * 此Activity实现评论功能
  * Created by corvo on 11/28/16.
  */
 
@@ -76,6 +77,9 @@ public class CommentsMakeActivity extends BaseActivity{
                                 JSONObject jRes = new JSONObject(response);
                                 if (jRes.getInt("code") == 200) {
                                     showSnackBar(jRes.getString("content"));
+                                    Intent intent = new Intent();
+                                    intent.putExtra("IsCommentOk", true);
+                                    setResult(1, intent);
                                     finish();
                                 }
                             } catch (JSONException e) {

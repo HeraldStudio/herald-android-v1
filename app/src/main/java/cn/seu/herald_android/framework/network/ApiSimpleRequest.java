@@ -1,5 +1,6 @@
 package cn.seu.herald_android.framework.network;
 
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
@@ -179,15 +180,20 @@ public class ApiSimpleRequest extends ApiRequest {
      * 执行部分
      **/
     public void runWithoutFatalListener() {
+
+        /**
+         * 增加对手机基本硬件软件信息的获取, 便于更新与升级app
+         */
+        String user_agent = Build.VERSION.RELEASE + ":" + Build.MODEL + ":" + Build.VERSION.SDK_INT;
         switch (method) {
             case GET:
                 getClientInstance().newCall(
-                        new Request.Builder().url(url).build()
+                        new Request.Builder().url(url).addHeader("User-Agent",user_agent).build()
                 ).enqueue(callback);
                 break;
             case POST:
                 getClientInstance().newCall(
-                        new Request.Builder().url(url).post(body.build()).build()
+                        new Request.Builder().url(url).addHeader("User-Agent", user_agent).post(body.build()).build()
                 ).enqueue(callback);
                 break;
         }

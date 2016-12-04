@@ -83,36 +83,43 @@ public class CommentRecyclerViewAdapter
         holder.mTextCommentContent.setText(comment.getmContent());
 
 
+        /** 暂时不启用, 之后可能会添加监听
         holder.mView.setOnClickListener(view -> {
             Context context = view.getContext();
-            Log.d("HotestFragmetn", "OnChange " + String.valueOf(position));
         });
+        */
 
-        holder.mImageLike.setOnClickListener(view -> {
-            // TODO 添加处理点赞的函数
-            Log.d("CommentRecycler", "OnClicked");
-            new ApiSimpleRequest(Method.POST)
-                    .url(TopicUtils.TOPIC_URL)
-                    .post("askcode", "105")     // 为评论点赞
-                    .post("cid", comment.getmCid())
-                    .post("cardnum", ApiHelper.getCurrentUser().userName)
-                    .onResponse(new OnResponseListener() {
-                        @Override
-                        public void onResponse(boolean success, int code, String response) {
-                            Log.d("CommentRecycler", response);
-                            if (code == 200) {
-                                try {
-                                    JSONObject jRes = new JSONObject(response);
-                                    if (jRes.getInt("code") == 200) {
-                                        holder.mImageLike.setImageResource(R.drawable.ic_heart_red);    // 点赞成功则修改图片状态
+        if (comment.ismIsLike()) {      // 如果已经点赞, 则爱心表现为红色
+            holder.mImageLike.setImageResource(R.drawable.ic_heart_red);
+        } else {
+            holder.mImageLike.setOnClickListener(view -> {
+                Log.d("CommentRecycler", "OnClicked");
+                new ApiSimpleRequest(Method.POST)
+                        .url(TopicUtils.TOPIC_URL)
+                        .post("askcode", "105")     // 为评论点赞
+                        .post("cid", comment.getmCid())
+                        .post("cardnum", ApiHelper.getCurrentUser().userName)
+                        .onResponse(new OnResponseListener() {
+                            @Override
+                            public void onResponse(boolean success, int code, String response) {
+                                Log.d("CommentRecycler", response);
+                                if (code == 200) {
+                                    try {
+                                        JSONObject jRes = new JSONObject(response);
+                                        if (jRes.getInt("code") == 200) {
+                                            holder.mImageLike.setImageResource(R.drawable.ic_heart_red);    // 点赞成功则修改图片状态
+                                            comment.addmLike();                                              // 点赞数量+1
+                                            comment.setmIsLike(true);
+                                            holder.mTextCommentLikeN.setText(String.valueOf(comment.getmLike()) + " likes");
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
                                 }
                             }
-                        }
-                    }).run();
-        });
+                        }).run();
+            });
+        }
 
     }
 
