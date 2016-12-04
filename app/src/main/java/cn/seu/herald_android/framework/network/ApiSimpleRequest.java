@@ -184,7 +184,7 @@ public class ApiSimpleRequest extends ApiRequest {
         /**
          * 增加对手机基本硬件软件信息的获取, 便于更新与升级app
          */
-        String user_agent = Build.VERSION.RELEASE + ":" + Build.MODEL + ":" + Build.VERSION.SDK_INT;
+        String user_agent = "android-" + Build.VERSION.RELEASE + ":" + Build.MODEL + ":" + Build.VERSION.SDK_INT;
         switch (method) {
             case GET:
                 getClientInstance().newCall(
