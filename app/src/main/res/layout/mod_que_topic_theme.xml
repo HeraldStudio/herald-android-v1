@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="260dp"
+    android:fitsSystemWindows="true"
+    android:paddingTop="20dp"
+    android:paddingBottom="30dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:layout_margin="20dp"
+    app:layout_collapseMode="parallax"
+    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+    <LinearLayout
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:text="当你一个人的时候, 你会做什么? 两个人呢, 或者, 是三个人又怎么样"
+            android:id="@+id/text_topic_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif-monospace"
+            android:textSize="22sp" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:text="话题详情 http://url.cn/41tD5Ri"
+            android:id="@+id/text_topic_detail"
+            android:linksClickable="true"
+            android:autoLink="web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginBottom="25dp"
+        android:text="已有*人评论"
+        android:id="@+id/text_topic_comment_cnt"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
+

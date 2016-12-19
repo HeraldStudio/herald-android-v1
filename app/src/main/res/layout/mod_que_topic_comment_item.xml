@@ -2,8 +2,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     >
 
     <!--这里直接使用CardView作为父布局会产生CardView无法显示的问题 -->
@@ -11,16 +12,16 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:clickable="false"
         card_view:theme="@style/Animation.AppCompat.Dialog"
-        card_view:cardCornerRadius="4dp"
+        card_view:cardCornerRadius="5dp"
         card_view:cardBackgroundColor="@color/cardview_light_background"
         >
 
         <LinearLayout
+            android:padding="10dp"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <RelativeLayout
@@ -28,10 +29,21 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/text_comment_user"
+                    android:textSize="15sp"
+                    android:id="@+id/text_topic_comment_user"
                     android:text="用户名称(实名vs匿名)"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textStyle="normal|bold"
+                    android:textAllCaps="false" />
+
+                <TextView
+                    android:id="@+id/text_topic_comment_time"
+                    android:text="2016-11-20"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_topic_comment_user" />
 
 
                 <LinearLayout
@@ -40,11 +52,10 @@
                     android:layout_alignParentRight="true"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content">
 
                     <ImageButton
-                        android:id="@+id/btn_comment_like"
+                        android:id="@+id/ibtn_topic_comment_like"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_heart_outline_grey"
                         android:background="@android:color/transparent"
@@ -52,7 +63,7 @@
                         android:layout_height="48dp" />
 
                     <TextView
-                        android:id="@+id/txt_comment_like_cnt"
+                        android:id="@+id/text_topic_comment_like_cnt"
                         android:text="20 likes"
                         android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
@@ -62,10 +73,13 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/text_topic_comment"
-                android:text="hello, 这是我的第一个回复, 就快要超过两行了, 怎么样啊, 如果你觉得不错, 就向我点个赞啊"
+                android:id="@+id/text_topic_comment_content"
+                android:padding="2dp"
+                android:textSize="16dp"
+                android:text="hello, 这是我的第一个回复, 就快要超过两行了, 怎么样啊, 如果你觉得不错, 就向我点个赞, 现在, 我在努力写字,想要撑过三行"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed" />
 
         </LinearLayout>
 
