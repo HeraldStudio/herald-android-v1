@@ -40,7 +40,7 @@ public class ExamBlockLayout extends LinearLayout {
 
         String hour = "";
         if (!item.hour.trim().equals("")) {
-            hour = " @ " + item.hour;
+            hour = item.hour + "分钟";
         }
         subtitle.setText(hour);
 
