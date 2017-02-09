@@ -319,8 +319,8 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             View header;
             @BindView(R.id.notify_dot)
             View notifyDot;
-            @BindView(R.id.img_header_bg)
-            View headerArrow;
+//            @BindView(R.id.img_header_bg)
+//            View headerArrow;
 
             public ViewHolder(View v) {
                 ButterKnife.bind(this, v);
@@ -366,7 +366,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
 
             holder.avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
-            holder.headerArrow.setVisibility(item.getOnClickListener() == null ? View.GONE : View.VISIBLE);
+//            holder.headerArrow.setVisibility(item.getOnClickListener() == null ? View.GONE : View.VISIBLE);
 
             holder.header.setOnClickListener((v) -> {
                 item.markAsRead();

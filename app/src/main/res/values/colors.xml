@@ -115,10 +115,10 @@
 
 
     <!--首页四个fragment的主题色-->
-    <color name="colorFragmentCards">#12b0ec</color>
-    <color name="colorFragmentActivitys">#1976d2</color>
-    <color name="colorFragmentModules">#12b0ec</color>
-    <color name="colorFragmentSettings">#12b0ec</color>
+    <color name="colorFragmentCards">#ffffff</color>
+    <color name="colorFragmentActivitys">#ffffff</color>
+    <color name="colorFragmentModules">#ffffff</color>
+    <color name="colorFragmentSettings">#ffffff</color>
 
     <!--课表-->
     <color name="colorCurriculumPrimary">#00abd4</color>
@@ -142,12 +142,12 @@
     <color name="relaxGreen">#419655</color>
     <color name="relaxRed">#FF5252</color>
     <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#707070</color>
+    <color name="colorSecondaryText">#333</color>
     <color name="colorAlphawhite">#96ffffff</color>
     <color name="colorUnenabledGray">#535252</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#e5e5e5</color>
-    <color name="colorMainPagesBg">#efeff4</color>
+    <color name="colorMainPagesBg">#FFFFFF</color>
     <color name="colorMainPagesDivider">#eaeaea</color>
 
 

@@ -5,29 +5,30 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-    <include layout="@layout/custom__divider"/>
+    <!--<include layout="@layout/custom__divider"/>-->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:gravity="left|center">
 
         <ImageView
             android:id="@+id/ic_shortcut"
-            android:layout_width="32dp"
-            android:layout_height="32dp"/>
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
 
         <TextView
             android:id="@+id/tv_shortcut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ic_shortcut"
+            android:paddingLeft="5dp"
             android:gravity="left|center"
             android:textColor="#555"
             android:textSize="12sp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
