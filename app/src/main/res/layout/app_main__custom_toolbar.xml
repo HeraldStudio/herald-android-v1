@@ -5,14 +5,13 @@
     android:layout_height="?attr/actionBarSize"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <cn.seu.herald_android.app_main.FakeBoldTextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/app_name"
-        android:textColor="#32465a"
-        android:textSize="18sp">
-    </cn.seu.herald_android.app_main.FakeBoldTextView>
+        android:textColor="@color/colorIcons"
+        android:textSize="18sp"/>
 
     <ImageButton
         android:id="@+id/ibtn_add"
@@ -37,6 +36,6 @@
         android:paddingRight="15dp"
         android:text="登录"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#32465a"
+        android:textColor="#ffffff"
         android:textSize="17sp"/>
 </RelativeLayout>
