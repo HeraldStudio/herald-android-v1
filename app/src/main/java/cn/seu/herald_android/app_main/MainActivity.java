@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
 
     CardsFragment cardsFragment = new CardsFragment();
     ActivitiesFragment afterSchoolFragment = new ActivitiesFragment();
-    //ModuleListFragment moduleListFragment = new ModuleListFragment();
+    ModuleListFragment moduleListFragment = new ModuleListFragment();
     SettingsFragment myInfoFragment = new SettingsFragment();
 
     // 用来接收需要切换首页fragment的广播
@@ -188,7 +188,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
 
     private FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
         List<Fragment> fragments = Arrays.asList(
-                cardsFragment, afterSchoolFragment, myInfoFragment
+                cardsFragment, afterSchoolFragment, moduleListFragment, myInfoFragment
         );
 
         @Override
@@ -215,14 +215,14 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         int[] selectedIcons = {
                 R.drawable.ic_home_selected,
                 R.drawable.ic_activity_selected,
-                //R.drawable.ic_view_module_selected,
+                R.drawable.ic_view_module_selected,
                 R.drawable.ic_person_selected
         };
 
         int[] unselectedIcons = {
                 R.drawable.ic_home_unselected,
                 R.drawable.ic_activity_unselected,
-                //R.drawable.ic_view_module_unselected,
+                R.drawable.ic_view_module_unselected,
                 R.drawable.ic_person_unselected
         };
 

@@ -3,7 +3,6 @@ package cn.seu.herald_android.app_main;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -80,7 +79,6 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_TIME_TICK);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
@@ -322,8 +320,8 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
             View header;
             @BindView(R.id.notify_dot)
             View notifyDot;
-//            @BindView(R.id.img_header_bg)
-//            View headerArrow;
+            @BindView(R.id.img_header_bg)
+            View headerArrow;
 
             public ViewHolder(View v) {
                 ButterKnife.bind(this, v);
@@ -369,7 +367,7 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
 
             holder.avatar.setImageDrawable(ContextCompat.getDrawable(getContext(), item.getIconRes()));
 
-//            holder.headerArrow.setVisibility(item.getOnClickListener() == null ? View.GONE : View.VISIBLE);
+            holder.headerArrow.setVisibility(item.getOnClickListener() == null ? View.GONE : View.VISIBLE);
 
             holder.header.setOnClickListener((v) -> {
                 item.markAsRead();
