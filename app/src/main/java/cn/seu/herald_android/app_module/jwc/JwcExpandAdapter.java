@@ -78,7 +78,7 @@ class JwcExpandAdapter extends BaseExpandableListAdapter {
         tv_date.setText("发布日期：" + jwcNoticeModel.date);
         contentView.setOnClickListener(v -> {
             try {
-                WebModuleActivity.startWebModuleActivity(jwcNoticeModel.title, jwcNoticeModel.href, R.style.JwcTheme);
+                WebModuleActivity.startWebModuleActivity(jwcNoticeModel.title, jwcNoticeModel.href);
             } catch (Exception e) {
                 e.printStackTrace();
             }

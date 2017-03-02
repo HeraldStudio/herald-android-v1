@@ -10,6 +10,6 @@ import cn.seu.herald_android.framework.AppContext;
 public class CustomSwitchButton extends SwitchButton {
     public CustomSwitchButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTintColor(AppContext.getColorPrimary(context));
+        setTintColor(AppContext.colorAccent());
     }
 }

@@ -82,7 +82,7 @@ public class ApiHelper {
 
     // 显示一个提示用户处于未登录模式，不能使用此功能的对话框
     public static void showTrialFunctionLimitMessage() {
-        AppContext.showMessage("该功能需要登录使用", "立即登录", () -> doLogout(null));
+        AppContext.showMessage("该功能需要登录使用");
     }
 
     public static boolean isLogin() {

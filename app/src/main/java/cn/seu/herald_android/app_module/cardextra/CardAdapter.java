@@ -57,15 +57,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             holder.tv_date.setVisibility(View.GONE);
             holder.tv_data_total.setVisibility(View.GONE);
         }
-        // 判断消费是否为负，如果不为负，则为正，需要设置成其他颜色
+        // 判断消费是否为负，如果不为负，则为正
         if (!cardRecordModel.getPrice().startsWith("-") && !cardRecordModel.getPrice().equals("")) {
-            // 如果不为负，则设置绿色和加号
+            // 如果不为负，则设置加号
             holder.tv_price.setText("+" + cardRecordModel.getPrice());
-            holder.tv_price.setTextColor(ContextCompat.getColor(context, R.color.colorCardPrimary));
         } else {
-            // 如果为负则设置成红色
             holder.tv_price.setText(cardRecordModel.getPrice());
-            holder.tv_price.setTextColor(ContextCompat.getColor(context, R.color.relaxRed));
         }
 
         holder.tv_date.setText(cardRecordModel.getDisplayDate());

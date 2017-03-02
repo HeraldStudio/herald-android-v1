@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="书籍"
-            android:textColor="@color/colorLibraryPrimary"
+            android:textColor="@color/colorAccent"
             android:textSize="15sp"/>
         <TextView
             android:id="@+id/tv_author"
@@ -41,6 +41,6 @@
         android:layout_gravity="center_vertical"
         android:gravity="right"
         android:text="00"
-        android:textColor="@color/colorLibraryprimaryDark"
+        android:textColor="@color/colorAccent"
         android:textSize="14sp"/>
 </LinearLayout>

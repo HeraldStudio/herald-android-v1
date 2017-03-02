@@ -29,8 +29,6 @@ public class ExperimentBlockLayout extends LinearLayout {
         addView(LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null));
         ButterKnife.bind(this);
 
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExperimentPrimary));
-
         title.setText(item.name);
         subtitle.setText(item.teacher);
         content.setText(item.date + " " + item.time + " @ " + item.address);

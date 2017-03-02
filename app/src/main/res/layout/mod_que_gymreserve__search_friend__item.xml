@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:text="姓名"
-        android:textColor="@color/colorGymReservePrimary"
+        android:textColor="@color/colorAccent"
         android:textSize="15sp"/>
 
     <TextView

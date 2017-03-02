@@ -66,14 +66,14 @@ class BorrowBookAdapter extends EmptyTipArrayAdapter<BorrowBookModel> {
 
         if (isDue(borrowBookModel.dueDate)) {
             // 如果已经接近归还日期则标红日期
-            holder.tv_due_date.setTextColor(ContextCompat.getColor(getContext(), R.color.colorLecturePrimary));
+            holder.tv_due_date.setTextColor(ContextCompat.getColor(getContext(), R.color.relaxRed));
         } else {
             holder.tv_due_date.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));
         }
 
         holder.btn_renew.setEnabled(borrowBookModel.renewTime.equals("0") && !isOverdue(borrowBookModel.dueDate));
         if (holder.btn_renew.isEnabled()) {
-            holder.btn_renew.setTextColor(ContextCompat.getColor(getContext(), R.color.colorLibraryPrimary));
+            holder.btn_renew.setTextColor(ContextCompat.getColor(getContext(), R.color.relaxRed));
             holder.btn_renew.setText("续借");
         } else {
             holder.btn_renew.setTextColor(ContextCompat.getColor(getContext(), R.color.colorSecondaryText));

@@ -86,7 +86,7 @@ public class ActivitiesAdapter extends RefreshRecyclerView.RefreshRecyclerAdapte
         viewHolder.cardView.setOnClickListener(o -> {
             // 链接不为空则打开
             if (!item.detailUrl.equals(""))
-                WebModuleActivity.startWebModuleActivity(item.title, item.getDetailUrl(), R.style.ActivitiesTheme);
+                WebModuleActivity.startWebModuleActivity(item.title, item.getDetailUrl());
         });
         // 判断活动是否开始
         viewHolder.tag.setText(item.getTag());

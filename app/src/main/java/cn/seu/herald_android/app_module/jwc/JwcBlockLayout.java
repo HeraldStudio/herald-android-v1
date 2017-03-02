@@ -23,14 +23,13 @@ public class JwcBlockLayout extends LinearLayout {
         addView(LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null));
         ButterKnife.bind(this);
 
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorJwcPrimary));
         title.setMinLines(1);
         title.setMaxLines(2);
 
         title.setText(item.title);
         content.setText("发布时间：" + item.date);
 
-        setOnClickListener(v -> WebModuleActivity.startWebModuleActivity(item.title, item.href, R.style.JwcTheme));
+        setOnClickListener(v -> WebModuleActivity.startWebModuleActivity(item.title, item.href));
     }
 
     @Override

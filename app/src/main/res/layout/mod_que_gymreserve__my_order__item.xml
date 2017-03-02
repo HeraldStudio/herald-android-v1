@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="运动名（场地）"
-        android:textColor="@color/colorGymReservePrimary"
+        android:textColor="@color/colorAccent"
         android:textSize="17sp"/>
 
     <TextView

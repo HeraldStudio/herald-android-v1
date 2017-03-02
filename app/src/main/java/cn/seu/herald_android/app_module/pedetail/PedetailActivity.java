@@ -37,7 +37,7 @@ public class PedetailActivity extends BaseActivity implements CompactCalendarVie
     @BindView(R.id.compactcalendar_view)
     CompactCalendarView calendarView;
 
-    @BindColor(R.color.colorPedetailPrimary)
+    @BindColor(R.color.colorAccent)
     public int primaryColor;
 
     @Override
