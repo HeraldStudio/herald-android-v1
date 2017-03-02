@@ -41,6 +41,7 @@ import cn.seu.herald_android.custom.TabEntity;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.UI;
 import cn.seu.herald_android.helper.ApiHelper;
 import cn.seu.herald_android.helper.SettingsHelper;
 import cn.seu.herald_android.helper.WifiLoginHelper;
@@ -164,7 +165,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         // 此处容易引发布局的ClassCastException，需要注意
         // 所有写死的尺寸一定要乘以dp，否则会出现兼容问题
         wmlp.x = (int) (3 * dp);
-        wmlp.y = btn.getLayoutParams().height;
+        wmlp.y = btn.getLayoutParams().height + UI.getStatusBarHeight(this);
         wmlp.width = (int) (140 * dp);
         window.setAttributes(wmlp);
         window.setContentView(R.layout.app_main__dialog_more);
