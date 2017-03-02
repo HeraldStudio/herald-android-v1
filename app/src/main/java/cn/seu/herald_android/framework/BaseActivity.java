@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.r0adkll.slidr.Slidr;
@@ -173,48 +174,51 @@ public class BaseActivity extends AppCompatActivity {
 
     // 显示一个SnackBar
     public void showSnackBar(String message) {
+        Toast.makeText(this, message, message.length() <= 20 ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
 
-        // 首先关闭软键盘，防止被软键盘遮挡
-        View v = getCurrentFocus();
-        if (v != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
-        if (contentView != null) {
-            ViewGroup rootView = (ViewGroup) contentView.getChildAt(0);
-
-            // 使用改色调构建SnackBar
-            new CustomSnackBar().view(rootView)
-                    .backgroundColor(AppContext.getColorPrimary(this))
-                    .text(message, null)
-                    .textColors(Color.WHITE, ContextCompat.getColor(this, R.color.colorAccent))
-                    .duration(CustomSnackBar.SnackBarDuration.LONG).show();
-        }
+//        // 首先关闭软键盘，防止被软键盘遮挡
+//        View v = getCurrentFocus();
+//        if (v != null) {
+//            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//        }
+//
+//        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+//        if (contentView != null) {
+//            ViewGroup rootView = (ViewGroup) contentView.getChildAt(0);
+//
+//            // 使用改色调构建SnackBar
+//            new CustomSnackBar().view(rootView)
+//                    .backgroundColor(Color.WHITE)
+//                    .text(message, null)
+//                    .textColors(ContextCompat.getColor(this, R.color.colorAccent),
+//                            ContextCompat.getColor(this, R.color.colorAccent))
+//                    .duration(CustomSnackBar.SnackBarDuration.LONG).show();
+//        }
     }
 
     // 显示一个带按钮的SnackBar
-    public void showSnackBar(String message, String actionTitle, Runnable action) {
-
-        // 首先关闭软键盘，防止被软键盘遮挡
-        View v = getCurrentFocus();
-        if (v != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
-        if (contentView != null) {
-            ViewGroup rootView = (ViewGroup) contentView.getChildAt(0);
-
-            // 使用改色调构建SnackBar
-            new CustomSnackBar().view(rootView)
-                    .backgroundColor(AppContext.getColorPrimary(this))
-                    .text(message, actionTitle)
-                    .textColors(Color.WHITE, Color.WHITE)
-                    .setOnClickListener(true, view -> action.run())
-                    .duration(CustomSnackBar.SnackBarDuration.LONG).show();
-        }
-    }
+//    public void showSnackBar(String message, String actionTitle, Runnable action) {
+//
+//        // 首先关闭软键盘，防止被软键盘遮挡
+//        View v = getCurrentFocus();
+//        if (v != null) {
+//            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//        }
+//
+//        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+//        if (contentView != null) {
+//            ViewGroup rootView = (ViewGroup) contentView.getChildAt(0);
+//
+//            // 使用改色调构建SnackBar
+//            new CustomSnackBar().view(rootView)
+//                    .backgroundColor(Color.WHITE)
+//                    .text(message, actionTitle)
+//                    .textColors(ContextCompat.getColor(this, R.color.colorAccent),
+//                            ContextCompat.getColor(this, R.color.colorAccent))
+//                    .setOnClickListener(true, view -> action.run())
+//                    .duration(CustomSnackBar.SnackBarDuration.LONG).show();
+//        }
+//    }
 }

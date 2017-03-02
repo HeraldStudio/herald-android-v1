@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/app_name"
-        android:textColor="#32465a"
-        android:textSize="18sp">
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp">
     </cn.seu.herald_android.app_main.FakeBoldTextView>
 
     <ImageButton
@@ -21,9 +21,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/selectable_item_background"
-        android:padding="15dp"
+        android:padding="12dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/home_add_btn"/>
+        android:tint="@color/colorAccent"
+        android:src="@drawable/ic_add"/>
 
     <TextView
         android:id="@+id/tv_login"
@@ -36,7 +37,8 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:text="登录"
+        android:background="@drawable/selectable_item_background"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#32465a"
-        android:textSize="17sp"/>
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"/>
 </RelativeLayout>

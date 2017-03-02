@@ -86,14 +86,14 @@ public class AppContext extends Application implements Application.ActivityLifec
         }
     }
 
-    public static void showMessage(String message, String actionText, Runnable action) {
-        Context context = getCurrentContext();
-        if (context instanceof BaseActivity) {
-            ((BaseActivity) context).showSnackBar(message, actionText, action);
-        } else {
-            Toast.makeText(instance, message, Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public static void showMessage(String message, String actionText, Runnable action) {
+//        Context context = getCurrentContext();
+//        if (context instanceof BaseActivity) {
+//            ((BaseActivity) context).showSnackBar(message, actionText, action);
+//        } else {
+//            Toast.makeText(instance, message, Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     public static void openUrlInBrowser(String url) {
         Uri uri = Uri.parse(url);
@@ -107,14 +107,14 @@ public class AppContext extends Application implements Application.ActivityLifec
      **/
 
     @ColorInt
-    public static int getColorPrimary(Context context) {
+    public static int colorAccent() {
         try {
             TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-            return ContextCompat.getColor(context, typedValue.resourceId);
+            getCurrentContext().getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
+            return ContextCompat.getColor(getCurrentContext(), typedValue.resourceId);
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
-            return ContextCompat.getColor(context, R.color.colorPrimary);
+            return ContextCompat.getColor(getCurrentContext(), R.color.colorAccent);
         }
     }
 

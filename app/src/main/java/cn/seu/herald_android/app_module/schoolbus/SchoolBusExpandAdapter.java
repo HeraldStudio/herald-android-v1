@@ -89,8 +89,8 @@ class SchoolBusExpandAdapter extends BaseExpandableListAdapter {
             Calendar now = Calendar.getInstance();
             if (now.after(dateStart) && now.before(dateEnd)) {
                 // 如果是当前时间所处于的时间区间，则设置颜色
-                tv_period.setTextColor(ContextCompat.getColor(context, R.color.colorSchoolBusPrimaryDark));
-                tv_time.setTextColor(ContextCompat.getColor(context, R.color.colorSchoolBusPrimaryDark));
+                tv_period.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+                tv_time.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
             } else {
                 tv_period.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));
                 tv_time.setTextColor(ContextCompat.getColor(context, R.color.colorSecondaryText));

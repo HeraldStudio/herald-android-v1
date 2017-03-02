@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:columnCount="5"
-        app:headerColor="@color/colorGradeAccent"
+        app:headerColor="#fff"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </LinearLayout>

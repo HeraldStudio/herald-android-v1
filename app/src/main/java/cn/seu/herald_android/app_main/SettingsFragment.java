@@ -79,7 +79,7 @@ public class SettingsFragment extends Fragment implements ApiHelper.OnUserChange
     @OnClick(R.id.aboutus)
     void aboutUs() {
         WebModuleActivity.startWebModuleActivity("关于小猴",
-                "http://app.heraldstudio.com/about.htm?type=android", R.style.AboutusTheme);
+                "http://app.heraldstudio.com/about.htm?type=android");
     }
 
     @OnClick(R.id.tv_feedback)

@@ -13,7 +13,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@color/colorPedetailPrimary"
         android:paddingBottom="15dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
@@ -71,7 +70,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPedetailPrimary"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
@@ -88,7 +86,7 @@
         android:layout_marginRight="15dp"
         app:compactCalendarBackgroundColor="#fff"
         app:compactCalendarCurrentDayBackgroundColor="#ccc"
-        app:compactCalendarMultiEventIndicatorColor="@color/colorPedetailPrimary"
+        app:compactCalendarMultiEventIndicatorColor="@color/colorAccent"
         app:compactCalendarTextColor="@color/colorSecondaryText"
         app:compactCalendarTextSize="14sp"/>
 

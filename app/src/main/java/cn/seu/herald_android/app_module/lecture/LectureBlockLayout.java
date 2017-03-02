@@ -24,8 +24,6 @@ public class LectureBlockLayout extends LinearLayout {
         addView(LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null));
         ButterKnife.bind(this);
 
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorLecturePrimary));
-
         title.setText(item.getTopic());
         title.setMinLines(1);
         title.setMaxLines(2);

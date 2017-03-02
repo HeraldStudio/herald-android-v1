@@ -12,18 +12,14 @@
     <cn.seu.herald_android.custom.CustomSwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        >
+        android:layout_height="match_parent">
 
         <cn.seu.herald_android.app_main.CardsListView
             android:id="@+id/timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            android:divider="@null"
+            android:divider="#fff"
             android:listSelector="@drawable/null_selector"
             android:headerDividersEnabled="false">
         </cn.seu.herald_android.app_main.CardsListView>

@@ -3,7 +3,8 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="6dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <cn.seu.herald_android.custom.ShortcutBoxView

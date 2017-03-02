@@ -15,7 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="left"
         android:text="课程名称"
-        android:textColor="@color/colorCurriculumPrimary"
+        android:textColor="@color/colorAccent"
         android:textSize="16sp"/>
 
     <TextView

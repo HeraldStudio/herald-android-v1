@@ -22,29 +22,11 @@ public class WebModuleActivity extends BaseActivity {
 
     String tag_url;
     String title;
-    int theme;
 
     public static void startWebModuleActivity(String title, String url) {
-
-        int theme = R.style.WebShowTheme;
-        if (url.equals(Module.schedule.getDestination())) {
-            theme = R.style.ScheduleTheme;
-        } else if (url.equals(Module.quanyi.getDestination())) {
-            theme = R.style.QuanYiTheme;
-        } else if (url.equals(Module.emptyroom.getDestination())) {
-            theme = R.style.EmptyRoomTheme;
-        } else if (url.equals(CardActivity.chargeUrl)) {
-            theme = R.style.CardTheme;
-        }
-
-        startWebModuleActivity(title, url, theme);
-    }
-
-    public static void startWebModuleActivity(String title, String url, int themeId) {
         Bundle bundle = new Bundle();
         bundle.putString("title", title);
         bundle.putString("url", url);
-        bundle.putInt("theme", themeId);
         Intent intent = new Intent(AppContext.instance, WebModuleActivity.class);
         intent.putExtras(bundle);
         AppContext.startActivitySafely(intent);
@@ -87,9 +69,6 @@ public class WebModuleActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         tag_url = bundle.getString("url");
         title = bundle.getString("title");
-        theme = bundle.getInt("theme");
-        // 设置主题
-        setTheme(theme);
     }
 
     public void openUrl(){

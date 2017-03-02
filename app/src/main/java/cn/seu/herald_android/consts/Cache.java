@@ -149,14 +149,6 @@ public class Cache {
     );
 
     /**
-     * 校园网络缓存
-     */
-    public static AppCache seunet = new AppCache("herald_nic", () ->
-            new ApiSimpleRequest(Method.POST).api("nic").addUuid()
-                    .toCache("herald_nic")
-    );
-
-    /**
      * 场馆预约缓存
      */
 

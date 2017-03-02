@@ -51,12 +51,12 @@ class GradeAdapter extends TableDataAdapter<GradeModel> {
         // 用于设置行颜色的类
         @Override
         public int getRowColor(int rowIndex, GradeModel rowData) {
-            if (rowIndex % 2 == 0) {
+//            if (rowIndex % 2 == 0) {
                 // 如果是偶数列则设置颜色为淡绿色
                 return ContextCompat.getColor(getContext(), R.color.white);
-            } else {
-                return ContextCompat.getColor(getContext(), R.color.colorGradeLight);
-            }
+//            } else {
+//                return ContextCompat.getColor(getContext(), R.color.colorGradeLight);
+//            }
         }
     }
 

@@ -11,6 +11,8 @@
         <item name="android:actionBarSize">48dp</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@style/default_animation</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="default_animation" mce_bogus="1" parent="@android:style/Animation.Activity">
@@ -29,176 +31,6 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="SubActivityTheme" parent="AppTheme">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="QueryGradeTheme" parent="SubActivityTheme">
-        <!-- 成绩查询页风格 -->
-        <item name="colorPrimary">@color/colorGradePrimary</item>
-        <item name="colorPrimaryDark">@color/colorGradePrimaryDark</item>
-        <item name="colorAccent">@color/colorGradeAccent</item>
-    </style>
-
-    <style name="JwcTheme" parent="SubActivityTheme">
-        <!-- 教务通知风格 -->
-        <item name="colorPrimary">@color/colorJwcPrimary</item>
-        <item name="colorPrimaryDark">@color/colorJwcPrimaryDark</item>
-        <item name="colorAccent">@color/colorJwcAccent</item>
-    </style>
-
-    <style name="LectureTheme" parent="SubActivityTheme">
-        <!-- 人文讲座风格 -->
-        <item name="colorPrimary">@color/colorLecturePrimary</item>
-        <item name="colorPrimaryDark">@color/colorLecturePrimaryDark</item>
-        <item name="colorAccent">@color/colorLectureAccent</item>
-    </style>
-
-    <style name="QuerySchoolBusTheme" parent="SubActivityTheme">
-        <!-- 校车时刻表风格 -->
-        <item name="colorPrimary">@color/colorSchoolBusPrimary</item>
-        <item name="colorPrimaryDark">@color/colorSchoolBusPrimaryDark</item>
-        <item name="colorAccent">@color/colorSchoolBusAccent</item>
-    </style>
-
-    <style name="ExperimentTheme" parent="SubActivityTheme">
-        <!-- 实验查询风格 -->
-        <item name="colorPrimary">@color/colorExperimentPrimary</item>
-        <item name="colorPrimaryDark">@color/colorExperimentPrimaryDark</item>
-        <item name="colorAccent">@color/colorExperimentAccent</item>
-    </style>
-
-    <style name="CardTheme" parent="SubActivityTheme">
-        <!-- 一卡通查询风格 -->
-        <item name="colorPrimary">@color/colorCardPrimary</item>
-        <item name="colorPrimaryDark">@color/colorCardPrimaryDark</item>
-        <item name="colorAccent">@color/colorCardAccent</item>
-    </style>
-
-    <style name="SeunetTheme" parent="SubActivityTheme">
-        <!-- 校园网查询风格 -->
-        <item name="colorPrimary">@color/colorSeuNetPrimary</item>
-        <item name="colorPrimaryDark">@color/colorSeuNetPrimaryDark</item>
-        <item name="colorAccent">@color/colorSeuNetAccent</item>
-    </style>
-
-    <style name="GymReserveTheme" parent="SubActivityTheme">
-        <!-- 场馆预约风格 -->
-        <item name="colorPrimary">@color/colorGymReservePrimary</item>
-        <item name="colorPrimaryDark">@color/colorGymReservePrimaryDark</item>
-        <item name="colorAccent">@color/colorGymReserveAccent</item>
-    </style>
-
-    <style name="ExamTheme" parent="SubActivityTheme">
-        <!-- 考试助手风格 -->
-        <item name="colorPrimary">@color/colorExamPrimary</item>
-        <item name="colorPrimaryDark">@color/colorExamPrimaryDark</item>
-        <item name="colorAccent">@color/colorExamAccent</item>
-    </style>
-
-    <style name="PedetailTheme" parent="SubActivityTheme">
-        <!-- 跑操查询风格 -->
-        <item name="colorPrimary">@color/colorPedetailPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPedetailprimaryDark</item>
-        <item name="colorAccent">@color/colorPedetailAccent</item>
-    </style>
-
-    <style name="CurriculumTheme" parent="SubActivityTheme">
-        <!-- 课表查询风格 -->
-        <item name="colorPrimary">@color/colorCurriculumPrimary</item>
-        <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
-        <item name="colorAccent">@color/colorCurriculumAccent</item>
-    </style>
-
-
-    <style name="SrtpTheme" parent="SubActivityTheme">
-        <!-- 课外研学查询风格 -->
-        <item name="colorPrimary">@color/colorSrtpPrimary</item>
-        <item name="colorPrimaryDark">@color/colorSrtpprimaryDark</item>
-        <item name="colorAccent">@color/colorSrtpAccent</item>
-    </style>
-
-    <style name="LibraryTheme" parent="SubActivityTheme">
-        <!-- 图书馆风格 -->
-        <item name="colorPrimary">@color/colorLibraryPrimary</item>
-        <item name="colorPrimaryDark">@color/colorLibraryprimaryDark</item>
-        <item name="colorAccent">@color/colorLibraryAccent</item>
-    </style>
-
-    <style name="ScheduleTheme" parent="SubActivityTheme">
-        <!-- 校历风格 -->
-        <item name="colorPrimary">@color/colorSchedulePrimary</item>
-        <item name="colorPrimaryDark">@color/colorScheduleprimaryDark</item>
-        <item name="colorAccent">@color/colorScheduleAccent</item>
-    </style>
-
-    <style name="EmptyRoomTheme" parent="SubActivityTheme">
-        <!-- 校历风格 -->
-        <item name="colorPrimary">@color/colorEmptyRoomPrimary</item>
-        <item name="colorPrimaryDark">@color/colorEmptyRoomprimaryDark</item>
-        <item name="colorAccent">@color/colorEmptyRoomAccent</item>
-    </style>
-
-    <style name="QuanYiTheme" parent="SubActivityTheme">
-        <!-- 权益服务风格 -->
-        <item name="colorPrimary">@color/colorQuanYiPrimary</item>
-        <item name="colorPrimaryDark">@color/colorQuanYiprimaryDark</item>
-        <item name="colorAccent">@color/colorQuanYiAccent</item>
-    </style>
-
-    <style name="ActivitiesTheme" parent="SubActivityTheme">
-        <!-- 校园活动风格 -->
-        <item name="colorPrimary">@color/colorActivitiesPrimary</item>
-        <item name="colorPrimaryDark">@color/colorActivitiesDark</item>
-        <item name="colorAccent">@color/colorActivitiesAccent</item>
-    </style>
-
-    <style name="ExpressActivityTheme" parent="SubActivityTheme">
-        <!-- 活动生活风格 -->
-        <item name="colorPrimary">@color/colorExpressPrimary</item>
-        <item name="colorPrimaryDark">@color/colorExpressDark</item>
-        <item name="colorAccent">@color/colorExpressAccent</item>
-    </style>
-
-
-
-    <style name="AboutusTheme" parent="SubActivityTheme">
-        <!-- 关于我们 -->
-        <item name="colorPrimary">@color/colorAboutusPrimary</item>
-        <item name="colorPrimaryDark">@color/colorAboutusprimaryDark</item>
-        <item name="colorAccent">@color/colorAboutusprimaryAccent</item>
-    </style>
-
-    <style name="FeedbackTheme" parent="SubActivityTheme">
-        <!-- 意见反馈 -->
-        <item name="colorPrimary">@color/colorFeedbackPrimary</item>
-        <item name="colorPrimaryDark">@color/colorFeedbackprimaryDark</item>
-        <item name="colorAccent">@color/colorFeedbackprimaryAccent</item>
-    </style>
-
-    <style name="WebShowTheme" parent="SubActivityTheme">
-        <!-- web模块 -->
-        <item name="colorPrimary">@color/colorWebPrimary</item>
-        <item name="colorPrimaryDark">@color/colorWebPrimaryDark</item>
-        <item name="colorAccent">@color/colorWebAccent</item>
-    </style>
-
-
-    <style name="TopicTheme" parent="SubActivityTheme">
-        <!-- 话题模块 -->
-        <item name="colorPrimary">@color/colorCurriculumPrimary</item>
-        <item name="colorPrimaryDark">@color/colorCurriculumPrimaryDark</item>
-        <item name="colorAccent">@color/colorCurriculumAccent</item>
-    </style>
-
-    <style name="WifiAutoLoginTheme" parent="SubActivityTheme">
-        <!-- 校园网自动登录模块 -->
-        <item name="colorPrimary">@color/colorSeuNetPrimary</item>
-        <item name="colorPrimaryDark">@color/colorSeuNetPrimaryDark</item>
-        <item name="colorAccent">@color/colorSeuNetAccent</item>
-    </style>
-
     <style name="AppTheme.Invisible" parent="AppTheme">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -208,11 +40,5 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="LoginActivityTheme" parent="AppTheme">
-        <item name="colorPrimary">#040406</item>
-        <item name="colorPrimaryDark">#040406</item>
-        <item name="colorAccent">#2bbfff</item>
-    </style>
 
 </resources>

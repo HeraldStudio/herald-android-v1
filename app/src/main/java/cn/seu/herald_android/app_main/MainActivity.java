@@ -226,12 +226,6 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
                 R.drawable.ic_person_unselected
         };
 
-        int[] statusColors = new int[]{
-                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentCards),
-                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentActivitys),
-                //ContextCompat.getColor(AppContext.instance, R.color.colorFragmentModules),
-                ContextCompat.getColor(AppContext.instance, R.color.colorFragmentSettings)};
-
         ArrayList<CustomTabEntity> tabEntities = new ArrayList<>();
         for (int i = 0; i < adapter.getCount(); i++) {
             tabEntities.add(new TabEntity(null, selectedIcons[i], unselectedIcons[i]));
@@ -251,12 +245,7 @@ public class MainActivity extends BaseActivity implements ApiHelper.OnUserChange
         });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                ArgbEvaluator evaluator = new ArgbEvaluator();
-                int colorOld = statusColors[position];
-                int colorNew = statusColors[(position + 1) % statusColors.length];
-                int evaluate = (Integer) evaluator.evaluate(positionOffset, colorOld, colorNew);
-                changeToolbarColor(evaluate);
+            @Override public void onPageScrolled(int p0, float p1, int p2) {
             }
 
             @Override public void onPageSelected(int position) {

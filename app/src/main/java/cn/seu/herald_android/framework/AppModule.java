@@ -101,7 +101,7 @@ public class AppModule {
         }
 
         if (needLogin && !ApiHelper.isLogin()) {
-            AppContext.showMessage(nameTip + "功能需要登录使用", "立即登录", AppContext::showLogin);
+            AppContext.showMessage(nameTip + "功能需要登录使用");
             return;
         }
 

@@ -37,11 +37,6 @@ public class Module {
             "教务通知", "显示教务处最新通知，提供重要教务通知提醒服务",
             "MODULE_QUERY_JWC", R.mipmap.ic_jwc, R.mipmap.ic_jwc, true, false);
 
-    // 无卡片的模块
-    public static AppModule seunet = new AppModule("seunet",
-            "校园网络", "显示校园网使用情况及校园网账户余额信息",
-            "MODULE_QUERY_SEUNET", R.mipmap.ic_seunet, R.mipmap.ic_seunet, false, true);
-
     public static AppModule gymreserve = new AppModule("gymreserve",
             "场馆预约", "提供体育场馆预约和查询服务",
             "MODULE_GYMRESERVE", R.mipmap.ic_gymreserve, R.mipmap.ic_gymreserve, false, true);
@@ -74,9 +69,9 @@ public class Module {
             "空教室 Web", "提供指定时间内的空教室信息查询服务",
             "http://www.heraldstudio.com/queryEmptyClassrooms/m", R.mipmap.ic_emptyroom, R.mipmap.ic_emptyroom, false, false);
 
-    public static AppModule topic = new AppModule("topic",
-            "小猴偷米话题", "提供校内最新最热话题",
-            "MODULE_TOPIC", R.mipmap.ic_topics, R.mipmap.ic_topics, false, false);
+//    public static AppModule topic = new AppModule("topic",
+//            "小猴偷米话题", "提供校内最新最热话题",
+//            "MODULE_TOPIC", R.mipmap.ic_topics, R.mipmap.ic_topics, false, false);
 
     // 特殊的模块，模块管理
     public static AppModule moduleManager = new AppModule("",
@@ -85,7 +80,7 @@ public class Module {
 
     public static AppModule[] array = new AppModule[]{
             card, pedetail, curriculum, experiment, exam, lecture, jwc,
-            seunet, gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom,
-            topic
+            gymreserve, library, grade, srtp, schoolbus, schedule, quanyi, emptyroom
+            //, topic
     };
 }

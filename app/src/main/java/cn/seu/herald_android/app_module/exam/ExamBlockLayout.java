@@ -26,9 +26,7 @@ public class ExamBlockLayout extends LinearLayout {
         addView(LayoutInflater.from(context).inflate(R.layout.app_main__fragment_cards__item_row, null));
         ButterKnife.bind(this);
 
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExamPrimary));
         title.setMaxEms(10);
-        count.setTextColor(ContextCompat.getColor(getContext(), R.color.colorExamPrimary));
 
         String location = "";
         if (!item.location.trim().equals("")) {

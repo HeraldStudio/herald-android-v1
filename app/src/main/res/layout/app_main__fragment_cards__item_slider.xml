@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.seu.herald_android.custom.SliderView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e0e0e0" /><!--高度要在TimelineView.java中设置-->
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="5dp">
+
+    <cn.seu.herald_android.custom.SliderView
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"/><!--高度需要在CardsListView.java中设置-->
+</FrameLayout>

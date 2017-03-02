@@ -49,7 +49,7 @@ public class GradeActivity extends BaseActivity {
                 return tv_header;
             }
         };
-        tableViewGrade.setHeaderBackgroundColor(ContextCompat.getColor(GradeActivity.this, R.color.colorGradePrimary));
+//        tableViewGrade.setHeaderBackgroundColor(ContextCompat.getColor(GradeActivity.this, R.color.colorAccent));
         tableViewGrade.setHeaderAdapter(tableHeaderAdapter);
 
         loadCache();

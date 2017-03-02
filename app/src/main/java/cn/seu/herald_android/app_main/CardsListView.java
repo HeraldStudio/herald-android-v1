@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ import cn.seu.herald_android.factory.ShortcutCard;
 import cn.seu.herald_android.framework.AppContext;
 import cn.seu.herald_android.framework.AppModule;
 import cn.seu.herald_android.framework.BaseActivity;
+import cn.seu.herald_android.framework.UI;
 import cn.seu.herald_android.framework.network.ApiEmptyRequest;
 import cn.seu.herald_android.framework.network.ApiRequest;
 import cn.seu.herald_android.helper.ApiHelper;
@@ -63,14 +65,15 @@ public class CardsListView extends ListView implements ApiHelper.OnUserChangeLis
         setVerticalScrollBarEnabled(false);
 
         // 实例化轮播图
-        slider = (SliderView) LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_slider, null);
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.app_main__fragment_cards__item_slider, null);
+        slider = (SliderView) v.findViewById(R.id.slider);
 
         // 设置高度。在其他地方设置没用。
         float resolution = 5 / 2f;
-        int height = (int) (getContext().getResources().getDisplayMetrics().widthPixels / resolution);
-        slider.setLayoutParams(new AbsListView.LayoutParams(-1, height));
+        int height = (int) ((getContext().getResources().getDisplayMetrics().widthPixels - UI.dp2px(40)) / resolution);
+        slider.setLayoutParams(new FrameLayout.LayoutParams(-1, height));
 
-        addHeaderView(slider);
+        addHeaderView(v);
     }
 
     @Override

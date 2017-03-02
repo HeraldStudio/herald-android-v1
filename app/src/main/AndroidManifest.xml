@@ -21,8 +21,7 @@
             android:name=".app_main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="cn.seu.herald_android.SWITCH_TAB" />
@@ -34,14 +33,12 @@
             android:name=".app_secondary.LoginActivity"
             android:label="@string/title_activity_login"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/LoginActivityTheme"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".app_secondary.ModuleManageActivity"
             android:label="@string/title_activity_query"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/SubActivityTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_MANAGER"/>
 
@@ -52,8 +49,7 @@
             android:name=".app_module.schoolbus.SchoolBusActivity"
             android:label="@string/title_activity_schoolbus"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/QuerySchoolBusTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SCHOOLBUS" />
 
@@ -64,8 +60,7 @@
             android:name=".app_module.grade.GradeActivity"
             android:label="@string/title_activity_grade"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/QueryGradeTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_GRADE" />
 
@@ -76,8 +71,7 @@
             android:name=".app_module.library.LibraryActivity"
             android:label="@string/title_activity_library"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/LibraryTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_LIBRARY" />
 
@@ -88,14 +82,12 @@
             android:name=".app_module.library.LibrarySearchActivity"
             android:launchMode="singleTask"
             android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/LibraryTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".app_module.lecture.LectureActivity"
             android:label="@string/title_activity_lecture"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/LectureTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_LECTURE" />
 
@@ -106,8 +98,7 @@
             android:name=".app_module.cardextra.CardActivity"
             android:label="@string/title_activity_card"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/CardTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_CARDEXTRA" />
 
@@ -118,22 +109,9 @@
             android:name=".app_module.experiment.ExperimentActivity"
             android:label="@string/title_activity_experiment"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExperimentTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXPERIMENT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".app_module.seunet.SeunetActivity"
-            android:label="@string/title_activity_seunet"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/SeunetTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_QUERY_SEUNET" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -142,8 +120,7 @@
             android:name=".app_module.exam.ExamActivity"
             android:label="@string/title_activity_exam"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExamTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_EXAM" />
 
@@ -155,14 +132,12 @@
             android:name=".app_module.exam.AddExamActivity"
             android:label="@string/title_activity_add_exam"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/ExamTheme" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".app_module.pedetail.PedetailActivity"
             android:label="@string/title_activity_pedetail"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/PedetailTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_PEDETAIL" />
 
@@ -173,8 +148,7 @@
             android:name=".app_module.curriculum.CurriculumActivity"
             android:label="@string/title_activity_curriculum"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/CurriculumTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_CURRICULUM" />
 
@@ -184,8 +158,7 @@
         <activity
             android:name=".app_secondary.WebModuleActivity"
             android:label="@string/title_activity_webmodule"
-            android:screenOrientation="portrait"
-            android:theme="@style/WebShowTheme">
+            android:screenOrientation="portrait">
 
             <!-- web module -->
             <intent-filter>
@@ -196,13 +169,11 @@
             android:name=".app_secondary.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:screenOrientation="portrait"
-            android:theme="@style/FeedbackTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".app_module.srtp.SrtpActivity"
             android:label="@string/title_activity_srtp"
-            android:screenOrientation="portrait"
-            android:theme="@style/SrtpTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_SRTP" />
 
@@ -213,8 +184,7 @@
             android:name=".app_module.jwc.JwcActivity"
             android:label="@string/title_activity_jwc"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/JwcTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_QUERY_JWC" />
 
@@ -225,8 +195,7 @@
             android:name=".app_module.gymreserve.GymReserveActivity"
             android:label="@string/title_activity_gymreserve"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="cn.seu.herald_android.MODULE_GYMRESERVE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -236,54 +205,39 @@
             android:name=".app_module.gymreserve.GymChooseTimeActivity"
             android:label="@string/title_activity_gym_choose_time"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".app_module.gymreserve.GymNewOrderActivity"
             android:label="@string/title_activity_gym_new_order"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".app_module.gymreserve.GymAddFriendActivity"
             android:label="@string/title_activity_gym_add_friend"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".app_module.gymreserve.GymMyOrderActivity"
             android:label="@string/title_activity_gym_my_order"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/GymReserveTheme"/>
+            android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".app_module.topic.TopicActivity"
-            android:label="@string/title_activity_topic"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            >
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_TOPIC" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".app_module.topic.CommentsMakeActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
-
-        <!--activity android:name=".app_module.topic.TopicActivity"
-            android:label="@string/title_activity_topic"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/TopicTheme">
-            <intent-filter>
-                <action android:name="cn.seu.herald_android.MODULE_TOPIC" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity-->
+        <!--<activity-->
+            <!--android:name=".app_module.topic.TopicActivity"-->
+            <!--android:label="@string/title_activity_topic"-->
+            <!--android:launchMode="singleTask"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="cn.seu.herald_android.MODULE_TOPIC" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".app_module.topic.CommentsMakeActivity"-->
+            <!--android:launchMode="singleTop"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--/>-->
 
     </application>
 

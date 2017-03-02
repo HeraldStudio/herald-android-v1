@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:background="@drawable/header_bg_lecture_record"
+            android:background="@color/colorAccent"
             android:padding="16dp">
 
             <TextView
